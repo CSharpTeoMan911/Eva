@@ -81,6 +81,8 @@ namespace Eva_5._0
         {
             System.Diagnostics.Debug.WriteLine("");
             System.Diagnostics.Debug.WriteLine("");
+            System.Diagnostics.Debug.WriteLine("");
+            System.Diagnostics.Debug.WriteLine("");
             this.Width = this.ActualWidth / 2.6;
             this.Height = this.ActualHeight / 2.6;
 
