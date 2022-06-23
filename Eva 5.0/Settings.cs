@@ -8,6 +8,7 @@ namespace Eva_5._0
 {
     internal class Settings
     {
+
         public Task<string> Get_Settings()
         {
             switch (System.IO.File.Exists(@"EvaSettings.json"))
@@ -15,13 +16,16 @@ namespace Eva_5._0
                 case true:
                     try
                     {
-                        using (var Settings_File = new System.IO.StreamReader("EvaSettings.json"))
+                        using (System.IO.StreamReader Settings_File = new System.IO.StreamReader("EvaSettings.json"))
                         {
-                            var SerialisedFile = Settings_File.ReadToEnd();
+                            string SerialisedFile = Settings_File.ReadToEnd();
                             Settings_File.Close();
                             Settings_File.Dispose();
 
                             dynamic DeserialisedFile = Newtonsoft.Json.JsonConvert.DeserializeObject(SerialisedFile);
+
+                            new Permissions<string>("EvaSettings.json");
+
                             return Task.FromResult((string)DeserialisedFile["Sound"]);
                         }
                     }
@@ -31,10 +35,12 @@ namespace Eva_5._0
                 case false:
                     try
                     {
-                        var Template = new Setting_File_Template();
+                        Setting_File_Template Template = new Setting_File_Template();
 
                         dynamic SerialisedFile = Newtonsoft.Json.JsonConvert.SerializeObject(Template, Newtonsoft.Json.Formatting.Indented);
                         System.IO.File.WriteAllText("EvaSettings.json", SerialisedFile);
+
+                        new Permissions<string>("EvaSettings.json");
                     }
                     catch { }
                     break;
@@ -51,9 +57,9 @@ namespace Eva_5._0
                 case true:
                     try
                     {
-                        using (var Settings_File = new System.IO.StreamReader("EvaSettings.json"))
+                        using (System.IO.StreamReader Settings_File = new System.IO.StreamReader("EvaSettings.json"))
                         {
-                            var SerialisedFile = Settings_File.ReadToEnd();
+                            string SerialisedFile = Settings_File.ReadToEnd();
                             Settings_File.Close();
                             Settings_File.Dispose();
 
@@ -62,7 +68,9 @@ namespace Eva_5._0
 
                             dynamic ReSerialisedFile = Newtonsoft.Json.JsonConvert.SerializeObject(DeserialisedFile, Newtonsoft.Json.Formatting.Indented);
 
-                            using (var Write_Settings_File = new System.IO.StreamWriter("EvaSettings.json"))
+                            new Permissions<string>("EvaSettings.json");
+
+                            using (System.IO.StreamWriter Write_Settings_File = new System.IO.StreamWriter("EvaSettings.json"))
                             {
 
                                 Write_Settings_File.Write(ReSerialisedFile);
@@ -78,10 +86,12 @@ namespace Eva_5._0
                 case false:
                     try
                     {
-                        var Template = new Setting_File_Template();
+                        Setting_File_Template Template = new Setting_File_Template();
 
                         dynamic SerialisedFile = Newtonsoft.Json.JsonConvert.SerializeObject(Template, Newtonsoft.Json.Formatting.Indented);
                         System.IO.File.WriteAllText("EvaSettings.json", SerialisedFile);
+
+                        new Permissions<string>("EvaSettings.json");
                     }
                     catch { }
                     break;

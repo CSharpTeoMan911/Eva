@@ -97,6 +97,7 @@ namespace Eva_5._0
 
 
 
+
                                 case false:
 
                                     await OnlineSpeechRecognition.StopRecognitionAsync();
