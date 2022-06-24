@@ -81,15 +81,11 @@ namespace Eva_5._0
 
             try
             {
-                var SoundOnFile = System.IO.File.ReadAllText(@"EvaSettings.json");
-
-                dynamic SoundOrOffDeserialised = Newtonsoft.Json.JsonConvert.DeserializeObject(SoundOnFile);
-
-                string SoundOrOff = SoundOrOffDeserialised["Sound"];
+                Settings settings = new Settings();
 
                 var ErrorSoundEffect = new System.Media.SoundPlayer("Privacy statement declined or mic not available.wav");
 
-                switch (SoundOrOff == "Enabled")
+                switch (await settings.Get_Settings() == true)
                 {
                     case true:
                         ErrorSoundEffect.Play();
@@ -112,15 +108,11 @@ namespace Eva_5._0
         {
             try
             {
-                var SoundOnFile = System.IO.File.ReadAllText(@"EvaSettings.json");
-
-                dynamic SoundOrOffDeserialised = Newtonsoft.Json.JsonConvert.DeserializeObject(SoundOnFile);
-
-                string SoundOrOff = SoundOrOffDeserialised["Sound"];
+                Settings settings = new Settings();
 
                 var ErrorSoundEffect = new System.Media.SoundPlayer("Privacy statement declined or mic not available.wav");
 
-                switch (SoundOrOff == "Enabled")
+                switch (await settings.Get_Settings() == true)
                 {
                     case true:
                         ErrorSoundEffect.Play();

@@ -44,8 +44,4 @@ namespace Eva_5._0
         }
     }
 
-    internal class Setting_File_Template
-    {
-        public string Sound = "Enabled";
-    }
 }
