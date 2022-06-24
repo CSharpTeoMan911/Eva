@@ -272,9 +272,11 @@ namespace Eva_5._0
 
 
 
-                                        RotateTransform Rotate = new RotateTransform();
+                                        RotateTransform Rotate = new RotateTransform()
+                                        {
 
-                                        Rotate.Angle = RotationValue;
+                                            Angle = RotationValue
+                                        };
 
                                         Rotator.RenderTransform = Rotate;
 

@@ -37,8 +37,7 @@ namespace Eva_5._0
             {
                 try
                 {
-                    var settings = new Settings();
-                    var SoundOrOff = await settings.Get_Settings();
+                    var SoundOrOff = await Settings.Get_Settings();
 
                     switch (WebApplication)
                     {
@@ -252,8 +251,7 @@ namespace Eva_5._0
             {
                 try
                 {
-                    var settings = new Settings();
-                    var SoundOrOff = await settings.Get_Settings();
+                    var SoundOrOff = await Settings.Get_Settings();
 
                     switch (Application)
                     {

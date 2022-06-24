@@ -144,10 +144,7 @@ namespace Eva_5._0
 
 
 
-
-
-            var settings = new Settings();
-            var SoundOrOff = settings.Get_Settings().Result;
+            var SoundOrOff = Settings.Get_Settings().Result;
 
             switch (SoundOrOff)
             {
@@ -260,11 +257,16 @@ namespace Eva_5._0
                                         }
 
 
-                                        RotateTransform Wheel1Rotate = new RotateTransform();
-                                        Wheel1Rotate.Angle = Wheel1Angle;
+                                        RotateTransform Wheel1Rotate = new RotateTransform()
+                                        {
+                                            Angle = Wheel1Angle
+                                        };
+                                        
 
-                                        RotateTransform Wheel2Rotate = new RotateTransform();
-                                        Wheel2Rotate.Angle = Wheel2Angle;
+                                        RotateTransform Wheel2Rotate = new RotateTransform
+                                        {
+                                            Angle = Wheel2Angle
+                                        };
 
                                         Wheel1.RenderTransform = Wheel1Rotate;
 
@@ -598,8 +600,7 @@ namespace Eva_5._0
                             {
 
                                 case false:
-                                    var settings = new Settings();
-                                    System.Threading.Tasks.Task.Run(() => { settings.Set_Settings(true); });
+                                    System.Threading.Tasks.Task.Run(() => { Settings.Set_Settings(true); });
 
                                     SoundOnButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
                                     SoundOffButton.Background = new SolidColorBrush(Colors.Transparent);
@@ -629,8 +630,7 @@ namespace Eva_5._0
                             {
 
                                 case false:
-                                    var settings = new Settings();
-                                    System.Threading.Tasks.Task.Run(() => { settings.Set_Settings(false); });
+                                    System.Threading.Tasks.Task.Run(() => { Settings.Set_Settings(false); });
 
                                     SoundOffButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
                                     SoundOnButton.Background = new SolidColorBrush(Colors.Transparent);

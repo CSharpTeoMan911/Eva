@@ -29,7 +29,7 @@ namespace Eva_5._0
                     {
                         case true:
 
-                            switch (Sentence.LastIndexOf("please") + 5 == Sentence.Count() - 1)
+                            switch (Sentence.LastIndexOf("please") + 5 == Sentence.Length - 1)
                             {
                                 case true:
 
@@ -39,7 +39,7 @@ namespace Eva_5._0
 
                                 case false:
 
-                                    switch (Sentence.LastIndexOf("now") + 2 == Sentence.Count() - 1)
+                                    switch (Sentence.LastIndexOf("now") + 2 == Sentence.Length - 1)
                                     {
                                         case true:
 
@@ -76,7 +76,7 @@ namespace Eva_5._0
                     {
                         case true:
 
-                            switch (Sentence.LastIndexOf("please") + 5 == Sentence.Count() - 1)
+                            switch (Sentence.LastIndexOf("please") + 5 == Sentence.Length - 1)
                             {
                                 case true:
 
@@ -85,7 +85,7 @@ namespace Eva_5._0
 
                                 case false:
 
-                                    switch (Sentence.LastIndexOf("now") + 2 == Sentence.Count() - 1)
+                                    switch (Sentence.LastIndexOf("now") + 2 == Sentence.Length - 1)
                                     {
                                         case true:
 
@@ -165,7 +165,7 @@ namespace Eva_5._0
             {
                 case "please open [Application]":
 
-                    for (int Index = Sentence.IndexOf("please open") + 12; Index <= Sentence.Count() - 1; Index++)
+                    for (int Index = Sentence.IndexOf("please open") + 12; Index <= Sentence.Length - 1; Index++)
                     {
                         Application += Sentence[Index];
 
@@ -200,7 +200,7 @@ namespace Eva_5._0
 
                 case "open [Application]":
 
-                    for (int Index = Sentence.IndexOf("open") + 5; Index <= Sentence.Count() - 1; Index++)
+                    for (int Index = Sentence.IndexOf("open") + 5; Index <= Sentence.Length - 1; Index++)
                     {
                         Application += Sentence[Index];
 
@@ -214,7 +214,7 @@ namespace Eva_5._0
 
                 case "please close [Application]":
 
-                    for (int Index = Sentence.IndexOf("please close") + 13; Index <= Sentence.Count() - 1; Index++)
+                    for (int Index = Sentence.IndexOf("please close") + 13; Index <= Sentence.Length - 1; Index++)
                     {
                         Application += Sentence[Index];
 
@@ -247,7 +247,7 @@ namespace Eva_5._0
 
                 case "close [Application]":
 
-                    for (int Index = Sentence.IndexOf("close") + 6; Index <= Sentence.Count() - 1; Index++)
+                    for (int Index = Sentence.IndexOf("close") + 6; Index <= Sentence.Length - 1; Index++)
                     {
                         Application += Sentence[Index];
 
@@ -261,7 +261,7 @@ namespace Eva_5._0
 
                 case "please search [Content] on [Web Application Keyword]":
 
-                    for (int Index = Sentence.IndexOf("please search") + 14; Index <= Sentence.Count() - 1; Index++)
+                    for (int Index = Sentence.IndexOf("please search") + 14; Index <= Sentence.Length - 1; Index++)
                     {
                         switch (Index <= Sentence.LastIndexOf("on") - 2)
                         {
@@ -348,7 +348,7 @@ namespace Eva_5._0
                             break;
                     }
 
-                    for (int Index = Sentence.IndexOf("please search on") + 17 + Application.Count(); Index <= Sentence.Count() - 1; Index++)
+                    for (int Index = Sentence.IndexOf("please search on") + 17 + Application.Length; Index <= Sentence.Length - 1; Index++)
                     {
                         WebApplicationSearchContent += Sentence[Index].ToString();
 
@@ -422,7 +422,7 @@ namespace Eva_5._0
                             break;
                     }
 
-                    for (int Index = Sentence.IndexOf("search on") + 10 + Application.Count(); Index <= Sentence.Count() - 1; Index++)
+                    for (int Index = Sentence.IndexOf("search on") + 10 + Application.Length; Index <= Sentence.Length - 1; Index++)
                     {
                         WebApplicationSearchContent += Sentence[Index];
 
@@ -439,7 +439,7 @@ namespace Eva_5._0
 
                 case "search [Content] on [Web Application Keyword]":
 
-                    for (int Index = Sentence.IndexOf("search") + 7; Index <= Sentence.Count() - 1; Index++)
+                    for (int Index = Sentence.IndexOf("search") + 7; Index <= Sentence.Length - 1; Index++)
                     {
                         switch (Index <= Sentence.LastIndexOf("on") - 2)
                         {

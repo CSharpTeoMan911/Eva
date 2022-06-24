@@ -12,7 +12,7 @@ namespace Eva_5._0
 
         private static bool Sound_Enabled = true;
 
-        public Task<bool> Get_Settings()
+        public static Task<bool> Get_Settings()
         {
             switch (Sound_Enabled)
             {
@@ -27,7 +27,7 @@ namespace Eva_5._0
         }
 
 
-        public Task<bool> Set_Settings(bool Option)
+        public static Task<bool> Set_Settings(bool Option)
         {
             switch (Option)
             {
