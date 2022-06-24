@@ -148,9 +148,6 @@
     <PackageReference Include="Microsoft.Windows.SDK.Contracts">
       <Version>10.0.22621.1</Version>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>13.0.1</Version>
-    </PackageReference>
     <PackageReference Include="System.Runtime.InteropServices.WindowsRuntime">
       <Version>4.3.0</Version>
     </PackageReference>
