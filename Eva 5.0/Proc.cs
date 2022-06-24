@@ -11,8 +11,6 @@ namespace Eva_5._0
         private System.Threading.Thread ParallelProcessing;
 
 
-
-
         public async Task<bool> ProcInitialisation(ProcessType process_type, Application application, Content content)
         {
 
@@ -35,12 +33,12 @@ namespace Eva_5._0
         {
             var AppExecutionSoundEffect = new System.Media.SoundPlayer("App execution.wav");
 
-            ParallelProcessing = new System.Threading.Thread(() =>
+            ParallelProcessing = new System.Threading.Thread(async() =>
             {
                 try
                 {
                     var settings = new Settings();
-                    var SoundOrOff = settings.Get_Settings().Result;
+                    var SoundOrOff = await settings.Get_Settings();
 
                     switch (WebApplication)
                     {
@@ -250,12 +248,12 @@ namespace Eva_5._0
             var AppExecutionSoundEffect = new System.Media.SoundPlayer("App execution.wav");
             var AppTerminationSoundEffect = new System.Media.SoundPlayer("App closing.wav");
 
-            ParallelProcessing = new System.Threading.Thread(() =>
+            ParallelProcessing = new System.Threading.Thread(async() =>
             {
                 try
                 {
                     var settings = new Settings();
-                    var SoundOrOff = settings.Get_Settings().Result;
+                    var SoundOrOff = await settings.Get_Settings();
 
                     switch (Application)
                     {
