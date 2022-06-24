@@ -15,6 +15,7 @@ namespace Eva_5._0
 
         public async Task<bool> ProcInitialisation(ProcessType process_type, Application application, Content content)
         {
+
             switch (process_type as string)
             {
                 case "Online Process":
@@ -60,7 +61,7 @@ namespace Eva_5._0
 
 
 
-                                switch (SoundOrOff == "Enabled")
+                                switch (SoundOrOff == true)
                                 {
                                     case true:
                                         switch (System.IO.File.Exists(@"App execution.wav"))
@@ -91,7 +92,7 @@ namespace Eva_5._0
                                     Netflix.Start();
                                 }
 
-                                switch (SoundOrOff == "Enabled")
+                                switch (SoundOrOff == true)
                                 {
                                     case true:
                                         switch (System.IO.File.Exists(System.IO.Path.GetFullPath("App execution.wav")))
@@ -122,7 +123,7 @@ namespace Eva_5._0
                                     Wikipedia.Start();
                                 }
 
-                                switch (SoundOrOff == "Enabled")
+                                switch (SoundOrOff == true)
                                 {
                                     case true:
                                         switch (System.IO.File.Exists(@"App execution.wav"))
@@ -153,7 +154,7 @@ namespace Eva_5._0
                                     Google.Start();
                                 }
 
-                                switch (SoundOrOff == "Enabled")
+                                switch (SoundOrOff == true)
                                 {
                                     case true:
                                         switch (System.IO.File.Exists(@"App execution.wav"))
@@ -184,7 +185,7 @@ namespace Eva_5._0
                                     GoogleNews.Start();
                                 }
 
-                                switch (SoundOrOff == "Enabled")
+                                switch (SoundOrOff == true)
                                 {
                                     case true:
                                         switch (System.IO.File.Exists(@"App execution.wav"))
@@ -215,7 +216,7 @@ namespace Eva_5._0
                                     Ebay.Start();
                                 }
 
-                                switch (SoundOrOff == "Enabled")
+                                switch (SoundOrOff == true)
                                 {
                                     case true:
                                         switch (System.IO.File.Exists(@"App execution.wav"))
@@ -274,7 +275,7 @@ namespace Eva_5._0
                                             Chrome.Start();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App execution.wav"))
@@ -298,7 +299,7 @@ namespace Eva_5._0
                                             ChromeNotDownloaded.Start();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App execution.wav"))
@@ -325,7 +326,7 @@ namespace Eva_5._0
                                             p.Kill();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App closing.wav"))
@@ -360,7 +361,7 @@ namespace Eva_5._0
                                             Chrome.Start();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App execution.wav"))
@@ -384,7 +385,7 @@ namespace Eva_5._0
                                             ChromeNotDownloaded.Start();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App execution.wav"))
@@ -411,7 +412,7 @@ namespace Eva_5._0
                                             p.Kill();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App closing.wav"))
@@ -446,7 +447,7 @@ namespace Eva_5._0
                                             Firefox.Start();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App execution.wav"))
@@ -469,7 +470,7 @@ namespace Eva_5._0
                                             FirefoxNotDownloaded.Start();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App execution.wav"))
@@ -496,7 +497,7 @@ namespace Eva_5._0
                                             p.Kill();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App closing.wav"))
@@ -531,7 +532,7 @@ namespace Eva_5._0
                                             Firefox.Start();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App execution.wav"))
@@ -555,7 +556,7 @@ namespace Eva_5._0
                                             FirefoxNotDownloaded.Start();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App execution.wav"))
@@ -582,7 +583,7 @@ namespace Eva_5._0
                                             p.Kill();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App closing.wav"))
@@ -617,7 +618,7 @@ namespace Eva_5._0
                                             Edge.Start();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App execution.wav"))
@@ -641,7 +642,7 @@ namespace Eva_5._0
                                             EdgeNotDownloaded.Start();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App execution.wav"))
@@ -668,7 +669,7 @@ namespace Eva_5._0
                                             p.Kill();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App closing.wav"))
@@ -703,7 +704,7 @@ namespace Eva_5._0
                                             Edge.Start();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App execution.wav"))
@@ -727,7 +728,7 @@ namespace Eva_5._0
                                             EdgeNotDownloaded.Start();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App execution.wav"))
@@ -754,7 +755,7 @@ namespace Eva_5._0
                                             p.Kill();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App closing.wav"))
@@ -772,6 +773,7 @@ namespace Eva_5._0
                                     break;
                             }
                             break;
+                             
 
                         case "opera":
                             switch (Process)
@@ -789,7 +791,7 @@ namespace Eva_5._0
                                             Opera.Start();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App execution.wav"))
@@ -813,7 +815,7 @@ namespace Eva_5._0
                                             OperaNotDownloaded.Start();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App execution.wav"))
@@ -840,7 +842,7 @@ namespace Eva_5._0
                                             p.Kill();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App closing.wav"))
@@ -875,7 +877,7 @@ namespace Eva_5._0
                                             Calculator.Start();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App execution.wav"))
@@ -899,7 +901,7 @@ namespace Eva_5._0
                                             CalculatorNotDownloaded.Start();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App execution.wav"))
@@ -926,7 +928,7 @@ namespace Eva_5._0
                                             p.Kill();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App closing.wav"))
@@ -963,7 +965,7 @@ namespace Eva_5._0
                                             Paint.Start();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App execution.wav"))
@@ -991,7 +993,7 @@ namespace Eva_5._0
                                             p.Kill();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App closing.wav"))
@@ -1026,7 +1028,7 @@ namespace Eva_5._0
                                             Paint.Start();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App execution.wav"))
@@ -1054,7 +1056,7 @@ namespace Eva_5._0
                                             p.Kill();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App closing.wav"))
@@ -1089,7 +1091,7 @@ namespace Eva_5._0
                                             FileExplorer.Start();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App execution.wav"))
@@ -1125,7 +1127,7 @@ namespace Eva_5._0
                                             Gmail.Start();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App execution.wav"))
@@ -1161,7 +1163,7 @@ namespace Eva_5._0
                                             Skype.Start();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App execution.wav"))
@@ -1189,7 +1191,7 @@ namespace Eva_5._0
                                             p.Kill();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App closing.wav"))
@@ -1225,7 +1227,7 @@ namespace Eva_5._0
                                             Notepad.Start();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App execution.wav"))
@@ -1243,6 +1245,7 @@ namespace Eva_5._0
                                     ParallelProcessing.Abort();
                                     break;
 
+
                                 case "close":
 
                                     try
@@ -1253,7 +1256,7 @@ namespace Eva_5._0
                                             p.Kill();
                                         }
 
-                                        switch (SoundOrOff == "Enabled")
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
                                                 switch (System.IO.File.Exists(@"App closing.wav"))

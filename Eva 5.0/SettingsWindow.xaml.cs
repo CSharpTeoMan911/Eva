@@ -144,12 +144,14 @@ namespace Eva_5._0
 
 
 
+
+
             var settings = new Settings();
             var SoundOrOff = settings.Get_Settings().Result;
 
             switch (SoundOrOff)
             {
-                case "Enabled":
+                case true:
                     SoundOnButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
                     SoundOffButton.Background = new SolidColorBrush(Colors.Transparent);
 
@@ -159,7 +161,7 @@ namespace Eva_5._0
 
                     break;
 
-                case "Disabled":
+                case false:
                     SoundOffButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
                     SoundOnButton.Background = new SolidColorBrush(Colors.Transparent);
 
@@ -597,7 +599,7 @@ namespace Eva_5._0
 
                                 case false:
                                     var settings = new Settings();
-                                    System.Threading.Tasks.Task.Run(() => { settings.Set_Settings("Enabled"); });
+                                    System.Threading.Tasks.Task.Run(() => { settings.Set_Settings(true); });
 
                                     SoundOnButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
                                     SoundOffButton.Background = new SolidColorBrush(Colors.Transparent);
@@ -628,7 +630,7 @@ namespace Eva_5._0
 
                                 case false:
                                     var settings = new Settings();
-                                    System.Threading.Tasks.Task.Run(() => { settings.Set_Settings("Disabled"); });
+                                    System.Threading.Tasks.Task.Run(() => { settings.Set_Settings(false); });
 
                                     SoundOffButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
                                     SoundOnButton.Background = new SolidColorBrush(Colors.Transparent);

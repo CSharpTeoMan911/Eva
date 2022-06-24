@@ -81,8 +81,6 @@ namespace Eva_5._0
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
-            new Permissions<string>("Eva 5.0.exe");
-
           
             this.Width = this.ActualWidth / 2.6;
             this.Height = this.ActualHeight / 2.6;
