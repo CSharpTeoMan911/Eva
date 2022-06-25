@@ -31,6 +31,15 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="{x:Type Hyperlink}" TargetType="{x:Type Hyperlink}">
+            <Setter Property="TextDecorations" Value="Underline"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
 
     <Window.Background>
@@ -99,36 +108,157 @@
             </TextBlock.Foreground>
         </TextBlock>
 
+        <!--&#x0a;-->
 
         <ScrollViewer Grid.Row="2" Grid.ColumnSpan="5" Grid.RowSpan="4" Margin="20,0,20,0" VerticalScrollBarVisibility="Auto">
 
             <StackPanel HorizontalAlignment="Center">
 
-                <TextBlock x:Name="InstructionManualContent" Margin="0,30,0,0" FontFamily="Bahnschrift Light" FontSize="24" Text="                    [-] [ About Eva ]&#x0a;&#x0a;&#x0a;&#x0a;Eva is an A.I. assistant that has the purpose&#x0a;of helping users to multi-task and to&#x0a;operate the computer faster.&#x0a;&#x0a;Eva uses Natural Language Processing in order&#x0a;to understand the user.&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;                    [-] [ Troubleshooting ]&#x0a;&#x0a;&#x0a;&#x0a;If the accuracy of the of Eva is low when you tell the A.I.
-                           &#x0a;the wake word, then go to:&#x0a;&#x0a;[ Control Panel ] -> [ Ease of Access ] -> [ Speech recognition ]&#x0a;-> [ Train your computer to better understand you ]&#x0a;&#x0a;&#x0a;&#x0a;If Eva cannot hear you or it has accuracy issues&#x0a;related to commands go to: &#x0a;&#x0a;[ Settings ] -> [ Speech Settings ]&#x0a;&#x0a;Under the Microphone section, press the [ Get Started ]&#x0a;button in order to set up the computer for speech recognition.&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;
-                           &#x0a;&#x0a;&#x0a;                    [-] [ How to use Eva]     &#x0a;&#x0a;&#x0a;&#x0a;In order to make Eva listen to any commands,&#x0a;you must tell the A.I. [ Eva listen ] before giving&#x0a;it any commands.&#x0a;&#x0a;&#x0a;&#x0a;In order for Eva to open an application tell the A.I. :&#x0a;&#x0a;&#x0a;&#x0a;Please open [Application keyword].&#x0a;&#x0a;&#x0a;[OR]&#x0a;&#x0a;&#x0a;Open [Application keyword] please&#x0a;&#x0a;&#x0a;[OR]&#x0a;&#x0a;&#x0a;Open [Application keyword].&#x0a;&#x0a;&#x0a;[OR]&#x0a;&#x0a;&#x0a;Open [Application keyword] now.&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;
-                           &#x0a;Applications that Eva can open:&#x0a;&#x0a;&#x0a;&#x0a;Notepad:&#x0a;&#x0a;[Application Keyword] = Notepad&#x0a;&#x0a;&#x0a;&#x0a;Google chrome:&#x0a;&#x0a;[Application Keyword] = Chrome&#x0a;&#x0a;[Application Keyword] = Google Chrome&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;Firefox:&#x0a;&#x0a;[Application keyword] = Firefox&#x0a;&#x0a;[Application keyword] = Mozilla Firefox&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;Opera:&#x0a;&#x0a;[Application keyword] = Opera&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;Edge:
-                           &#x0a;&#x0a;[Application keyword] = Edge&#x0a;&#x0a;[Application keyword] = Microsoft Edge&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;Calculator:&#x0a;&#x0a;[Application keyword] = Calculator&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;Paint:&#x0a;&#x0a;[Application keyword] = Paint&#x0a;&#x0a;[Application keyword] = Microsoft Paint&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;File Explorer:&#x0a;&#x0a;[Application keyword] = File Explorer
-                           &#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;Gmail:&#x0a;&#x0a;[Application keyword] = Gmail&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;Skype:&#x0a;&#x0a;[Application keyword] = Skype&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;In order for Eva to close an application tell the A.I. :&#x0a;&#x0a;&#x0a;&#x0a;Please close [Application keyword].&#x0a;&#x0a;&#x0a;[OR]&#x0a;&#x0a;
-                           &#x0a;Close [Application keyword] please&#x0a;&#x0a;&#x0a;[OR]&#x0a;&#x0a;&#x0a;Close [Application keyword].&#x0a;&#x0a;&#x0a;[OR]&#x0a;&#x0a;&#x0a;Close [Application keyword] now.&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;Applications that Eva can close:&#x0a;&#x0a;&#x0a;&#x0a;Notepad:&#x0a;&#x0a;[Application Keyword] = Notepad&#x0a;&#x0a;&#x0a;&#x0a;Google chrome:&#x0a;&#x0a;[Application Keyword] = Chrome&#x0a;&#x0a;[Application Keyword] = Google Chrome&#x0a;&#x0a;
-                           &#x0a;&#x0a;&#x0a;&#x0a;Firefox:&#x0a;&#x0a;[Application keyword] = Firefox&#x0a;&#x0a;[Application keyword] = Mozilla Firefox&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;Opera:&#x0a;&#x0a;[Application keyword] = Opera&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;Edge:
-                           &#x0a;&#x0a;[Application keyword] = Edge&#x0a;&#x0a;[Application keyword] = Microsoft Edge&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;Calculator:&#x0a;&#x0a;[Application keyword] = Calculator&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;Paint:&#x0a;&#x0a;[Application keyword] = Paint&#x0a;&#x0a;[Application keyword] = Microsoft Paint
-                           &#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;Skype:&#x0a;&#x0a;[Application keyword] = Skype&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;In order for Eva to search content on a&#x0a;web application tell the A.I. :&#x0a;&#x0a;&#x0a;&#x0a;Please search [Content] on [Web Application keyword].&#x0a;
-                           &#x0a;&#x0a;[OR]&#x0a;&#x0a;&#x0a;Please search on [Web Application keyword] [Content]&#x0a;&#x0a;&#x0a;[OR]&#x0a;&#x0a;
-                           &#x0a;Search [Content] on [Web Application keyword].&#x0a;&#x0a;&#x0a;[OR]&#x0a;&#x0a;&#x0a;Search on [Web Application keyword] [Content].&#x0a;&#x0a;&#x0a;&#x0a;Note:&#x0a;&#x0a;The speed with which Eva is searching content&#x0a;on web applications is affected by the default&#x0a;web browser's speed.&#x0a;&#x0a;&#x0a;
-                           &#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;Web applications on which Eva can search content:&#x0a;&#x0a;&#x0a;&#x0a;Wikipedia:&#x0a;&#x0a;[Web Application Keyword] = Wikipedia&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;Ebay:&#x0a;&#x0a;[Web Application keyword] = Ebay&#x0a;
-                           &#x0a;&#x0a;&#x0a;&#x0a;&#x0a;Netflix:&#x0a;&#x0a;[Web Application keyword] = Netflix&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;YouTube:
-                           &#x0a;&#x0a;[Web Application keyword] = YouTube&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;Google:&#x0a;&#x0a;[Web Application keyword] = Google&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;Google News:
-                           &#x0a;&#x0a;[Web Application keyword] = Google News &#x0a;&#x0a; &#x0a;&#x0a; &#x0a;&#x0a; &#x0a;&#x0a;">
+                <TextBlock x:Name="AboutEva" Margin="0,30,0,0" FontFamily="Bahnschrift" FontSize="27" Text="&#x0a;About Eva">
 
                     <TextBlock.Foreground>
                         <LinearGradientBrush>
-                            <GradientStop Color="#FF7BBFD8" x:Name="InstructionManualContentTextBlockOffset" Offset="1"/>
+                            <GradientStop Color="#FF7BBFD8" x:Name="AboutEvaTextBlockOffset" Offset="1"/>
                             <GradientStop Color="#FF1B70C3"/>
                         </LinearGradientBrush>
                     </TextBlock.Foreground>
                 </TextBlock>
 
+
+                <TextBlock x:Name="AboutEvaContent" Margin="0,30,0,0" FontFamily="Bahnschrift Light" FontSize="24" Text="Eva is an A. I. assistant that has the purpose &#x0a;of helping users multi-task. Eva is achieving&#x0a;this by executing voice commands given by&#x0a;the user.&#x0a;&#x0a;Eva is an open-source project and you can&#x0a;find the project ">
+
+                    <Hyperlink
+                    NavigateUri="https://github.com/CSharpTeoMan911/Eva"
+                    RequestNavigate="Navigate_To_Eva_Project">
+                    here.
+                    </Hyperlink>
+                    
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush>
+                            <GradientStop Color="#FF7BBFD8" x:Name="AboutEvaContentTextBlockOffset" Offset="1"/>
+                            <GradientStop Color="#FF1B70C3"/>
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+                </TextBlock>
+
+
+
+                <TextBlock x:Name="UserInstructions" Margin="0,30,0,0" FontFamily="Bahnschrift" FontSize="27" Text="&#x0a;&#x0a;&#x0a;User Instructions">
+
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush>
+                            <GradientStop Color="#FF7BBFD8" x:Name="UserInstructionsTextBlockOffset" Offset="1"/>
+                            <GradientStop Color="#FF1B70C3"/>
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+                </TextBlock>
+
+
+                <TextBlock x:Name="UserInstructionsContent" Margin="0,30,0,0" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;In order for Eva to execute commands, the&#x0a;user must do the following steps:&#x0a;&#x0a;1)  Press the &#xF781; button.&#x0a;&#x0a;2) When the button is displaying &#xE1D6;,&#x0a;    Eva is actively listening.&#x0a;&#x0a;3) Tell Eva the wake word [ Eva listen ],&#x0a;    followed by a command. You must&#x0a;    wait one second before giving it a&#x0a;    command.&#x0a;&#x0a;&#x0a;">
+
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush>
+                            <GradientStop Color="#FF7BBFD8" x:Name="UserInstructionsContentTextBlockOffset" Offset="1"/>
+                            <GradientStop Color="#FF1B70C3"/>
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+                </TextBlock>
+
+
+                <TextBlock x:Name="Commands" Margin="0,30,0,0" FontFamily="Bahnschrift" FontSize="27" Text="&#x0a;&#x0a;&#x0a;Commands">
+
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush>
+                            <GradientStop Color="#FF7BBFD8" x:Name="CommandsTextBlockOffset" Offset="1"/>
+                            <GradientStop Color="#FF1B70C3"/>
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+                    
+                </TextBlock>
+
+
+                <TextBlock x:Name="CommandsContent" Margin="0,30,0,0" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;In order for Eva to open applications follow&#x0a;the following formats:&#x0a;&#x0a;open [Application]&#x0a;&#x0a;open [Application] now&#x0a;&#x0a;open [Application] please&#x0a;&#x0a;please open [Application]&#x0a;&#x0a;&#x0a;[ Example: open chrome ]&#x0a;&#x0a;&#x0a;&#x0a;List of applications Eva can open:&#x0a;&#x0a;- chrome&#x0a;&#x0a;-edge&#x0a;&#x0a;-firefox&#x0a;&#x0a;-opera&#x0a;&#x0a;-calculator&#x0a;&#x0a;-paint&#x0a;&#x0a;-file explorer&#x0a;&#x0a;-gmail&#x0a;&#x0a;-skype&#x0a;&#x0a;-notepad&#x0a;&#x0a;-task manager&#x0a;&#x0a;-calendar&#x0a;&#x0a;-weather&#x0a;&#x0a;-snip and sketch&#x0a;&#x0a;-word&#x0a;&#x0a;-powerpoint&#x0a;&#x0a;-excel&#x0a;&#x0a;-onedrive&#x0a;&#x0a;&#x0a;&#x0a;In order for Eva to close applications follow&#x0a;the following formats:&#x0a;&#x0a;close [Application]&#x0a;&#x0a;close [Application] now&#x0a;&#x0a;close [Application] please&#x0a;&#x0a;please close [Application]&#x0a;&#x0a;&#x0a;[ Example: close chrome ]&#x0a;&#x0a;&#x0a;&#x0a;List of applications Eva can close:&#x0a;&#x0a;-chrome&#x0a;&#x0a;-edge&#x0a;&#x0a;-firefox&#x0a;&#x0a;-opera&#x0a;&#x0a;-calculator&#x0a;&#x0a;-paint&#x0a;&#x0a;-skype&#x0a;&#x0a;-notepad&#x0a;&#x0a;-calendar&#x0a;&#x0a;-weather&#x0a;&#x0a;-snip and sketch&#x0a;&#x0a;&#x0a;&#x0a;In order for Eva to search content&#x0a;on web application follow the&#x0a;following formats:&#x0a;&#x0a;search [Content] on [Web Application Keyword]&#x0a;&#x0a;search on [Web Application Keyword] [Content]&#x0a;&#x0a;please search on [Web Application Keyword] [Content]&#x0a;&#x0a;please search [Content] on [Web Application Keyword]&#x0a;&#x0a;&#x0a;[ Example: search robots on youtube ]&#x0a;&#x0a;&#x0a;List of applications Eva can search&#x0a;content on:&#x0a;&#x0a;-google&#x0a;&#x0a;-google news&#x0a;&#x0a;-google images&#x0a;&#x0a;-ebay&#x0a;&#x0a;-netflix&#x0a;&#x0a;-wikipedia">
+
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush>
+                            <GradientStop Color="#FF7BBFD8" x:Name="CommandsContentTextBlockOffset" Offset="1"/>
+                            <GradientStop Color="#FF1B70C3"/>
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+                </TextBlock>
+
+
+                <TextBlock x:Name="Troubleshooting" Margin="0,30,0,0" FontFamily="Bahnschrift" FontSize="27" Text="&#x0a;&#x0a;&#x0a;Troubleshooting">
+
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush>
+                            <GradientStop Color="#FF7BBFD8" x:Name="TroubleshootingTextBlockOffset" Offset="1"/>
+                            <GradientStop Color="#FF1B70C3"/>
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+
+                </TextBlock>
+
+
+
+                <TextBlock x:Name="TroubleshootingContents1" Margin="0,30,0,0" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;If Eva cannot hear you open Control Panel,&#x0a;">
+                    
+                    <Hyperlink
+                        NavigateUri=""
+                        RequestNavigate="Open_Control_Panel_At_Speech_Recognition">
+                        go to Ease of access -> Speech Recognition
+                    </Hyperlink>
+
+
+                    
+                    
+
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush>
+                            <GradientStop Color="#FF7BBFD8" x:Name="TroubleshootingContentTextBlockOffset1" Offset="1"/>
+                            <GradientStop Color="#FF1B70C3"/>
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+
+                </TextBlock>
+
+
+
+                <TextBlock x:Name="TroubleshootingContents2" Margin="0,0,0,0" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="and select Set up microphone.&#x0a;&#x0a;If Eva cannot understand you clearly,&#x0a;open Control Panel and then go to:&#x0a;Ease of Access -> Speech Recognition ->&#x0a;">
+                    
+                    <Hyperlink
+                        NavigateUri=""
+                        RequestNavigate="Open_Control_Panel_At_Speech_Recognition">
+                        Train your computer to better understand you
+                    </Hyperlink>
+
+
+
+
+
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush>
+                            <GradientStop Color="#FF7BBFD8" x:Name="TroubleshootingContentTextBlockOffset2" Offset="1"/>
+                            <GradientStop Color="#FF1B70C3"/>
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+
+                </TextBlock>
+
+
+                <TextBlock x:Name="TroubleshootingContents3" Margin="0,0,0,0" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;Follow the instructions for speech calibration&#x0a;and read minimum 8 paragraphs.">
+                   
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush>
+                            <GradientStop Color="#FF7BBFD8" x:Name="TroubleshootingContentTextBlockOffset3" Offset="1"/>
+                            <GradientStop Color="#FF1B70C3"/>
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+
+                </TextBlock>
+
+
+                
             </StackPanel>
 
         </ScrollViewer>

@@ -37,11 +37,39 @@ namespace Eva_5._0
         private bool SwitchOffsetMinimiseTheWindowOffset;
         private double GradientArithmeticMinimiseTheWindowOffset;
 
-        private bool SwitchOffsetInstructionManualContentTextBlockOffset;
-        private double GradientArithmeticInstructionManualContentTextBlockOffset;
-
         private bool SwitchOffsetInstructionManualTitleTextBlockOffset;
         private double GradientArithmeticInstructionManualTitleTextBlockOffset;
+
+        private bool SwitchOffsetAboutEvaTextBlockOffset;
+        private double GradientArithmeticAboutEvaTextBlockOffset;
+
+        private bool SwitchOffsetAboutEvaContentTextBlockOffset;
+        private double GradientArithmeticAboutEvaContentTextBlockOffset;
+
+        private bool SwitchOffsetUserInstructionsTextBlockOffset;
+        private double GradientArithmeticUserInstructionsTextBlockOffset;
+
+        private bool SwitchOffsetUserInstructionsContentTextBlockOffset;
+        private double GradientArithmeticUserInstructionsContentTextBlockOffset;
+
+        private bool SwitchOffsetCommandsTextBlockOffset;
+        private double GradientArithmeticCommandsTextBlockOffset;
+
+        private bool SwitchOffsetCommandsContentTextBlockOffset;
+        private double GradientArithmeticCommandsContentTextBlockOffset;
+
+        private bool SwitchOffsetTroubleshootingTextBlockOffset;
+        private double GradientArithmeticTroubleshootingTextBlockOffset;
+
+        private bool SwitchOffsetTroubleshootingContentTextBlockOffset1;
+        private double GradientArithmeticTroubleshootingContentTextBlockOffset1;
+
+        private bool SwitchOffsetTroubleshootingContentTextBlockOffset2;
+        private double GradientArithmeticTroubleshootingContentTextBlockOffset2;
+
+
+        private bool SwitchOffsetTroubleshootingContentTextBlockOffset3;
+        private double GradientArithmeticTroubleshootingContentTextBlockOffset3;
 
         public InstructionManual()
         {
@@ -254,40 +282,6 @@ namespace Eva_5._0
                                                 break;
                                         }
 
-                                        switch (SwitchOffsetInstructionManualContentTextBlockOffset)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticInstructionManualContentTextBlockOffset <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticInstructionManualContentTextBlockOffset++;
-                                                        InstructionManualContentTextBlockOffset.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetInstructionManualContentTextBlockOffset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticInstructionManualContentTextBlockOffset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticInstructionManualContentTextBlockOffset--;
-                                                        InstructionManualContentTextBlockOffset.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetInstructionManualContentTextBlockOffset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-
                                         switch (SwitchOffsetInstructionManualTitleTextBlockOffset)
                                         {
                                             case false:
@@ -321,7 +315,354 @@ namespace Eva_5._0
                                                 break;
                                         }
 
+                                        switch (SwitchOffsetAboutEvaTextBlockOffset)
+                                        {
+                                            case false:
+
+                                                switch (GradientArithmeticAboutEvaTextBlockOffset <= 65)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticAboutEvaTextBlockOffset++;
+                                                        AboutEvaTextBlockOffset.Offset += 0.025;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchOffsetAboutEvaTextBlockOffset = true;
+                                                        break;
+                                                }
+                                                break;
+
+                                            case true:
+
+                                                switch (GradientArithmeticAboutEvaTextBlockOffset > 0)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticAboutEvaTextBlockOffset--;
+                                                        AboutEvaTextBlockOffset.Offset -= 0.025;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchOffsetAboutEvaTextBlockOffset = false;
+                                                        break;
+                                                }
+                                                break;
+                                        }
+
+
+
+
+                                        switch (SwitchOffsetAboutEvaContentTextBlockOffset)
+                                        {
+                                            case false:
+
+                                                switch (GradientArithmeticAboutEvaContentTextBlockOffset <= 65)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticAboutEvaContentTextBlockOffset++;
+                                                        AboutEvaContentTextBlockOffset.Offset += 0.025;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchOffsetAboutEvaContentTextBlockOffset = true;
+                                                        break;
+                                                }
+                                                break;
+
+                                            case true:
+
+                                                switch (GradientArithmeticAboutEvaContentTextBlockOffset > 0)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticAboutEvaContentTextBlockOffset--;
+                                                        AboutEvaContentTextBlockOffset.Offset -= 0.025;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchOffsetAboutEvaContentTextBlockOffset = false;
+                                                        break;
+                                                }
+                                                break;
+                                        }
+
+
+                                        switch (SwitchOffsetUserInstructionsTextBlockOffset)
+                                        {
+                                            case false:
+
+                                                switch (GradientArithmeticUserInstructionsTextBlockOffset <= 65)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticUserInstructionsTextBlockOffset++;
+                                                        UserInstructionsTextBlockOffset.Offset += 0.025;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchOffsetUserInstructionsTextBlockOffset = true;
+                                                        break;
+                                                }
+                                                break;
+
+                                            case true:
+
+                                                switch (GradientArithmeticUserInstructionsTextBlockOffset > 0)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticUserInstructionsTextBlockOffset--;
+                                                        UserInstructionsTextBlockOffset.Offset -= 0.025;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchOffsetUserInstructionsTextBlockOffset = false;
+                                                        break;
+                                                }
+                                                break;
+                                        }
+
+
+
+                                        switch (SwitchOffsetUserInstructionsContentTextBlockOffset)
+                                        {
+                                            case false:
+
+                                                switch (GradientArithmeticUserInstructionsContentTextBlockOffset <= 65)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticUserInstructionsContentTextBlockOffset++;
+                                                        UserInstructionsContentTextBlockOffset.Offset += 0.025;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchOffsetUserInstructionsContentTextBlockOffset = true;
+                                                        break;
+                                                }
+                                                break;
+
+                                            case true:
+
+                                                switch (GradientArithmeticUserInstructionsContentTextBlockOffset > 0)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticUserInstructionsContentTextBlockOffset--;
+                                                        UserInstructionsContentTextBlockOffset.Offset -= 0.025;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchOffsetUserInstructionsContentTextBlockOffset = false;
+                                                        break;
+                                                }
+                                                break;
+                                        }
+
+
+
+                                        switch (SwitchOffsetCommandsTextBlockOffset)
+                                        {
+                                            case false:
+
+                                                switch (GradientArithmeticCommandsTextBlockOffset <= 65)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticCommandsTextBlockOffset++;
+                                                        CommandsTextBlockOffset.Offset += 0.025;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchOffsetCommandsTextBlockOffset = true;
+                                                        break;
+                                                }
+                                                break;
+
+                                            case true:
+
+                                                switch (GradientArithmeticCommandsTextBlockOffset > 0)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticCommandsTextBlockOffset--;
+                                                        CommandsTextBlockOffset.Offset -= 0.025;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchOffsetCommandsTextBlockOffset = false;
+                                                        break;
+                                                }
+                                                break;
+                                        }
+
+
+
+                                        switch (SwitchOffsetCommandsContentTextBlockOffset)
+                                        {
+                                            case false:
+
+                                                switch (GradientArithmeticCommandsContentTextBlockOffset <= 65)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticCommandsContentTextBlockOffset++;
+                                                        CommandsContentTextBlockOffset.Offset += 0.025;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchOffsetCommandsContentTextBlockOffset = true;
+                                                        break;
+                                                }
+                                                break;
+
+                                            case true:
+
+                                                switch (GradientArithmeticCommandsContentTextBlockOffset > 0)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticCommandsContentTextBlockOffset--;
+                                                        CommandsContentTextBlockOffset.Offset -= 0.025;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchOffsetCommandsContentTextBlockOffset = false;
+                                                        break;
+                                                }
+                                                break;
+                                        }
+
+
+
+                                        switch (SwitchOffsetTroubleshootingTextBlockOffset)
+                                        {
+                                            case false:
+
+                                                switch (GradientArithmeticTroubleshootingTextBlockOffset <= 65)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticTroubleshootingTextBlockOffset++;
+                                                        TroubleshootingTextBlockOffset.Offset += 0.025;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchOffsetTroubleshootingTextBlockOffset = true;
+                                                        break;
+                                                }
+                                                break;
+
+                                            case true:
+
+                                                switch (GradientArithmeticTroubleshootingTextBlockOffset > 0)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticTroubleshootingTextBlockOffset--;
+                                                        TroubleshootingTextBlockOffset.Offset -= 0.025;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchOffsetTroubleshootingTextBlockOffset = false;
+                                                        break;
+                                                }
+                                                break;
+                                        }
+
+
+
+                                        switch (SwitchOffsetTroubleshootingContentTextBlockOffset1)
+                                        {
+                                            case false:
+
+                                                switch (GradientArithmeticTroubleshootingContentTextBlockOffset1 <= 65)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticTroubleshootingContentTextBlockOffset1++;
+                                                        TroubleshootingContentTextBlockOffset1.Offset += 0.025;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchOffsetTroubleshootingContentTextBlockOffset1 = true;
+                                                        break;
+                                                }
+                                                break;
+
+                                            case true:
+
+                                                switch (GradientArithmeticTroubleshootingContentTextBlockOffset1 > 0)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticTroubleshootingContentTextBlockOffset1--;
+                                                        TroubleshootingContentTextBlockOffset1.Offset -= 0.025;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchOffsetTroubleshootingContentTextBlockOffset1 = false;
+                                                        break;
+                                                }
+                                                break;
+                                        }
+
+
+                                        switch (SwitchOffsetTroubleshootingContentTextBlockOffset2)
+                                        {
+                                            case false:
+
+                                                switch (GradientArithmeticTroubleshootingContentTextBlockOffset2 <= 65)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticTroubleshootingContentTextBlockOffset2++;
+                                                        TroubleshootingContentTextBlockOffset2.Offset += 0.025;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchOffsetTroubleshootingContentTextBlockOffset2 = true;
+                                                        break;
+                                                }
+                                                break;
+
+                                            case true:
+
+                                                switch (GradientArithmeticTroubleshootingContentTextBlockOffset2 > 0)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticTroubleshootingContentTextBlockOffset2--;
+                                                        TroubleshootingContentTextBlockOffset2.Offset -= 0.025;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchOffsetTroubleshootingContentTextBlockOffset2 = false;
+                                                        break;
+                                                }
+                                                break;
+                                        }
+
+
+                                        switch (SwitchOffsetTroubleshootingContentTextBlockOffset3)
+                                        {
+                                            case false:
+
+                                                switch (GradientArithmeticTroubleshootingContentTextBlockOffset3 <= 65)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticTroubleshootingContentTextBlockOffset3++;
+                                                        TroubleshootingContentTextBlockOffset3.Offset += 0.025;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchOffsetTroubleshootingContentTextBlockOffset3 = true;
+                                                        break;
+                                                }
+                                                break;
+
+                                            case true:
+
+                                                switch (GradientArithmeticTroubleshootingContentTextBlockOffset3 > 0)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticTroubleshootingContentTextBlockOffset3--;
+                                                        TroubleshootingContentTextBlockOffset3.Offset -= 0.025;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchOffsetTroubleshootingContentTextBlockOffset3 = false;
+                                                        break;
+                                                }
+                                                break;
+                                        }
+
                                         break;
+
                                 }
                             });
                             break;
@@ -460,6 +801,25 @@ namespace Eva_5._0
                     }
                     break;
             }
+        }
+
+        private void Navigate_To_Eva_Project(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            System.Diagnostics.Process.Start(e.Uri.ToString());
+        }
+
+        private void Open_Control_Panel_At_Speech_Recognition(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            using (var ControlPanel = new System.Diagnostics.Process())
+            {
+                ControlPanel.StartInfo.FileName = "control.exe";
+                ControlPanel.StartInfo.WorkingDirectory = Environment.SystemDirectory + "control.exe";
+                ControlPanel.StartInfo.Arguments = "/name Microsoft.SpeechRecognition";
+                ControlPanel.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                ControlPanel.StartInfo.UseShellExecute = true;
+                ControlPanel.Start();
+            }
+
         }
     }
 }
