@@ -230,6 +230,38 @@ namespace Eva_5._0
                             }
                             catch { }
                             break;
+
+
+                        case "google images":
+
+                            try
+                            {
+                                MainWindow.BeginExecutionAnimation = true;
+                                using (var Google_Images = new System.Diagnostics.Process())
+                                {
+                                    Google_Images.StartInfo.FileName = "https://www.google.com/search?tbm=isch&q=" + SearchContent;
+                                    Google_Images.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                                    Google_Images.StartInfo.UseShellExecute = true;
+                                    Google_Images.Start();
+                                }
+
+                                switch (SoundOrOff == true)
+                                {
+                                    case true:
+                                        switch (System.IO.File.Exists(@"App execution.wav"))
+                                        {
+                                            case true:
+                                                AppExecutionSoundEffect.Play();
+                                                break;
+                                        }
+                                        break;
+                                }
+
+                                ParallelProcessing.Join();
+                                ParallelProcessing.Abort();
+                            }
+                            catch { }
+                            break;
                     }
                 }
                 catch { }
@@ -1263,6 +1295,423 @@ namespace Eva_5._0
                                                 }
                                                 break;
                                         }
+                                    }
+                                    catch { }
+                                    ParallelProcessing.Join();
+                                    ParallelProcessing.Abort();
+                                    break;
+                            }
+                            break;
+
+
+
+                        case "task manager":
+                            switch (Process)
+                            {
+                                case "open":
+
+                                    try
+                                    {
+                                        MainWindow.BeginExecutionAnimation = true;
+                                        using (var Task_Manager = new System.Diagnostics.Process())
+                                        {
+                                            Task_Manager.StartInfo.FileName = "Taskmgr.exe";
+                                            Task_Manager.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                                            Task_Manager.StartInfo.UseShellExecute = true;
+                                            Task_Manager.Start();
+                                        }
+
+                                        switch (SoundOrOff == true)
+                                        {
+                                            case true:
+                                                switch (System.IO.File.Exists(@"App execution.wav"))
+                                                {
+                                                    case true:
+                                                        AppExecutionSoundEffect.Play();
+                                                        break;
+                                                }
+                                                break;
+                                        }
+
+                                    }
+                                    catch { }
+                                    ParallelProcessing.Join();
+                                    ParallelProcessing.Abort();
+                                    break;
+
+
+                                case "close":
+
+                                    try
+                                    {
+                                        MainWindow.BeginExecutionAnimation = true;
+                                        foreach (System.Diagnostics.Process p in System.Diagnostics.Process.GetProcessesByName("Taskmgr"))
+                                        {
+                                            p.Kill();
+                                        }
+
+                                        switch (SoundOrOff == true)
+                                        {
+                                            case true:
+                                                switch (System.IO.File.Exists(@"App closing.wav"))
+                                                {
+                                                    case true:
+                                                        AppTerminationSoundEffect.Play();
+                                                        break;
+                                                }
+                                                break;
+                                        }
+                                    }
+                                    catch { }
+                                    ParallelProcessing.Join();
+                                    ParallelProcessing.Abort();
+                                    break;
+                            }
+                            break;
+
+
+
+                        case "calendar":
+                            switch (Process)
+                            {
+                                case "open":
+
+                                    try
+                                    {
+                                        MainWindow.BeginExecutionAnimation = true;
+
+
+                                        await Windows.System.Launcher.LaunchUriAsync(new Uri("outlookcal:"));
+
+                                        switch (SoundOrOff == true)
+                                        {
+                                            case true:
+                                                switch (System.IO.File.Exists(@"App execution.wav"))
+                                                {
+                                                    case true:
+                                                        AppExecutionSoundEffect.Play();
+                                                        break;
+                                                }
+                                                break;
+                                        }
+
+                                    }
+                                    catch { }
+                                    ParallelProcessing.Join();
+                                    ParallelProcessing.Abort();
+                                    break;
+
+
+                                case "close":
+
+                                    try
+                                    {
+                                        
+
+                                        MainWindow.BeginExecutionAnimation = true;
+                                        foreach (System.Diagnostics.Process p in System.Diagnostics.Process.GetProcessesByName("HxCalendarAppImm"))
+                                        {
+                                            p.Kill();
+                                        }
+
+                                        switch (SoundOrOff == true)
+                                        {
+                                            case true:
+                                                switch (System.IO.File.Exists(@"App closing.wav"))
+                                                {
+                                                    case true:
+                                                        AppTerminationSoundEffect.Play();
+                                                        break;
+                                                }
+                                                break;
+                                        }
+                                    }
+                                    catch { }
+                                    ParallelProcessing.Join();
+                                    ParallelProcessing.Abort();
+                                    break;
+                            }
+                            break;
+
+
+
+                        case "weather":
+                            switch (Process)
+                            {
+                                case "open":
+
+                                    try
+                                    {
+                                        MainWindow.BeginExecutionAnimation = true;
+
+
+                                        await Windows.System.Launcher.LaunchUriAsync(new Uri("bingweather:"));
+
+                                        switch (SoundOrOff == true)
+                                        {
+                                            case true:
+                                                switch (System.IO.File.Exists(@"App execution.wav"))
+                                                {
+                                                    case true:
+                                                        AppExecutionSoundEffect.Play();
+                                                        break;
+                                                }
+                                                break;
+                                        }
+
+                                    }
+                                    catch { }
+                                    ParallelProcessing.Join();
+                                    ParallelProcessing.Abort();
+                                    break;
+
+
+                                case "close":
+
+                                    try
+                                    {
+
+
+                                        MainWindow.BeginExecutionAnimation = true;
+                                        foreach (System.Diagnostics.Process p in System.Diagnostics.Process.GetProcessesByName("Microsoft.Msn.Weather"))
+                                        {
+                                            p.Kill();
+                                        }
+
+                                        switch (SoundOrOff == true)
+                                        {
+                                            case true:
+                                                switch (System.IO.File.Exists(@"App closing.wav"))
+                                                {
+                                                    case true:
+                                                        AppTerminationSoundEffect.Play();
+                                                        break;
+                                                }
+                                                break;
+                                        }
+                                    }
+                                    catch { }
+                                    ParallelProcessing.Join();
+                                    ParallelProcessing.Abort();
+                                    break;
+                            }
+                            break;
+
+
+
+                        case "snip and sketch":
+                            switch (Process)
+                            {
+                                case "open":
+
+                                    try
+                                    {
+                                        await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-screensketch:"));
+
+                                        switch (SoundOrOff == true)
+                                        {
+                                            case true:
+                                                switch (System.IO.File.Exists(@"App execution.wav"))
+                                                {
+                                                    case true:
+                                                        AppExecutionSoundEffect.Play();
+                                                        break;
+                                                }
+                                                break;
+                                        }
+
+                                    }
+                                    catch { }
+                                    ParallelProcessing.Join();
+                                    ParallelProcessing.Abort();
+                                    break;
+
+
+
+                                case "close":
+
+                                    try
+                                    {
+
+
+                                        MainWindow.BeginExecutionAnimation = true;
+                                        foreach (System.Diagnostics.Process p in System.Diagnostics.Process.GetProcessesByName("ScreenSketch"))
+                                        {
+                                            p.Kill();
+                                        }
+
+                                        switch (SoundOrOff == true)
+                                        {
+                                            case true:
+                                                switch (System.IO.File.Exists(@"App closing.wav"))
+                                                {
+                                                    case true:
+                                                        AppTerminationSoundEffect.Play();
+                                                        break;
+                                                }
+                                                break;
+                                        }
+                                    }
+                                    catch { }
+                                    ParallelProcessing.Join();
+                                    ParallelProcessing.Abort();
+                                    break;
+                            }
+                            break;
+
+
+
+                        case "word":
+                            switch (Process)
+                            {
+                                case "open":
+
+                                    try
+                                    {
+                                        MainWindow.BeginExecutionAnimation = true;
+                                        using (var Word = new System.Diagnostics.Process())
+                                        {
+                                            Word.StartInfo.FileName = "https://www.office.com/launch/word";
+                                            Word.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                                            Word.StartInfo.UseShellExecute = true;
+                                            Word.Start();
+                                        }
+
+
+
+                                        switch (SoundOrOff == true)
+                                        {
+                                            case true:
+                                                switch (System.IO.File.Exists(@"App execution.wav"))
+                                                {
+                                                    case true:
+                                                        AppExecutionSoundEffect.Play();
+                                                        break;
+                                                }
+                                                break;
+                                        }
+
+                                    }
+                                    catch { }
+                                    ParallelProcessing.Join();
+                                    ParallelProcessing.Abort();
+                                    break;
+                            }
+                            break;
+
+
+
+                        case "powerpoint":
+                            switch (Process)
+                            {
+                                case "open":
+
+                                    try
+                                    {
+                                        MainWindow.BeginExecutionAnimation = true;
+                                        using (var Powerpoint = new System.Diagnostics.Process())
+                                        {
+                                            Powerpoint.StartInfo.FileName = "https://www.office.com/launch/powerpoint";
+                                            Powerpoint.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                                            Powerpoint.StartInfo.UseShellExecute = true;
+                                            Powerpoint.Start();
+                                        }
+
+
+
+                                        switch (SoundOrOff == true)
+                                        {
+                                            case true:
+                                                switch (System.IO.File.Exists(@"App execution.wav"))
+                                                {
+                                                    case true:
+                                                        AppExecutionSoundEffect.Play();
+                                                        break;
+                                                }
+                                                break;
+                                        }
+
+                                    }
+                                    catch { }
+                                    ParallelProcessing.Join();
+                                    ParallelProcessing.Abort();
+                                    break;
+                            }
+                            break;
+
+
+
+                        case "excel":
+                            switch (Process)
+                            {
+                                case "open":
+
+                                    try
+                                    {
+                                        MainWindow.BeginExecutionAnimation = true;
+                                        using (var Excel = new System.Diagnostics.Process())
+                                        {
+                                            Excel.StartInfo.FileName = "https://www.office.com/launch/excel";
+                                            Excel.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                                            Excel.StartInfo.UseShellExecute = true;
+                                            Excel.Start();
+                                        }
+
+
+
+                                        switch (SoundOrOff == true)
+                                        {
+                                            case true:
+                                                switch (System.IO.File.Exists(@"App execution.wav"))
+                                                {
+                                                    case true:
+                                                        AppExecutionSoundEffect.Play();
+                                                        break;
+                                                }
+                                                break;
+                                        }
+
+                                    }
+                                    catch { }
+                                    ParallelProcessing.Join();
+                                    ParallelProcessing.Abort();
+                                    break;
+                            }
+                            break;
+
+
+
+                        case "onedrive":
+
+                            switch (Process)
+                            {
+                                case "open":
+
+                                    try
+                                    {
+                                        MainWindow.BeginExecutionAnimation = true;
+                                        using (var Onedrive = new System.Diagnostics.Process())
+                                        {
+                                            Onedrive.StartInfo.FileName = "https://onedrive.live.com/";
+                                            Onedrive.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                                            Onedrive.StartInfo.UseShellExecute = true;
+                                            Onedrive.Start();
+                                        }
+
+
+
+                                        switch (SoundOrOff == true)
+                                        {
+                                            case true:
+                                                switch (System.IO.File.Exists(@"App execution.wav"))
+                                                {
+                                                    case true:
+                                                        AppExecutionSoundEffect.Play();
+                                                        break;
+                                                }
+                                                break;
+                                        }
+
                                     }
                                     catch { }
                                     ParallelProcessing.Join();
