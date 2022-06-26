@@ -165,7 +165,7 @@ namespace Eva_5._0
             {
                 case "please open [Application]":
 
-                    for (int Index = Sentence.IndexOf("please open") + 12; Index <= Sentence.Length - 1; Index++)
+                    for (int Index = 12; Index <= Sentence.Length - 1; Index++)
                     {
                         Application += Sentence[Index];
 
@@ -178,7 +178,7 @@ namespace Eva_5._0
 
                 case "open [Application] please":
 
-                    for (int Index = Sentence.IndexOf("open") + 5; Index <= Sentence.LastIndexOf("please") - 2; Index++)
+                    for (int Index = 5; Index <= Sentence.LastIndexOf("please") - 2; Index++)
                     {
                         Application += Sentence[Index];
 
@@ -189,7 +189,7 @@ namespace Eva_5._0
 
                 case "open [Application] now":
 
-                    for (int Index = Sentence.IndexOf("open") + 5; Index <= Sentence.LastIndexOf("now") - 2; Index++)
+                    for (int Index = 5; Index <= Sentence.LastIndexOf("now") - 2; Index++)
                     {
                         Application += Sentence[Index];
 
@@ -200,7 +200,7 @@ namespace Eva_5._0
 
                 case "open [Application]":
 
-                    for (int Index = Sentence.IndexOf("open") + 5; Index <= Sentence.Length - 1; Index++)
+                    for (int Index = 5; Index <= Sentence.Length - 1; Index++)
                     {
                         Application += Sentence[Index];
 
@@ -214,7 +214,7 @@ namespace Eva_5._0
 
                 case "please close [Application]":
 
-                    for (int Index = Sentence.IndexOf("please close") + 13; Index <= Sentence.Length - 1; Index++)
+                    for (int Index = 13; Index <= Sentence.Length - 1; Index++)
                     {
                         Application += Sentence[Index];
 
@@ -225,7 +225,7 @@ namespace Eva_5._0
 
                 case "close [Application] please":
 
-                    for (int Index = Sentence.IndexOf("close") + 6; Index <= Sentence.LastIndexOf("please") - 2; Index++)
+                    for (int Index = 6; Index <= Sentence.LastIndexOf("please") - 2; Index++)
                     {
                         Application += Sentence[Index];
 
@@ -236,7 +236,7 @@ namespace Eva_5._0
 
                 case "close [Application] now":
 
-                    for (int Index = Sentence.IndexOf("close") + 6; Index <= Sentence.LastIndexOf("now") - 2; Index++)
+                    for (int Index = 6; Index <= Sentence.LastIndexOf("now") - 2; Index++)
                     {
                         Application += Sentence[Index];
 
@@ -247,7 +247,7 @@ namespace Eva_5._0
 
                 case "close [Application]":
 
-                    for (int Index = Sentence.IndexOf("close") + 6; Index <= Sentence.Length - 1; Index++)
+                    for (int Index = 6; Index <= Sentence.Length - 1; Index++)
                     {
                         Application += Sentence[Index];
 
@@ -261,16 +261,16 @@ namespace Eva_5._0
 
                 case "please search [Content] on [Web Application Keyword]":
 
-                    for (int Index = Sentence.IndexOf("please search") + 14; Index <= Sentence.Length - 1; Index++)
+                    for (int Index = 14; Index <= Sentence.Length - 1; Index++)
                     {
-                        switch (Index <= Sentence.LastIndexOf("on") - 2)
+                        switch (Index <= Sentence.IndexOf("on") - 2)
                         {
                             case true:
                                 WebApplicationSearchContent += Sentence[Index].ToString();
                                 break;
                         }
 
-                        switch (Index >= Sentence.LastIndexOf("on") + 2)
+                        switch (Index >= Sentence.IndexOf("on") + 2)
                         {
                             case true:
 
@@ -346,6 +346,12 @@ namespace Eva_5._0
 
                                                                         case false:
 
+                                                                            switch (17 == Sentence.IndexOf("amazon"))
+                                                                            {
+                                                                                case true:
+                                                                                    Application = "amazon";
+                                                                                    break;
+                                                                            }
 
                                                                             break;
                                                                     }
@@ -385,7 +391,7 @@ namespace Eva_5._0
                 case "search on [Web Application Keyword] [Content]":
 
 
-                    switch (Sentence.IndexOf("search on") + 10 == Sentence.IndexOf("google images"))
+                    switch (10 == Sentence.IndexOf("google images"))
                     {
                         case true:
                             Application = "google images";
@@ -393,7 +399,7 @@ namespace Eva_5._0
 
                         case false:
 
-                            switch (Sentence.IndexOf("search on") + 10 == Sentence.IndexOf("google news"))
+                            switch (10 == Sentence.IndexOf("google news"))
                             {
                                 case true:
                                     Application = "google news";
@@ -401,7 +407,7 @@ namespace Eva_5._0
 
                                 case false:
 
-                                    switch (Sentence.IndexOf("search on") + 10 == Sentence.IndexOf("google"))
+                                    switch (10 == Sentence.IndexOf("google"))
                                     {
                                         case true:
                                             Application = "google";
@@ -409,7 +415,7 @@ namespace Eva_5._0
 
                                         case false:
 
-                                            switch (Sentence.IndexOf("search on") + 10 == Sentence.IndexOf("wikipedia"))
+                                            switch (10 == Sentence.IndexOf("wikipedia"))
                                             {
                                                 case true:
                                                     Application = "wikipedia";
@@ -417,7 +423,7 @@ namespace Eva_5._0
 
                                                 case false:
 
-                                                    switch (Sentence.IndexOf("search on") + 10 == Sentence.IndexOf("ebay"))
+                                                    switch (10 == Sentence.IndexOf("ebay"))
                                                     {
                                                         case true:
                                                             Application = "ebay";
@@ -425,7 +431,7 @@ namespace Eva_5._0
 
                                                         case false:
 
-                                                            switch (Sentence.IndexOf("search on") + 10 == Sentence.IndexOf("netflix"))
+                                                            switch (10 == Sentence.IndexOf("netflix"))
                                                             {
                                                                 case true:
                                                                     Application = "netflix";
@@ -433,10 +439,20 @@ namespace Eva_5._0
 
                                                                 case false:
 
-                                                                    switch (Sentence.IndexOf("search on") + 10 == Sentence.IndexOf("youtube"))
+                                                                    switch (10 == Sentence.IndexOf("youtube"))
                                                                     {
                                                                         case true:
                                                                             Application = "youtube";
+                                                                            break;
+
+                                                                        case false:
+
+                                                                            switch (10 == Sentence.IndexOf("amazon"))
+                                                                            {
+                                                                                case true:
+                                                                                    Application = "amazon";
+                                                                                    break;
+                                                                            }
                                                                             break;
                                                                     }
                                                                     break;
@@ -472,16 +488,16 @@ namespace Eva_5._0
 
                 case "search [Content] on [Web Application Keyword]":
 
-                    for (int Index = Sentence.IndexOf("search") + 7; Index <= Sentence.Length - 1; Index++)
+                    for (int Index = 7; Index <= Sentence.Length - 1; Index++)
                     {
-                        switch (Index <= Sentence.LastIndexOf("on") - 2)
+                        switch (Index <= Sentence.IndexOf("on") - 2)
                         {
                             case true:
                                 WebApplicationSearchContent += Sentence[Index].ToString();
                                 break;
                         }
 
-                        switch (Index >= Sentence.LastIndexOf("on") + 2)
+                        switch (Index >= Sentence.IndexOf("on") + 2)
                         {
                             case true:
 
