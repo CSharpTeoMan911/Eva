@@ -81,6 +81,14 @@ namespace Eva_5._0
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
+            bool IsAdministrator = new System.Security.Principal.WindowsPrincipal(System.Security.Principal.WindowsIdentity.GetCurrent()).IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator);
+
+            if(IsAdministrator == true)
+            {
+                System.Environment.Exit(0);
+            }
+
+
           
             this.Width = this.ActualWidth / 2.6;
             this.Height = this.ActualHeight / 2.6;
