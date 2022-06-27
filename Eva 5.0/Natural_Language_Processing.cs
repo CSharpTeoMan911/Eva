@@ -106,6 +106,8 @@ namespace Eva_5._0
             }
 
 
+
+
             switch (Sentence.IndexOf("please search on ") == 0)
             {
                 case true:
