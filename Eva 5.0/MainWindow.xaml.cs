@@ -164,17 +164,9 @@ namespace Eva_5._0
 
                                     case false:
 
-                                        switch (Application.Current.MainWindow.WindowState == WindowState.Minimized)
-                                        {
-                                            case true:
-                                                WindowMinimised = true;
-                                                break;
 
-                                            case false:
-                                                WindowMinimised = false;
-                                                break;
-                                        }
-
+                                       
+                                      
                                         switch (RotationValue == 360)
                                         {
                                             case true:
@@ -519,6 +511,8 @@ namespace Eva_5._0
                             {
                                 case false:
                                     Application.Current.MainWindow.WindowState = WindowState.Minimized;
+
+                                    WindowMinimised = true;
                                     break;
                             }
 
@@ -686,9 +680,11 @@ namespace Eva_5._0
                                                         {
                                                             case false:
 
-                                                                switch (WindowMinimised)
+                                                                switch (Application.Current.MainWindow.WindowState == WindowState.Normal)
                                                                 {
-                                                                    case false:
+                                                                    case true:
+
+                                                                        WindowMinimised = false;
 
                                                                         FunctionInitiated = true;
 
