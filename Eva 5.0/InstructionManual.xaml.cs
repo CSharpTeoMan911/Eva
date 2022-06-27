@@ -71,6 +71,14 @@ namespace Eva_5._0
         private bool SwitchOffsetTroubleshootingContentTextBlockOffset3;
         private double GradientArithmeticTroubleshootingContentTextBlockOffset3;
 
+
+        private bool SwitchOffsetExtraFeaturesTextBlockOffset;
+        private double GradientArithmeticExtraFeaturesTextBlockOffset;
+
+
+        private bool SwitchOffsetExtraFeaturesContentTextBlockOffset;
+        private double GradientArithmeticExtraFeaturesContentTextBlockOffset;
+
         public InstructionManual()
         {
             InitializeComponent();
@@ -656,6 +664,75 @@ namespace Eva_5._0
 
                                                     case false:
                                                         SwitchOffsetTroubleshootingContentTextBlockOffset3 = false;
+                                                        break;
+                                                }
+                                                break;
+                                        }
+
+
+                                        switch (SwitchOffsetExtraFeaturesTextBlockOffset)
+                                        {
+                                            case false:
+
+                                                switch (GradientArithmeticExtraFeaturesTextBlockOffset <= 65)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticExtraFeaturesTextBlockOffset++;
+                                                        ExtraFeaturesTextBlockOffset.Offset += 0.025;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchOffsetExtraFeaturesTextBlockOffset = true;
+                                                        break;
+                                                }
+                                                break;
+
+                                            case true:
+
+                                                switch (GradientArithmeticExtraFeaturesTextBlockOffset > 0)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticExtraFeaturesTextBlockOffset--;
+                                                        ExtraFeaturesTextBlockOffset.Offset -= 0.025;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchOffsetExtraFeaturesTextBlockOffset = false;
+                                                        break;
+                                                }
+                                                break;
+                                        }
+
+
+
+                                        switch (SwitchOffsetExtraFeaturesContentTextBlockOffset)
+                                        {
+                                            case false:
+
+                                                switch (GradientArithmeticExtraFeaturesContentTextBlockOffset <= 65)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticExtraFeaturesContentTextBlockOffset++;
+                                                        ExtraFeaturesContentTextBlockOffset.Offset += 0.025;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchOffsetExtraFeaturesContentTextBlockOffset = true;
+                                                        break;
+                                                }
+                                                break;
+
+                                            case true:
+
+                                                switch (GradientArithmeticExtraFeaturesContentTextBlockOffset > 0)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticExtraFeaturesContentTextBlockOffset--;
+                                                        ExtraFeaturesContentTextBlockOffset.Offset -= 0.025;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchOffsetExtraFeaturesContentTextBlockOffset = false;
                                                         break;
                                                 }
                                                 break;
