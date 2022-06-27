@@ -17,9 +17,6 @@ namespace Eva_5._0
             // Initiates the online speech recognition engine 
             // on another thread for parallel processing
 
-
-            System.Diagnostics.Debug.WriteLine((string)MainWindow.WindowMinimised);
-
             ParallelProcessing = new System.Threading.Thread(Initiate_The_Online_Speech_Recognition_Engine);
             ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
             ParallelProcessing.IsBackground = true;
