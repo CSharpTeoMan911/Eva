@@ -18,6 +18,7 @@ namespace Eva_5._0
             // on another thread for parallel processing
 
 
+            System.Diagnostics.Debug.WriteLine((string)MainWindow.WindowMinimised);
 
             ParallelProcessing = new System.Threading.Thread(Initiate_The_Online_Speech_Recognition_Engine);
             ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
@@ -32,8 +33,11 @@ namespace Eva_5._0
         {
             try
             {
+               
+
                 using (Windows.Media.SpeechRecognition.SpeechRecognizer OnlineSpeechRecognition = new Windows.Media.SpeechRecognition.SpeechRecognizer())
                 {
+
 
 
 
