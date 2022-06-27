@@ -42,6 +42,9 @@ namespace Eva_5._0
 
             return Task.FromResult(true);
         }
+
+        ~Settings()
+        { }
     }
 
 }

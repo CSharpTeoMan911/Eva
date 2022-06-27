@@ -10,15 +10,13 @@ namespace Eva_5._0
     {
         private Proc<string, string, string> proc;
 
-        public async Task<bool> PreProcessing<Sentence_Parameter> (Sentence_Parameter sentence_parameter)
+        public static async Task<bool> PreProcessing<Sentence_Parameter> (Sentence_Parameter sentence_parameter)
         {
             string Sentence = sentence_parameter as string;
 
             switch (Sentence.IndexOf("please open ") == 0)
             {
                 case true:
-
-
 
                     await PostProcessing<string, string>("please open [Application]", Sentence);
                     break;
@@ -33,7 +31,6 @@ namespace Eva_5._0
                             {
                                 case true:
 
-
                                     await PostProcessing<string, string>("open [Application] please", Sentence);
                                     break;
 
@@ -43,12 +40,10 @@ namespace Eva_5._0
                                     {
                                         case true:
 
-
                                             await PostProcessing<string, string>("open [Application] now", Sentence);
                                             break;
 
                                         case false:
-
 
                                             await PostProcessing<string, string>("open [Application]", Sentence);
                                             break;
@@ -154,7 +149,7 @@ namespace Eva_5._0
 
 
 
-        private async Task<bool> PostProcessing<Parameter, Sentence_Parameter>(Parameter parameter, Sentence_Parameter sentence)
+        private static async Task<bool> PostProcessing<Parameter, Sentence_Parameter>(Parameter parameter, Sentence_Parameter sentence)
         {
             string Application = String.Empty;
             string WebApplicationSearchContent = String.Empty;
@@ -174,8 +169,8 @@ namespace Eva_5._0
                     }
 
 
-                    proc = new Proc<string, string, string>();
-                    await proc.ProcInitialisation("System Process", Application, "open");
+                    
+                    await Proc<string, string, string>.ProcInitialisation("System Process", Application, "open");
                     break;
 
                 case "open [Application] please":
@@ -185,8 +180,7 @@ namespace Eva_5._0
                         Application += Sentence[Index];
 
                     }
-                    proc = new Proc<string, string, string>();
-                    await proc.ProcInitialisation("System Process", Application, "open");
+                    await Proc<string, string, string>.ProcInitialisation("System Process", Application, "open");
                     break;
 
                 case "open [Application] now":
@@ -196,8 +190,7 @@ namespace Eva_5._0
                         Application += Sentence[Index];
 
                     }
-                    proc = new Proc<string, string, string>();
-                    await proc.ProcInitialisation("System Process", Application, "open");
+                    await Proc<string, string, string>.ProcInitialisation("System Process", Application, "open");
                     break;
 
                 case "open [Application]":
@@ -207,8 +200,7 @@ namespace Eva_5._0
                         Application += Sentence[Index];
 
                     }
-                    proc = new Proc<string, string, string>();
-                    await proc.ProcInitialisation("System Process", Application, "open");
+                    await Proc<string, string, string>.ProcInitialisation("System Process", Application, "open");
                     break;
 
 
@@ -221,8 +213,7 @@ namespace Eva_5._0
                         Application += Sentence[Index];
 
                     }
-                    proc = new Proc<string, string, string>();
-                    await proc.ProcInitialisation("System Process", Application, "close");
+                    await Proc<string, string, string>.ProcInitialisation("System Process", Application, "close");
                     break;
 
                 case "close [Application] please":
@@ -232,8 +223,7 @@ namespace Eva_5._0
                         Application += Sentence[Index];
 
                     }
-                    proc = new Proc<string, string, string>();
-                    await proc.ProcInitialisation("System Process", Application, "close");
+                    await Proc<string, string, string>.ProcInitialisation("System Process", Application, "close");
                     break;
 
                 case "close [Application] now":
@@ -243,8 +233,7 @@ namespace Eva_5._0
                         Application += Sentence[Index];
 
                     }
-                    proc = new Proc<string, string, string>();
-                    await proc.ProcInitialisation("System Process", Application, "close");
+                    await Proc<string, string, string>.ProcInitialisation("System Process", Application, "close");
                     break;
 
                 case "close [Application]":
@@ -254,8 +243,7 @@ namespace Eva_5._0
                         Application += Sentence[Index];
 
                     }
-                    proc = new Proc<string, string, string>();
-                    await proc.ProcInitialisation("System Process", Application, "close");
+                    await Proc<string, string, string>.ProcInitialisation("System Process", Application, "close");
                     break;
 
 
@@ -287,8 +275,7 @@ namespace Eva_5._0
                    
 
                     Application = Application.Trim();
-                    proc = new Proc<string, string, string>();
-                    await proc.ProcInitialisation("Online Process", Application, WebApplicationSearchContent);
+                    await Proc<string, string, string>.ProcInitialisation("Online Process", Application, WebApplicationSearchContent);
                     break;
 
 
@@ -381,10 +368,9 @@ namespace Eva_5._0
 
                     WebApplicationSearchContent = WebApplicationSearchContent.Trim();
 
-                    
 
-                    proc = new Proc<string, string, string>();
-                    await proc.ProcInitialisation("Online Process", Application, WebApplicationSearchContent);
+
+                    await Proc<string, string, string>.ProcInitialisation("Online Process", Application, WebApplicationSearchContent);
                     break;
 
 
@@ -484,8 +470,7 @@ namespace Eva_5._0
 
                     WebApplicationSearchContent = WebApplicationSearchContent.Trim();
 
-                    proc = new Proc<string, string, string>();
-                    await proc.ProcInitialisation("Online Process", Application, WebApplicationSearchContent);
+                    await Proc<string, string, string>.ProcInitialisation("Online Process", Application, WebApplicationSearchContent);
                     break;
 
 
@@ -515,8 +500,7 @@ namespace Eva_5._0
                     Application = Application.Trim();
                     WebApplicationSearchContent = WebApplicationSearchContent.Trim();
 
-                    proc = new Proc<string, string, string>();
-                    await proc.ProcInitialisation("Online Process", Application, WebApplicationSearchContent);
+                    await Proc<string, string, string>.ProcInitialisation("Online Process", Application, WebApplicationSearchContent);
                     break;
             }
 
@@ -531,10 +515,6 @@ namespace Eva_5._0
 
             System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect(0, GCCollectionMode.Forced, true, true);
-            System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-            GC.Collect(1, GCCollectionMode.Forced, true, true);
-            System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-            GC.Collect(2, GCCollectionMode.Forced, true, true);
         }
 
     }

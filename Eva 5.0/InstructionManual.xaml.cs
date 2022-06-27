@@ -786,23 +786,6 @@ namespace Eva_5._0
             }
         }
 
-        ~InstructionManual()
-        {
-            switch (TimerDisposed)
-            {
-                case false:
-
-                    switch (AnimationTimer == null)
-                    {
-                        case false:
-
-                            AnimationTimer.Dispose();
-                            break;
-                    }
-                    break;
-            }
-        }
-
         private void Navigate_To_Eva_Project(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
             System.Diagnostics.Process.Start(e.Uri.ToString());
@@ -820,6 +803,24 @@ namespace Eva_5._0
                 ControlPanel.Start();
             }
 
+        }
+
+
+        ~InstructionManual()
+        {
+            switch (TimerDisposed)
+            {
+                case false:
+
+                    switch (AnimationTimer == null)
+                    {
+                        case false:
+
+                            AnimationTimer.Dispose();
+                            break;
+                    }
+                    break;
+            }
         }
     }
 }

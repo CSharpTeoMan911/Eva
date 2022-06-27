@@ -13,7 +13,6 @@ namespace Eva_5._0
     /// </summary>
     public partial class App : Application
     {
-
         public static bool SettingsWindowOpen;
 
         public static bool InstructionManualOpen;
@@ -26,10 +25,30 @@ namespace Eva_5._0
 
         public static string ErrorFunction;
 
+
+
+
         public static bool StopRecognitionSession;
 
 
+
+
+        public App()
+        {
+            // Construct the class and resources related to applications, processes and web-links
+            // related to the Eva functions
+
+            new Eva_Applications_And_Processes_List();
+        }
+
+
         ~App()
-        { }
+        {
+            StopRecognitionSession = true;
+            ErrorFunction = null;
+
+            System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
+            GC.Collect(2, GCCollectionMode.Forced, true, true);
+        }
     }
 }

@@ -19,8 +19,10 @@ namespace Eva_5._0
     /// </summary>
     public partial class SettingsWindow : Window
     {
-        private bool WindowIsClosing;
         private System.Timers.Timer AnimationAndFunctionalityTimer;
+
+        private bool WindowIsClosing;
+
         private double Wheel1Angle;
         private double Wheel2Angle;
 
@@ -696,10 +698,6 @@ namespace Eva_5._0
                     break;
             }
 
-            System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-            GC.Collect(0, GCCollectionMode.Forced);
-            System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-            GC.Collect(1, GCCollectionMode.Forced);
             System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect(2, GCCollectionMode.Forced);
         }

@@ -81,13 +81,7 @@ namespace Eva_5._0
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
-            bool IsAdministrator = new System.Security.Principal.WindowsPrincipal(System.Security.Principal.WindowsIdentity.GetCurrent()).IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator);
-
-            if(IsAdministrator == true)
-            {
-                System.Environment.Exit(0);
-            }
-
+            Check_User_Current_Administartive_Role.Check_If_User_Is_Administartor();
 
           
             this.Width = this.ActualWidth / 2.6;
@@ -584,37 +578,40 @@ namespace Eva_5._0
 
                                                 SpeechRecognitionButton.Content = "\xE1D6";
 
+                                                App.StopRecognitionSession = false;
+
                                                 try
                                                 {
-                                                    ParallelProcessing = new System.Threading.Thread(() =>
-                                                    {
-                                                        MainSpeechRecogniser = new System.Speech.Recognition.SpeechRecognitionEngine();
+                                                    
+                                                        ParallelProcessing = new System.Threading.Thread(() =>
+                                                        {
+                                                            MainSpeechRecogniser = new System.Speech.Recognition.SpeechRecognitionEngine();
 
-                                                        MainSpeechRecogniser.BabbleTimeout = TimeSpan.FromSeconds(0);
-                                                        MainSpeechRecogniser.EndSilenceTimeout = TimeSpan.FromSeconds(0);
-                                                        MainSpeechRecogniser.InitialSilenceTimeout = TimeSpan.FromSeconds(0);
-                                                        MainSpeechRecogniser.EndSilenceTimeoutAmbiguous = TimeSpan.FromSeconds(0);
+                                                            MainSpeechRecogniser.BabbleTimeout = TimeSpan.FromSeconds(0);
+                                                            MainSpeechRecogniser.EndSilenceTimeout = TimeSpan.FromSeconds(0);
+                                                            MainSpeechRecogniser.InitialSilenceTimeout = TimeSpan.FromSeconds(0);
+                                                            MainSpeechRecogniser.EndSilenceTimeoutAmbiguous = TimeSpan.FromSeconds(0);
 
-                                                        MainSpeechRecogniser.RequestRecognizerUpdate();
-                                                        System.Speech.Recognition.Choices Choices = new System.Speech.Recognition.Choices("Eva Listen");
-                                                        System.Speech.Recognition.GrammarBuilder gb = new System.Speech.Recognition.GrammarBuilder();
-                                                        gb.Culture = System.Threading.Thread.CurrentThread.CurrentCulture;
-                                                        gb.Append(Choices);
-                                                        System.Speech.Recognition.Grammar Grammar = new System.Speech.Recognition.Grammar(gb);
-                                                        MainSpeechRecogniser.RequestRecognizerUpdate();
-                                                        MainSpeechRecogniser.LoadGrammarAsync(Grammar);
-                                                        MainSpeechRecogniser.SetInputToDefaultAudioDevice();
-                                                        MainSpeechRecogniser.RequestRecognizerUpdate();
+                                                            MainSpeechRecogniser.RequestRecognizerUpdate();
+                                                            System.Speech.Recognition.Choices Choices = new System.Speech.Recognition.Choices("Eva Listen");
+                                                            System.Speech.Recognition.GrammarBuilder gb = new System.Speech.Recognition.GrammarBuilder();
+                                                            gb.Culture = System.Threading.Thread.CurrentThread.CurrentCulture;
+                                                            gb.Append(Choices);
+                                                            System.Speech.Recognition.Grammar Grammar = new System.Speech.Recognition.Grammar(gb);
+                                                            MainSpeechRecogniser.RequestRecognizerUpdate();
+                                                            MainSpeechRecogniser.LoadGrammarAsync(Grammar);
+                                                            MainSpeechRecogniser.SetInputToDefaultAudioDevice();
+                                                            MainSpeechRecogniser.RequestRecognizerUpdate();
 
-                                                        MainSpeechRecogniser.RecognizeAsync(System.Speech.Recognition.RecognizeMode.Multiple);
-                                                        MainSpeechRecogniser.SpeechRecognized += MainSpeechRecogniser_SpeechRecognized;
-                                                        MainSpeechRecogniser.RecognizeCompleted += MainSpeechRecogniser_RecognizeCompleted;
-                                                    });
-                                                    ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
-                                                    ParallelProcessing.IsBackground = true;
-                                                    ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
-                                                    ParallelProcessing.Start();
-                                                    ParallelProcessing.Join();
+                                                            MainSpeechRecogniser.RecognizeAsync(System.Speech.Recognition.RecognizeMode.Multiple);
+                                                            MainSpeechRecogniser.SpeechRecognized += MainSpeechRecogniser_SpeechRecognized;
+                                                            MainSpeechRecogniser.RecognizeCompleted += MainSpeechRecogniser_RecognizeCompleted;
+                                                        });
+                                                        ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
+                                                        ParallelProcessing.IsBackground = true;
+                                                        ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
+                                                        ParallelProcessing.Start();
+                                                   
                                                 }
                                                 catch { }
 
@@ -623,31 +620,28 @@ namespace Eva_5._0
                                             case 2:
 
                                                 SpeechRecognitionButton.Content = "\xF781";
-                                                try
-                                                {
-                                                    ParallelProcessing = new System.Threading.Thread(() =>
-                                                    {
-                                                        MainSpeechRecogniser.RecognizeAsyncStop();
-                                                        MainSpeechRecogniser.RecognizeAsyncCancel();
-                                                        System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-                                                        GC.Collect(0, GCCollectionMode.Forced);
-                                                        System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-                                                        GC.Collect(1, GCCollectionMode.Forced);
-                                                        System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-                                                        GC.Collect(2, GCCollectionMode.Forced);
-
-                                                    });
-                                                    ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
-                                                    ParallelProcessing.IsBackground = true;
-                                                    ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
-                                                    ParallelProcessing.Start();
-                                                    ParallelProcessing.Join();
-                                                }
-                                                catch { }
 
                                                 App.StopRecognitionSession = true;
 
                                                 OnOff = 0;
+
+                                                try
+                                                {
+                                                    
+                                                        ParallelProcessing = new System.Threading.Thread(() =>
+                                                        {
+                                                            MainSpeechRecogniser.RecognizeAsyncStop();
+                                                            MainSpeechRecogniser.RecognizeAsyncCancel();
+                                                            MainSpeechRecogniser.Dispose();
+                                                        });
+                                                        ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
+                                                        ParallelProcessing.IsBackground = true;
+                                                        ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
+                                                        ParallelProcessing.Start();
+                                                    
+                                                }
+                                                catch { }
+
                                                 break;
                                         }
 
@@ -702,7 +696,7 @@ namespace Eva_5._0
                                                                         Application.Current.MainWindow.Topmost = true;
                                                                         Application.Current.MainWindow.Activate();
 
-                                                                        new Online_Speech_Recognition();
+                                                                        Online_Speech_Recognition.Recogniser_Thread_Creation_And_Initiation();
 
                                                                         Application.Current.MainWindow.Topmost = false;
                                                                         break;
@@ -838,10 +832,6 @@ namespace Eva_5._0
                 WindowMinimised = null;
 
 
-                System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-                GC.Collect(0, GCCollectionMode.Forced);
-                System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-                GC.Collect(1, GCCollectionMode.Forced);
                 System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
                 GC.Collect(2, GCCollectionMode.Forced);
             }

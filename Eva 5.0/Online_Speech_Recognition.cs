@@ -9,9 +9,10 @@ namespace Eva_5._0
 {
     internal class Online_Speech_Recognition
     {
-        System.Threading.Thread ParallelProcessing;
+        private static System.Threading.Thread ParallelProcessing;
 
-        public Online_Speech_Recognition()
+
+        public static void Recogniser_Thread_Creation_And_Initiation()
         {
             ParallelProcessing = new System.Threading.Thread(InitiateTheRecogniser);
             ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
@@ -22,8 +23,7 @@ namespace Eva_5._0
         }
 
 
-
-        private async void InitiateTheRecogniser()
+        private static async void InitiateTheRecogniser()
         {
             try
             {
@@ -73,22 +73,23 @@ namespace Eva_5._0
 
                                             break;
 
+
                                         case false:
+
                                             switch (App.StopRecognitionSession)
                                             {
                                                 case false:
-                                                    
-                                                    Natural_Language_Processing processing = new Natural_Language_Processing();
-                                                    await processing.PreProcessing<string>(Result.Text);
+                                                    await Natural_Language_Processing.PreProcessing<string>(Result.Text);
+                                                    await OnlineSpeechRecognition.StopRecognitionAsync();
+                                                    OnlineSpeechRecognition.Dispose();
 
                                                     break;
+
+                                                case true:
+                                                    await OnlineSpeechRecognition.StopRecognitionAsync();
+                                                    OnlineSpeechRecognition.Dispose();
+                                                    break;
                                             }
-
-                                            App.StopRecognitionSession = false;
-
-                                            await OnlineSpeechRecognition.StopRecognitionAsync();
-                                            OnlineSpeechRecognition.Dispose();
-
                                             break;
                                     }
 
@@ -134,7 +135,10 @@ namespace Eva_5._0
                 }
             }
 
+
             MainWindow.FunctionInitiated = false;
+
+
             ParallelProcessing.Join();
             ParallelProcessing.Abort();
         }
@@ -144,10 +148,6 @@ namespace Eva_5._0
         {
             ParallelProcessing = null;
 
-            System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-            GC.Collect(0, GCCollectionMode.Forced, true, true);
-            System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-            GC.Collect(1, GCCollectionMode.Forced, true, true);
             System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect(2, GCCollectionMode.Forced, true, true);
         }
