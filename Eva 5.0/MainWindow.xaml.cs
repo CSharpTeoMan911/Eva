@@ -58,8 +58,6 @@ namespace Eva_5._0
 
         public static bool FunctionInitiated = false;
 
-        public static dynamic WindowMinimised = false;
-
         public static dynamic BeginExecutionAnimation = false;
 
         private static byte ExecutionAnimationArithmetic;
@@ -511,8 +509,6 @@ namespace Eva_5._0
                             {
                                 case false:
                                     Application.Current.MainWindow.WindowState = WindowState.Minimized;
-
-                                    WindowMinimised = true;
                                     break;
                             }
 
@@ -684,8 +680,6 @@ namespace Eva_5._0
                                                                 {
                                                                     case true:
 
-                                                                        WindowMinimised = false;
-
                                                                         FunctionInitiated = true;
 
                                                                         Application.Current.MainWindow.Topmost = true;
@@ -824,7 +818,7 @@ namespace Eva_5._0
                 }
 
                 BeginExecutionAnimation = null;
-                WindowMinimised = null;
+                
 
 
                 System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;

@@ -86,22 +86,9 @@ namespace Eva_5._0
                                             {
                                                 case false:
 
-                                                    switch(MainWindow.WindowMinimised)
-                                                    {
-                                                        case true:
-
-                                                            await OnlineSpeechRecognition.StopRecognitionAsync();
-                                                            OnlineSpeechRecognition.Dispose();
-                                                            break;
-
-                                                        case false:
-
-                                                            await Natural_Language_Processing.PreProcessing<string>(Result.Text);
-                                                            await OnlineSpeechRecognition.StopRecognitionAsync();
-                                                            OnlineSpeechRecognition.Dispose();
-                                                            break;
-                                                    }
-
+                                                    await Natural_Language_Processing.PreProcessing<string>(Result.Text);
+                                                    await OnlineSpeechRecognition.StopRecognitionAsync();
+                                                    OnlineSpeechRecognition.Dispose();
                                                     break;
 
                                                 case true:
