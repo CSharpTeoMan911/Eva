@@ -58,7 +58,7 @@ namespace Eva_5._0
 
         public static bool FunctionInitiated = false;
 
-        private dynamic WindowMinimised = false;
+        public static dynamic WindowMinimised = false;
 
         public static dynamic BeginExecutionAnimation = false;
 

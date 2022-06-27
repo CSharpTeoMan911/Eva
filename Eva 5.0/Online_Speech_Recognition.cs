@@ -14,7 +14,12 @@ namespace Eva_5._0
 
         public static void Recogniser_Thread_Creation_And_Initiation()
         {
-            ParallelProcessing = new System.Threading.Thread(InitiateTheRecogniser);
+            // Initiates the online speech recognition engine 
+            // on another thread for parallel processing
+
+
+
+            ParallelProcessing = new System.Threading.Thread(Initiate_The_Online_Speech_Recognition_Engine);
             ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
             ParallelProcessing.IsBackground = true;
             ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
@@ -23,7 +28,7 @@ namespace Eva_5._0
         }
 
 
-        private static async void InitiateTheRecogniser()
+        private static async void Initiate_The_Online_Speech_Recognition_Engine()
         {
             try
             {
@@ -79,9 +84,22 @@ namespace Eva_5._0
                                             switch (App.StopRecognitionSession)
                                             {
                                                 case false:
-                                                    await Natural_Language_Processing.PreProcessing<string>(Result.Text);
-                                                    await OnlineSpeechRecognition.StopRecognitionAsync();
-                                                    OnlineSpeechRecognition.Dispose();
+
+                                                    switch (MainWindow.WindowMinimised)
+                                                    {
+                                                        case true:
+
+                                                            await OnlineSpeechRecognition.StopRecognitionAsync();
+                                                            OnlineSpeechRecognition.Dispose();
+                                                            break;
+
+                                                        case false:
+
+                                                            await Natural_Language_Processing.PreProcessing<string>(Result.Text);
+                                                            await OnlineSpeechRecognition.StopRecognitionAsync();
+                                                            OnlineSpeechRecognition.Dispose();
+                                                            break;
+                                                    }
 
                                                     break;
 
