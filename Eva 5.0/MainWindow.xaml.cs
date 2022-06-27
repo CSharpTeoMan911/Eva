@@ -692,8 +692,6 @@ namespace Eva_5._0
 
                                                                         FunctionInitiated = true;
 
-                                                                        System.Diagnostics.Debug.WriteLine("OK");
-
                                                                         Application.Current.MainWindow.Topmost = true;
                                                                         Application.Current.MainWindow.Activate();
 
