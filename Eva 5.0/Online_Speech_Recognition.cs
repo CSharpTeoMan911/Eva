@@ -17,7 +17,30 @@ namespace Eva_5._0
             // Initiates the online speech recognition engine 
             // on another thread for parallel processing
 
-            ParallelProcessing = new System.Threading.Thread(Initiate_The_Online_Speech_Recognition_Engine);
+           
+            ParallelProcessing = new System.Threading.Thread(() =>
+            {
+
+                // Ensures that the virtual interface with the Cortana's online speech recognition system is open
+                // during the speech recognition session.
+
+                try
+                {
+                   
+                    using (System.Diagnostics.Process Speech_Recognition_Executable_Initiation = new System.Diagnostics.Process())
+                    {
+                        Speech_Recognition_Executable_Initiation.StartInfo.FileName = @"C:Windows\SystemApps\Microsoft.Windows.Search_cw5n1h2txyewy\SearchApp.exe";
+                        Speech_Recognition_Executable_Initiation.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                        Speech_Recognition_Executable_Initiation.StartInfo.UseShellExecute = true;
+                        Speech_Recognition_Executable_Initiation.Start();
+                    }
+                }
+                catch { }
+
+
+
+                Initiate_The_Online_Speech_Recognition_Engine();
+            });
             ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
             ParallelProcessing.IsBackground = true;
             ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
