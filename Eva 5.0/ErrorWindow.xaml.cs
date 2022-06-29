@@ -81,7 +81,7 @@ namespace Eva_5._0
 
             try
             {
-                var ErrorSoundEffect = new System.Media.SoundPlayer("Privacy statement declined or mic not available.wav");
+                System.Media.SoundPlayer ErrorSoundEffect = new System.Media.SoundPlayer("Privacy statement declined or mic not available.wav");
 
                 switch (await Settings.Get_Settings() == true)
                 {
@@ -106,7 +106,7 @@ namespace Eva_5._0
         {
             try
             {
-                var ErrorSoundEffect = new System.Media.SoundPlayer("Privacy statement declined or mic not available.wav");
+                System.Media.SoundPlayer ErrorSoundEffect = new System.Media.SoundPlayer("Privacy statement declined or mic not available.wav");
 
                 switch (await Settings.Get_Settings() == true)
                 {

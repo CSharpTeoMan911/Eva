@@ -31,112 +31,118 @@ namespace Eva_5._0
 
         private static Task<bool> OnlineProcesses(string WebApplication, string SearchContent)
         {
-
+           
             System.Media.SoundPlayer AppExecutionSoundEffect = new System.Media.SoundPlayer("App execution.wav");
+
+
             string Process = String.Empty;
 
-            if(ParallelProcessing != null)
+
+            ParallelProcessing = new System.Threading.Thread(async () =>
             {
-                ParallelProcessing = new System.Threading.Thread(async () =>
+                try
                 {
+                    bool SoundOrOff = await Settings.Get_Settings();
+
+                    switch (WebApplication)
+                    {
+                        case "youtube":
+
+                            Process = "https://www.youtube.com/results?search_query=";
+
+                            break;
+
+                        case "netflix":
+
+                            Process = "https://www.netflix.com/search?q=";
+
+                            break;
+
+                        case "wikipedia":
+
+                            Process = "https://en.wikipedia.org/wiki/";
+
+                            break;
+
+                        case "google":
+
+                            Process = "https://www.google.com/search?q=";
+
+                            break;
+
+                        case "google news":
+
+                            Process = "https://www.google.com/search?tbm=nws&q=";
+
+                            break;
+
+                        case "ebay":
+
+                            Process = "https://www.ebay.co.uk/sch/i.html?_nkw=";
+
+                            break;
+
+
+                        case "google images":
+
+                            Process = "https://www.google.com/search?tbm=isch&q=";
+
+                            break;
+
+
+                        case "amazon":
+
+                            Process = "https://www.amazon.co.uk/s?k=";
+
+                            break;
+                    }
+
+
                     try
                     {
-                        bool SoundOrOff = await Settings.Get_Settings();
-
-                        switch (WebApplication)
+                        MainWindow.BeginExecutionAnimation = true;
+                        using (System.Diagnostics.Process Online_Process = new System.Diagnostics.Process())
                         {
-                            case "youtube":
-
-                                Process = "https://www.youtube.com/results?search_query=";
-
-                                break;
-
-                            case "netflix":
-
-                                Process = "https://www.netflix.com/search?q=";
-
-                                break;
-
-                            case "wikipedia":
-
-                                Process = "https://en.wikipedia.org/wiki/";
-
-                                break;
-
-                            case "google":
-
-                                Process = "https://www.google.com/search?q=";
-
-                                break;
-
-                            case "google news":
-
-                                Process = "https://www.google.com/search?tbm=nws&q=";
-
-                                break;
-
-                            case "ebay":
-
-                                Process = "https://www.ebay.co.uk/sch/i.html?_nkw=";
-
-                                break;
-
-
-                            case "google images":
-
-                                Process = "https://www.google.com/search?tbm=isch&q=";
-
-                                break;
-
-
-                            case "amazon":
-
-                                Process = "https://www.amazon.co.uk/s?k=";
-
-                                break;
+                            Online_Process.StartInfo.FileName = Process + SearchContent;
+                            Online_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                            Online_Process.StartInfo.UseShellExecute = true;
+                            Online_Process.Start();
                         }
-
 
                         try
                         {
-                            MainWindow.BeginExecutionAnimation = true;
-                            using (System.Diagnostics.Process Online_Process = new System.Diagnostics.Process())
+                            switch (SoundOrOff == true)
                             {
-                                Online_Process.StartInfo.FileName = Process + SearchContent;
-                                Online_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-                                Online_Process.StartInfo.UseShellExecute = true;
-                                Online_Process.Start();
+                                case true:
+                                    switch (System.IO.File.Exists(System.IO.Path.GetFullPath("App execution.wav")))
+                                    {
+                                        case true:
+                                            AppExecutionSoundEffect.Play();
+                                            break;
+                                    }
+                                    break;
                             }
-
-                            try
-                            {
-                                switch (SoundOrOff == true)
-                                {
-                                    case true:
-                                        switch (System.IO.File.Exists(System.IO.Path.GetFullPath("App execution.wav")))
-                                        {
-                                            case true:
-                                                AppExecutionSoundEffect.Play();
-                                                break;
-                                        }
-                                        break;
-                                }
-                            }
-                            catch { }
-
-                            ParallelProcessing.Join();
-                            ParallelProcessing.Abort();
                         }
                         catch { }
-                    }
-                    catch { }
 
-                });
-                ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
-                ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
-                ParallelProcessing.IsBackground = true;
-                ParallelProcessing.Start();
-            }
+                        ParallelProcessing.Join();
+                        ParallelProcessing.Abort();
+                    }
+                    catch 
+                    {
+                       
+                    }
+                }
+                catch
+                {
+
+                }
+
+            });
+            ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
+            ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
+            ParallelProcessing.IsBackground = true;
+            ParallelProcessing.Start();
 
             return Task.FromResult(true);
         }
@@ -158,19 +164,19 @@ namespace Eva_5._0
 
                 string application_executable_name = String.Empty;
 
-                bool Application_Executable_Name_Retrieval_Result = Eva_Applications_And_Processes_List.Application_Name__And__Application_Executable_Name.TryGetValue(Application, out application_executable_name);
+                bool Application_Executable_Name_Retrieval_Result = App.Application_Name__And__Application_Executable_Name.TryGetValue(Application, out application_executable_name);
 
 
 
                 string application_process_name = String.Empty;
 
-                bool Application_Process_Name_Retrieval_Result = Eva_Applications_And_Processes_List.Application_Name__And__Application_Process_Name.TryGetValue(Application, out application_process_name);
+                bool Application_Process_Name_Retrieval_Result = App.Application_Name__And__Application_Process_Name.TryGetValue(Application, out application_process_name);
 
 
 
                 string application_not_found_error_link = String.Empty;
 
-                bool Application_Not_Found_Error_Download_Link_Result = Eva_Applications_And_Processes_List.Application_Name__And__Application_Not_Found_Error_Download_Link.TryGetValue(Application, out application_not_found_error_link);
+                bool Application_Not_Found_Error_Download_Link_Result = App.Application_Name__And__Application_Not_Found_Error_Download_Link.TryGetValue(Application, out application_not_found_error_link);
 
 
                 

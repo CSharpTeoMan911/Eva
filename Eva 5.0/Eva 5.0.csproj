@@ -102,7 +102,6 @@
     <Compile Include="ErrorWindow.xaml.cs">
       <DependentUpon>ErrorWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Eva_Applications_And_Processes_List.cs" />
     <Compile Include="InstructionManual.xaml.cs">
       <DependentUpon>InstructionManual.xaml</DependentUpon>
     </Compile>

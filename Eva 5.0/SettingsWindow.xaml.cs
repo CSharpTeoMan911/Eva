@@ -136,7 +136,7 @@ namespace Eva_5._0
             }
         }
 
-        private void SettingsWindowLoaded(object sender, RoutedEventArgs e)
+        private async void SettingsWindowLoaded(object sender, RoutedEventArgs e)
         {
             AnimationAndFunctionalityTimer = new System.Timers.Timer();
             AnimationAndFunctionalityTimer.Disposed += AnimationAndFunctionalityTimer_Disposed;
@@ -146,7 +146,7 @@ namespace Eva_5._0
 
 
 
-            var SoundOrOff = Settings.Get_Settings().Result;
+            bool SoundOrOff = await Settings.Get_Settings();
 
             switch (SoundOrOff)
             {

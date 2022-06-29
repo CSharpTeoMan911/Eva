@@ -870,7 +870,7 @@ namespace Eva_5._0
 
         private void Open_Control_Panel_At_Speech_Recognition(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
-            using (var ControlPanel = new System.Diagnostics.Process())
+            using (System.Diagnostics.Process ControlPanel = new System.Diagnostics.Process())
             {
                 ControlPanel.StartInfo.FileName = "control.exe";
                 ControlPanel.StartInfo.WorkingDirectory = Environment.SystemDirectory + "control.exe";
