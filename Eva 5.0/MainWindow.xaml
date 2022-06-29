@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Eva_5._0"
         mc:Ignorable="d"
-        Title="Eva" Height="450" Width="800" Loaded="WindowLoaded" Closing="MainWindowClosing" ResizeMode="NoResize"  Opacity="0.94" AllowsTransparency="True" WindowStyle="None" Icon="/Eva Icon.png" Focusable="False">
+        Title="Eva" Height="450" Width="800" Loaded="WindowLoaded" Closing="MainWindowClosing" ResizeMode="NoResize"  Opacity="0.94" AllowsTransparency="True" WindowStyle="None" Icon="Eva Icon.png" Focusable="False">
 
     <Window.Background>
         <LinearGradientBrush StartPoint="0.5, 1">
