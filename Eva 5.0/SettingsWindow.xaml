@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Eva_5._0"
         mc:Ignorable="d"
-        Title="Settings" Height="350" Width="300" WindowStyle="None" AllowsTransparency="True" Opacity="0.98" Loaded="SettingsWindowLoaded" Closing="WindowClosing" Icon="Eva Icon.png">
+        Title="Settings" Height="350" Width="300" WindowStyle="None" AllowsTransparency="True" Opacity="0.98" Loaded="SettingsWindowLoaded" Closing="WindowClosing" Icon="/Eva icon.png">
 
 
     <Window.Clip>
@@ -41,7 +41,7 @@
     <Window.Background>
         <LinearGradientBrush StartPoint="0.5, 1" EndPoint="1, 0">
             <GradientStop Color="#FF121111" x:Name="WindowOffset" Offset="1"/>
-            <GradientStop Color="#FF0D3358"/>
+            <GradientStop Color="#FF133C63"/>
         </LinearGradientBrush>
     </Window.Background>
 

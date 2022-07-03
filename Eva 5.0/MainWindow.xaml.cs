@@ -743,42 +743,45 @@ namespace Eva_5._0
                                                 {
                                                     case "Eva Listen":
 
-                                                        switch (FunctionInitiated)
+                                                        if(Timer_Window.Ring_Timer == false)
                                                         {
-                                                            case false:
+                                                            switch (FunctionInitiated)
+                                                            {
+                                                                case false:
 
-                                                                switch (Application.Current.MainWindow.WindowState == WindowState.Normal)
-                                                                {
-                                                                    case true:
+                                                                    switch (Application.Current.MainWindow.WindowState == WindowState.Normal)
+                                                                    {
+                                                                        case true:
 
-                                                                        FunctionInitiated = true;
+                                                                            FunctionInitiated = true;
 
-                                                                        Application.Current.MainWindow.Topmost = true;
-                                                                        Application.Current.MainWindow.Activate();
-
-
-
-
-                                                                        System.Threading.Thread Online_Speech_Recognition_Thread = new System.Threading.Thread(() =>
-                                                                        {
-                                                                            Online_Speech_Recognition.Recogniser_Thread_Creation_And_Initiation();
-                                                                        });
-
-                                                                        Online_Speech_Recognition_Thread.SetApartmentState(System.Threading.ApartmentState.STA);
-                                                                        Online_Speech_Recognition_Thread.Priority = System.Threading.ThreadPriority.AboveNormal;
-                                                                        Online_Speech_Recognition_Thread.IsBackground = true;
-                                                                        Online_Speech_Recognition_Thread.Start();
+                                                                            Application.Current.MainWindow.Topmost = true;
+                                                                            Application.Current.MainWindow.Activate();
 
 
 
 
+                                                                            System.Threading.Thread Online_Speech_Recognition_Thread = new System.Threading.Thread(() =>
+                                                                            {
+                                                                                Online_Speech_Recognition.Recogniser_Thread_Creation_And_Initiation();
+                                                                            });
 
-                                                                        Application.Current.MainWindow.Topmost = false;
+                                                                            Online_Speech_Recognition_Thread.SetApartmentState(System.Threading.ApartmentState.STA);
+                                                                            Online_Speech_Recognition_Thread.Priority = System.Threading.ThreadPriority.AboveNormal;
+                                                                            Online_Speech_Recognition_Thread.IsBackground = true;
+                                                                            Online_Speech_Recognition_Thread.Start();
 
-                                                                        break;
-                                                                }
 
-                                                                break;
+
+
+
+                                                                            Application.Current.MainWindow.Topmost = false;
+
+                                                                            break;
+                                                                    }
+
+                                                                    break;
+                                                            }
                                                         }
 
                                                         break;
