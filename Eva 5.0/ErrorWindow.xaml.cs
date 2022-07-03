@@ -86,18 +86,28 @@ namespace Eva_5._0
                 switch (await Settings.Get_Settings() == true)
                 {
                     case true:
-                        ErrorSoundEffect.Play();
+
+                        switch (System.IO.File.Exists(System.IO.Path.GetFullPath("Privacy statement declined or mic not available.wav")))
+                        {
+                            case true:
+                                ErrorSoundEffect.Play();
+                                break;
+                        }
                         break;
                 }
             }
             catch { }
 
-            await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:privacy-microphone"));
-
-            Application.Current.Dispatcher.Invoke(() =>
+            try
             {
-                ErrorContext.Text = "Go to Settings  ->  Privacy  ->  Microphone.\n\n\nUnder the  [Allow apps to access your microphone]\nsection, press the button associated with it, in order\nto enable it.";
-            });
+                await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:privacy-microphone"));
+
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    ErrorContext.Text = "Go to Settings  ->  Privacy  ->  Microphone.\n\n\nUnder the  [Allow apps to access your microphone]\nsection, press the button associated with it, in order\nto enable it.";
+                });
+            }
+            catch { }
 
             return false;
         }
@@ -111,18 +121,28 @@ namespace Eva_5._0
                 switch (await Settings.Get_Settings() == true)
                 {
                     case true:
-                        ErrorSoundEffect.Play();
+
+                        switch (System.IO.File.Exists(System.IO.Path.GetFullPath("Privacy statement declined or mic not available.wav")))
+                        {
+                            case true:
+                                ErrorSoundEffect.Play();
+                                break;
+                        }
                         break;
                 }
             }
             catch { }
 
-            await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:privacy-speech"));
-
-            Application.Current.Dispatcher.Invoke(() =>
+            try
             {
-                ErrorContext.Text = "Go to Settings  ->  Privacy  ->  Speech.\n\n\nUnder the  [Online speech recognition]  section,\npress the button associated with it,\nin order to enable it.";
-            });
+                await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:privacy-speech"));
+
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    ErrorContext.Text = "Go to Settings  ->  Privacy  ->  Speech.\n\n\nUnder the  [Online speech recognition]  section,\npress the button associated with it,\nin order to enable it.";
+                });
+            }
+            catch { }
 
             return false;
         }
@@ -636,6 +656,38 @@ namespace Eva_5._0
 
             App.PermisissionWindowOpen = false;
         }
+
+
+        private void Window_Size_Changed(object sender, SizeChangedEventArgs e)
+        {
+            switch (App.PermisissionWindowOpen)
+            {
+                case true:
+
+                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                    {
+                        case false:
+
+                            switch (Application.Current.MainWindow == null)
+                            {
+                                case false:
+
+                                    Rect geometry = new Rect();
+
+                                    geometry.Height = this.Height;
+                                    geometry.Width = this.Width;
+
+                                    Error_Window_Geometry.Rect = geometry;
+
+                                    break;
+                            }
+
+                            break;
+                    }
+                    break;
+            }
+        }
+
 
         ~ErrorWindow()
         {

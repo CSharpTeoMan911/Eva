@@ -37,6 +37,10 @@ namespace Eva_5._0
 
         private double OpenSettingsMenuButtonOffsetArithmetic;
 
+        private bool SwitchOpenTimerMenuButtonOffset;
+
+        private double OpenTimerMenuButtonOffsetArithmetic;
+
         private bool SwitchSpeechRecognitionButtonOffset;
 
         private double SpeechRecognitionButtonOffsetArithmetic;
@@ -62,7 +66,7 @@ namespace Eva_5._0
 
         private static byte ExecutionAnimationArithmetic;
 
-        private double InitialRotatorWindth;
+        private double InitialRotatorWidth;
 
         int RotationValue;
 
@@ -81,26 +85,8 @@ namespace Eva_5._0
         {
             Check_User_Current_Administartive_Role.Check_If_User_Is_Administartor();
 
-          
-            this.Width = this.ActualWidth / 2.6;
-            this.Height = this.ActualHeight / 2.6;
+            InitialRotatorWidth = Rotator.ActualWidth;
 
-            this.ResizeMode = System.Windows.ResizeMode.NoResize;
-
-            OuterElipse.Height = WidthReference.ActualWidth;
-            OuterElipse.Width = WidthReference.ActualWidth;
-
-            InnerElipse.Width = WidthReference.ActualWidth / 1.1;
-            InnerElipse.Height = WidthReference.ActualWidth / 1.1;
-
-            InitialRotatorWindth = WidthReference.ActualWidth / 4.5;
-            Rotator.Width = WidthReference.ActualWidth / 4.5;
-
-
-            SpeechRecognitionButton.FontSize = SpeechRecognitionButton.FontSize / 2;
-            MinimiseTheWindowButton.FontSize = MinimiseTheWindowButton.FontSize / 2.6;
-            CloseTheWindowButton.FontSize = CloseTheWindowButton.FontSize / 2.6;
-            OpenSettingsMenuButton.FontSize = OpenSettingsMenuButton.FontSize / 2.6;
 
             AnimationAndFunctionalityTimer = new System.Timers.Timer();
             AnimationAndFunctionalityTimer.Elapsed += AnimationAndFunctionalityTimer_Elapsed;
@@ -147,7 +133,7 @@ namespace Eva_5._0
                             
 
 
-                            Application.Current.Dispatcher.Invoke(() =>
+                            Application.Current.Dispatcher.Invoke(async() =>
                             {
                                 switch (Application.Current.MainWindow == null)
                                 {
@@ -161,6 +147,52 @@ namespace Eva_5._0
                                         break;
 
                                     case false:
+
+
+                                        if (Timer_Interval._isTimer == true)
+                                        {
+
+                                            OpenTimerMenuButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+
+                                            OpenTimerMenuButtonNotOffset.Color = (Color)ColorConverter.ConvertFromString("#FF11497F");
+
+
+
+
+                                            bool Time_Interval_Elapsed = await Timer_Interval.Calculate_Time_Interval_Left();
+
+                                            if (Time_Interval_Elapsed == true)
+                                            {
+                                                switch(App.TimerWindowOpen)
+                                                {
+                                                    case true:
+
+                                                        Timer_Window.Ring_Timer = true;
+                                                        break;
+
+
+
+                                                    case false:
+
+                                                        Timer_Window.Ring_Timer = true;
+
+                                                        Timer_Window timer = new Timer_Window();
+                                                        timer.ShowDialog();
+                                                        break;
+                                                }
+                                            }
+
+                                        }
+                                        else
+                                        {
+
+                                            OpenTimerMenuButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FFD67A71");
+
+                                            OpenTimerMenuButtonNotOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7F1111");
+
+                                        }
+
+
 
 
                                        
@@ -181,84 +213,83 @@ namespace Eva_5._0
 
 
 
-                                        switch (BeginExecutionAnimation)
+                                        if (BeginExecutionAnimation == true)
                                         {
-                                            case true:
 
-                                                Rotator.Width = 0;
 
-                                                switch (ExecutionAnimationArithmetic == 40)
-                                                {
-                                                    case true:
-                                                        OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                        OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                        ExecutionAnimationArithmetic = 0;
-                                                        BeginExecutionAnimation = false;
-                                                        break;
+                                            Rotator.Width = 0;
 
-                                                    case false:
-                                                        ExecutionAnimationArithmetic++;
+                                            switch (ExecutionAnimationArithmetic == 40)
+                                            {
+                                                case true:
+                                                    OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                    OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                    ExecutionAnimationArithmetic = 0;
+                                                    BeginExecutionAnimation = false;
+                                                    break;
 
-                                                        switch (ExecutionAnimationArithmetic)
-                                                        {
-                                                            case 4:
-                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                                break;
+                                                case false:
+                                                    ExecutionAnimationArithmetic++;
 
-                                                            case 8:
-                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                                break;
+                                                    switch (ExecutionAnimationArithmetic)
+                                                    {
+                                                        case 4:
+                                                            OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                            OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                            break;
 
-                                                            case 12:
-                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                                break;
+                                                        case 8:
+                                                            OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                            OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                            break;
 
-                                                            case 16:
-                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                                break;
+                                                        case 12:
+                                                            OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                            OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                            break;
 
-                                                            case 20:
-                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                                break;
+                                                        case 16:
+                                                            OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                            OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                            break;
 
-                                                            case 24:
-                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                                break;
+                                                        case 20:
+                                                            OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                            OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                            break;
 
-                                                            case 28:
-                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                                break;
+                                                        case 24:
+                                                            OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                            OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                            break;
 
-                                                            case 32:
-                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                                break;
+                                                        case 28:
+                                                            OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                            OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                            break;
 
-                                                            case 36:
-                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                                break;
+                                                        case 32:
+                                                            OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                            OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                            break;
 
-                                                            case 40:
-                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                                break;
-                                                        }
-                                                        break;
-                                                }
+                                                        case 36:
+                                                            OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                            OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                            break;
 
-                                                break;
+                                                        case 40:
+                                                            OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                            OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                            break;
+                                                    }
+                                                    break;
+                                            }
 
-                                            case false:
-                                                Rotator.Width = InitialRotatorWindth;
-                                                break;
+                                        }
+                                        else
+                                        {
+                                            Rotator.Width = InitialRotatorWidth;
                                         }
 
 
@@ -382,6 +413,44 @@ namespace Eva_5._0
 
                                                 break;
                                         }
+
+
+
+                                        switch (SwitchOpenTimerMenuButtonOffset)
+                                        {
+                                            case true:
+
+                                                switch (OpenTimerMenuButtonOffsetArithmetic > 0)
+                                                {
+                                                    case true:
+                                                        OpenTimerMenuButtonOffsetArithmetic--;
+                                                        OpenTimerMenuButtonOffset.Offset += 0.02;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchOpenTimerMenuButtonOffset = false;
+                                                        break;
+                                                }
+
+                                                break;
+
+                                            case false:
+
+                                                switch (OpenTimerMenuButtonOffsetArithmetic < 45)
+                                                {
+                                                    case true:
+                                                        OpenTimerMenuButtonOffsetArithmetic++;
+                                                        OpenTimerMenuButtonOffset.Offset -= 0.02;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchOpenTimerMenuButtonOffset = true;
+                                                        break;
+                                                }
+
+                                                break;
+                                        }
+
 
 
 
@@ -605,8 +674,6 @@ namespace Eva_5._0
                                                     ParallelProcessing.IsBackground = true;
                                                     ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
                                                     ParallelProcessing.Start();
-                                                    ParallelProcessing.Join();
-
                                                 }
                                                 catch { }
 
@@ -633,8 +700,6 @@ namespace Eva_5._0
                                                     ParallelProcessing.IsBackground = true;
                                                     ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
                                                     ParallelProcessing.Start();
-                                                    ParallelProcessing.Join();
-
                                                 }
                                                 catch { }
 
@@ -670,7 +735,7 @@ namespace Eva_5._0
 
                                     case false:
 
-                                        switch (e.Result.Confidence >= 0.90)
+                                        switch (e.Result.Confidence >= 0.95)
                                         {
                                             case true:
 
@@ -691,9 +756,25 @@ namespace Eva_5._0
                                                                         Application.Current.MainWindow.Topmost = true;
                                                                         Application.Current.MainWindow.Activate();
 
-                                                                        Online_Speech_Recognition.Recogniser_Thread_Creation_And_Initiation();
+
+
+
+                                                                        System.Threading.Thread Online_Speech_Recognition_Thread = new System.Threading.Thread(() =>
+                                                                        {
+                                                                            Online_Speech_Recognition.Recogniser_Thread_Creation_And_Initiation();
+                                                                        });
+
+                                                                        Online_Speech_Recognition_Thread.SetApartmentState(System.Threading.ApartmentState.STA);
+                                                                        Online_Speech_Recognition_Thread.Priority = System.Threading.ThreadPriority.AboveNormal;
+                                                                        Online_Speech_Recognition_Thread.IsBackground = true;
+                                                                        Online_Speech_Recognition_Thread.Start();
+
+
+
+
 
                                                                         Application.Current.MainWindow.Topmost = false;
+
                                                                         break;
                                                                 }
 
@@ -794,6 +875,39 @@ namespace Eva_5._0
             }
         }
 
+        
+
+        private void OpenTimerWindow(object sender, RoutedEventArgs e)
+        {
+            switch (MainWindowIsClosing)
+            {
+                case false:
+                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                    {
+                        case false:
+
+                            switch (Application.Current.MainWindow == null)
+                            {
+                                case false:
+                                    switch (App.TimerWindowOpen)
+                                    {
+                                        case false:
+                                            App.TimerWindowOpen = true;
+                                            Timer_Window TimerWindowObject = new Timer_Window();
+                                            TimerWindowObject.Show();
+                                            break;
+                                    }
+                                    break;
+                            }
+
+                            break;
+                    }
+                    break;
+            }
+        }
+
+
+
         ~MainWindow()
         {
             try
@@ -824,7 +938,7 @@ namespace Eva_5._0
                 }
 
                 BeginExecutionAnimation = null;
-                
+
 
 
                 System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
@@ -833,5 +947,8 @@ namespace Eva_5._0
             catch { }
 
         }
+
+
+
     }
 }

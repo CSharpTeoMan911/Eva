@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Eva_5._0
 {
-    internal class Proc<ProcessType, Application, Content>
+    internal class Proc<ProcessType, Application, Content>:Applications_And_Processes
     {
         private static System.Threading.Thread ParallelProcessing;
 
@@ -22,6 +22,10 @@ namespace Eva_5._0
 
                 case "System Process":
                     await SystemProcesses(application as string, content as string);
+                    break;
+
+                case "Timer Process":
+                    await TimerProcess(content as System.Collections.Concurrent.ConcurrentDictionary<string, int>);
                     break;
             }
 
@@ -164,19 +168,19 @@ namespace Eva_5._0
 
                 string application_executable_name = String.Empty;
 
-                bool Application_Executable_Name_Retrieval_Result = App.Application_Name__And__Application_Executable_Name.TryGetValue(Application, out application_executable_name);
+                bool Application_Executable_Name_Retrieval_Result = Applications_And_Processes.Application_Name__And__Application_Executable_Name.TryGetValue(Application, out application_executable_name);
 
 
 
                 string application_process_name = String.Empty;
 
-                bool Application_Process_Name_Retrieval_Result = App.Application_Name__And__Application_Process_Name.TryGetValue(Application, out application_process_name);
+                bool Application_Process_Name_Retrieval_Result = Applications_And_Processes.Application_Name__And__Application_Process_Name.TryGetValue(Application, out application_process_name);
 
 
 
                 string application_not_found_error_link = String.Empty;
 
-                bool Application_Not_Found_Error_Download_Link_Result = App.Application_Name__And__Application_Not_Found_Error_Download_Link.TryGetValue(Application, out application_not_found_error_link);
+                bool Application_Not_Found_Error_Download_Link_Result = Applications_And_Processes.Application_Name__And__Application_Not_Found_Error_Download_Link.TryGetValue(Application, out application_not_found_error_link);
 
 
                 
@@ -281,11 +285,19 @@ namespace Eva_5._0
                         {
                             try
                             {
+                               
                                 MainWindow.BeginExecutionAnimation = true;
 
-                                foreach (System.Diagnostics.Process p in System.Diagnostics.Process.GetProcessesByName(application_process_name))
+                                if(application_process_name != "timer")
                                 {
-                                    p.Kill();
+                                    foreach (System.Diagnostics.Process p in System.Diagnostics.Process.GetProcessesByName(application_process_name))
+                                    {
+                                        p.Kill();
+                                    }
+                                }
+                                else
+                                {
+                                    await Timer_Interval.Cancel_Time_Interval();
                                 }
 
                                 try
@@ -321,6 +333,59 @@ namespace Eva_5._0
             return Task.FromResult(true);
         }
 
+
+
+        private async static Task<bool> TimerProcess(System.Collections.Concurrent.ConcurrentDictionary<string, int> Timer_Time_Intervals)
+        {
+            bool SoundOrOff = await Settings.Get_Settings();
+
+            System.Media.SoundPlayer AppExecutionSoundEffect = new System.Media.SoundPlayer("App execution.wav");
+
+
+
+
+            int hours_interval = 0;
+
+            Timer_Time_Intervals.TryGetValue("hours", out hours_interval);
+
+
+
+            int minutes_interval = 0;
+
+            Timer_Time_Intervals.TryGetValue("minutes", out minutes_interval);
+
+
+
+            int seconds_interval = 0;
+
+            Timer_Time_Intervals.TryGetValue("seconds", out seconds_interval);
+
+
+
+
+            await Timer_Interval.Set_Time_Interval(hours_interval, minutes_interval, seconds_interval);
+
+            MainWindow.BeginExecutionAnimation = true;
+
+
+
+
+
+            switch (SoundOrOff == true)
+            {
+                case true:
+                    switch (System.IO.File.Exists(@"App execution.wav"))
+                    {
+                        case true:
+                            AppExecutionSoundEffect.Play();
+                            break;
+                    }
+                    break;
+            }
+
+
+            return true;
+        }
 
 
         ~Proc()

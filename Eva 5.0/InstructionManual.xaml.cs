@@ -882,6 +882,36 @@ namespace Eva_5._0
 
         }
 
+        private void Window_Size_Changed(object sender, SizeChangedEventArgs e)
+        {
+            switch (App.InstructionManualOpen)
+            {
+                case true:
+
+                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                    {
+                        case false:
+
+                            switch (Application.Current.MainWindow == null)
+                            {
+
+                                case false:
+
+                                    Rect geometry = new Rect();
+
+                                    geometry.Height = this.Height;
+                                    geometry.Width = this.Width;
+
+                                    Instruction_Manual_Geometry.Rect = geometry;
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+            }
+        }
+
+
 
         ~InstructionManual()
         {
@@ -899,5 +929,6 @@ namespace Eva_5._0
                     break;
             }
         }
+
     }
 }

@@ -8,9 +8,8 @@ namespace Eva_5._0
 {
     internal class Natural_Language_Processing
     {
-        private Proc<string, string, string> proc;
-
-        public static async Task<bool> PreProcessing<Sentence_Parameter> (Sentence_Parameter sentence_parameter)
+       
+        public static async Task<bool> PreProcessing<Sentence_Parameter>(Sentence_Parameter sentence_parameter)
         {
             string Sentence = sentence_parameter as string;
 
@@ -144,6 +143,63 @@ namespace Eva_5._0
                     break;
             }
 
+
+
+            System.Diagnostics.Debug.WriteLine(Sentence + "  <---");
+
+            switch (Sentence.IndexOf("set a ") == 0)
+            {
+                case true:
+                    
+                    switch (Sentence.IndexOf(" timer") == Sentence.Length - 6)
+                    {
+                        case true:
+
+                            await PostProcessing<string, string>("set a [Timer Interval] timer", Sentence);
+                            break;
+
+
+                        case false:
+
+                            switch (Sentence.IndexOf(" please") == Sentence.Length - 7)
+                            {
+                                case true:
+
+                                    switch(Sentence.IndexOf(" timer ") == Sentence.Length - 13)
+                                    {
+                                        case true:
+
+                                            await PostProcessing<string, string>("set a [Timer Interval] timer please", Sentence);
+                                            break;
+                                    }
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+
+               
+
+                case false:
+
+                    switch (Sentence.IndexOf("please set a ") == 0)
+                    {
+                        case true:
+
+                            switch(Sentence.IndexOf(" timer") == Sentence.Length - 6)
+                            {
+                                case true:
+
+                                    await PostProcessing<string, string>("please set a [Timer Interval] timer", Sentence);
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+            }
+
+
+
             return true;
         }
 
@@ -157,6 +213,17 @@ namespace Eva_5._0
 
             string Sentence = sentence as string;
             string Param = parameter as string;
+
+
+
+
+            bool Time_Unit_Received = false;
+
+            int Time_Unit_Value_Buffer = 0;
+
+            string Word_Buffer = String.Empty;
+
+            System.Collections.Concurrent.ConcurrentDictionary<string, int> time_interval = new System.Collections.Concurrent.ConcurrentDictionary<string, int>();
 
 
             switch (Param)
@@ -503,6 +570,623 @@ namespace Eva_5._0
 
                     await Proc<string, string, string>.ProcInitialisation("Online Process", Application, WebApplicationSearchContent);
                     break;
+
+
+
+                case "set a [Timer Interval] timer":
+
+                    Time_Unit_Received = false;
+
+                    Time_Unit_Value_Buffer = 0;
+
+                    Word_Buffer = String.Empty;
+
+
+                    
+
+
+
+                    for (int Index = 6; Index <= Sentence.Length - 6; Index++)
+                    {
+                        if (Sentence[Index].ToString() == " ")
+                        {
+
+                            if (Time_Unit_Received == true)
+                            {
+
+                                if ((Word_Buffer == "hour") || (Word_Buffer == "hours"))
+                                {
+
+                                    int buffer = 0;
+
+                                    bool retrieval_result = time_interval.TryGetValue("hours", out buffer);
+
+                                    if(retrieval_result == false)
+                                    {
+                                        time_interval.TryAdd("hours", Time_Unit_Value_Buffer);
+
+                                        Time_Unit_Value_Buffer = 0;
+
+                                        Time_Unit_Received = false;
+                                    }
+                                    else
+                                    {
+                                        break;
+                                    }
+
+                                }
+                                else if ((Word_Buffer.Trim() == "minute") || (Word_Buffer.Trim() == "minutes"))
+                                {
+
+                                    int buffer = 0;
+
+                                    bool retrieval_result = time_interval.TryGetValue("minutes", out buffer);
+
+                                    if(retrieval_result == false)
+                                    {
+                                        time_interval.TryAdd("minutes", Time_Unit_Value_Buffer);
+
+                                        Time_Unit_Value_Buffer = 0;
+
+                                        Time_Unit_Received = false;
+                                    }
+                                    else
+                                    {
+                                        break;
+                                    }
+
+                                }
+                                else if ((Word_Buffer == "second") || (Word_Buffer == "seconds"))
+                                {
+
+                                    int buffer = 0;
+
+                                    bool retrieval_result = time_interval.TryGetValue("seconds", out buffer);
+
+                                    if(retrieval_result == false)
+                                    {
+                                        time_interval.TryAdd("seconds", Time_Unit_Value_Buffer);
+
+                                        Time_Unit_Value_Buffer = 0;
+
+                                        Time_Unit_Received = false;
+                                    }
+                                    else
+                                    {
+                                        break;
+                                    }
+
+                                }
+                              
+                            }
+                            else
+                            {
+                                try
+                                {
+
+                                    double Number_Verification_Buffer = Convert.ToDouble(Word_Buffer);
+
+                                    Time_Unit_Value_Buffer = Convert.ToInt32(Word_Buffer);
+
+                                    Time_Unit_Received = true;
+
+                                }
+                                catch
+                                {
+
+                                    if (Time_Unit_Received == false)
+                                    {
+                                        switch (Word_Buffer)
+                                        {
+                                            case "one":
+
+                                                Time_Unit_Value_Buffer = 1;
+
+                                                Time_Unit_Received = true;
+
+                                                break;
+
+
+                                            case "two":
+
+                                                Time_Unit_Value_Buffer = 2;
+
+                                                Time_Unit_Received = true;
+
+                                                break;
+
+
+                                            case "three":
+
+                                                Time_Unit_Value_Buffer = 3;
+
+                                                Time_Unit_Received = true;
+
+                                                break;
+
+
+                                            case "four":
+
+                                                Time_Unit_Value_Buffer = 4;
+
+                                                Time_Unit_Received = true;
+
+                                                break;
+
+
+                                            case "five":
+
+                                                Time_Unit_Value_Buffer = 5;
+
+                                                Time_Unit_Received = true;
+
+                                                break;
+
+
+                                            case "six":
+
+                                                Time_Unit_Value_Buffer = 6;
+
+                                                Time_Unit_Received = true;
+
+                                                break;
+
+
+                                            case "seven":
+
+                                                Time_Unit_Value_Buffer = 7;
+
+                                                Time_Unit_Received = true;
+
+                                                break;
+
+
+                                            case "eight":
+
+                                                Time_Unit_Value_Buffer = 8;
+
+                                                Time_Unit_Received = true;
+
+                                                break;
+
+
+                                            case "nine":
+
+                                                Time_Unit_Value_Buffer = 9;
+
+                                                Time_Unit_Received = true;
+
+                                                break;
+                                        }
+                                   
+                                    }
+                                  
+                                }
+                            }
+                           
+
+                            Word_Buffer = String.Empty;
+                        }
+                        else
+                        {
+                            Word_Buffer += Sentence[Index].ToString();
+                        }
+                    }
+
+
+                    await Proc<string, string, System.Collections.Concurrent.ConcurrentDictionary<string, int>>.ProcInitialisation("Timer Process", null, time_interval);
+
+                    break;
+
+
+                case "set a [Timer Interval] timer please":
+
+                    Time_Unit_Received = false;
+
+                    Time_Unit_Value_Buffer = 0;
+
+                    Word_Buffer = String.Empty;
+
+
+
+                    for (int Index = 6; Index <= Sentence.Length - 13; Index++)
+                    {
+                        if (Sentence[Index].ToString() == " ")
+                        {
+
+                            if (Time_Unit_Received == true)
+                            {
+
+                                if ((Word_Buffer == "hour") || (Word_Buffer == "hours"))
+                                {
+
+                                    int buffer = 0;
+
+                                    bool retrieval_result = time_interval.TryGetValue("hours", out buffer);
+
+                                    if (retrieval_result == false)
+                                    {
+                                        time_interval.TryAdd("hours", Time_Unit_Value_Buffer);
+
+                                        Time_Unit_Value_Buffer = 0;
+
+                                        Time_Unit_Received = false;
+                                    }
+                                    else
+                                    {
+                                        break;
+                                    }
+
+                                }
+                                else if ((Word_Buffer.Trim() == "minute") || (Word_Buffer.Trim() == "minutes"))
+                                {
+
+                                    int buffer = 0;
+
+                                    bool retrieval_result = time_interval.TryGetValue("minutes", out buffer);
+
+                                    if (retrieval_result == false)
+                                    {
+                                        time_interval.TryAdd("minutes", Time_Unit_Value_Buffer);
+
+                                        Time_Unit_Value_Buffer = 0;
+
+                                        Time_Unit_Received = false;
+                                    }
+                                    else
+                                    {
+                                        break;
+                                    }
+
+                                }
+                                else if ((Word_Buffer == "second") || (Word_Buffer == "seconds"))
+                                {
+
+                                    int buffer = 0;
+
+                                    bool retrieval_result = time_interval.TryGetValue("seconds", out buffer);
+
+                                    if (retrieval_result == false)
+                                    {
+                                        time_interval.TryAdd("seconds", Time_Unit_Value_Buffer);
+
+                                        Time_Unit_Value_Buffer = 0;
+
+                                        Time_Unit_Received = false;
+                                    }
+                                    else
+                                    {
+                                        break;
+                                    }
+
+                                }
+
+                            }
+                            else
+                            {
+                                try
+                                {
+
+                                    double Number_Verification_Buffer = Convert.ToDouble(Word_Buffer);
+
+                                    Time_Unit_Value_Buffer = Convert.ToInt32(Word_Buffer);
+
+                                    Time_Unit_Received = true;
+
+                                }
+                                catch
+                                {
+
+                                    if (Time_Unit_Received == false)
+                                    {
+                                        switch (Word_Buffer)
+                                        {
+                                            case "one":
+
+                                                Time_Unit_Value_Buffer = 1;
+
+                                                Time_Unit_Received = true;
+
+                                                break;
+
+
+                                            case "two":
+
+                                                Time_Unit_Value_Buffer = 2;
+
+                                                Time_Unit_Received = true;
+
+                                                break;
+
+
+                                            case "three":
+
+                                                Time_Unit_Value_Buffer = 3;
+
+                                                Time_Unit_Received = true;
+
+                                                break;
+
+
+                                            case "four":
+
+                                                Time_Unit_Value_Buffer = 4;
+
+                                                Time_Unit_Received = true;
+
+                                                break;
+
+
+                                            case "five":
+
+                                                Time_Unit_Value_Buffer = 5;
+
+                                                Time_Unit_Received = true;
+
+                                                break;
+
+
+                                            case "six":
+
+                                                Time_Unit_Value_Buffer = 6;
+
+                                                Time_Unit_Received = true;
+
+                                                break;
+
+
+                                            case "seven":
+
+                                                Time_Unit_Value_Buffer = 7;
+
+                                                Time_Unit_Received = true;
+
+                                                break;
+
+
+                                            case "eight":
+
+                                                Time_Unit_Value_Buffer = 8;
+
+                                                Time_Unit_Received = true;
+
+                                                break;
+
+
+                                            case "nine":
+
+                                                Time_Unit_Value_Buffer = 9;
+
+                                                Time_Unit_Received = true;
+
+                                                break;
+                                        }
+
+                                    }
+
+                                }
+                            }
+
+
+                            Word_Buffer = String.Empty;
+                        }
+                        else
+                        {
+                            Word_Buffer += Sentence[Index].ToString();
+                        }
+                    }
+
+
+                    await Proc<string, string, System.Collections.Concurrent.ConcurrentDictionary<string, int>>.ProcInitialisation("Timer Process", null, time_interval);
+
+                    break;
+
+
+
+                case "please set a [Timer Interval] timer":
+
+                    Time_Unit_Received = false;
+
+                    Time_Unit_Value_Buffer = 0;
+
+                    Word_Buffer = String.Empty;
+
+
+
+
+
+
+                    for (int Index = 13; Index <= Sentence.Length - 6; Index++)
+                    {
+                        if (Sentence[Index].ToString() == " ")
+                        {
+
+                            if (Time_Unit_Received == true)
+                            {
+
+                                if ((Word_Buffer == "hour") || (Word_Buffer == "hours"))
+                                {
+
+                                    int buffer = 0;
+
+                                    bool retrieval_result = time_interval.TryGetValue("hours", out buffer);
+
+                                    if (retrieval_result == false)
+                                    {
+                                        time_interval.TryAdd("hours", Time_Unit_Value_Buffer);
+
+                                        Time_Unit_Value_Buffer = 0;
+
+                                        Time_Unit_Received = false;
+                                    }
+                                    else
+                                    {
+                                        break;
+                                    }
+
+                                }
+                                else if ((Word_Buffer.Trim() == "minute") || (Word_Buffer.Trim() == "minutes"))
+                                {
+
+                                    int buffer = 0;
+
+                                    bool retrieval_result = time_interval.TryGetValue("minutes", out buffer);
+
+                                    if (retrieval_result == false)
+                                    {
+                                        time_interval.TryAdd("minutes", Time_Unit_Value_Buffer);
+
+                                        Time_Unit_Value_Buffer = 0;
+
+                                        Time_Unit_Received = false;
+                                    }
+                                    else
+                                    {
+                                        break;
+                                    }
+
+                                }
+                                else if ((Word_Buffer == "second") || (Word_Buffer == "seconds"))
+                                {
+
+                                    int buffer = 0;
+
+                                    bool retrieval_result = time_interval.TryGetValue("seconds", out buffer);
+
+                                    if (retrieval_result == false)
+                                    {
+                                        time_interval.TryAdd("seconds", Time_Unit_Value_Buffer);
+
+                                        Time_Unit_Value_Buffer = 0;
+
+                                        Time_Unit_Received = false;
+                                    }
+                                    else
+                                    {
+                                        break;
+                                    }
+
+                                }
+
+                            }
+                            else
+                            {
+                                try
+                                {
+
+                                    double Number_Verification_Buffer = Convert.ToDouble(Word_Buffer);
+
+                                    Time_Unit_Value_Buffer = Convert.ToInt32(Word_Buffer);
+
+                                    Time_Unit_Received = true;
+
+                                }
+                                catch
+                                {
+
+                                    if (Time_Unit_Received == false)
+                                    {
+                                        switch (Word_Buffer)
+                                        {
+                                            case "one":
+
+                                                Time_Unit_Value_Buffer = 1;
+
+                                                Time_Unit_Received = true;
+
+                                                break;
+
+
+                                            case "two":
+
+                                                Time_Unit_Value_Buffer = 2;
+
+                                                Time_Unit_Received = true;
+
+                                                break;
+
+
+                                            case "three":
+
+                                                Time_Unit_Value_Buffer = 3;
+
+                                                Time_Unit_Received = true;
+
+                                                break;
+
+
+                                            case "four":
+
+                                                Time_Unit_Value_Buffer = 4;
+
+                                                Time_Unit_Received = true;
+
+                                                break;
+
+
+                                            case "five":
+
+                                                Time_Unit_Value_Buffer = 5;
+
+                                                Time_Unit_Received = true;
+
+                                                break;
+
+
+                                            case "six":
+
+                                                Time_Unit_Value_Buffer = 6;
+
+                                                Time_Unit_Received = true;
+
+                                                break;
+
+
+                                            case "seven":
+
+                                                Time_Unit_Value_Buffer = 7;
+
+                                                Time_Unit_Received = true;
+
+                                                break;
+
+
+                                            case "eight":
+
+                                                Time_Unit_Value_Buffer = 8;
+
+                                                Time_Unit_Received = true;
+
+                                                break;
+
+
+                                            case "nine":
+
+                                                Time_Unit_Value_Buffer = 9;
+
+                                                Time_Unit_Received = true;
+
+                                                break;
+                                        }
+
+                                    }
+
+                                }
+                            }
+
+
+                            Word_Buffer = String.Empty;
+                        }
+                        else
+                        {
+                            Word_Buffer += Sentence[Index].ToString();
+                        }
+                    }
+
+
+                    await Proc<string, string, System.Collections.Concurrent.ConcurrentDictionary<string, int>>.ProcInitialisation("Timer Process", null, time_interval);
+
+                    break;
             }
 
 
@@ -512,8 +1196,6 @@ namespace Eva_5._0
 
         ~Natural_Language_Processing()
         {
-            proc = null;
-
             System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect(0, GCCollectionMode.Forced, true, true);
         }

@@ -98,6 +98,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Applications_And_Processes.cs" />
     <Compile Include="Check_User_Current_Administartive_Role.cs" />
     <Compile Include="ErrorWindow.xaml.cs">
       <DependentUpon>ErrorWindow.xaml</DependentUpon>
@@ -110,6 +111,10 @@
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Timer_Interval.cs" />
+    <Compile Include="Timer_Window.xaml.cs">
+      <DependentUpon>Timer_Window.xaml</DependentUpon>
     </Compile>
     <Page Include="ErrorWindow.xaml">
       <SubType>Designer</SubType>
@@ -132,6 +137,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="SettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Timer_Window.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -5,9 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Eva_5._0"
         mc:Ignorable="d"
-        Title="Error" Height="450" Width="800" WindowStyle="None" AllowsTransparency="True" Loaded="ErrorWindowLoaded" Closing="ErrorWindowClosing" Icon="Eva Icon.png">
+        Title="Error" Height="450" Width="800" WindowStyle="None" AllowsTransparency="True" Loaded="ErrorWindowLoaded" SizeChanged="Window_Size_Changed" Closing="ErrorWindowClosing" Icon="Eva Icon.png">
 
 
+    <Window.Clip>
+        <RectangleGeometry x:Name="Error_Window_Geometry" Rect="0,0,800,450" RadiusX="20" RadiusY="20"/>
+    </Window.Clip>
+    
+    
     <Window.Resources>
         <Style x:Key="MyButtonStyle" TargetType="Button">
             <Setter Property="OverridesDefaultStyle" Value="True"/>
