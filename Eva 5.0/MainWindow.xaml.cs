@@ -18,12 +18,23 @@ namespace Eva_5._0
     public partial class MainWindow : Window
     {
         private System.Threading.Thread ParallelProcessing;
+
         private System.Timers.Timer AnimationAndFunctionalityTimer;
+
         private System.Speech.Recognition.SpeechRecognitionEngine MainSpeechRecogniser;
+
+
+
+        public static bool Online_Speech_Recogniser_Listening;
+
+        private int Online_Speech_Recogniser_Listening_TimeOut;
+
+
 
         /// <summary>
         ///  Gradient Arithmetic For Neon Glow Chromatic Effect
         /// </summary>
+
 
         private bool SwitchMinimiseTheWindowOffset;
 
@@ -147,6 +158,39 @@ namespace Eva_5._0
                                         break;
 
                                     case false:
+
+
+
+                                        switch(Online_Speech_Recogniser_Listening)
+                                        {
+                                            case true:
+
+                                                Online_Speech_Recogniser_Listening_TimeOut++;
+
+                                                switch(Online_Speech_Recogniser_Listening_TimeOut == 700)
+                                                {
+                                                    case true:
+
+                                                        Online_Speech_Recogniser_Listening_TimeOut = 0;
+                                                        Online_Speech_Recogniser_Listening = false;
+                                                        break;
+
+                                                    case false:
+
+                                                        OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF91E1FF");
+                                                        OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF3099FF");
+                                                        break;
+                                                }
+                                                break;
+
+
+                                            case false:
+
+                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FFACC6D6");
+                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                break;
+                                        }
+
 
 
                                         if (Timer_Interval._isTimer == true)
@@ -735,7 +779,7 @@ namespace Eva_5._0
 
                                     case false:
 
-                                        switch (e.Result.Confidence >= 0.95)
+                                        switch (e.Result.Confidence >= 0.925)
                                         {
                                             case true:
 

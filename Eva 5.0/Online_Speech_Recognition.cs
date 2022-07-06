@@ -80,6 +80,8 @@ namespace Eva_5._0
                     {
                         case true:
 
+                            MainWindow.Online_Speech_Recogniser_Listening = true;
+
                             OnlineSpeechRecognition.Timeouts.BabbleTimeout = TimeSpan.FromSeconds(7);
                             OnlineSpeechRecognition.Timeouts.EndSilenceTimeout = TimeSpan.FromSeconds(7);
                             OnlineSpeechRecognition.Timeouts.InitialSilenceTimeout = TimeSpan.FromSeconds(7);
@@ -94,9 +96,14 @@ namespace Eva_5._0
                             {
                                 case true:
 
+                                    MainWindow.Online_Speech_Recogniser_Listening = true;
+
                                     switch ((Result.Text == String.Empty) || (Result.Text == null))
                                     {
                                         case true:
+
+                                            MainWindow.Online_Speech_Recogniser_Listening = false;
+
                                             await OnlineSpeechRecognition.StopRecognitionAsync();
                                             OnlineSpeechRecognition.Dispose();
 
@@ -105,9 +112,13 @@ namespace Eva_5._0
 
                                         case false:
 
+                                            MainWindow.Online_Speech_Recogniser_Listening = true;
+
                                             switch (App.StopRecognitionSession)
                                             {
                                                 case false:
+
+                                                    MainWindow.Online_Speech_Recogniser_Listening = true;
 
                                                     await Natural_Language_Processing.PreProcessing<string>(Result.Text);
                                                     await OnlineSpeechRecognition.StopRecognitionAsync();
@@ -115,6 +126,9 @@ namespace Eva_5._0
                                                     break;
 
                                                 case true:
+
+                                                    MainWindow.Online_Speech_Recogniser_Listening = false;
+
                                                     await OnlineSpeechRecognition.StopRecognitionAsync();
                                                     OnlineSpeechRecognition.Dispose();
                                                     break;
@@ -129,6 +143,8 @@ namespace Eva_5._0
 
 
                                 case false:
+
+                                    MainWindow.Online_Speech_Recogniser_Listening = false;
 
                                     await OnlineSpeechRecognition.StopRecognitionAsync();
                                     OnlineSpeechRecognition.Dispose();
@@ -164,6 +180,8 @@ namespace Eva_5._0
                 }
             }
 
+
+            MainWindow.Online_Speech_Recogniser_Listening = false;
 
             MainWindow.FunctionInitiated = false;
 

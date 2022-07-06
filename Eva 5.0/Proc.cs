@@ -148,6 +148,10 @@ namespace Eva_5._0
             ParallelProcessing.IsBackground = true;
             ParallelProcessing.Start();
 
+
+
+            MainWindow.Online_Speech_Recogniser_Listening = false;
+
             return Task.FromResult(true);
         }
 
@@ -329,6 +333,7 @@ namespace Eva_5._0
             ParallelProcessing.Start();
 
 
+            MainWindow.Online_Speech_Recogniser_Listening = false;
 
             return Task.FromResult(true);
         }
@@ -383,6 +388,8 @@ namespace Eva_5._0
                     break;
             }
 
+
+            MainWindow.Online_Speech_Recogniser_Listening = false;
 
             return true;
         }

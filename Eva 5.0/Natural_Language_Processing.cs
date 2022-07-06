@@ -145,7 +145,7 @@ namespace Eva_5._0
 
 
 
-            System.Diagnostics.Debug.WriteLine(Sentence + "  <---");
+            
 
             switch (Sentence.IndexOf("set a ") == 0)
             {
