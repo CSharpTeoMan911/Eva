@@ -161,6 +161,9 @@ namespace Eva_5._0
 
         private async void SettingsWindowLoaded(object sender, RoutedEventArgs e)
         {
+            SensitivityIdentifier.Text = (MainWindow.Speech_Recognition_Sensitivity * 100).ToString();
+
+
             AnimationAndFunctionalityTimer = new System.Timers.Timer();
             AnimationAndFunctionalityTimer.Disposed += AnimationAndFunctionalityTimer_Disposed;
             AnimationAndFunctionalityTimer.Elapsed += AnimationAndFunctionalityTimer_Elapsed;
