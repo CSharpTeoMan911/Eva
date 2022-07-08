@@ -21,9 +21,11 @@ namespace Eva_5._0
 
         private System.Timers.Timer AnimationAndFunctionalityTimer;
 
+
+
         private System.Speech.Recognition.SpeechRecognitionEngine MainSpeechRecogniser;
 
-
+        public static double Speech_Recognition_Sensitivity = 0.92;
 
         public static bool Online_Speech_Recogniser_Listening;
 
@@ -94,7 +96,11 @@ namespace Eva_5._0
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
-            Check_User_Current_Administartive_Role.Check_If_User_Is_Administartor();
+
+           new Check_Role();
+
+
+
 
             InitialRotatorWidth = Rotator.ActualWidth;
 
@@ -779,7 +785,7 @@ namespace Eva_5._0
 
                                     case false:
 
-                                        switch (e.Result.Confidence >= 0.925)
+                                        switch (e.Result.Confidence >= Speech_Recognition_Sensitivity)
                                         {
                                             case true:
 

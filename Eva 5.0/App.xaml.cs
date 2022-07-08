@@ -45,7 +45,7 @@ namespace Eva_5._0
             // Construct the class and resources related to applications, processes and web-links
             // related to the Eva functions
 
-            new Applications_And_Processes();
+            new A_p_l____And____P_r_o_c();
         }
 
 

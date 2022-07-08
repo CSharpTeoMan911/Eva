@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Eva_5._0
 {
-    internal class Proc<ProcessType, Application, Content>:Applications_And_Processes
+    internal class Proc<ProcessType, Application, Content>:A_p_l____And____P_r_o_c
     {
         private static System.Threading.Thread ParallelProcessing;
 
@@ -172,19 +172,19 @@ namespace Eva_5._0
 
                 string application_executable_name = String.Empty;
 
-                bool Application_Executable_Name_Retrieval_Result = Applications_And_Processes.Application_Name__And__Application_Executable_Name.TryGetValue(Application, out application_executable_name);
+                bool Application_Executable_Name_Retrieval_Result = A_p_l____And____P_r_o_c.A_p_l_Name__And__A_p_l___E_x__Name.TryGetValue(Application, out application_executable_name);
 
 
 
                 string application_process_name = String.Empty;
 
-                bool Application_Process_Name_Retrieval_Result = Applications_And_Processes.Application_Name__And__Application_Process_Name.TryGetValue(Application, out application_process_name);
+                bool Application_Process_Name_Retrieval_Result = A_p_l____And____P_r_o_c.A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryGetValue(Application, out application_process_name);
 
 
 
                 string application_not_found_error_link = String.Empty;
 
-                bool Application_Not_Found_Error_Download_Link_Result = Applications_And_Processes.Application_Name__And__Application_Not_Found_Error_Download_Link.TryGetValue(Application, out application_not_found_error_link);
+                bool Application_Not_Found_Error_Download_Link_Result = A_p_l____And____P_r_o_c.A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryGetValue(Application, out application_not_found_error_link);
 
 
                 

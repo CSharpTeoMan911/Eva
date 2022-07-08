@@ -85,6 +85,7 @@
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
+  <PropertyGroup />
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -107,8 +108,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Applications_And_Processes.cs" />
-    <Compile Include="Check_User_Current_Administartive_Role.cs" />
+    <Compile Include="A_p_l____And____P_r_o_c.cs" />
+    <Compile Include="Check_Role.cs" />
     <Compile Include="ErrorWindow.xaml.cs">
       <DependentUpon>ErrorWindow.xaml</DependentUpon>
     </Compile>

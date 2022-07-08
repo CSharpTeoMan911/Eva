@@ -21,10 +21,16 @@ namespace Eva_5._0
     {
         private System.Timers.Timer AnimationAndFunctionalityTimer;
 
+
+
         private bool WindowIsClosing;
+
+
 
         private double Wheel1Angle;
         private double Wheel2Angle;
+
+
 
         private bool SwitchOffsetCloseButtonOffset;
         private double GradientArithmeticCloseButtonOffset;
@@ -53,7 +59,24 @@ namespace Eva_5._0
         private bool SwitchInstructionManualTextBlockOffset;
         private double GradientArithmeticInstructionManualTextBlockOffset;
 
+        private bool SwitchSensitivityTitleTextBlockOffset;
+        private double GradientArithmeticSensitivityTitleTextBlockOffset;
+
+        private bool SwitchSesitivityDownButtonOffset;
+        private double GradientArithmeticSesitivityDownButtonOffset;
+
+        private bool SwitchSesitivityUpButtonOffset;
+        private double GradientArithmeticSesitivityUpButtonOffset;
+
+        private bool SwitchSensitivityIdentifierTextBlockOffset;
+        private double GradientArithmeticSensitivityIdentifierTextBlockOffset;
+
+
+
+
         private bool AnimationAndFunctionalityTimerDisposed;
+
+
 
         public SettingsWindow()
         {
@@ -578,6 +601,146 @@ namespace Eva_5._0
                                                 break;
                                         }
 
+
+                                        switch (SwitchSensitivityTitleTextBlockOffset)
+                                        {
+                                            case false:
+
+                                                switch (GradientArithmeticSensitivityTitleTextBlockOffset <= 65)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticSensitivityTitleTextBlockOffset++;
+                                                        SensitivityTitleOffset.Offset -= 0.01;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchSensitivityTitleTextBlockOffset = true;
+                                                        break;
+                                                }
+                                                break;
+
+                                            case true:
+
+                                                switch (GradientArithmeticSensitivityTitleTextBlockOffset > 0)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticSensitivityTitleTextBlockOffset--;
+                                                        SensitivityTitleOffset.Offset += 0.01;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchSensitivityTitleTextBlockOffset = false;
+                                                        break;
+                                                }
+                                                break;
+                                        }
+
+
+
+                                        switch (SwitchSesitivityDownButtonOffset)
+                                        {
+                                            case false:
+
+                                                switch (GradientArithmeticSesitivityDownButtonOffset <= 65)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticSesitivityDownButtonOffset++;
+                                                        SesitivityDownButtonOffset.Offset -= 0.01;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchSesitivityDownButtonOffset = true;
+                                                        break;
+                                                }
+                                                break;
+
+                                            case true:
+
+                                                switch (GradientArithmeticSesitivityDownButtonOffset > 0)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticSesitivityDownButtonOffset--;
+                                                        SesitivityDownButtonOffset.Offset += 0.01;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchSesitivityDownButtonOffset = false;
+                                                        break;
+                                                }
+                                                break;
+                                        }
+
+
+
+                                        switch (SwitchSesitivityUpButtonOffset)
+                                        {
+                                            case false:
+
+                                                switch (GradientArithmeticSesitivityUpButtonOffset <= 65)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticSesitivityUpButtonOffset++;
+                                                        SesitivityUpButtonOffset.Offset -= 0.01;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchSesitivityUpButtonOffset = true;
+                                                        break;
+                                                }
+                                                break;
+
+                                            case true:
+
+                                                switch (GradientArithmeticSesitivityUpButtonOffset > 0)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticSesitivityUpButtonOffset--;
+                                                        SesitivityUpButtonOffset.Offset += 0.01;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchSesitivityUpButtonOffset = false;
+                                                        break;
+                                                }
+                                                break;
+                                        }
+
+
+
+                                        switch (SwitchSensitivityIdentifierTextBlockOffset)
+                                        {
+                                            case false:
+
+                                                switch (GradientArithmeticSensitivityIdentifierTextBlockOffset <= 65)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticSensitivityIdentifierTextBlockOffset++;
+                                                        SensitivityIdentifierOffset.Offset -= 0.01;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchSensitivityIdentifierTextBlockOffset = true;
+                                                        break;
+                                                }
+                                                break;
+
+                                            case true:
+
+                                                switch (GradientArithmeticSensitivityIdentifierTextBlockOffset > 0)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticSensitivityIdentifierTextBlockOffset--;
+                                                        SensitivityIdentifierOffset.Offset += 0.01;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchSensitivityIdentifierTextBlockOffset = false;
+                                                        break;
+                                                }
+                                                break;
+                                        }
+
+
                                         break;
 
                                 }
@@ -681,6 +844,68 @@ namespace Eva_5._0
 
         }
 
+        
+        private void Sensitivity_Down(object sender, RoutedEventArgs e)
+        {
+            switch (App.SettingsWindowOpen)
+            {
+                case true:
+
+                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                    {
+                        case false:
+
+                            switch (Application.Current.MainWindow == null)
+                            {
+
+                                case false:
+
+                                    if (MainWindow.Speech_Recognition_Sensitivity > 0.30)
+                                    {
+                                        MainWindow.Speech_Recognition_Sensitivity -= 0.01;
+
+                                        SensitivityIdentifier.Text = (MainWindow.Speech_Recognition_Sensitivity * 100).ToString();
+                                    }
+                                    
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+            }
+        }
+
+        private void Sensitivity_Up(object sender, RoutedEventArgs e)
+        {
+            switch (App.SettingsWindowOpen)
+            {
+                case true:
+
+                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                    {
+                        case false:
+
+                            switch (Application.Current.MainWindow == null)
+                            {
+
+                                case false:
+
+                                    if(MainWindow.Speech_Recognition_Sensitivity < 1)
+                                    {
+                                        MainWindow.Speech_Recognition_Sensitivity += 0.01;
+
+                                        SensitivityIdentifier.Text = (MainWindow.Speech_Recognition_Sensitivity * 100).ToString();
+                                    }
+
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+            }
+        }
+
+
         ~SettingsWindow()
         {
             switch (AnimationAndFunctionalityTimerDisposed)
@@ -701,5 +926,6 @@ namespace Eva_5._0
             System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect(2, GCCollectionMode.Forced);
         }
+
     }
 }
