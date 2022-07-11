@@ -111,9 +111,9 @@
             </TextBlock>
         </StackPanel>
 
-        <StackPanel Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,20,0,0" Grid.ColumnSpan="5" Orientation="Horizontal" Grid.RowSpan="2" >
+        <StackPanel Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,20,0,0" Grid.ColumnSpan="5" Orientation="Horizontal" Grid.RowSpan="3" >
 
-            <TextBlock Margin="0,0,10,0" HorizontalAlignment="Center" FontSize="18" FontFamily="Corbel Light" Text="Sound">
+            <TextBlock Margin="0,0,20,0" HorizontalAlignment="Center" FontSize="22" FontFamily="Corbel Light" Text="Sound">
                 <TextBlock.Foreground>
                     <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
                         <GradientStop Color="#FF7BBFD8" x:Name="SettingTitleOffset" Offset="1"/>
@@ -124,7 +124,7 @@
 
 
             <StackPanel Background="Black"  Orientation="Horizontal">
-                <Button x:Name="SoundOnButton" Background="Transparent" BorderBrush="Transparent" Margin="0,0,10,0" FontSize="16" FontFamily="Segoe MDL2 Assets" Content="&#xE767;" Click="SoundOn" Style="{StaticResource MyButtonStyle}">
+                <Button x:Name="SoundOnButton" Background="Transparent" BorderBrush="Transparent" Margin="0,0,10,0" FontSize="22" FontFamily="Segoe MDL2 Assets" Content="&#xE767;" Click="SoundOn" Style="{StaticResource MyButtonStyle}">
                     <Button.Foreground>
                         <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
                             <GradientStop Color="#FF7BBFD8" x:Name="SoundButtonOffset" Offset="1"/>
@@ -133,7 +133,7 @@
                     </Button.Foreground>
                 </Button>
 
-                <Button x:Name="SoundOffButton" Background="Transparent" BorderBrush="Transparent" FontSize="16" FontFamily="Segoe MDL2 Assets" Content="&#xE74F;" Click="SoundOff" Style="{StaticResource MyButtonStyle}">
+                <Button x:Name="SoundOffButton" Background="Transparent" BorderBrush="Transparent" FontSize="22" FontFamily="Segoe MDL2 Assets" Content="&#xE74F;" Click="SoundOff" Style="{StaticResource MyButtonStyle}">
                     <Button.Foreground>
                         <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
                             <GradientStop Color="#FF7BBFD8" x:Name="MuteButtonOffset" Offset="1"/>
@@ -151,52 +151,7 @@
 
 
 
-        <StackPanel Grid.Row="3" Grid.RowSpan="2" Margin="0,30,0,0" Grid.ColumnSpan="5" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-
-            <TextBlock HorizontalAlignment="Center" Margin="0,0,10,0" FontSize="18" FontFamily="Corbel Light" Text="Sensitivity">
-                <TextBlock.Foreground>
-                    <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
-                        <GradientStop Color="#FF7BBFD8" x:Name="SensitivityTitleOffset" Offset="1"/>
-                        <GradientStop Color="#FF1B70C3"/>
-                    </LinearGradientBrush>
-                </TextBlock.Foreground>
-            </TextBlock>
-
-            <StackPanel Background="Black" Orientation="Horizontal">
-                <Button x:Name="SesitivityDownButton" Background="Transparent" BorderBrush="Transparent" Margin="0,0,0,0" FontSize="15" FontFamily="Segoe MDL2 Assets" Content="&#xE00E;" Click="Sensitivity_Down" Style="{StaticResource MyButtonStyle}">
-                    <Button.Foreground>
-                        <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
-                            <GradientStop Color="#FF7BBFD8" x:Name="SesitivityDownButtonOffset" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </Button.Foreground>
-                </Button>
-
-
-                <TextBlock x:Name="SensitivityIdentifier" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" FontFamily="Consolas" Text="92">
-                    <TextBlock.Foreground>
-                        <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
-                            <GradientStop Color="#FF7BBFD8" x:Name="SensitivityIdentifierOffset" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </TextBlock.Foreground>
-                </TextBlock>
-
-
-                <Button x:Name="SesitivityUpButton" Background="Transparent" BorderBrush="Transparent" FontSize="15" FontFamily="Segoe MDL2 Assets" Content="&#xE00F;" Click="Sensitivity_Up" Style="{StaticResource MyButtonStyle}">
-                    <Button.Foreground>
-                        <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
-                            <GradientStop Color="#FF7BBFD8" x:Name="SesitivityUpButtonOffset" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </Button.Foreground>
-
-                </Button>
-            </StackPanel>
-                
-            
-            
-        </StackPanel>
+       
 
 
 
@@ -211,7 +166,7 @@
                 </TextBlock.Foreground>
             </TextBlock>
 
-            <Button FontFamily="Segoe MDL2 Assets" Click="OpenInstructionManual" Background="Black" FontSize="16" VerticalAlignment="Center" Content="&#xE946;" Style="{StaticResource MyButtonStyle}">
+            <Button FontFamily="Segoe MDL2 Assets" Click="OpenInstructionManual" Background="Black" FontSize="20" VerticalAlignment="Center" Content="&#xE946;" Style="{StaticResource MyButtonStyle}">
                 <Button.Foreground>
                     <LinearGradientBrush>
                         <GradientStop Color="#FF7BBFD8" x:Name="InstructionManualButtonOffset" Offset="1"/>

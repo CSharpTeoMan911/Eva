@@ -17,15 +17,9 @@ namespace Eva_5._0
 {
     public partial class MainWindow : Window
     {
-        private System.Threading.Thread ParallelProcessing;
-
         private System.Timers.Timer AnimationAndFunctionalityTimer;
 
 
-
-        private System.Speech.Recognition.SpeechRecognitionEngine MainSpeechRecogniser;
-
-        public static double Speech_Recognition_Sensitivity = 0.92;
 
         public static bool Online_Speech_Recogniser_Listening;
 
@@ -69,11 +63,9 @@ namespace Eva_5._0
 
 
 
-        private int Button_Timeout;
+        private static int Button_Timeout;
 
-        private bool MainWindowIsClosing;
-
-        public static bool FunctionInitiated = false;
+        private static bool MainWindowIsClosing;
 
         public static dynamic BeginExecutionAnimation = false;
 
@@ -83,7 +75,7 @@ namespace Eva_5._0
 
         int RotationValue;
 
-        private byte OnOff;
+       
 
 
 
@@ -94,12 +86,13 @@ namespace Eva_5._0
 
 
 
-        private void WindowLoaded(object sender, RoutedEventArgs e)
+        private async void WindowLoaded(object sender, RoutedEventArgs e)
         {
 
-           new Check_Role();
+            new Check_Role();
 
 
+            await HT__KY_CLS.REG____HT__KY();
 
 
             InitialRotatorWidth = Rotator.ActualWidth;
@@ -165,6 +158,8 @@ namespace Eva_5._0
 
                                     case false:
 
+                                        
+
 
 
                                         switch(Online_Speech_Recogniser_Listening)
@@ -183,6 +178,7 @@ namespace Eva_5._0
 
                                                     case false:
 
+                                                        SpeechRecognitionButton.Content = "\xE1D6";
                                                         OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF91E1FF");
                                                         OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF3099FF");
                                                         break;
@@ -192,6 +188,7 @@ namespace Eva_5._0
 
                                             case false:
 
+                                                SpeechRecognitionButton.Content = "\xF781";
                                                 OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FFACC6D6");
                                                 OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
                                                 break;
@@ -588,9 +585,11 @@ namespace Eva_5._0
             }
         }
 
-        private void MainWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        private async void MainWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             MainWindowIsClosing = true;
+
+            await HT__KY_CLS.UN_REG__E____HT__KY();
         }
 
         private void MoveTheWindow(object sender, MouseButtonEventArgs e)
@@ -661,241 +660,91 @@ namespace Eva_5._0
             }
         }
 
-        private void StartOrStopSpeechRecognition(object sender, RoutedEventArgs e)
+
+
+        private async void StartOrStopSpeechRecognition(object sender, RoutedEventArgs e)
         {
 
-            if (Button_Timeout == 0)
-            {
-                Button_Timeout = 400;
-
-                switch (MainWindowIsClosing)
-                {
-                    case false:
-                        switch (Application.Current.Dispatcher.HasShutdownStarted)
-                        {
-                            case false:
-
-                                switch (Application.Current.MainWindow == null)
-                                {
-                                    case false:
-
-                                        OnOff++;
-
-                                        switch (OnOff)
-                                        {
-                                            case 1:
-
-                                                SpeechRecognitionButton.Content = "\xE1D6";
-
-                                                App.StopRecognitionSession = false;
-
-                                                try
-                                                {
-
-                                                    ParallelProcessing = new System.Threading.Thread(() =>
-                                                    {
-
-
-                                                        MainSpeechRecogniser = new System.Speech.Recognition.SpeechRecognitionEngine();
-
-                                                        MainSpeechRecogniser.BabbleTimeout = TimeSpan.FromSeconds(0);
-                                                        MainSpeechRecogniser.EndSilenceTimeout = TimeSpan.FromSeconds(0);
-                                                        MainSpeechRecogniser.InitialSilenceTimeout = TimeSpan.FromSeconds(0);
-                                                        MainSpeechRecogniser.EndSilenceTimeoutAmbiguous = TimeSpan.FromSeconds(0);
-
-                                                        MainSpeechRecogniser.RequestRecognizerUpdate();
-                                                        System.Speech.Recognition.Choices Choices = new System.Speech.Recognition.Choices("Eva Listen");
-                                                        System.Speech.Recognition.GrammarBuilder gb = new System.Speech.Recognition.GrammarBuilder();
-                                                        gb.Culture = System.Threading.Thread.CurrentThread.CurrentCulture;
-                                                        gb.Append(Choices);
-                                                        System.Speech.Recognition.Grammar Grammar = new System.Speech.Recognition.Grammar(gb);
-                                                        MainSpeechRecogniser.RequestRecognizerUpdate();
-                                                        MainSpeechRecogniser.LoadGrammarAsync(Grammar);
-                                                        MainSpeechRecogniser.SetInputToDefaultAudioDevice();
-                                                        MainSpeechRecogniser.RequestRecognizerUpdate();
-
-                                                        MainSpeechRecogniser.RecognizeAsync(System.Speech.Recognition.RecognizeMode.Multiple);
-                                                        MainSpeechRecogniser.SpeechRecognized += MainSpeechRecogniser_SpeechRecognized;
-                                                        MainSpeechRecogniser.RecognizeCompleted += MainSpeechRecogniser_RecognizeCompleted;
-
-
-                                                    });
-                                                    ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
-                                                    ParallelProcessing.IsBackground = true;
-                                                    ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
-                                                    ParallelProcessing.Start();
-                                                }
-                                                catch { }
-
-                                                break;
-
-                                            case 2:
-
-                                                SpeechRecognitionButton.Content = "\xF781";
-
-                                                App.StopRecognitionSession = true;
-
-                                                OnOff = 0;
-
-                                                try
-                                                {
-
-                                                    ParallelProcessing = new System.Threading.Thread(() =>
-                                                    {
-                                                        MainSpeechRecogniser.RecognizeAsyncStop();
-                                                        MainSpeechRecogniser.RecognizeAsyncCancel();
-                                                        MainSpeechRecogniser.Dispose();
-                                                    });
-                                                    ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
-                                                    ParallelProcessing.IsBackground = true;
-                                                    ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
-                                                    ParallelProcessing.Start();
-                                                }
-                                                catch { }
-
-                                                break;
-                                        }
-
-                                        break;
-                                }
-
-                                break;
-                        }
-                        break;
-                }
-            }
-        }
-
-        private void MainSpeechRecogniser_SpeechRecognized(object sender, System.Speech.Recognition.SpeechRecognizedEventArgs e)
-        {
             switch (MainWindowIsClosing)
             {
                 case false:
-
                     switch (Application.Current.Dispatcher.HasShutdownStarted)
                     {
-
                         case false:
 
-                            Application.Current.Dispatcher.Invoke(() =>
+                            switch (Application.Current.MainWindow == null)
                             {
+                                case false:
 
-                                switch (Application.Current.MainWindow == null)
-                                {
+                                    await Initiate_Recogniser();
+                                    
+                                    break;
+                            }
 
-                                    case false:
-
-                                        switch (e.Result.Confidence >= Speech_Recognition_Sensitivity)
-                                        {
-                                            case true:
-
-                                                switch (e.Result.Text)
-                                                {
-                                                    case "Eva Listen":
-
-                                                        if(Timer_Window.Ring_Timer == false)
-                                                        {
-                                                            switch (FunctionInitiated)
-                                                            {
-                                                                case false:
-
-                                                                    switch (Application.Current.MainWindow.WindowState == WindowState.Normal)
-                                                                    {
-                                                                        case true:
-
-                                                                            FunctionInitiated = true;
-
-                                                                            Application.Current.MainWindow.Topmost = true;
-                                                                            Application.Current.MainWindow.Activate();
-
-
-
-
-                                                                            System.Threading.Thread Online_Speech_Recognition_Thread = new System.Threading.Thread(() =>
-                                                                            {
-                                                                                Online_Speech_Recognition.Recogniser_Thread_Creation_And_Initiation();
-                                                                            });
-
-                                                                            Online_Speech_Recognition_Thread.SetApartmentState(System.Threading.ApartmentState.STA);
-                                                                            Online_Speech_Recognition_Thread.Priority = System.Threading.ThreadPriority.AboveNormal;
-                                                                            Online_Speech_Recognition_Thread.IsBackground = true;
-                                                                            Online_Speech_Recognition_Thread.Start();
-
-
-
-
-
-                                                                            Application.Current.MainWindow.Topmost = false;
-
-                                                                            break;
-                                                                    }
-
-                                                                    break;
-                                                            }
-                                                        }
-
-                                                        break;
-                                                }
-                                                break;
-                                        }
-                                        break;
-                                }
-                            });
                             break;
                     }
                     break;
             }
-
+           
         }
 
-        private void MainSpeechRecogniser_RecognizeCompleted(object sender, System.Speech.Recognition.RecognizeCompletedEventArgs e)
+
+
+        protected static Task<bool> Initiate_Recogniser()
         {
-          
-
-            try
+            switch (MainWindowIsClosing)
             {
-                switch (e.Error != null)
-                {
-                    case true:
+                case false:
+                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                    {
+                        case false:
 
-                        Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            App.ErrorAppShutdown = true;
-                            Application.Current.MainWindow.Visibility = Visibility.Hidden;
-
-                            switch (App.PermisissionWindowOpen)
+                            switch (Application.Current.MainWindow == null)
                             {
                                 case false:
 
-                                    MainSpeechRecogniser.RecognizeAsyncCancel();
-                                    System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-                                    GC.Collect(0, GCCollectionMode.Forced, true, true);
-                                    System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-                                    GC.Collect(0, GCCollectionMode.Forced, true, true);
-                                    System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-                                    GC.Collect(0, GCCollectionMode.Forced, true, true);
+                                    if (Button_Timeout == 0)
+                                    {
+                                        Button_Timeout = 500;
 
-                                    ErrorWindow OpenPermissionDeclinedWindow = new ErrorWindow("Mircrophone Access Denied");
-                                    OpenPermissionDeclinedWindow.Show();
+                                        Application.Current.MainWindow.Activate();
 
-                                    break;
 
-                                case true:
 
-                                    App.InitiateErrorFunction = true;
-                                    App.ErrorFunction = "Mircrophone Access Denied";
+
+                                        System.Threading.Thread Online_Speech_Recognition_Thread = new System.Threading.Thread(() =>
+                                        {
+                                            Online_Speech_Recognition.Recogniser_Thread_Creation_And_Initiation();
+                                        });
+
+                                        Online_Speech_Recognition_Thread.SetApartmentState(System.Threading.ApartmentState.STA);
+                                        Online_Speech_Recognition_Thread.Priority = System.Threading.ThreadPriority.AboveNormal;
+                                        Online_Speech_Recognition_Thread.IsBackground = true;
+                                        Online_Speech_Recognition_Thread.Start();
+
+
+                                        Application.Current.MainWindow.Topmost = true;
+
+                                        Application.Current.MainWindow.Activate();
+
+                                        Application.Current.MainWindow.Topmost = false;
+
+                                    }
+
 
                                     break;
                             }
 
-                        });
-
-                        break;
-                }
-
+                            break;
+                    }
+                    break;
             }
-            catch { }
+            
+
+            return Task.FromResult(false);
         }
+
+   
 
 
 
@@ -977,21 +826,8 @@ namespace Eva_5._0
                         break;
                 }
 
-                switch (MainSpeechRecogniser != null)
-                {
-                    case true:
-                        try
-                        {
-                            MainSpeechRecogniser.RecognizeAsyncStop();
-                            MainSpeechRecogniser.RecognizeAsyncCancel();
-                            MainSpeechRecogniser.Dispose();
-                        }
-                        catch { }
-                        break;
-                }
-
+              
                 BeginExecutionAnimation = null;
-
 
 
                 System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;

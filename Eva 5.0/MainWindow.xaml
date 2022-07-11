@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Eva_5._0"
         mc:Ignorable="d"
-        Title="Eva" Height="170" Width="300" Loaded="WindowLoaded" Closing="MainWindowClosing" ResizeMode="NoResize"  Opacity="0.94" AllowsTransparency="True" WindowStyle="None" Icon="/Eva icon.png" Focusable="False">
+        Title="Eva" Height="150" Width="240" Loaded="WindowLoaded" Closing="MainWindowClosing" ResizeMode="NoResize"  Opacity="0.94" AllowsTransparency="True" WindowStyle="None" Icon="/Eva icon.png" Focusable="False">
 
     <Window.Background>
         <LinearGradientBrush StartPoint="0.5, 1">
@@ -16,7 +16,7 @@
 
 
     <Window.Clip>
-        <RectangleGeometry Rect="0, 0, 300, 170" RadiusX="15" RadiusY="15"/>
+        <RectangleGeometry Rect="0, 0, 240, 150" RadiusX="15" RadiusY="15"/>
     </Window.Clip>
 
     <Window.Resources>
@@ -65,11 +65,11 @@
 
 
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="3" Grid.ColumnSpan="2">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="3" Grid.ColumnSpan="2" Grid.RowSpan="2">
             
             
             
-            <Button Focusable="False" x:Name="MinimiseTheWindowButton" Click="MinimiseTheMainWindow" Margin="0,5,7,0" HorizontalAlignment="Right" VerticalAlignment="Top" Content="&#xEF2D;" FontSize="20" FontFamily="Segoe MDL2 Assets" Background="Transparent" Style="{StaticResource MyButtonStyle}">
+            <Button Focusable="False" x:Name="MinimiseTheWindowButton" Click="MinimiseTheMainWindow" Margin="0,5,3,0" HorizontalAlignment="Right" VerticalAlignment="Top" Content="&#xEF2D;" FontSize="20" FontFamily="Segoe MDL2 Assets" Background="Transparent" Style="{StaticResource MyButtonStyle}">
                 <Button.Foreground>
                     <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                         <GradientStop Color="#FF7BBFD8" x:Name="MinimiseTheWindowOffset" Offset="1"/>
@@ -80,7 +80,7 @@
 
             
             
-            <Button Focusable="False" x:Name="CloseTheWindowButton" Click="CloseTheApplication" Margin="7,5,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" Content="&#xEF2C;" FontSize="20" FontFamily="Segoe MDL2 Assets" Background="Transparent" BorderBrush="Transparent" Style="{StaticResource MyButtonStyle}">
+            <Button Focusable="False" x:Name="CloseTheWindowButton" Click="CloseTheApplication" Margin="3,5,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" Content="&#xEF2C;" FontSize="20" FontFamily="Segoe MDL2 Assets" Background="Transparent" BorderBrush="Transparent" Style="{StaticResource MyButtonStyle}">
                 <Button.Foreground>
                     <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                         <GradientStop Color="#FF7BBFD8" x:Name="CloseTheWindowButtonOffset" Offset="1"/>
@@ -95,7 +95,7 @@
         
         
 
-        <Button Focusable="False" x:Name="OpenSettingsMenuButton" Click="OpenSettingsWindow" BorderBrush="Transparent" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1" FontFamily="Segoe MDL2 Assets" FontSize="20" Content="&#xE115;" Style="{StaticResource MyButtonStyle}">
+        <Button Focusable="False" x:Name="OpenSettingsMenuButton" Click="OpenSettingsWindow" BorderBrush="Transparent" Background="Transparent" HorizontalAlignment="Left" Grid.Row="0" Grid.RowSpan="2" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets" FontSize="18" Content="&#xE115;" Style="{StaticResource MyButtonStyle}">
             <Button.Foreground>
                 <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                     <GradientStop Color="#FF7BBFD8" x:Name="OpenSettingsMenuButtonOffset" Offset="1"/>
@@ -105,7 +105,7 @@
         </Button>
 
 
-        <Button Focusable="False" x:Name="OpenTimerMenuButton" Click="OpenTimerWindow" BorderBrush="Transparent" Background="Transparent" Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="2" FontFamily="Segoe MDL2 Assets" FontSize="20" Content="&#xED5A;" Style="{StaticResource MyButtonStyle}">
+        <Button Focusable="False" x:Name="OpenTimerMenuButton" Click="OpenTimerWindow" BorderBrush="Transparent" Background="Transparent" Margin="0,5,0,0" HorizontalAlignment="Left" Grid.Row="1" Grid.RowSpan="3" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets" FontSize="18" Content="&#xED5A;" Style="{StaticResource MyButtonStyle}">
             <Button.Foreground>
                 <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                     <GradientStop Color="#FF7BBFD8" x:Name="OpenTimerMenuButtonOffset" Offset="1"/>
@@ -115,7 +115,7 @@
         </Button>
 
 
-        <Button Focusable="False" x:Name="SpeechRecognitionButton" Click="StartOrStopSpeechRecognition" Grid.Column="2" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center" BorderBrush="Transparent" Background="Transparent" FontFamily="Segoe MDL2 Assets" FontSize="23" Content="&#xF781;" Style="{StaticResource MyButtonStyle}">
+        <Button Focusable="False" x:Name="SpeechRecognitionButton" Click="StartOrStopSpeechRecognition" Grid.Column="1" Grid.ColumnSpan="3"  Grid.Row="3" Grid.RowSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" BorderBrush="Transparent" Background="Transparent" FontFamily="Segoe MDL2 Assets" FontSize="25" Content="&#xF781;" Style="{StaticResource MyButtonStyle}">
             <Button.Foreground>
                 <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                     <GradientStop Color="#FF7BBFD8" x:Name="SpeechRecognitionButtonOffset" Offset="1"/>
@@ -124,7 +124,7 @@
             </Button.Foreground>
         </Button>
 
-        <Ellipse Focusable="False" x:Name="OuterElipse" Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" Height="60" Width="60" >
+        <Ellipse Focusable="False" x:Name="OuterElipse" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Center" Height="52" Width="52" >
             <Ellipse.Fill>
                 <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                     <GradientStop Color="#FF7BBFD8" x:Name="OuterElipseOffset" Offset="1"/>
@@ -133,7 +133,7 @@
             </Ellipse.Fill>
         </Ellipse>
 
-        <Ellipse Focusable="False" x:Name="InnerElipse" Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" Height="50" Width="50" Fill="#FF121111"/>
+        <Ellipse Focusable="False" x:Name="InnerElipse" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Center" Height="42" Width="42" Fill="#FF121111"/>
 
 
         <Rectangle Focusable="False" Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="Rotator"  Height="80" Width="15" Fill="#FF121111" RenderTransformOrigin="0.5,0.5">

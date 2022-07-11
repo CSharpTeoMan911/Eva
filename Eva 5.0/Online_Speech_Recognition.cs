@@ -9,7 +9,10 @@ namespace Eva_5._0
 {
     internal class Online_Speech_Recognition
     {
+
         private static System.Threading.Thread ParallelProcessing;
+
+
 
 
         public static void Recogniser_Thread_Creation_And_Initiation()
@@ -102,7 +105,7 @@ namespace Eva_5._0
                                     {
                                         case true:
 
-                                            MainWindow.Online_Speech_Recogniser_Listening = false;
+                                           
 
                                             await OnlineSpeechRecognition.StopRecognitionAsync();
                                             OnlineSpeechRecognition.Dispose();
@@ -114,25 +117,10 @@ namespace Eva_5._0
 
                                             MainWindow.Online_Speech_Recogniser_Listening = true;
 
-                                            switch (App.StopRecognitionSession)
-                                            {
-                                                case false:
+                                            await Natural_Language_Processing.PreProcessing<string>(Result.Text);
+                                            await OnlineSpeechRecognition.StopRecognitionAsync();
+                                            OnlineSpeechRecognition.Dispose();
 
-                                                    MainWindow.Online_Speech_Recogniser_Listening = true;
-
-                                                    await Natural_Language_Processing.PreProcessing<string>(Result.Text);
-                                                    await OnlineSpeechRecognition.StopRecognitionAsync();
-                                                    OnlineSpeechRecognition.Dispose();
-                                                    break;
-
-                                                case true:
-
-                                                    MainWindow.Online_Speech_Recogniser_Listening = false;
-
-                                                    await OnlineSpeechRecognition.StopRecognitionAsync();
-                                                    OnlineSpeechRecognition.Dispose();
-                                                    break;
-                                            }
                                             break;
                                     }
 
@@ -182,18 +170,13 @@ namespace Eva_5._0
 
 
             MainWindow.Online_Speech_Recogniser_Listening = false;
-
-            MainWindow.FunctionInitiated = false;
-
-
-            ParallelProcessing.Join();
-            ParallelProcessing.Abort();
         }
 
 
         ~Online_Speech_Recognition()
         {
             ParallelProcessing = null;
+
 
             System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect(2, GCCollectionMode.Forced, true, true);
