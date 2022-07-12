@@ -25,7 +25,7 @@ namespace Eva_5._0
 
         private System.Speech.Recognition.SpeechRecognitionEngine MainSpeechRecogniser;
 
-        public static double Speech_Recognition_Sensitivity = 0.92;
+        public static double Speech_Recognition_Sensitivity = 0.97;
 
         public static bool Online_Speech_Recogniser_Listening;
 
@@ -704,7 +704,7 @@ namespace Eva_5._0
                                                         MainSpeechRecogniser.EndSilenceTimeoutAmbiguous = TimeSpan.FromSeconds(0);
 
                                                         MainSpeechRecogniser.RequestRecognizerUpdate();
-                                                        System.Speech.Recognition.Choices Choices = new System.Speech.Recognition.Choices("Eva Listen");
+                                                        System.Speech.Recognition.Choices Choices = new System.Speech.Recognition.Choices("Eva");
                                                         System.Speech.Recognition.GrammarBuilder gb = new System.Speech.Recognition.GrammarBuilder();
                                                         gb.Culture = System.Threading.Thread.CurrentThread.CurrentCulture;
                                                         gb.Append(Choices);
@@ -791,7 +791,7 @@ namespace Eva_5._0
 
                                                 switch (e.Result.Text)
                                                 {
-                                                    case "Eva Listen":
+                                                    case "Eva":
 
                                                         if(Timer_Window.Ring_Timer == false)
                                                         {

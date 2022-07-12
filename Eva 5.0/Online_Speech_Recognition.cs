@@ -102,7 +102,7 @@ namespace Eva_5._0
                                     {
                                         case true:
 
-                                            MainWindow.Online_Speech_Recogniser_Listening = false;
+                                            
 
                                             await OnlineSpeechRecognition.StopRecognitionAsync();
                                             OnlineSpeechRecognition.Dispose();
@@ -112,13 +112,13 @@ namespace Eva_5._0
 
                                         case false:
 
-                                            MainWindow.Online_Speech_Recogniser_Listening = true;
+                                            
 
                                             switch (App.StopRecognitionSession)
                                             {
                                                 case false:
 
-                                                    MainWindow.Online_Speech_Recogniser_Listening = true;
+                                                   
 
                                                     await Natural_Language_Processing.PreProcessing<string>(Result.Text);
                                                     await OnlineSpeechRecognition.StopRecognitionAsync();
@@ -127,7 +127,7 @@ namespace Eva_5._0
 
                                                 case true:
 
-                                                    MainWindow.Online_Speech_Recogniser_Listening = false;
+                                                    
 
                                                     await OnlineSpeechRecognition.StopRecognitionAsync();
                                                     OnlineSpeechRecognition.Dispose();
@@ -144,7 +144,7 @@ namespace Eva_5._0
 
                                 case false:
 
-                                    MainWindow.Online_Speech_Recogniser_Listening = false;
+                                    
 
                                     await OnlineSpeechRecognition.StopRecognitionAsync();
                                     OnlineSpeechRecognition.Dispose();
