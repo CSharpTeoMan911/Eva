@@ -89,6 +89,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Speech" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -112,7 +113,6 @@
     <Compile Include="ErrorWindow.xaml.cs">
       <DependentUpon>ErrorWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="HT__KY_CLS.cs" />
     <Compile Include="InstructionManual.xaml.cs">
       <DependentUpon>InstructionManual.xaml</DependentUpon>
     </Compile>
@@ -183,9 +183,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="GlobalHotkeys">
-      <Version>1.0.0.6</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.Windows.SDK.Contracts">
       <Version>10.0.22621.1</Version>
     </PackageReference>
