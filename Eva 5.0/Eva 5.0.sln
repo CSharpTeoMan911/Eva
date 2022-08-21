@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32428.217
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eva 5.0", "Eva 5.0.csproj", "{0E255796-9D90-4F37-B02A-D903B243772B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0E255796-9D90-4F37-B02A-D903B243772B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E255796-9D90-4F37-B02A-D903B243772B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E255796-9D90-4F37-B02A-D903B243772B}.Debug|x86.ActiveCfg = Debug|x86
+		{0E255796-9D90-4F37-B02A-D903B243772B}.Debug|x86.Build.0 = Debug|x86
+		{0E255796-9D90-4F37-B02A-D903B243772B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E255796-9D90-4F37-B02A-D903B243772B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E255796-9D90-4F37-B02A-D903B243772B}.Release|x86.ActiveCfg = Release|x86
+		{0E255796-9D90-4F37-B02A-D903B243772B}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4F23C9B3-88A6-4133-A4D8-6E4F29786406}
+	EndGlobalSection
+EndGlobal
