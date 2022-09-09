@@ -13,30 +13,8 @@
     </Window.Clip>
     
     
-    <Window.Resources>
-        <Style x:Key="MyButtonStyle" TargetType="Button">
-            <Setter Property="OverridesDefaultStyle" Value="True"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Name="border" 
-                            BorderThickness="1"
-                            Padding="4,2" 
-                            BorderBrush="Transparent" 
-                            CornerRadius="3" 
-                            Background="{TemplateBinding Background}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="BorderBrush" Value="#FF7BBFD8" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Resources>
+   
+   
 
     <Window.Background>
         <LinearGradientBrush StartPoint="0.5, 1" EndPoint="1, 0">
@@ -67,7 +45,7 @@
 
         <StackPanel Orientation="Horizontal" Grid.Column ="3" Grid.ColumnSpan="2" HorizontalAlignment="Right">
 
-            <Button x:Name="MinimiseTheWindowButton" Margin="20,20,20,0" BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Left" Content="&#xEF2D;" FontFamily="Segoe MDL2 Assets" FontSize="20" Click="MinimiseTheWindow" Style="{StaticResource MyButtonStyle}">
+            <Button x:Name="MinimiseTheWindowButton" Margin="20,20,20,0" BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Left" Content="&#xEF2D;" FontFamily="Segoe MDL2 Assets" FontSize="20" Click="MinimiseTheWindow" Style="{StaticResource MyRedButtonStyle}">
                 <Button.Foreground>
                     <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                         <GradientStop Color="#FFF94040" x:Name="MinimiseTheWindowOffset" Offset="1"/>
@@ -76,7 +54,7 @@
                 </Button.Foreground>
             </Button>
 
-            <Button x:Name="NormaliseOrMaximiseTheWindowButton" Margin="0,20,20,0" BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Right" Content="&#xEF2E;" FontFamily="Segoe MDL2 Assets" FontSize="20" Click="NormaliseOrMaximiseTheWindow" Style="{StaticResource MyButtonStyle}">
+            <Button x:Name="NormaliseOrMaximiseTheWindowButton" Margin="0,20,20,0" BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Right" Content="&#xEF2E;" FontFamily="Segoe MDL2 Assets" FontSize="20" Click="NormaliseOrMaximiseTheWindow" Style="{StaticResource MyRedButtonStyle}">
                 <Button.Foreground>
                     <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                         <GradientStop Color="#FFF94040" x:Name="NormaliseOrMaximiseButtonOffset" Offset="1"/>
@@ -85,7 +63,7 @@
                 </Button.Foreground>
             </Button>
 
-            <Button x:Name="CloseTheWindowButton" Margin="0,20,20,0" BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Right" Content="&#xEF2C;" FontFamily="Segoe MDL2 Assets" FontSize="20" Click="CloseTheWindow" Style="{StaticResource MyButtonStyle}">
+            <Button x:Name="CloseTheWindowButton" Margin="0,20,20,0" BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Right" Content="&#xEF2C;" FontFamily="Segoe MDL2 Assets" FontSize="20" Click="CloseTheWindow" Style="{StaticResource MyRedButtonStyle}">
                 <Button.Foreground>
                     <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                         <GradientStop Color="#FFF94040" x:Name="CloseButtonOffset" Offset="1"/>
