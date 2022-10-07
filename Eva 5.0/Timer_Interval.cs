@@ -25,8 +25,6 @@ namespace Eva_5._0
 
                 if ((int)calculated_remaining_time.TotalMilliseconds <= 0)
                 {
-                    System.Diagnostics.Debug.WriteLine(" [ Time Elapsed ] ");
-
                     _isTimer = false;
 
                     return Task.FromResult(true);

@@ -14,32 +14,46 @@ namespace Eva_5._0
 
         public static void Recogniser_Thread_Creation_And_Initiation()
         {
-            // Initiates the online speech recognition engine 
-            // on another thread for parallel processing
+            // Initiates the online speech recognition engine on another thread using parallel processing
 
            
             ParallelProcessing = new System.Threading.Thread(() =>
             {
 
-                // Ensures that the virtual interface with the Cortana's online speech recognition system is open
-                // during the speech recognition session.
+                // [ BEGIN ] Ensures that the virtual interface to the online speech recognition server on Windows 10/11 for the online speech recognition system is open, during the speech recognition session.
 
                 try
                 {
-                   
+                    
                     using (System.Diagnostics.Process Speech_Recognition_Executable_Initiation = new System.Diagnostics.Process())
                     {
-                        Speech_Recognition_Executable_Initiation.StartInfo.FileName = @"C:Windows\SystemApps\Microsoft.Windows.Search_cw5n1h2txyewy\SearchApp.exe";
-                        Speech_Recognition_Executable_Initiation.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                        switch (Environment.Is64BitOperatingSystem)
+                        {
+
+                            case true:
+
+                                Speech_Recognition_Executable_Initiation.StartInfo.FileName = @"C:\Program Files\WindowsApps\Microsoft.549981C3F5F10_4.2204.13303.0_x64__8wekyb3d8bbwe\Win32Bridge.Server.exe";
+                                break;
+
+
+                            case false:
+
+                                Speech_Recognition_Executable_Initiation.StartInfo.FileName = @"C:\Program Files\WindowsApps\Microsoft.549981C3F5F10_4.2204.13303.0_x86__8wekyb3d8bbwe\Win32Bridge.Server.exe";
+                                break;
+
+                        }
                         Speech_Recognition_Executable_Initiation.StartInfo.UseShellExecute = true;
                         Speech_Recognition_Executable_Initiation.Start();
                     }
                 }
-                catch { }
+                catch{ }
+
+                // [ END ] Ensures that the virtual interface to the online speech recognition server on Windows 10/11 for the online speech recognition system is open, during the speech recognition session.
 
 
 
                 Initiate_The_Online_Speech_Recognition_Engine();
+
             });
             ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
             ParallelProcessing.IsBackground = true;
@@ -47,6 +61,8 @@ namespace Eva_5._0
             ParallelProcessing.Start();
             ParallelProcessing.Join();
         }
+
+
 
 
         private static async void Initiate_The_Online_Speech_Recognition_Engine()
@@ -191,6 +207,8 @@ namespace Eva_5._0
         }
 
 
+
+
         ~Online_Speech_Recognition()
         {
             ParallelProcessing = null;
@@ -198,5 +216,6 @@ namespace Eva_5._0
             System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect(2, GCCollectionMode.Forced, true, true);
         }
+
     }
 }
