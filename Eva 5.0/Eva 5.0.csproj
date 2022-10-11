@@ -214,5 +214,10 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="App closing.wav" />
+    <Content Include="App execution.wav" />
+    <Content Include="Privacy statement declined or mic not available.wav" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
