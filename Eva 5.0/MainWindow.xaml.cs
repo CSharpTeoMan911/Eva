@@ -165,9 +165,9 @@ namespace Eva_5._0
 
                                     case false:
 
+                                        Application.Current.MainWindow.Topmost = true;
 
-
-                                        switch(Online_Speech_Recogniser_Listening)
+                                        switch (Online_Speech_Recogniser_Listening)
                                         {
                                             case true:
 
@@ -805,12 +805,7 @@ namespace Eva_5._0
 
                                                                             FunctionInitiated = true;
 
-                                                                            Application.Current.MainWindow.Topmost = true;
-                                                                            Application.Current.MainWindow.Activate();
-
-
-
-
+                                                                           
                                                                             System.Threading.Thread Online_Speech_Recognition_Thread = new System.Threading.Thread(() =>
                                                                             {
                                                                                 Online_Speech_Recognition.Recogniser_Thread_Creation_And_Initiation();
