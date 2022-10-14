@@ -25,7 +25,7 @@ namespace Eva_5._0
 
         private System.Speech.Recognition.SpeechRecognitionEngine MainSpeechRecogniser;
 
-        public static double Speech_Recognition_Sensitivity = 0.97;
+        public static double Speech_Recognition_Sensitivity = 0.96;
 
         public static bool Online_Speech_Recogniser_Listening;
 
