@@ -723,7 +723,7 @@ namespace Eva_5._0
 
 
                                                         MainSpeechRecogniser.RequestRecognizerUpdate();
-                                                        System.Speech.Recognition.Choices Choices = new System.Speech.Recognition.Choices("Eva");
+                                                        System.Speech.Recognition.Choices Choices = new System.Speech.Recognition.Choices("Hey Eva");
                                                         System.Speech.Recognition.GrammarBuilder gb = new System.Speech.Recognition.GrammarBuilder();
                                                         gb.Culture = new System.Globalization.CultureInfo("en_GB");
                                                         gb.Append(Choices);
@@ -792,6 +792,7 @@ namespace Eva_5._0
 
         private void MainSpeechRecogniser_SpeechRecognized(object sender, System.Speech.Recognition.SpeechRecognizedEventArgs e)
         {
+
             switch (MainWindowIsClosing)
             {
                 case false:
@@ -815,7 +816,7 @@ namespace Eva_5._0
 
                                                 switch (e.Result.Text)
                                                 {
-                                                    case "Eva":
+                                                    case "Hey Eva":
 
                                                         if(Timer_Window.Ring_Timer == false)
                                                         {
