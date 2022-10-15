@@ -8,6 +8,31 @@ namespace Eva_5._0
 {
     internal class Proc<ProcessType, Application, Content>:A_p_l____And____P_r_o_c
     {
+
+        /*
+         * 
+         * ALL THE PROCESSES (ONLINE OR SYSTEM RELATED) ARE MULTITHREADED WITHIN AN ASYNCHRONOUS CALL STACK.
+         * 
+         * 
+         * 
+         * THIS WAS DONE IN ORDER TO ENSURE A SMOOTH OPERABILITY AND ALSO TO AVOID THE THREAD OVERLOAD OF ANY CORE.
+         * 
+         * 
+         * 
+         * THE ASYNCHRONOUS CALL STACK OPERATES WITHIN THE APPLICATION'S DEFAULT THREAD POOL, WHICH ARE THREADS
+         * THAT DO NOT HAVE ANY PRESETTED VALUES OR PROPRIETIES, OCUPPY AN EQUAL AMMOUNT OF RESOURCES AND WHEN 
+         * ALL ARE FULL THE REMAINING TASKS WILL WAIT FOR A BACKGROUND THREAD FROM THE THREADPOOL TO FREE.
+         * 
+         * 
+         * THE SOUND EFFECTS OF THE APPLICATION'S RELATED SOUND EFFECTS FOR PROCESS EXECUTION AND/OR TERMINATION
+         * AND APPLICATION'S OPERATING SYSTEM SPECIFIC ERRORS ARE INCLUDED IN THE APPLICATION'S SOLUTION. PLEASE 
+         * COPY THEM IN THE APPLICATION'S DESIRED BIN FOLDER
+         * 
+         * 
+         */
+
+
+
         private static System.Threading.Thread ParallelProcessing;
 
 
@@ -111,6 +136,8 @@ namespace Eva_5._0
                             Online_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
                             Online_Process.StartInfo.UseShellExecute = true;
                             Online_Process.Start();
+
+                            new Set_Process_As_Foreground(Online_Process.MainWindowHandle);
                         }
 
                         try
@@ -215,6 +242,8 @@ namespace Eva_5._0
                                             Application_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
                                             Application_Process.StartInfo.UseShellExecute = true;
                                             Application_Process.Start();
+
+                                            new Set_Process_As_Foreground(Application_Process.MainWindowHandle);
                                         }
                                         break;
                                 }
@@ -251,6 +280,8 @@ namespace Eva_5._0
                                     Application_Not_Found_Downdload_Link_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
                                     Application_Not_Found_Downdload_Link_Process.StartInfo.UseShellExecute = true;
                                     Application_Not_Found_Downdload_Link_Process.Start();
+
+                                    new Set_Process_As_Foreground(Application_Not_Found_Downdload_Link_Process.MainWindowHandle);
                                 }
 
                                 switch (SoundOrOff == true)

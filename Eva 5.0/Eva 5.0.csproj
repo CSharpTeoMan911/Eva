@@ -122,6 +122,7 @@
     <Compile Include="SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Set_Process_As_Foreground.cs" />
     <Compile Include="Timer_Interval.cs" />
     <Compile Include="Timer_Window.xaml.cs">
       <DependentUpon>Timer_Window.xaml</DependentUpon>

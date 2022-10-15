@@ -246,7 +246,7 @@
                 </TextBlock>
 
 
-                <TextBlock x:Name="TroubleshootingContents3" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;Follow the instructions for speech calibration&#x0a;and read minimum 8 paragraphs.&#x0a;&#x0a;If Eva is activated to easily or to hard, you can&#x0a;adjust its wake word response sensitivity&#x0a;from the settings menu at the [ Sesitivity ]&#x0a;section.&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;">
+                <TextBlock x:Name="TroubleshootingContents3" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;Follow the instructions for speech calibration&#x0a;and read minimum 8 paragraphs.&#x0a;&#x0a;If Eva is activated too easily or too hard, you can&#x0a;adjust its wake word response sensitivity&#x0a;from the settings menu at the [ Accuracy ]&#x0a;section.&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;">
                    
                     <TextBlock.Foreground>
                         <LinearGradientBrush>

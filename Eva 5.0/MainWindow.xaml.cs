@@ -17,6 +17,19 @@ namespace Eva_5._0
 {
     public partial class MainWindow : Window
     {
+
+        /////////////////////////////////////////////////////////////////////////////
+        ///                                                                       ///
+        ///                         TEODOR MIHAIL (2021)                          ///
+        ///                                                                       ///
+        /// ANY UNAUTHORISED COMMERCIAL USE OF THIS SOFTWARE IS PUNISHABLE BY LAW ///
+        ///                                                                       ///
+        ///                                                                       ///
+        /////////////////////////////////////////////////////////////////////////////
+
+
+
+
         private System.Threading.Thread ParallelProcessing;
 
         private System.Timers.Timer AnimationAndFunctionalityTimer;
@@ -97,7 +110,12 @@ namespace Eva_5._0
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
 
+            // Check the administartive rights with which the application session is running. If the application rights are the ones of administrator, the application will close.
+            // This is done to prevent any security problems due to the fact that the application is operating at a low level within the operating system.
+
             new Check_Role();
+
+
 
 
 
@@ -703,13 +721,16 @@ namespace Eva_5._0
                                                         MainSpeechRecogniser.InitialSilenceTimeout = TimeSpan.FromSeconds(0);
                                                         MainSpeechRecogniser.EndSilenceTimeoutAmbiguous = TimeSpan.FromSeconds(0);
 
+
                                                         MainSpeechRecogniser.RequestRecognizerUpdate();
                                                         System.Speech.Recognition.Choices Choices = new System.Speech.Recognition.Choices("Eva");
                                                         System.Speech.Recognition.GrammarBuilder gb = new System.Speech.Recognition.GrammarBuilder();
-                                                        gb.Culture = System.Threading.Thread.CurrentThread.CurrentCulture;
+                                                        gb.Culture = new System.Globalization.CultureInfo("en_GB");
                                                         gb.Append(Choices);
                                                         System.Speech.Recognition.Grammar Grammar = new System.Speech.Recognition.Grammar(gb);
                                                         MainSpeechRecogniser.RequestRecognizerUpdate();
+
+
                                                         MainSpeechRecogniser.LoadGrammarAsync(Grammar);
                                                         MainSpeechRecogniser.SetInputToDefaultAudioDevice();
                                                         MainSpeechRecogniser.RequestRecognizerUpdate();
@@ -742,9 +763,12 @@ namespace Eva_5._0
 
                                                     ParallelProcessing = new System.Threading.Thread(() =>
                                                     {
-                                                        MainSpeechRecogniser.RecognizeAsyncStop();
-                                                        MainSpeechRecogniser.RecognizeAsyncCancel();
-                                                        MainSpeechRecogniser.Dispose();
+                                                        if(MainSpeechRecogniser != null)
+                                                        {
+                                                            MainSpeechRecogniser.RecognizeAsyncStop();
+                                                            MainSpeechRecogniser.RecognizeAsyncCancel();
+                                                            MainSpeechRecogniser.Dispose();
+                                                        }
                                                     });
                                                     ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
                                                     ParallelProcessing.IsBackground = true;
@@ -849,43 +873,39 @@ namespace Eva_5._0
 
             try
             {
-                switch (e.Error != null)
+                if (e.Error != null)
                 {
-                    case true:
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        App.ErrorAppShutdown = true;
+                        Application.Current.MainWindow.Visibility = Visibility.Hidden;
 
-                        Application.Current.Dispatcher.Invoke(() =>
+                        switch (App.PermisissionWindowOpen)
                         {
-                            App.ErrorAppShutdown = true;
-                            Application.Current.MainWindow.Visibility = Visibility.Hidden;
+                            case false:
 
-                            switch (App.PermisissionWindowOpen)
-                            {
-                                case false:
+                                MainSpeechRecogniser.RecognizeAsyncCancel();
+                                System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
+                                GC.Collect(0, GCCollectionMode.Forced, true, true);
+                                System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
+                                GC.Collect(0, GCCollectionMode.Forced, true, true);
+                                System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
+                                GC.Collect(0, GCCollectionMode.Forced, true, true);
 
-                                    MainSpeechRecogniser.RecognizeAsyncCancel();
-                                    System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-                                    GC.Collect(0, GCCollectionMode.Forced, true, true);
-                                    System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-                                    GC.Collect(0, GCCollectionMode.Forced, true, true);
-                                    System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-                                    GC.Collect(0, GCCollectionMode.Forced, true, true);
+                                ErrorWindow OpenPermissionDeclinedWindow = new ErrorWindow("Mircrophone Access Denied");
+                                OpenPermissionDeclinedWindow.Show();
 
-                                    ErrorWindow OpenPermissionDeclinedWindow = new ErrorWindow("Mircrophone Access Denied");
-                                    OpenPermissionDeclinedWindow.Show();
+                                break;
 
-                                    break;
+                            case true:
 
-                                case true:
+                                App.InitiateErrorFunction = true;
+                                App.ErrorFunction = "Mircrophone Access Denied";
 
-                                    App.InitiateErrorFunction = true;
-                                    App.ErrorFunction = "Mircrophone Access Denied";
+                                break;
+                        }
 
-                                    break;
-                            }
-
-                        });
-
-                        break;
+                    });
                 }
 
             }
@@ -960,29 +980,25 @@ namespace Eva_5._0
         {
             try
             {
-                switch (AnimationAndFunctionalityTimer != null)
+                if (AnimationAndFunctionalityTimer != null)
                 {
-                    case true:
-                        try
-                        {
-                            AnimationAndFunctionalityTimer.Stop();
-                            AnimationAndFunctionalityTimer.Dispose();
-                        }
-                        catch { }
-                        break;
+                    try
+                    {
+                        AnimationAndFunctionalityTimer.Stop();
+                        AnimationAndFunctionalityTimer.Dispose();
+                    }
+                    catch { }
                 }
 
-                switch (MainSpeechRecogniser != null)
+                if (MainSpeechRecogniser != null)
                 {
-                    case true:
-                        try
-                        {
-                            MainSpeechRecogniser.RecognizeAsyncStop();
-                            MainSpeechRecogniser.RecognizeAsyncCancel();
-                            MainSpeechRecogniser.Dispose();
-                        }
-                        catch { }
-                        break;
+                    try
+                    {
+                        MainSpeechRecogniser.RecognizeAsyncStop();
+                        MainSpeechRecogniser.RecognizeAsyncCancel();
+                        MainSpeechRecogniser.Dispose();
+                    }
+                    catch { }
                 }
 
                 BeginExecutionAnimation = null;

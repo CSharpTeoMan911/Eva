@@ -130,7 +130,7 @@
 
         <StackPanel Grid.Row="3" Grid.RowSpan="2" Margin="0,30,0,0" Grid.ColumnSpan="5" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
 
-            <TextBlock HorizontalAlignment="Center" Margin="0,0,10,0" FontSize="18" FontFamily="Corbel Light" Text="Sensitivity">
+            <TextBlock HorizontalAlignment="Center" Margin="0,0,10,0" FontSize="18" FontFamily="Corbel Light" Text="Accuracy">
                 <TextBlock.Foreground>
                     <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
                         <GradientStop Color="#FF7BBFD8" x:Name="SensitivityTitleOffset" Offset="1"/>
