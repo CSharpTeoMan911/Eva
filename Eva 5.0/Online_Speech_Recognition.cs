@@ -25,26 +25,35 @@ namespace Eva_5._0
                 try
                 {
                     
-                    using (System.Diagnostics.Process Speech_Recognition_Executable_Initiation = new System.Diagnostics.Process())
+                    using (System.Diagnostics.Process Speech_Recognition_Server_Interface_Initiation = new System.Diagnostics.Process())
                     {
                         switch (Environment.Is64BitOperatingSystem)
                         {
 
                             case true:
 
-                                Speech_Recognition_Executable_Initiation.StartInfo.FileName = @"C:\Program Files\WindowsApps\Microsoft.549981C3F5F10_4.2204.13303.0_x64__8wekyb3d8bbwe\Win32Bridge.Server.exe";
+                                Speech_Recognition_Server_Interface_Initiation.StartInfo.FileName = @"C:\Program Files\WindowsApps\Microsoft.549981C3F5F10_4.2204.13303.0_x64__8wekyb3d8bbwe\Win32Bridge.Server.exe";
                                 break;
 
 
                             case false:
 
-                                Speech_Recognition_Executable_Initiation.StartInfo.FileName = @"C:\Program Files\WindowsApps\Microsoft.549981C3F5F10_4.2204.13303.0_x86__8wekyb3d8bbwe\Win32Bridge.Server.exe";
+                                Speech_Recognition_Server_Interface_Initiation.StartInfo.FileName = @"C:\Program Files\WindowsApps\Microsoft.549981C3F5F10_4.2204.13303.0_x86__8wekyb3d8bbwe\Win32Bridge.Server.exe";
                                 break;
 
                         }
-                        Speech_Recognition_Executable_Initiation.StartInfo.UseShellExecute = true;
-                        Speech_Recognition_Executable_Initiation.Start();
+                        Speech_Recognition_Server_Interface_Initiation.StartInfo.UseShellExecute = true;
+                        Speech_Recognition_Server_Interface_Initiation.Start();
                     }
+
+
+                    using (System.Diagnostics.Process Speech_Recognition_Cortana_Search_Initiation = new System.Diagnostics.Process())
+                    {
+                        Speech_Recognition_Cortana_Search_Initiation.StartInfo.FileName = @"C:\Windows\SystemApps\Microsoft.Windows.Search_cw5n1h2txyewy\SearchApp.exe";
+                        Speech_Recognition_Cortana_Search_Initiation.StartInfo.UseShellExecute = true;
+                        Speech_Recognition_Cortana_Search_Initiation.Start();
+                    }
+
                 }
                 catch{ }
 
