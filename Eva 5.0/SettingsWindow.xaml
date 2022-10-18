@@ -69,7 +69,7 @@
 
         <StackPanel Orientation="Horizontal" Grid.RowSpan="2" Grid.Row="1" Grid.ColumnSpan="5" VerticalAlignment="Top" HorizontalAlignment="Center">
 
-            <TextBlock x:Name="Wheel1" FontFamily="Segoe MDL2 Assets" FontSize="70" Text="&#xF8B0;" RenderTransformOrigin="0.5, 0.5">
+            <TextBlock x:Name="Wheel1" FontFamily="Segoe MDL2 Assets" FontSize="75" Text="&#xF8B0;" RenderTransformOrigin="0.5, 0.5">
                 <TextBlock.Foreground>
                     <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                         <GradientStop Color="#FF0079EA" x:Name="MenuGear1Offset" Offset="1"/>
@@ -78,7 +78,7 @@
                 </TextBlock.Foreground>
             </TextBlock>
 
-            <TextBlock x:Name="Wheel2" FontFamily="Segoe MDL2 Assets" FontSize="40" VerticalAlignment="Bottom" Text="&#xF8B0;" RenderTransformOrigin="0.5, 0.5">
+            <TextBlock x:Name="Wheel2" FontFamily="Segoe MDL2 Assets" FontSize="45" VerticalAlignment="Bottom" Text="&#xF8B0;" RenderTransformOrigin="0.5, 0.5">
                 <TextBlock.Foreground>
                     <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                         <GradientStop Color="#FF0079EA" x:Name="MenuGear2Offset" Offset="1"/>
@@ -88,9 +88,9 @@
             </TextBlock>
         </StackPanel>
 
-        <StackPanel Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,20,0,0" Grid.ColumnSpan="5" Orientation="Horizontal" Grid.RowSpan="2" >
+        <StackPanel Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,20,0,0" Grid.ColumnSpan="5" Grid.RowSpan="2" Orientation="Horizontal">
 
-            <TextBlock Margin="0,0,10,0" HorizontalAlignment="Center" FontSize="18" FontFamily="Corbel Light" Text="Sound">
+            <TextBlock Margin="0,0,10,0" HorizontalAlignment="Center" FontSize="20" FontFamily="Corbel Light" Text="Sound">
                 <TextBlock.Foreground>
                     <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
                         <GradientStop Color="#FF7BBFD8" x:Name="SettingTitleOffset" Offset="1"/>
@@ -128,58 +128,13 @@
 
 
 
-        <StackPanel Grid.Row="3" Grid.RowSpan="2" Margin="0,30,0,0" Grid.ColumnSpan="5" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-
-            <TextBlock HorizontalAlignment="Center" Margin="0,0,10,0" FontSize="18" FontFamily="Corbel Light" Text="Accuracy">
-                <TextBlock.Foreground>
-                    <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
-                        <GradientStop Color="#FF7BBFD8" x:Name="SensitivityTitleOffset" Offset="1"/>
-                        <GradientStop Color="#FF1B70C3"/>
-                    </LinearGradientBrush>
-                </TextBlock.Foreground>
-            </TextBlock>
-
-            <StackPanel Background="Black" Orientation="Horizontal">
-                <Button x:Name="SesitivityDownButton" Background="Transparent" BorderBrush="Transparent" Margin="0,0,0,0" FontSize="15" FontFamily="Segoe MDL2 Assets" Content="&#xE00E;" Click="Sensitivity_Down" Style="{StaticResource MyButtonStyle}">
-                    <Button.Foreground>
-                        <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
-                            <GradientStop Color="#FF7BBFD8" x:Name="SesitivityDownButtonOffset" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </Button.Foreground>
-                </Button>
-
-
-                <TextBlock x:Name="SensitivityIdentifier" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" FontFamily="Consolas" Text="92">
-                    <TextBlock.Foreground>
-                        <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
-                            <GradientStop Color="#FF7BBFD8" x:Name="SensitivityIdentifierOffset" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </TextBlock.Foreground>
-                </TextBlock>
-
-
-                <Button x:Name="SesitivityUpButton" Background="Transparent" BorderBrush="Transparent" FontSize="15" FontFamily="Segoe MDL2 Assets" Content="&#xE00F;" Click="Sensitivity_Up" Style="{StaticResource MyButtonStyle}">
-                    <Button.Foreground>
-                        <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
-                            <GradientStop Color="#FF7BBFD8" x:Name="SesitivityUpButtonOffset" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </Button.Foreground>
-
-                </Button>
-            </StackPanel>
-                
-            
-            
-        </StackPanel>
+        
 
 
 
         <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.RowSpan="2" Grid.ColumnSpan="5" Margin="0,30,0,0" VerticalAlignment="Center" HorizontalAlignment="Center">
             
-            <TextBlock Text="Instruction Manual" FontSize="18" FontFamily="Corbel Light" Margin="0,0,10,0">
+            <TextBlock Text="Instruction Manual" FontSize="20" FontFamily="Corbel Light" Margin="0,0,10,0">
                 <TextBlock.Foreground>
                     <LinearGradientBrush>
                         <GradientStop Color="#FF7BBFD8" x:Name="InstructionManualTextBlockOffset" Offset="1"/>

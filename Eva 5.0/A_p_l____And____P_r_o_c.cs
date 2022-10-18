@@ -87,6 +87,14 @@ namespace Eva_5._0
             A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("settings", "ms-settings:");
 
 
+            A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("command prompt", "cmd.exe");
+
+
+            A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("powershell", "powershell.exe");
+
+
+
+
 
 
 
@@ -427,11 +435,13 @@ namespace Eva_5._0
 
             A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("timer", "timer");
 
+            A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("command prompt", "cmd");
+
+            A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("powershell", "PowerShell");
 
 
 
-
-
+            
 
 
 

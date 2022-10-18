@@ -38,7 +38,7 @@ namespace Eva_5._0
 
         private System.Speech.Recognition.SpeechRecognitionEngine MainSpeechRecogniser;
 
-        public static double Speech_Recognition_Sensitivity = 0.97;
+        public static double Speech_Recognition_Sensitivity = 0.94;
 
         public static bool Online_Speech_Recogniser_Listening;
 
@@ -723,7 +723,7 @@ namespace Eva_5._0
 
 
                                                         MainSpeechRecogniser.RequestRecognizerUpdate();
-                                                        System.Speech.Recognition.Choices Choices = new System.Speech.Recognition.Choices("Hey Eva");
+                                                        System.Speech.Recognition.Choices Choices = new System.Speech.Recognition.Choices("Hey Eva", "Ey A", "Hey all");
                                                         System.Speech.Recognition.GrammarBuilder gb = new System.Speech.Recognition.GrammarBuilder();
                                                         gb.Culture = new System.Globalization.CultureInfo("en_GB");
                                                         gb.Append(Choices);
