@@ -83,17 +83,16 @@ namespace Eva_5._0
             {
                 System.Media.SoundPlayer ErrorSoundEffect = new System.Media.SoundPlayer("Privacy statement declined or mic not available.wav");
 
-                switch (await Settings.Get_Settings() == true)
+                if (await Settings.Get_Settings() == true)
                 {
-                    case true:
 
-                        switch (System.IO.File.Exists(System.IO.Path.GetFullPath("Privacy statement declined or mic not available.wav")))
-                        {
-                            case true:
-                                ErrorSoundEffect.Play();
-                                break;
-                        }
-                        break;
+                    if (System.IO.File.Exists(System.IO.Path.GetFullPath("Privacy statement declined or mic not available.wav")) == true)
+                    {
+
+                        ErrorSoundEffect.Play();
+
+                    }
+
                 }
             }
             catch { }
@@ -118,17 +117,16 @@ namespace Eva_5._0
             {
                 System.Media.SoundPlayer ErrorSoundEffect = new System.Media.SoundPlayer("Privacy statement declined or mic not available.wav");
 
-                switch (await Settings.Get_Settings() == true)
+                if (await Settings.Get_Settings() == true)
                 {
-                    case true:
 
-                        switch (System.IO.File.Exists(System.IO.Path.GetFullPath("Privacy statement declined or mic not available.wav")))
-                        {
-                            case true:
-                                ErrorSoundEffect.Play();
-                                break;
-                        }
-                        break;
+                    if (System.IO.File.Exists(System.IO.Path.GetFullPath("Privacy statement declined or mic not available.wav")) == true)
+                    {
+
+                        ErrorSoundEffect.Play();
+
+                    }
+
                 }
             }
             catch { }
@@ -149,116 +147,94 @@ namespace Eva_5._0
 
         private void MinimiseTheWindow(object sender, RoutedEventArgs e)
         {
-            switch (App.PermisissionWindowOpen)
+            if (App.PermisissionWindowOpen == true)
             {
-                case true:
 
-                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                {
+
+                    if (Application.Current.MainWindow != null)
                     {
-                        case false:
 
+                        this.WindowState = WindowState.Minimized;
 
-                            switch (Application.Current.MainWindow == null)
-                            {
-                                case false:
-                                    this.WindowState = WindowState.Minimized;
-                                    break;
-                            }
-
-
-                            break;
                     }
-                    break;
+
+                }
+
             }
         }
 
         private void NormaliseOrMaximiseTheWindow(object sender, RoutedEventArgs e)
         {
-            switch (App.PermisissionWindowOpen)
+            if (App.PermisissionWindowOpen == true)
             {
-                case true:
 
-                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                {
+
+                    if (Application.Current.MainWindow != null)
                     {
-                        case false:
 
+                        NormalisedOrMaximised++;
 
-                            switch (Application.Current.MainWindow == null)
-                            {
-                                case false:
+                        switch (NormalisedOrMaximised)
+                        {
+                            case 1:
+                                this.WindowState = WindowState.Maximized;
+                                break;
 
-                                    NormalisedOrMaximised++;
+                            case 2:
+                                this.WindowState = WindowState.Normal;
+                                NormalisedOrMaximised = 0;
+                                break;
+                        }
 
-                                    switch (NormalisedOrMaximised)
-                                    {
-                                        case 1:
-                                            this.WindowState = WindowState.Maximized;
-                                            break;
-
-                                        case 2:
-                                            this.WindowState = WindowState.Normal;
-                                            NormalisedOrMaximised = 0;
-                                            break;
-                                    }
-
-                                    break;
-                            }
-
-
-                            break;
                     }
-                    break;
+
+                }
+
             }
         }
 
         private void CloseTheWindow(object sender, RoutedEventArgs e)
         {
-            switch (App.PermisissionWindowOpen)
+            if (App.PermisissionWindowOpen == true)
             {
-                case true:
 
-                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                    if (Application.Current.Dispatcher.HasShutdownStarted == false)
                     {
-                        case false:
 
-
-                            switch (Application.Current.MainWindow == null)
+                            if (Application.Current.MainWindow != null)
                             {
-                                case false:
+
                                     this.Close();
-                                    break;
+
                             }
 
-
-                            break;
                     }
-                    break;
+
             }
         }
 
 
         private void MoveTheWindow(object sender, MouseButtonEventArgs e)
         {
-            switch (App.PermisissionWindowOpen)
+            if (App.PermisissionWindowOpen == true)
             {
-                case true:
 
-                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                {
+
+                    if (Application.Current.MainWindow != null)
                     {
-                        case false:
 
+                        this.DragMove();
 
-
-                            switch (Application.Current.MainWindow == null)
-                            {
-                                case false:
-                                    this.DragMove();
-                                    break;
-                            }
-
-                            break;
                     }
-                    break;
+
+                }
+
             }
         }
 
@@ -646,13 +622,12 @@ namespace Eva_5._0
 
         private void ErrorWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            switch (App.ErrorAppShutdown)
+            if (App.ErrorAppShutdown == true)
             {
-                case true:
-                    Application.Current.MainWindow.Close();
-                    break;
-            }
 
+                Application.Current.MainWindow.Close();
+
+            }
 
             App.PermisissionWindowOpen = false;
         }
@@ -660,31 +635,26 @@ namespace Eva_5._0
 
         private void Window_Size_Changed(object sender, SizeChangedEventArgs e)
         {
-            switch (App.PermisissionWindowOpen)
+            if (App.PermisissionWindowOpen == true)
             {
-                case true:
 
-                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                {
+
+                    if (Application.Current.MainWindow != null)
                     {
-                        case false:
 
-                            switch (Application.Current.MainWindow == null)
-                            {
-                                case false:
+                        Rect geometry = new Rect();
 
-                                    Rect geometry = new Rect();
+                        geometry.Height = this.Height;
+                        geometry.Width = this.Width;
 
-                                    geometry.Height = this.Height;
-                                    geometry.Width = this.Width;
+                        Error_Window_Geometry.Rect = geometry;
 
-                                    Error_Window_Geometry.Rect = geometry;
-
-                                    break;
-                            }
-
-                            break;
                     }
-                    break;
+
+                }
+
             }
         }
 

@@ -755,66 +755,55 @@ namespace Eva_5._0
 
         private void MoveTheWindow(object sender, MouseButtonEventArgs e)
         {
-            switch (App.InstructionManualOpen)
+            if (App.InstructionManualOpen == true)
             {
-                case true:
 
-                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                {
+
+                    if (Application.Current.MainWindow != null)
                     {
-                        case false:
 
-                            switch (Application.Current.MainWindow == null)
-                            {
+                        this.DragMove();
 
-                                case false:
-
-                                    this.DragMove();
-                                    break;
-                            }
-                            break;
                     }
-                    break;
+
+                }
+
             }
         }
 
         private void MinimiseTheWindow(object sender, RoutedEventArgs e)
         {
-            switch (App.InstructionManualOpen)
+            if (App.InstructionManualOpen == true)
             {
-                case true:
 
-                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                {
+
+                    if (Application.Current.MainWindow != null)
                     {
-                        case false:
 
-                            switch (Application.Current.MainWindow == null)
-                            {
+                        this.WindowState = WindowState.Minimized;
 
-                                case false:
-
-                                    this.WindowState = WindowState.Minimized;
-                                    break;
-                            }
-                            break;
                     }
-                    break;
+
+                }
+
             }
         }
 
+
         private void NormaliseOrMaximiseTheWindow(object sender, RoutedEventArgs e)
         {
-            switch (App.InstructionManualOpen)
+            if (App.InstructionManualOpen == true)
             {
-                case true:
 
-                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                    if (Application.Current.Dispatcher.HasShutdownStarted == false)
                     {
-                        case false:
 
-                            switch (Application.Current.MainWindow == null)
+                            if (Application.Current.MainWindow != null)
                             {
-
-                                case false:
 
                                     NormalisedOrMaximised++;
 
@@ -831,35 +820,31 @@ namespace Eva_5._0
                                             NormalisedOrMaximised = 0;
                                             break;
                                     }
-                                    break;
+
                             }
-                            break;
+
                     }
-                    break;
+
             }
         }
 
         private void CloseTheWindow(object sender, RoutedEventArgs e)
         {
-            switch (App.InstructionManualOpen)
+            if (App.InstructionManualOpen == true)
             {
-                case true:
 
-                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                {
+
+                    if (Application.Current.MainWindow != null)
                     {
-                        case false:
 
-                            switch (Application.Current.MainWindow == null)
-                            {
+                        this.Close();
 
-                                case false:
-
-                                    this.Close();
-                                    break;
-                            }
-                            break;
                     }
-                    break;
+
+                }
+
             }
         }
 
@@ -884,30 +869,26 @@ namespace Eva_5._0
 
         private void Window_Size_Changed(object sender, SizeChangedEventArgs e)
         {
-            switch (App.InstructionManualOpen)
+            if (App.InstructionManualOpen == true)
             {
-                case true:
 
-                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                {
+
+                    if (Application.Current.MainWindow != null)
                     {
-                        case false:
 
-                            switch (Application.Current.MainWindow == null)
-                            {
+                        Rect geometry = new Rect();
 
-                                case false:
+                        geometry.Height = this.Height;
+                        geometry.Width = this.Width;
 
-                                    Rect geometry = new Rect();
+                        Instruction_Manual_Geometry.Rect = geometry;
 
-                                    geometry.Height = this.Height;
-                                    geometry.Width = this.Width;
-
-                                    Instruction_Manual_Geometry.Rect = geometry;
-                                    break;
-                            }
-                            break;
                     }
-                    break;
+
+                }
+
             }
         }
 

@@ -28,22 +28,18 @@ namespace Eva_5._0
         /////////////////////////////////////////////////////////////////////////////
 
 
-
-
         private System.Threading.Thread ParallelProcessing;
 
         private System.Timers.Timer AnimationAndFunctionalityTimer;
 
 
-
         private System.Speech.Recognition.SpeechRecognitionEngine MainSpeechRecogniser;
 
-        public static double Speech_Recognition_Sensitivity = 0.94;
+        public static double Speech_Recognition_Sensitivity = 0.9485;
 
         public static bool Online_Speech_Recogniser_Listening;
 
         private int Online_Speech_Recogniser_Listening_TimeOut;
-
 
 
         /// <summary>
@@ -79,7 +75,6 @@ namespace Eva_5._0
         /// <summary>
         ///  Gradient Arithmetic For Neon Glow Chromatic Effect
         /// </summary>
-
 
 
         private int Button_Timeout;
@@ -613,69 +608,63 @@ namespace Eva_5._0
 
         private void MoveTheWindow(object sender, MouseButtonEventArgs e)
         {
-            switch (MainWindowIsClosing)
+            if (MainWindowIsClosing == false)
             {
-                case false:
-                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+
+                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                {
+
+                    if (Application.Current.MainWindow != null)
                     {
-                        case false:
 
-                            switch (Application.Current.MainWindow == null)
-                            {
-                                case false:
-                                    this.DragMove();
-                                    break;
-                            }
+                        this.DragMove();
 
-                            break;
                     }
-                    break;
+
+                }
+
             }
         }
 
         private void MinimiseTheMainWindow(object sender, RoutedEventArgs e)
         {
-            switch (MainWindowIsClosing)
+            if (MainWindowIsClosing == false)
             {
-                case false:
-                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+
+                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                {
+
+                    if (Application.Current.MainWindow != null)
                     {
-                        case false:
 
-                            switch (Application.Current.MainWindow == null)
-                            {
-                                case false:
-                                    Application.Current.MainWindow.WindowState = WindowState.Minimized;
-                                    break;
-                            }
+                        Application.Current.MainWindow.WindowState = WindowState.Minimized;
 
-                            break;
                     }
-                    break;
+
+                }
+
             }
         }
 
         private void CloseTheApplication(object sender, RoutedEventArgs e)
         {
-            switch (MainWindowIsClosing)
+            if (MainWindowIsClosing == false)
             {
-                case false:
-                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+
+                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                {
+
+                    if (Application.Current.MainWindow != null)
                     {
-                        case false:
 
-                            switch (Application.Current.MainWindow == null)
-                            {
-                                case false:
-                                    this.Close();
-                                    Application.Current.Shutdown();
-                                    Environment.Exit(0);
-                                    break;
-                            }
+                        this.Close();
+                        Application.Current.Shutdown();
+                        Environment.Exit(0);
 
-                            break;
                     }
-                    break;
+
+                }
+
             }
         }
 
@@ -686,106 +675,89 @@ namespace Eva_5._0
             {
                 Button_Timeout = 400;
 
-                switch (MainWindowIsClosing)
+                if (MainWindowIsClosing == false)
                 {
-                    case false:
-                        switch (Application.Current.Dispatcher.HasShutdownStarted)
+
+                    if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                    {
+
+
+                        if (Application.Current.MainWindow != null)
                         {
-                            case false:
 
-                                switch (Application.Current.MainWindow == null)
-                                {
-                                    case false:
+                            OnOff++;
 
-                                        OnOff++;
+                            switch (OnOff)
+                            {
+                                case 1:
 
-                                        switch (OnOff)
-                                        {
-                                            case 1:
+                                    bool Wake_Word_Engine_Initiation_Successful = Initiate_The_Wake_Word_Engine();
 
-                                                SpeechRecognitionButton.Content = "\xE1D6";
+                                    switch (Wake_Word_Engine_Initiation_Successful)
+                                    {
 
-                                                App.StopRecognitionSession = false;
+                                        case true:
 
-                                                try
-                                                {
+                                            SpeechRecognitionButton.Content = "\xE1D6";
 
-                                                    ParallelProcessing = new System.Threading.Thread(() =>
-                                                    {
+                                            App.StopRecognitionSession = false;
+
+                                            break;
 
 
-                                                        MainSpeechRecogniser = new System.Speech.Recognition.SpeechRecognitionEngine();
-
-                                                        MainSpeechRecogniser.BabbleTimeout = TimeSpan.FromSeconds(0);
-                                                        MainSpeechRecogniser.EndSilenceTimeout = TimeSpan.FromSeconds(0);
-                                                        MainSpeechRecogniser.InitialSilenceTimeout = TimeSpan.FromSeconds(0);
-                                                        MainSpeechRecogniser.EndSilenceTimeoutAmbiguous = TimeSpan.FromSeconds(0);
 
 
-                                                        MainSpeechRecogniser.RequestRecognizerUpdate();
-                                                        System.Speech.Recognition.Choices Choices = new System.Speech.Recognition.Choices("Hey Eva", "Ey A", "Hey all");
-                                                        System.Speech.Recognition.GrammarBuilder gb = new System.Speech.Recognition.GrammarBuilder();
-                                                        gb.Culture = new System.Globalization.CultureInfo("en_GB");
-                                                        gb.Append(Choices);
-                                                        System.Speech.Recognition.Grammar Grammar = new System.Speech.Recognition.Grammar(gb);
-                                                        MainSpeechRecogniser.RequestRecognizerUpdate();
+                                        case false:
+
+                                            OnOff = 0;
+
+                                            App.StopRecognitionSession = true;
+
+                                            SpeechRecognitionButton.Content = "\xF781";
+
+                                            break;
+
+                                    }
+
+                                    break;
+
+                                case 2:
+
+                                    bool Wake_Word_Engine_Shutdown_Successful = Close_The_Wake_Word_Engine();
+
+                                    switch (Wake_Word_Engine_Shutdown_Successful)
+                                    {
+
+                                        case true:
+
+                                            SpeechRecognitionButton.Content = "\xF781";
+
+                                            App.StopRecognitionSession = true;
+
+                                            OnOff = 0;
+
+                                            break;
 
 
-                                                        MainSpeechRecogniser.LoadGrammarAsync(Grammar);
-                                                        MainSpeechRecogniser.SetInputToDefaultAudioDevice();
-                                                        MainSpeechRecogniser.RequestRecognizerUpdate();
-
-                                                        MainSpeechRecogniser.RecognizeAsync(System.Speech.Recognition.RecognizeMode.Multiple);
-                                                        MainSpeechRecogniser.SpeechRecognized += MainSpeechRecogniser_SpeechRecognized;
-                                                        MainSpeechRecogniser.RecognizeCompleted += MainSpeechRecogniser_RecognizeCompleted;
 
 
-                                                    });
-                                                    ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
-                                                    ParallelProcessing.IsBackground = true;
-                                                    ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
-                                                    ParallelProcessing.Start();
-                                                }
-                                                catch { }
+                                        case false:
 
-                                                break;
+                                            SpeechRecognitionButton.Content = "\xE1D6";
 
-                                            case 2:
+                                            App.StopRecognitionSession = false;
 
-                                                SpeechRecognitionButton.Content = "\xF781";
+                                            break;
 
-                                                App.StopRecognitionSession = true;
+                                    }
 
-                                                OnOff = 0;
+                                    break;
+                            }
 
-                                                try
-                                                {
-
-                                                    ParallelProcessing = new System.Threading.Thread(() =>
-                                                    {
-                                                        if(MainSpeechRecogniser != null)
-                                                        {
-                                                            MainSpeechRecogniser.RecognizeAsyncStop();
-                                                            MainSpeechRecogniser.RecognizeAsyncCancel();
-                                                            MainSpeechRecogniser.Dispose();
-                                                        }
-                                                    });
-                                                    ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
-                                                    ParallelProcessing.IsBackground = true;
-                                                    ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
-                                                    ParallelProcessing.Start();
-                                                }
-                                                catch { }
-
-                                                break;
-                                        }
-
-                                        break;
-                                }
-
-                                break;
                         }
-                        break;
+
+                    }
+
                 }
             }
         }
@@ -818,7 +790,49 @@ namespace Eva_5._0
                                                 {
                                                     case "Hey Eva":
 
-                                                        if(Timer_Window.Ring_Timer == false)
+
+
+                                                        Wake_Word_Engine_Shutdown:
+
+                                                        int Wake_Word_Engine_Shutdown_Error_Counter = 0;
+
+                                                        bool Wake_Word_Engine_Shutdown_Successful = Close_The_Wake_Word_Engine();
+
+
+
+                                                        if (Wake_Word_Engine_Shutdown_Successful == false)
+                                                        {
+                                                            if(OnOff != 0)
+                                                            {
+                                                                switch (Wake_Word_Engine_Shutdown_Error_Counter < 10)
+                                                                {
+
+                                                                    case true:
+
+                                                                        Wake_Word_Engine_Shutdown_Error_Counter++;
+
+                                                                        goto Wake_Word_Engine_Shutdown;
+
+
+
+
+                                                                    case false:
+
+                                                                        SpeechRecognitionButton.Content = "\xE1D6";
+
+                                                                        App.StopRecognitionSession = false;
+
+                                                                        break;
+
+                                                                }
+                                                            }
+                                                            
+                                                        }
+
+
+
+
+                                                        if (Timer_Window.Ring_Timer == false)
                                                         {
                                                             switch (FunctionInitiated)
                                                             {
@@ -830,19 +844,15 @@ namespace Eva_5._0
 
                                                                             FunctionInitiated = true;
 
-                                                                           
-                                                                            System.Threading.Thread Online_Speech_Recognition_Thread = new System.Threading.Thread(() =>
+                                                                            ParallelProcessing = new System.Threading.Thread(() =>
                                                                             {
                                                                                 Online_Speech_Recognition.Recogniser_Thread_Creation_And_Initiation();
                                                                             });
 
-                                                                            Online_Speech_Recognition_Thread.SetApartmentState(System.Threading.ApartmentState.STA);
-                                                                            Online_Speech_Recognition_Thread.Priority = System.Threading.ThreadPriority.AboveNormal;
-                                                                            Online_Speech_Recognition_Thread.IsBackground = true;
-                                                                            Online_Speech_Recognition_Thread.Start();
-
-
-
+                                                                            ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
+                                                                            ParallelProcessing.Priority = System.Threading.ThreadPriority.AboveNormal;
+                                                                            ParallelProcessing.IsBackground = true;
+                                                                            ParallelProcessing.Start();
 
 
                                                                             Application.Current.MainWindow.Topmost = false;
@@ -853,6 +863,14 @@ namespace Eva_5._0
                                                                     break;
                                                             }
                                                         }
+
+
+                                                        if (OnOff != 0)
+                                                        {
+                                                            Initiate_The_Wake_Word_Engine();
+                                                        }
+
+
 
                                                         break;
                                                 }
@@ -870,12 +888,15 @@ namespace Eva_5._0
 
         private void MainSpeechRecogniser_RecognizeCompleted(object sender, System.Speech.Recognition.RecognizeCompletedEventArgs e)
         {
-          
 
             try
             {
                 if (e.Error != null)
                 {
+
+
+
+
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         App.ErrorAppShutdown = true;
@@ -907,40 +928,87 @@ namespace Eva_5._0
                         }
 
                     });
+
+                }
+                else
+                {
+
+                    if (OnOff != 0)
+                    {
+
+                    Wake_Word_Engine_Initiation:
+
+
+                        int Wake_Word_Engine_Initiation_Error_Counter = 0;
+
+                        bool Wake_Word_Engine_Initiation_Successful = Initiate_The_Wake_Word_Engine();
+
+
+
+                        if (Wake_Word_Engine_Initiation_Successful == false)
+                        {
+                            if (OnOff != 0)
+                            {
+                                switch (Wake_Word_Engine_Initiation_Error_Counter < 10)
+                                {
+
+                                    case true:
+
+                                        Wake_Word_Engine_Initiation_Error_Counter++;
+
+                                        goto Wake_Word_Engine_Initiation;
+
+
+
+
+                                    case false:
+
+                                        OnOff = 0;
+
+                                        App.StopRecognitionSession = true;
+
+                                        SpeechRecognitionButton.Content = "\xF781";
+
+                                        break;
+
+                                }
+                            }
+
+                        }
+                    }
+
                 }
 
             }
             catch { }
+
+
         }
 
 
 
         private void OpenSettingsWindow(object sender, RoutedEventArgs e)
         {
-            switch (MainWindowIsClosing)
+            if (MainWindowIsClosing == false)
             {
-                case false:
-                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+
+                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                {
+
+                    if (Application.Current.MainWindow != null)
                     {
-                        case false:
 
-                            switch (Application.Current.MainWindow == null)
-                            {
-                                case false:
-                                    switch (App.SettingsWindowOpen)
-                                    {
-                                        case false:
-                                            App.SettingsWindowOpen = true;
-                                            SettingsWindow SettingWindowObject = new SettingsWindow();
-                                            SettingWindowObject.Show();
-                                            break;
-                                    }
-                                    break;
-                            }
+                        if (App.SettingsWindowOpen == false)
+                        {
+                            App.SettingsWindowOpen = true;
+                            SettingsWindow SettingWindowObject = new SettingsWindow();
+                            SettingWindowObject.Show();
+                        }
 
-                            break;
                     }
-                    break;
+
+                }
+
             }
         }
 
@@ -948,33 +1016,105 @@ namespace Eva_5._0
 
         private void OpenTimerWindow(object sender, RoutedEventArgs e)
         {
-            switch (MainWindowIsClosing)
+            if (MainWindowIsClosing == false)
             {
-                case false:
-                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+
+                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                {
+
+                    if (Application.Current.MainWindow != null)
                     {
-                        case false:
 
-                            switch (Application.Current.MainWindow == null)
-                            {
-                                case false:
-                                    switch (App.TimerWindowOpen)
-                                    {
-                                        case false:
-                                            App.TimerWindowOpen = true;
-                                            Timer_Window TimerWindowObject = new Timer_Window();
-                                            TimerWindowObject.Show();
-                                            break;
-                                    }
-                                    break;
-                            }
+                        if (App.TimerWindowOpen == false)
+                        {
 
-                            break;
+                            App.TimerWindowOpen = true;
+                            Timer_Window TimerWindowObject = new Timer_Window();
+                            TimerWindowObject.Show();
+
+                        }
+
                     }
-                    break;
+
+                }
+
             }
         }
 
+
+
+        private bool Initiate_The_Wake_Word_Engine()
+        {
+            bool Wake_Word_Engine_Initiation_Successful = true;
+
+            try
+            {
+                if (OnOff == 1)
+                {
+                    ParallelProcessing = new System.Threading.Thread(() =>
+                    {
+                        MainSpeechRecogniser = new System.Speech.Recognition.SpeechRecognitionEngine();
+
+                        MainSpeechRecogniser.BabbleTimeout = TimeSpan.FromSeconds(0);
+                        MainSpeechRecogniser.EndSilenceTimeout = TimeSpan.FromSeconds(0);
+                        MainSpeechRecogniser.InitialSilenceTimeout = TimeSpan.FromSeconds(0);
+                        MainSpeechRecogniser.EndSilenceTimeoutAmbiguous = TimeSpan.FromSeconds(0);
+
+
+                        MainSpeechRecogniser.RequestRecognizerUpdate();
+                        System.Speech.Recognition.Choices Choices = new System.Speech.Recognition.Choices("Hey Eva");
+                        System.Speech.Recognition.GrammarBuilder gb = new System.Speech.Recognition.GrammarBuilder();
+                        gb.Culture = new System.Globalization.CultureInfo("en_GB");
+                        gb.Append(Choices);
+                        System.Speech.Recognition.Grammar Grammar = new System.Speech.Recognition.Grammar(gb);
+                        MainSpeechRecogniser.RequestRecognizerUpdate();
+
+
+                        MainSpeechRecogniser.LoadGrammarAsync(Grammar);
+                        MainSpeechRecogniser.SetInputToDefaultAudioDevice();
+                        MainSpeechRecogniser.RequestRecognizerUpdate();
+
+                        MainSpeechRecogniser.RecognizeAsync(System.Speech.Recognition.RecognizeMode.Multiple);
+                        MainSpeechRecogniser.SpeechRecognized += MainSpeechRecogniser_SpeechRecognized;
+                        MainSpeechRecogniser.RecognizeCompleted += MainSpeechRecogniser_RecognizeCompleted;
+                    });
+
+                    ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
+                    ParallelProcessing.Priority = System.Threading.ThreadPriority.AboveNormal;
+                    ParallelProcessing.IsBackground = false;
+                    ParallelProcessing.Start();
+                    
+                }
+            }
+            catch(Exception E)
+            {
+                Wake_Word_Engine_Initiation_Successful = false;
+            }
+
+            return Wake_Word_Engine_Initiation_Successful;
+        }
+
+
+        private bool Close_The_Wake_Word_Engine()
+        {
+            bool Wake_Word_Engine_Shutdown_Successful = true;
+
+            try
+            {
+                if (MainSpeechRecogniser != null)
+                {
+                    MainSpeechRecogniser.RecognizeAsyncStop();
+                    MainSpeechRecogniser.RecognizeAsyncCancel();
+                    MainSpeechRecogniser.Dispose();
+                }
+            }
+            catch 
+            {
+                Wake_Word_Engine_Shutdown_Successful = false;
+            }
+
+            return Wake_Word_Engine_Shutdown_Successful;
+        }
 
 
         ~MainWindow()
@@ -1004,6 +1144,7 @@ namespace Eva_5._0
 
                 BeginExecutionAnimation = null;
 
+                ParallelProcessing = null;
 
 
                 System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;

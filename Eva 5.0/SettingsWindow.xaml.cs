@@ -85,48 +85,42 @@ namespace Eva_5._0
 
         private void MinimiseTheWindow(object sender, RoutedEventArgs e)
         {
-            switch (WindowIsClosing)
+            if (WindowIsClosing == false)
             {
-                case false:
 
-                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                {
+
+                    if (Application.Current.MainWindow != null)
                     {
-                        case false:
 
-                            switch (Application.Current.MainWindow == null)
-                            {
-                                case false:
+                        this.WindowState = WindowState.Minimized;
 
-                                    this.WindowState = WindowState.Minimized;
-                                    break;
-                            }
-                            break;
                     }
-                    break;
+
+                }
+
             }
         }
 
 
         private void CloseTheWindow(object sender, RoutedEventArgs e)
         {
-            switch (WindowIsClosing)
+            if (WindowIsClosing == false)
             {
-                case false:
 
-                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                {
+
+                    if (Application.Current.MainWindow != null)
                     {
-                        case false:
 
-                            switch (Application.Current.MainWindow == null)
-                            {
-                                case false:
+                        this.Close();
 
-                                    this.Close();
-                                    break;
-                            }
-                            break;
                     }
-                    break;
+
+                }
+
             }
         }
 
@@ -138,24 +132,21 @@ namespace Eva_5._0
 
         private void MoveTheWindow(object sender, MouseButtonEventArgs e)
         {
-            switch (WindowIsClosing)
+            if (WindowIsClosing == false)
             {
-                case false:
 
-                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                {
+
+                    if (Application.Current.MainWindow != null)
                     {
-                        case false:
 
-                            switch (Application.Current.MainWindow == null)
-                            {
-                                case false:
+                        this.DragMove();
 
-                                    this.DragMove();
-                                    break;
-                            }
-                            break;
                     }
-                    break;
+
+                }
+
             }
         }
 
@@ -620,93 +611,81 @@ namespace Eva_5._0
 
         private void SoundOn(object sender, RoutedEventArgs e)
         {
-            switch (App.SettingsWindowOpen)
+            if (App.SettingsWindowOpen == true)
             {
-                case true:
 
-                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                {
+
+                    if (Application.Current.MainWindow != null)
                     {
-                        case false:
 
-                            switch (Application.Current.MainWindow == null)
-                            {
+                        System.Threading.Tasks.Task.Run(() => { Settings.Set_Settings(true); });
 
-                                case false:
-                                    System.Threading.Tasks.Task.Run(() => { Settings.Set_Settings(true); });
+                        SoundOnButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
+                        SoundOffButton.Background = new SolidColorBrush(Colors.Transparent);
 
-                                    SoundOnButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
-                                    SoundOffButton.Background = new SolidColorBrush(Colors.Transparent);
+                        MuteButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF1B70C3");
+                        SoundButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
 
-                                    MuteButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF1B70C3");
-                                    SoundButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-
-                                    break;
-                            }
-                            break;
                     }
-                    break;
+
+                }
+
             }
         }
 
         private void SoundOff(object sender, RoutedEventArgs e)
         {
-            switch (App.SettingsWindowOpen)
+            if (App.SettingsWindowOpen == true)
             {
-                case true:
 
-                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                {
+
+                    if (Application.Current.MainWindow != null)
                     {
-                        case false:
 
-                            switch (Application.Current.MainWindow == null)
-                            {
+                        System.Threading.Tasks.Task.Run(() => { Settings.Set_Settings(false); });
 
-                                case false:
-                                    System.Threading.Tasks.Task.Run(() => { Settings.Set_Settings(false); });
+                        SoundOffButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
+                        SoundOnButton.Background = new SolidColorBrush(Colors.Transparent);
 
-                                    SoundOffButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
-                                    SoundOnButton.Background = new SolidColorBrush(Colors.Transparent);
+                        SoundButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF1B70C3");
+                        MuteButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
 
-                                    SoundButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF1B70C3");
-                                    MuteButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-
-                                    break;
-                            }
-                            break;
                     }
-                    break;
+
+                }
+
             }
         }
 
         private void OpenInstructionManual(object sender, RoutedEventArgs e)
         {
-            switch (App.SettingsWindowOpen)
+            if (App.SettingsWindowOpen == true)
             {
-                case true:
 
-                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                {
+
+                    if (Application.Current.MainWindow != null)
                     {
-                        case false:
 
-                            switch (Application.Current.MainWindow == null)
-                            {
 
-                                case false:
+                        if (App.InstructionManualOpen != true)
+                        {
 
-                                    switch (App.InstructionManualOpen)
-                                    {
-                                        case false:
+                            App.InstructionManualOpen = true;
+                            InstructionManual instructionManual = new InstructionManual();
+                            instructionManual.Show();
 
-                                            App.InstructionManualOpen = true;
-                                            InstructionManual instructionManual = new InstructionManual();
-                                            instructionManual.Show();
-                                            break;
-                                    }
-                                    break;
-                            }
-                            break;
+                        }
+
                     }
-                    break;
+
+                }
+
             }
 
         }

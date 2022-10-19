@@ -229,6 +229,8 @@ namespace Eva_5._0
                                 {
                                     case true:
 
+                                        MainWindow.BeginExecutionAnimation = true;
+
                                         await Windows.System.Launcher.LaunchUriAsync(new Uri(application_executable_name.Remove(0, 6)));
                                         break;
 
@@ -268,7 +270,7 @@ namespace Eva_5._0
                         }
                         catch
                         {
-                            
+
                             if (Application_Not_Found_Error_Download_Link_Result == true)
                             {
 
@@ -287,6 +289,7 @@ namespace Eva_5._0
                                 switch (SoundOrOff == true)
                                 {
                                     case true:
+
                                         switch (System.IO.File.Exists(@"App execution.wav"))
                                         {
                                             case true:

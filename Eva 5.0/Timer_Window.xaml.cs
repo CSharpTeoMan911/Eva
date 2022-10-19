@@ -95,69 +95,63 @@ namespace Eva_5._0
 
         private void Move_The_Window(object sender, MouseButtonEventArgs e)
         {
-            switch(Application.Current == null)
+            if (Application.Current != null)
             {
-                case false:
 
-                    switch(Application.Current.Dispatcher.HasShutdownStarted)
+                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                {
+
+                    Application.Current.Dispatcher.Invoke(() =>
                     {
-                        case false:
+                        if (Application.Current.MainWindow != null)
+                        {
 
-                            Application.Current.Dispatcher.Invoke(() =>
-                            {
-                                switch (Application.Current.MainWindow == null)
-                                {
-                                    case false:
+                            this.DragMove();
 
-                                        this.DragMove();
+                        }
+                    });
 
-                                        break;
-                                }
-                            });
-                            break;
-                    }
-                    break;
+                }
+
             }
         }
 
         private void Close_The_Window(object sender, RoutedEventArgs e)
         {
-            switch (Application.Current == null)
+            if (Application.Current != null)
             {
-                case false:
 
-                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                {
+
+                    Application.Current.Dispatcher.Invoke(() =>
                     {
-                        case false:
+                        if (Application.Current.MainWindow != null)
+                        {
 
-                            Application.Current.Dispatcher.Invoke(() =>
+
+                            if (Ring_Timer == true)
                             {
-                                switch (Application.Current.MainWindow == null)
+                                Ring_Timer = false;
+
+                                if (Alarm_Started == true)
                                 {
-                                    case false:
-
-                                        if(Ring_Timer == true)
-                                        {
-                                            Ring_Timer = false;
-
-                                            if (Alarm_Started == true)
-                                            {
-                                                try
-                                                {
-                                                    Alarm_Sound_Effect.Stop();
-                                                }
-                                                catch { }
-                                            }
-                                        }
-
-                                        this.Close();
-
-                                        break;
+                                    try
+                                    {
+                                        Alarm_Sound_Effect.Stop();
+                                    }
+                                    catch { }
                                 }
-                            });
-                            break;
-                    }
-                    break;
+                            }
+
+                            this.Close();
+
+
+                        }
+                    });
+
+                }
+
             }
         }
 
@@ -633,55 +627,52 @@ namespace Eva_5._0
 
         private void Cancel_The_Timer(object sender, RoutedEventArgs e)
         {
-            switch (Application.Current == null)
+            if (Application.Current != null)
             {
-                case false:
 
-                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                {
+
+                    Application.Current.Dispatcher.Invoke(async () =>
                     {
-                        case false:
+                        if (Application.Current.MainWindow != null)
+                        {
 
-                            Application.Current.Dispatcher.Invoke(async() =>
+                            switch (Ring_Timer)
                             {
-                                switch (Application.Current.MainWindow == null)
-                                {
-                                    case false:
+                                case true:
 
+                                    Ring_Timer = false;
 
-                                        switch(Ring_Timer)
+                                    if (Alarm_Started == true)
+                                    {
+                                        try
                                         {
-                                            case true:
-
-                                                Ring_Timer = false;
-
-                                                if(Alarm_Started == true)
-                                                {
-                                                    try
-                                                    {
-                                                        Alarm_Sound_Effect.Stop();
-                                                    }
-                                                    catch { }
-                                                }
-
-                                                this.Close();
-
-                                                break;
-
-
-                                            case false:
-
-                                                await Timer_Interval.Cancel_Time_Interval();
-                                                break;
+                                            Alarm_Sound_Effect.Stop();
                                         }
+                                        catch { }
+                                    }
 
-                                        break;
-                                }
-                            });
-                            break;
-                    }
-                    break;
+                                    this.Close();
+
+                                    break;
+
+
+                                case false:
+
+                                    await Timer_Interval.Cancel_Time_Interval();
+                                    break;
+                            }
+
+
+                        }
+                    });
+
+                }
+
             }
         }
+
 
         private void Timer_Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
