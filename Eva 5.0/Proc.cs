@@ -39,6 +39,7 @@ namespace Eva_5._0
         public static async Task<bool> ProcInitialisation(ProcessType process_type, Application application, Content content)
         {
 
+
             switch (process_type as string)
             {
                 case "Online Process":

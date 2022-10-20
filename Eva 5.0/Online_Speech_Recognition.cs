@@ -54,6 +54,14 @@ namespace Eva_5._0
                         Speech_Recognition_Cortana_Search_Initiation.Start();
                     }
 
+
+                    using (System.Diagnostics.Process Speech_Recognition_Cortana_Speech_Initiation = new System.Diagnostics.Process())
+                    {
+                        Speech_Recognition_Cortana_Speech_Initiation.StartInfo.FileName = @"C:\Windows\System32\Speech_OneCore\common\SpeechRuntime.exe";
+                        Speech_Recognition_Cortana_Speech_Initiation.StartInfo.UseShellExecute = true;
+                        Speech_Recognition_Cortana_Speech_Initiation.Start();
+                    }
+
                 }
                 catch{ }
 
