@@ -33,9 +33,9 @@ namespace Eva_5._0
         private System.Timers.Timer AnimationAndFunctionalityTimer;
 
 
-        private System.Speech.Recognition.SpeechRecognitionEngine MainSpeechRecogniser;
+        private static System.Speech.Recognition.SpeechRecognitionEngine MainSpeechRecogniser;
 
-        public static double Speech_Recognition_Sensitivity = 0.9485;
+        public static double Speech_Recognition_Sensitivity = 0.95;
 
         public static bool Online_Speech_Recogniser_Listening;
 
@@ -186,12 +186,14 @@ namespace Eva_5._0
 
                                                 Online_Speech_Recogniser_Listening_TimeOut++;
 
-                                                switch(Online_Speech_Recogniser_Listening_TimeOut == 700)
+                                                switch(Online_Speech_Recogniser_Listening_TimeOut == 6000)
                                                 {
                                                     case true:
 
                                                         Online_Speech_Recogniser_Listening_TimeOut = 0;
-                                                        Online_Speech_Recogniser_Listening = false;
+
+                                                        await Online_Speech_Recognition.Stop_The_Online_Speech_Recognition();
+
                                                         break;
 
                                                     case false:
@@ -204,6 +206,8 @@ namespace Eva_5._0
 
 
                                             case false:
+
+                                                Online_Speech_Recogniser_Listening_TimeOut = 0;
 
                                                 OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FFACC6D6");
                                                 OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
@@ -626,7 +630,7 @@ namespace Eva_5._0
             }
         }
 
-        private void MinimiseTheMainWindow(object sender, RoutedEventArgs e)
+        private async void MinimiseTheMainWindow(object sender, RoutedEventArgs e)
         {
             if (MainWindowIsClosing == false)
             {
@@ -638,6 +642,8 @@ namespace Eva_5._0
                     {
 
                         Application.Current.MainWindow.WindowState = WindowState.Minimized;
+
+                        await Online_Speech_Recognition.Stop_The_Online_Speech_Recognition();
 
                     }
 
@@ -668,7 +674,7 @@ namespace Eva_5._0
             }
         }
 
-        private void StartOrStopSpeechRecognition(object sender, RoutedEventArgs e)
+        private async void StartOrStopSpeechRecognition(object sender, RoutedEventArgs e)
         {
 
             if (Button_Timeout == 0)
@@ -691,7 +697,7 @@ namespace Eva_5._0
                             {
                                 case 1:
 
-                                    bool Wake_Word_Engine_Initiation_Successful = Initiate_The_Wake_Word_Engine();
+                                    bool Wake_Word_Engine_Initiation_Successful = await Initiate_The_Wake_Word_Engine();
 
                                     switch (Wake_Word_Engine_Initiation_Successful)
                                     {
@@ -723,7 +729,10 @@ namespace Eva_5._0
 
                                 case 2:
 
-                                    bool Wake_Word_Engine_Shutdown_Successful = Close_The_Wake_Word_Engine();
+                                    bool Wake_Word_Engine_Shutdown_Successful = await Close_The_Wake_Word_Engine();
+
+                                    await Online_Speech_Recognition.Stop_The_Online_Speech_Recognition();
+
 
                                     switch (Wake_Word_Engine_Shutdown_Successful)
                                     {
@@ -774,7 +783,7 @@ namespace Eva_5._0
 
                         case false:
 
-                            Application.Current.Dispatcher.Invoke(() =>
+                            Application.Current.Dispatcher.Invoke(async () =>
                             {
 
                                 switch (Application.Current.MainWindow == null)
@@ -792,11 +801,17 @@ namespace Eva_5._0
 
 
 
+                                                        await Online_Speech_Recognition.Stop_The_Online_Speech_Recognition();
+
+
+
+
+
                                                         Wake_Word_Engine_Shutdown:
 
                                                         int Wake_Word_Engine_Shutdown_Error_Counter = 0;
 
-                                                        bool Wake_Word_Engine_Shutdown_Successful = Close_The_Wake_Word_Engine();
+                                                        bool Wake_Word_Engine_Shutdown_Successful = await Close_The_Wake_Word_Engine();
 
 
 
@@ -854,9 +869,6 @@ namespace Eva_5._0
                                                                             ParallelProcessing.IsBackground = true;
                                                                             ParallelProcessing.Start();
 
-
-                                                                            Application.Current.MainWindow.Topmost = false;
-
                                                                             break;
                                                                     }
 
@@ -865,9 +877,13 @@ namespace Eva_5._0
                                                         }
 
 
+
                                                         if (OnOff != 0)
                                                         {
-                                                            Initiate_The_Wake_Word_Engine();
+                                                            if(Wake_Word_Engine_Shutdown_Successful == true)
+                                                            {
+                                                                await Initiate_The_Wake_Word_Engine();
+                                                            }
                                                         }
 
 
@@ -886,7 +902,7 @@ namespace Eva_5._0
 
         }
 
-        private void MainSpeechRecogniser_RecognizeCompleted(object sender, System.Speech.Recognition.RecognizeCompletedEventArgs e)
+        private async void MainSpeechRecogniser_RecognizeCompleted(object sender, System.Speech.Recognition.RecognizeCompletedEventArgs e)
         {
 
             try
@@ -941,7 +957,7 @@ namespace Eva_5._0
 
                         int Wake_Word_Engine_Initiation_Error_Counter = 0;
 
-                        bool Wake_Word_Engine_Initiation_Successful = Initiate_The_Wake_Word_Engine();
+                        bool Wake_Word_Engine_Initiation_Successful = await Initiate_The_Wake_Word_Engine();
 
 
 
@@ -975,6 +991,7 @@ namespace Eva_5._0
                             }
 
                         }
+
                     }
 
                 }
@@ -1043,7 +1060,7 @@ namespace Eva_5._0
 
 
 
-        private bool Initiate_The_Wake_Word_Engine()
+        private Task<bool> Initiate_The_Wake_Word_Engine()
         {
             bool Wake_Word_Engine_Initiation_Successful = true;
 
@@ -1077,11 +1094,12 @@ namespace Eva_5._0
                         MainSpeechRecogniser.RecognizeAsync(System.Speech.Recognition.RecognizeMode.Multiple);
                         MainSpeechRecogniser.SpeechRecognized += MainSpeechRecogniser_SpeechRecognized;
                         MainSpeechRecogniser.RecognizeCompleted += MainSpeechRecogniser_RecognizeCompleted;
+
                     });
 
                     ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
                     ParallelProcessing.Priority = System.Threading.ThreadPriority.AboveNormal;
-                    ParallelProcessing.IsBackground = false;
+                    ParallelProcessing.IsBackground = true;
                     ParallelProcessing.Start();
                     
                 }
@@ -1091,29 +1109,29 @@ namespace Eva_5._0
                 Wake_Word_Engine_Initiation_Successful = false;
             }
 
-            return Wake_Word_Engine_Initiation_Successful;
+            return Task.FromResult(Wake_Word_Engine_Initiation_Successful);
         }
 
 
-        private bool Close_The_Wake_Word_Engine()
+        private Task<bool> Close_The_Wake_Word_Engine()
         {
             bool Wake_Word_Engine_Shutdown_Successful = true;
+
 
             try
             {
                 if (MainSpeechRecogniser != null)
                 {
-                    MainSpeechRecogniser.RecognizeAsyncStop();
                     MainSpeechRecogniser.RecognizeAsyncCancel();
                     MainSpeechRecogniser.Dispose();
                 }
             }
-            catch 
+            catch
             {
                 Wake_Word_Engine_Shutdown_Successful = false;
             }
 
-            return Wake_Word_Engine_Shutdown_Successful;
+            return Task.FromResult(Wake_Word_Engine_Shutdown_Successful);
         }
 
 
