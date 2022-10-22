@@ -9,9 +9,14 @@ namespace Eva_5._0
 {
     internal class Online_Speech_Recognition
     {
+
+
         private static System.Threading.Thread ParallelProcessing;
 
         private static Windows.Media.SpeechRecognition.SpeechRecognizer OnlineSpeechRecognition;
+
+
+
 
 
         public static async void Recogniser_Thread_Creation_And_Initiation()
@@ -78,6 +83,10 @@ namespace Eva_5._0
 
 
 
+
+
+
+
         private static async Task<bool> Initiate_The_Online_Speech_Recognition_Engine()
         {
             try
@@ -106,7 +115,11 @@ namespace Eva_5._0
 
                     case true:
 
+
+                        MainWindow.Online_Speech_Recogniser_Listening = false;
+
                         MainWindow.Online_Speech_Recogniser_Listening = true;
+
 
                         OnlineSpeechRecognition.ContinuousRecognitionSession.AutoStopSilenceTimeout = TimeSpan.FromSeconds(7);
                         OnlineSpeechRecognition.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
@@ -114,6 +127,9 @@ namespace Eva_5._0
                         await OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync();
 
                         break;
+
+
+
 
                     case false:
 
@@ -157,53 +173,54 @@ namespace Eva_5._0
             return true;
         }
 
+
+
+
+
+
+
+
         private static async void ContinuousRecognitionSession_Completed(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionSession sender, Windows.Media.SpeechRecognition.SpeechContinuousRecognitionCompletedEventArgs args)
         {
             await Stop_The_Online_Speech_Recognition();
         }
+
+
+
+
+
+
+
 
         private async static void ContinuousRecognitionSession_ResultGenerated(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionSession sender, Windows.Media.SpeechRecognition.SpeechContinuousRecognitionResultGeneratedEventArgs args)
         {
             try
             {
 
-                switch ((args.Result.Text == String.Empty) || (args.Result.Text == null))
+                if ((args.Result.Text != String.Empty) || (args.Result.Text != null))
                 {
-                    case true:
 
-                        await Stop_The_Online_Speech_Recognition();
+                    if (App.StopRecognitionSession == false)
+                    {
+                        await Natural_Language_Processing.PreProcessing<string>(args.Result.Text);
+                    }
 
-                        break;
-
-
-                    case false:
-
-
-
-                        switch (App.StopRecognitionSession)
-                        {
-                            case false:
-
-                                await Natural_Language_Processing.PreProcessing<string>(args.Result.Text);
-
-                                await Stop_The_Online_Speech_Recognition();
-
-                                break;
-
-                            case true:
-
-                                await Stop_The_Online_Speech_Recognition();
-
-                                break;
-                        }
-                        break;
                 }
 
 
                 await Stop_The_Online_Speech_Recognition();
+
             }
             catch { }
         }
+
+
+
+
+
+
+
+
 
         public async static Task<bool> Stop_The_Online_Speech_Recognition()
         {
@@ -228,6 +245,12 @@ namespace Eva_5._0
 
             return true;
         }
+
+
+
+
+
+
 
 
         ~Online_Speech_Recognition()

@@ -128,47 +128,39 @@ namespace Eva_5._0
                     }
 
 
+                    MainWindow.BeginExecutionAnimation = true;
+                    using (System.Diagnostics.Process Online_Process = new System.Diagnostics.Process())
+                    {
+                        Online_Process.StartInfo.FileName = Process + SearchContent;
+                        Online_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                        Online_Process.StartInfo.UseShellExecute = true;
+                        Online_Process.Start();
+
+                        new Set_Process_As_Foreground(Online_Process.MainWindowHandle);
+                    }
+
                     try
                     {
-                        MainWindow.BeginExecutionAnimation = true;
-                        using (System.Diagnostics.Process Online_Process = new System.Diagnostics.Process())
-                        {
-                            Online_Process.StartInfo.FileName = Process + SearchContent;
-                            Online_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-                            Online_Process.StartInfo.UseShellExecute = true;
-                            Online_Process.Start();
 
-                            new Set_Process_As_Foreground(Online_Process.MainWindowHandle);
+                        switch (SoundOrOff == true)
+                        {
+                            case true:
+                                switch (System.IO.File.Exists(System.IO.Path.GetFullPath("App execution.wav")))
+                                {
+                                    case true:
+                                        AppExecutionSoundEffect.Play();
+                                        break;
+                                }
+                                break;
                         }
 
-                        try
-                        {
-                            switch (SoundOrOff == true)
-                            {
-                                case true:
-                                    switch (System.IO.File.Exists(System.IO.Path.GetFullPath("App execution.wav")))
-                                    {
-                                        case true:
-                                            AppExecutionSoundEffect.Play();
-                                            break;
-                                    }
-                                    break;
-                            }
-                        }
-                        catch { }
-
-                        ParallelProcessing.Join();
-                        ParallelProcessing.Abort();
                     }
-                    catch 
-                    {
-                       
-                    }
-                }
-                catch
-                {
+                    catch { }
 
+                    ParallelProcessing.Join();
+                    ParallelProcessing.Abort();
                 }
+                catch { }
 
             });
             ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
@@ -272,34 +264,47 @@ namespace Eva_5._0
                         catch
                         {
 
-                            if (Application_Not_Found_Error_Download_Link_Result == true)
+                            try
                             {
-
-                                MainWindow.BeginExecutionAnimation = true;
-
-                                using (System.Diagnostics.Process Application_Not_Found_Downdload_Link_Process = new System.Diagnostics.Process())
+                                if (Application_Not_Found_Error_Download_Link_Result == true)
                                 {
-                                    Application_Not_Found_Downdload_Link_Process.StartInfo.FileName = application_not_found_error_link;
-                                    Application_Not_Found_Downdload_Link_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-                                    Application_Not_Found_Downdload_Link_Process.StartInfo.UseShellExecute = true;
-                                    Application_Not_Found_Downdload_Link_Process.Start();
 
-                                    new Set_Process_As_Foreground(Application_Not_Found_Downdload_Link_Process.MainWindowHandle);
-                                }
+                                    MainWindow.BeginExecutionAnimation = true;
 
-                                switch (SoundOrOff == true)
-                                {
-                                    case true:
+                                    using (System.Diagnostics.Process Application_Not_Found_Downdload_Link_Process = new System.Diagnostics.Process())
+                                    {
+                                        Application_Not_Found_Downdload_Link_Process.StartInfo.FileName = application_not_found_error_link;
+                                        Application_Not_Found_Downdload_Link_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                                        Application_Not_Found_Downdload_Link_Process.StartInfo.UseShellExecute = true;
+                                        Application_Not_Found_Downdload_Link_Process.Start();
 
-                                        switch (System.IO.File.Exists(@"App execution.wav"))
+                                        new Set_Process_As_Foreground(Application_Not_Found_Downdload_Link_Process.MainWindowHandle);
+                                    }
+
+
+                                    try
+                                    {
+
+                                        switch (SoundOrOff == true)
                                         {
                                             case true:
-                                                AppExecutionSoundEffect.Play();
+
+                                                switch (System.IO.File.Exists(@"App execution.wav"))
+                                                {
+                                                    case true:
+                                                        AppExecutionSoundEffect.Play();
+                                                        break;
+                                                }
                                                 break;
                                         }
-                                        break;
+
+                                    }
+                                    catch { }
+
                                 }
                             }
+                            catch { }
+                            
                         }
                         ParallelProcessing.Join();
                         ParallelProcessing.Abort();
@@ -376,51 +381,63 @@ namespace Eva_5._0
 
         private async static Task<bool> TimerProcess(System.Collections.Concurrent.ConcurrentDictionary<string, int> Timer_Time_Intervals)
         {
-            bool SoundOrOff = await Settings.Get_Settings();
-
-            System.Media.SoundPlayer AppExecutionSoundEffect = new System.Media.SoundPlayer("App execution.wav");
-
-
-
-
-            int hours_interval = 0;
-
-            Timer_Time_Intervals.TryGetValue("hours", out hours_interval);
-
-
-
-            int minutes_interval = 0;
-
-            Timer_Time_Intervals.TryGetValue("minutes", out minutes_interval);
-
-
-
-            int seconds_interval = 0;
-
-            Timer_Time_Intervals.TryGetValue("seconds", out seconds_interval);
-
-
-
-
-            await Timer_Interval.Set_Time_Interval(hours_interval, minutes_interval, seconds_interval);
-
-            MainWindow.BeginExecutionAnimation = true;
-
-
-
-
-
-            switch (SoundOrOff == true)
+            try
             {
-                case true:
-                    switch (System.IO.File.Exists(@"App execution.wav"))
+
+                bool SoundOrOff = await Settings.Get_Settings();
+
+                System.Media.SoundPlayer AppExecutionSoundEffect = new System.Media.SoundPlayer("App execution.wav");
+
+
+
+
+                int hours_interval = 0;
+
+                Timer_Time_Intervals.TryGetValue("hours", out hours_interval);
+
+
+
+                int minutes_interval = 0;
+
+                Timer_Time_Intervals.TryGetValue("minutes", out minutes_interval);
+
+
+
+                int seconds_interval = 0;
+
+                Timer_Time_Intervals.TryGetValue("seconds", out seconds_interval);
+
+
+
+
+                await Timer_Interval.Set_Time_Interval(hours_interval, minutes_interval, seconds_interval);
+
+                MainWindow.BeginExecutionAnimation = true;
+
+
+
+
+
+                try
+                {
+
+                    switch (SoundOrOff == true)
                     {
                         case true:
-                            AppExecutionSoundEffect.Play();
+                            switch (System.IO.File.Exists(@"App execution.wav"))
+                            {
+                                case true:
+                                    AppExecutionSoundEffect.Play();
+                                    break;
+                            }
                             break;
                     }
-                    break;
+
+                }
+                catch { }
+
             }
+            catch { }
 
 
            

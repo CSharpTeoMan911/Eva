@@ -801,12 +801,6 @@ namespace Eva_5._0
 
 
 
-                                                        await Online_Speech_Recognition.Stop_The_Online_Speech_Recognition();
-
-
-
-
-
                                                         Wake_Word_Engine_Shutdown:
 
                                                         int Wake_Word_Engine_Shutdown_Error_Counter = 0;
