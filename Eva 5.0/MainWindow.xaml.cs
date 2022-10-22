@@ -35,7 +35,7 @@ namespace Eva_5._0
 
         private static System.Speech.Recognition.SpeechRecognitionEngine MainSpeechRecogniser;
 
-        public static double Speech_Recognition_Sensitivity = 0.95;
+        public static double Speech_Recognition_Sensitivity = 0.945;
 
         public static bool Online_Speech_Recogniser_Listening;
 
@@ -911,6 +911,10 @@ namespace Eva_5._0
                 {
 
 
+                    await Online_Speech_Recognition.Stop_The_Online_Speech_Recognition();
+
+                    await Close_The_Wake_Word_Engine();
+
 
 
                     Application.Current.Dispatcher.Invoke(() =>
@@ -922,7 +926,6 @@ namespace Eva_5._0
                         {
                             case false:
 
-                                MainSpeechRecogniser.RecognizeAsyncCancel();
                                 System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
                                 GC.Collect(0, GCCollectionMode.Forced, true, true);
                                 System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
@@ -1070,7 +1073,7 @@ namespace Eva_5._0
                 {
                     ParallelProcessing = new System.Threading.Thread(() =>
                     {
-                        MainSpeechRecogniser = new System.Speech.Recognition.SpeechRecognitionEngine();
+                        MainSpeechRecogniser = new System.Speech.Recognition.SpeechRecognitionEngine(new System.Globalization.CultureInfo("en_GB"));
 
                         MainSpeechRecogniser.BabbleTimeout = TimeSpan.FromSeconds(0);
                         MainSpeechRecogniser.EndSilenceTimeout = TimeSpan.FromSeconds(0);
@@ -1079,7 +1082,7 @@ namespace Eva_5._0
 
 
                         MainSpeechRecogniser.RequestRecognizerUpdate();
-                        System.Speech.Recognition.Choices Choices = new System.Speech.Recognition.Choices("Hey Eva");
+                        System.Speech.Recognition.Choices Choices = new System.Speech.Recognition.Choices("Hey Eva", "Ei Ea");
                         System.Speech.Recognition.GrammarBuilder gb = new System.Speech.Recognition.GrammarBuilder();
                         gb.Culture = new System.Globalization.CultureInfo("en_GB");
                         gb.Append(Choices);
@@ -1087,13 +1090,21 @@ namespace Eva_5._0
                         MainSpeechRecogniser.RequestRecognizerUpdate();
 
 
-                        MainSpeechRecogniser.LoadGrammarAsync(Grammar);
-                        MainSpeechRecogniser.SetInputToDefaultAudioDevice();
-                        MainSpeechRecogniser.RequestRecognizerUpdate();
+                        if(MainSpeechRecogniser != null)
+                        {
+                            MainSpeechRecogniser.LoadGrammarAsync(Grammar);
+                            MainSpeechRecogniser.SetInputToDefaultAudioDevice();
+                            MainSpeechRecogniser.RequestRecognizerUpdate();
 
-                        MainSpeechRecogniser.RecognizeAsync(System.Speech.Recognition.RecognizeMode.Multiple);
-                        MainSpeechRecogniser.SpeechRecognized += MainSpeechRecogniser_SpeechRecognized;
-                        MainSpeechRecogniser.RecognizeCompleted += MainSpeechRecogniser_RecognizeCompleted;
+
+                            MainSpeechRecogniser.RecognizeAsync(System.Speech.Recognition.RecognizeMode.Multiple);
+                            MainSpeechRecogniser.SpeechRecognized += MainSpeechRecogniser_SpeechRecognized;
+                            MainSpeechRecogniser.RecognizeCompleted += MainSpeechRecogniser_RecognizeCompleted;
+                        }
+                        else
+                        {
+                            Close_The_Wake_Word_Engine();
+                        }
 
                     });
 
@@ -1104,7 +1115,7 @@ namespace Eva_5._0
                     
                 }
             }
-            catch(Exception E)
+            catch
             {
                 Wake_Word_Engine_Initiation_Successful = false;
             }
@@ -1122,6 +1133,11 @@ namespace Eva_5._0
             {
                 if (MainSpeechRecogniser != null)
                 {
+                    if (MainSpeechRecogniser.Grammars.Count > 0)
+                    {
+                        MainSpeechRecogniser.UnloadAllGrammars();
+                    }
+
                     MainSpeechRecogniser.RecognizeAsyncCancel();
                     MainSpeechRecogniser.Dispose();
                 }

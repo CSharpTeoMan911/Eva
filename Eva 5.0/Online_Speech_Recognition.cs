@@ -167,7 +167,6 @@ namespace Eva_5._0
             try
             {
 
-
                 switch ((args.Result.Text == String.Empty) || (args.Result.Text == null))
                 {
                     case true:
