@@ -13,6 +13,30 @@ namespace Eva_5._0
         {
             string Sentence = sentence_parameter as string;
 
+
+
+            // [ BEGIN ] REMOVE SPECIAL CHARACTERS 
+            //
+            //            [ NOTE ] :
+            //
+            //            THE CURRENT ONLINE SPEECH RECOGNITION ENGINE'S GRAMMAR FORMAT IS SET FOR FORM FILLING.
+            //            THIS IMPLIES THAT IT COULD TAKE SOME WORDS OR SEQUENCES OF WORDS SUCH AS [ NEW LINE ] 
+            //            AND PARSE THEM INTO SPECIAL CHARACTERS, IN THIS EXAMPLE THIS SPECIAL CHARACTER WILL
+            //            BE [ \n ].
+
+
+
+            if (Sentence.Contains("\n") == true)
+            {
+                Sentence = Sentence.Replace("\n", " new line ");
+            }
+
+
+            // [ END ] REMOVE SPECIAL CHARACTERS 
+
+
+
+
             switch (Sentence.IndexOf("please open ") == 0)
             {
                 case true:
