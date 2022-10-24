@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Speech.Synthesis;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -35,16 +36,28 @@ namespace Eva_5._0
 
         private static System.Speech.Recognition.SpeechRecognitionEngine MainSpeechRecogniser;
 
-        public static double Speech_Recognition_Sensitivity = 0.945;
+        public static double Speech_Recognition_Accuracy = 0.945;
 
         public static bool Online_Speech_Recogniser_Listening;
 
         private int Online_Speech_Recogniser_Listening_TimeOut;
 
+        private int Online_Speech_Recogniser_Not_Taking_Input_While_Activated_TimeOut;
+
 
         /// <summary>
         ///  Gradient Arithmetic For Neon Glow Chromatic Effect
         /// </summary>
+        /// 
+
+
+
+        private static string Speech_Detected = "false";
+
+        public static string Online_Speech_Recogniser_Taking_Input = "false";
+
+
+
 
 
         private bool SwitchMinimiseTheWindowOffset;
@@ -100,6 +113,8 @@ namespace Eva_5._0
             InitializeComponent();
         }
 
+
+        
 
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
@@ -182,9 +197,18 @@ namespace Eva_5._0
 
                                         switch (Online_Speech_Recogniser_Listening)
                                         {
+
+
                                             case true:
 
+
+
                                                 Online_Speech_Recogniser_Listening_TimeOut++;
+
+
+                                                await Online_Speech_Recognition_Locking_Prevention_Mechanism();
+
+
 
                                                 switch(Online_Speech_Recogniser_Listening_TimeOut == 6000)
                                                 {
@@ -202,7 +226,11 @@ namespace Eva_5._0
                                                         OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF3099FF");
                                                         break;
                                                 }
+
                                                 break;
+
+
+
 
 
                                             case false:
@@ -212,6 +240,8 @@ namespace Eva_5._0
                                                 OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FFACC6D6");
                                                 OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
                                                 break;
+
+
                                         }
 
 
@@ -791,7 +821,7 @@ namespace Eva_5._0
 
                                     case false:
 
-                                        switch (e.Result.Confidence >= Speech_Recognition_Sensitivity)
+                                        switch (e.Result.Confidence >= Speech_Recognition_Accuracy)
                                         {
                                             case true:
 
@@ -853,15 +883,7 @@ namespace Eva_5._0
 
                                                                             FunctionInitiated = true;
 
-                                                                            ParallelProcessing = new System.Threading.Thread(() =>
-                                                                            {
-                                                                                Online_Speech_Recognition.Recogniser_Thread_Creation_And_Initiation();
-                                                                            });
-
-                                                                            ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
-                                                                            ParallelProcessing.Priority = System.Threading.ThreadPriority.AboveNormal;
-                                                                            ParallelProcessing.IsBackground = true;
-                                                                            ParallelProcessing.Start();
+                                                                            await Online_Speech_Recognition.Recogniser_Thread_Creation_And_Initiation();
 
                                                                             break;
                                                                     }
@@ -994,6 +1016,77 @@ namespace Eva_5._0
 
 
 
+
+        private Task<bool> Online_Speech_Recognition_Locking_Prevention_Mechanism()
+        {
+            if (Speech_Detected == "true")
+            {
+
+                if (MainSpeechRecogniser.AudioState == System.Speech.Recognition.AudioState.Stopped)
+                {
+                    lock (Speech_Detected)
+                    {
+                        Speech_Detected = "false";
+                    }
+                }
+                else
+                {
+
+                    lock (Online_Speech_Recogniser_Taking_Input)
+                    {
+
+                        switch (Online_Speech_Recogniser_Taking_Input == "false")
+                        {
+
+                            case true:
+
+                                switch (Online_Speech_Recogniser_Not_Taking_Input_While_Activated_TimeOut < 500)
+                                {
+
+                                    case true:
+                                        
+                                        Online_Speech_Recogniser_Not_Taking_Input_While_Activated_TimeOut++;
+                                        break;
+
+
+
+                                    case false:
+
+
+                                        Task.Run(async () =>
+                                        {
+                                            await Online_Speech_Recognition.Stop_The_Online_Speech_Recognition();
+                                        });
+
+                                        break;
+
+                                }
+                                break;
+
+
+                            case false:
+
+                                Online_Speech_Recogniser_Not_Taking_Input_While_Activated_TimeOut = 0;
+                                break;
+
+                        }
+
+                    }
+
+
+
+                }
+
+            }
+
+            return Task.FromResult(true);
+        }
+
+
+
+
+
+
         private void OpenSettingsWindow(object sender, RoutedEventArgs e)
         {
             if (MainWindowIsClosing == false)
@@ -1050,7 +1143,7 @@ namespace Eva_5._0
 
 
 
-        private Task<bool> Initiate_The_Wake_Word_Engine()
+        public Task<bool> Initiate_The_Wake_Word_Engine()
         {
             bool Wake_Word_Engine_Initiation_Successful = true;
 
@@ -1087,6 +1180,7 @@ namespace Eva_5._0
                             MainSpeechRecogniser.RecognizeAsync(System.Speech.Recognition.RecognizeMode.Multiple);
                             MainSpeechRecogniser.SpeechRecognized += MainSpeechRecogniser_SpeechRecognized;
                             MainSpeechRecogniser.RecognizeCompleted += MainSpeechRecogniser_RecognizeCompleted;
+                            MainSpeechRecogniser.SpeechDetected += MainSpeechRecogniser_SpeechDetected;
                         }
                         
 
@@ -1108,7 +1202,20 @@ namespace Eva_5._0
         }
 
 
-        private Task<bool> Close_The_Wake_Word_Engine()
+
+
+        private void MainSpeechRecogniser_SpeechDetected(object sender, System.Speech.Recognition.SpeechDetectedEventArgs e)
+        {
+            lock(Speech_Detected)
+            {
+                Speech_Detected = "true";
+            }
+        }
+
+
+
+
+        public Task<bool> Close_The_Wake_Word_Engine()
         {
             bool Wake_Word_Engine_Shutdown_Successful = true;
 
@@ -1128,6 +1235,9 @@ namespace Eva_5._0
 
             return Task.FromResult(Wake_Word_Engine_Shutdown_Successful);
         }
+
+
+        
 
 
         ~MainWindow()
