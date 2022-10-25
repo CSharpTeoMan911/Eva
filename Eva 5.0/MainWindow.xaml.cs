@@ -56,6 +56,8 @@ namespace Eva_5._0
 
         public static string Online_Speech_Recogniser_Taking_Input = "false";
 
+        public static string Online_Speech_Recogniser_Restart = "false";
+
 
 
 
@@ -831,7 +833,24 @@ namespace Eva_5._0
 
 
 
-                                                        Wake_Word_Engine_Shutdown:
+                                                        lock (Online_Speech_Recogniser_Taking_Input)
+                                                        {
+                                                            if (Online_Speech_Recogniser_Taking_Input == "false")
+                                                            {
+
+                                                                if (Online_Speech_Recogniser_Not_Taking_Input_While_Activated_TimeOut > 250)
+                                                                {
+                                                                    Task.Run(async () =>
+                                                                    {
+                                                                        await Online_Speech_Recognition.Stop_The_Online_Speech_Recognition();
+                                                                    });
+                                                                }
+                                                            }
+                                                        }
+
+
+
+                                                    Wake_Word_Engine_Shutdown:
 
                                                         int Wake_Word_Engine_Shutdown_Error_Counter = 0;
 
@@ -882,7 +901,6 @@ namespace Eva_5._0
                                                                         case true:
 
                                                                             FunctionInitiated = true;
-
                                                                             await Online_Speech_Recognition.Recogniser_Thread_Creation_And_Initiation();
 
                                                                             break;
@@ -1019,6 +1037,7 @@ namespace Eva_5._0
 
         private Task<bool> Online_Speech_Recognition_Locking_Prevention_Mechanism()
         {
+
             if (Speech_Detected == "true")
             {
 
@@ -1044,7 +1063,7 @@ namespace Eva_5._0
                                 {
 
                                     case true:
-                                        
+
                                         Online_Speech_Recogniser_Not_Taking_Input_While_Activated_TimeOut++;
                                         break;
 

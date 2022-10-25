@@ -107,7 +107,7 @@ namespace Eva_5._0
                 A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("terminal", @"C:\Users\" + Environment.UserName + @"\AppData\Local\Microsoft\WindowsApps\wt.exe");
 
 
-                A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("visual studio 2022", @"C:\Program Files (x86)\Microsoft Visual Studio\2019\\Community\Common7\IDE\devenv.exe");
+                A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("visual studio 2022", @"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\devenv.exe");
 
 
                 A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("visual studio 2019", @"C:\Program Files (x86)\Microsoft Visual Studio\2019\\Community\Common7\IDE\devenv.exe");
