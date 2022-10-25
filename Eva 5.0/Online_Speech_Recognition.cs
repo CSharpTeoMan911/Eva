@@ -203,7 +203,6 @@ namespace Eva_5._0
 
         private static void OnlineSpeechRecognition_StateChanged(Windows.Media.SpeechRecognition.SpeechRecognizer sender, Windows.Media.SpeechRecognition.SpeechRecognizerStateChangedEventArgs args)
         {
-
            
             if(MainWindow.Online_Speech_Recogniser_Listening == true)
             {
@@ -214,28 +213,13 @@ namespace Eva_5._0
                         MainWindow.Online_Speech_Recogniser_Taking_Input = "true";
                     }
                 }
-                else if(args.State != Windows.Media.SpeechRecognition.SpeechRecognizerState.SoundEnded)
+                else
                 {
                     lock (MainWindow.Online_Speech_Recogniser_Taking_Input)
                     {
                         MainWindow.Online_Speech_Recogniser_Taking_Input = "false";
                     }
                 }
-                else if (args.State != Windows.Media.SpeechRecognition.SpeechRecognizerState.Paused)
-                {
-                    lock (MainWindow.Online_Speech_Recogniser_Taking_Input)
-                    {
-                        MainWindow.Online_Speech_Recogniser_Taking_Input = "false";
-                    }
-                }
-                else if (args.State != Windows.Media.SpeechRecognition.SpeechRecognizerState.Idle)
-                {
-                    lock (MainWindow.Online_Speech_Recogniser_Taking_Input)
-                    {
-                        MainWindow.Online_Speech_Recogniser_Taking_Input = "false";
-                    }
-                }
-
 
             }
 
@@ -283,7 +267,7 @@ namespace Eva_5._0
 
 
 
-        public async static Task<bool> Stop_The_Online_Speech_Recognition()
+        public static Task<bool> Stop_The_Online_Speech_Recognition()
         {
             try
             {
@@ -301,20 +285,26 @@ namespace Eva_5._0
 
 
 
-                if (OnlineSpeechRecognition != null)
+                lock(OnlineSpeechRecognition)
                 {
-                    await OnlineSpeechRecognition.ContinuousRecognitionSession.CancelAsync();
+                    if (OnlineSpeechRecognition != null)
+                    {
+                        Task.Run(async() =>
+                        {
+                            await OnlineSpeechRecognition.ContinuousRecognitionSession.CancelAsync();
 
-                    OnlineSpeechRecognition.Dispose();
+                            OnlineSpeechRecognition.Dispose();
+                        });
+                    }
                 }
 
             }
             catch 
             {
-                return false;
+                return Task.FromResult(false);
             }
 
-            return true;
+            return Task.FromResult(true);
         }
 
 

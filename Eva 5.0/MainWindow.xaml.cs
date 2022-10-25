@@ -1040,7 +1040,7 @@ namespace Eva_5._0
 
                             case true:
 
-                                switch (Online_Speech_Recogniser_Not_Taking_Input_While_Activated_TimeOut < 500)
+                                switch (Online_Speech_Recogniser_Not_Taking_Input_While_Activated_TimeOut < 702)
                                 {
 
                                     case true:
