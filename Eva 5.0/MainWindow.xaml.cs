@@ -838,7 +838,7 @@ namespace Eva_5._0
                                                             if (Online_Speech_Recogniser_Taking_Input == "false")
                                                             {
 
-                                                                if (Online_Speech_Recogniser_Not_Taking_Input_While_Activated_TimeOut > 250)
+                                                                if (Online_Speech_Recogniser_Not_Taking_Input_While_Activated_TimeOut > 400)
                                                                 {
                                                                     Task.Run(async () =>
                                                                     {

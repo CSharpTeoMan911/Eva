@@ -59,18 +59,6 @@ namespace Eva_5._0
         private bool SwitchInstructionManualTextBlockOffset;
         private double GradientArithmeticInstructionManualTextBlockOffset;
 
-        private bool SwitchSensitivityTitleTextBlockOffset;
-        private double GradientArithmeticSensitivityTitleTextBlockOffset;
-
-        private bool SwitchSesitivityDownButtonOffset;
-        private double GradientArithmeticSesitivityDownButtonOffset;
-
-        private bool SwitchSesitivityUpButtonOffset;
-        private double GradientArithmeticSesitivityUpButtonOffset;
-
-        private bool SwitchSensitivityIdentifierTextBlockOffset;
-        private double GradientArithmeticSensitivityIdentifierTextBlockOffset;
-
 
 
 
