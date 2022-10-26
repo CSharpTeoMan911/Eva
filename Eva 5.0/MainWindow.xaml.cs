@@ -38,8 +38,6 @@ namespace Eva_5._0
 
         public static double Speech_Recognition_Accuracy = 0.945;
 
-        public static bool Online_Speech_Recogniser_Listening;
-
         private int Online_Speech_Recogniser_Listening_TimeOut;
 
         private int Online_Speech_Recogniser_Not_Taking_Input_While_Activated_TimeOut;
@@ -51,12 +49,19 @@ namespace Eva_5._0
         /// 
 
 
+        // [ BEGIN ] STATIC OBJECTS OBJECTS THAT ARE ACCESSED IN A THREAD SAFE MANNER
+
+        public static string Online_Speech_Recogniser_Listening = "false";
+
+        public static string FunctionInitiated = "false";
 
         private static string Speech_Detected = "false";
 
         public static string Online_Speech_Recogniser_Taking_Input = "false";
 
         public static string Online_Speech_Recogniser_Restart = "false";
+
+        // [ END ] STATIC OBJECTS OBJECTS THAT ARE ACCESSED IN A THREAD SAFE MANNER
 
 
 
@@ -95,8 +100,6 @@ namespace Eva_5._0
         private int Button_Timeout;
 
         private bool MainWindowIsClosing;
-
-        public static bool FunctionInitiated = false;
 
         public static dynamic BeginExecutionAnimation = false;
 
@@ -184,6 +187,8 @@ namespace Eva_5._0
                             {
                                 switch (Application.Current.MainWindow == null)
                                 {
+
+
                                     case true:
 
                                         try
@@ -191,59 +196,74 @@ namespace Eva_5._0
                                             AnimationAndFunctionalityTimer.Stop();
                                         }
                                         catch { }
+
                                         break;
+
+
+
+
+
 
                                     case false:
 
                                         Application.Current.MainWindow.Topmost = true;
 
-                                        switch (Online_Speech_Recogniser_Listening)
+                                        lock(Online_Speech_Recogniser_Listening)
                                         {
 
-
-                                            case true:
-
-
-
-                                                Online_Speech_Recogniser_Listening_TimeOut++;
+                                            switch (Online_Speech_Recogniser_Listening)
+                                            {
 
 
-                                                await Online_Speech_Recognition_Locking_Prevention_Mechanism();
+                                                case "true":
 
 
+                                                    Online_Speech_Recogniser_Listening_TimeOut++;
 
-                                                switch(Online_Speech_Recogniser_Listening_TimeOut == 6000)
-                                                {
-                                                    case true:
 
-                                                        Online_Speech_Recogniser_Listening_TimeOut = 0;
-
-                                                        await Online_Speech_Recognition.Stop_The_Online_Speech_Recognition();
-
-                                                        break;
-
-                                                    case false:
-
-                                                        OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF91E1FF");
-                                                        OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF3099FF");
-                                                        break;
-                                                }
-
-                                                break;
+                                                    Task.Run(async() =>
+                                                    {
+                                                        await Online_Speech_Recognition_Locking_Prevention_Mechanism();
+                                                    });
 
 
 
+                                                    switch (Online_Speech_Recogniser_Listening_TimeOut == 6000)
+                                                    {
+                                                        case true:
+
+                                                            Online_Speech_Recogniser_Listening_TimeOut = 0;
+
+                                                            Task.Run(async () =>
+                                                            {
+                                                                await Online_Speech_Recognition.Stop_The_Online_Speech_Recognition();
+                                                            });
+
+                                                            break;
+
+                                                        case false:
+
+                                                            OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF91E1FF");
+                                                            OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF3099FF");
+                                                            break;
+                                                    }
+
+                                                    break;
 
 
-                                            case false:
-
-                                                Online_Speech_Recogniser_Listening_TimeOut = 0;
-
-                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FFACC6D6");
-                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                break;
 
 
+
+                                                case "false":
+
+                                                    Online_Speech_Recogniser_Listening_TimeOut = 0;
+
+                                                    OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FFACC6D6");
+                                                    OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                    break;
+
+
+                                            }
                                         }
 
 
@@ -835,18 +855,27 @@ namespace Eva_5._0
 
                                                         lock (Online_Speech_Recogniser_Taking_Input)
                                                         {
+
                                                             if (Online_Speech_Recogniser_Taking_Input == "false")
                                                             {
 
-                                                                if (Online_Speech_Recogniser_Not_Taking_Input_While_Activated_TimeOut > 180)
+                                                                if (Online_Speech_Recogniser_Not_Taking_Input_While_Activated_TimeOut > 250)
                                                                 {
+
+                                                                    Online_Speech_Recogniser_Not_Taking_Input_While_Activated_TimeOut = 0;
+
+
                                                                     Task.Run(async () =>
                                                                     {
                                                                         await Online_Speech_Recognition.Stop_The_Online_Speech_Recognition();
                                                                     });
+
                                                                 }
+
                                                             }
+
                                                         }
+
 
 
 
@@ -890,24 +919,31 @@ namespace Eva_5._0
 
 
 
+
                                                         if (Timer_Window.Ring_Timer == false)
                                                         {
-                                                            switch (FunctionInitiated)
+
+                                                            lock(FunctionInitiated)
                                                             {
-                                                                case false:
 
-                                                                    switch (Application.Current.MainWindow.WindowState == WindowState.Normal)
+                                                                if (FunctionInitiated == "false")
+                                                                {
+
+                                                                    if (Application.Current.MainWindow.WindowState == WindowState.Normal)
                                                                     {
-                                                                        case true:
+                                                                        FunctionInitiated = "true";
 
-                                                                            FunctionInitiated = true;
+                                                                        Task.Run(async() =>
+                                                                        {
                                                                             await Online_Speech_Recognition.Recogniser_Thread_Creation_And_Initiation();
+                                                                        });
 
-                                                                            break;
                                                                     }
 
-                                                                    break;
+                                                                }
+
                                                             }
+
                                                         }
 
 
@@ -1063,7 +1099,7 @@ namespace Eva_5._0
                                 {
 
                                     case true:
-
+                                        
                                         Online_Speech_Recogniser_Not_Taking_Input_While_Activated_TimeOut++;
                                         break;
 

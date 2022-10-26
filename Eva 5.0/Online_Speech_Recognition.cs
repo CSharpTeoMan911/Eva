@@ -13,7 +13,7 @@ namespace Eva_5._0
 
         private static System.Threading.Thread ParallelProcessing;
 
-        private static Windows.Media.SpeechRecognition.SpeechRecognizer OnlineSpeechRecognition;
+        private Windows.Media.SpeechRecognition.SpeechRecognizer OnlineSpeechRecognition;
 
 
 
@@ -75,9 +75,6 @@ namespace Eva_5._0
                     }
 
 
-                    ParallelProcessing.Join();
-
-
                 }
                 catch{ }
 
@@ -111,16 +108,17 @@ namespace Eva_5._0
 
             try
             {
+                Online_Speech_Recognition online_Speech_Recognition = new Online_Speech_Recognition();
 
-                OnlineSpeechRecognition = new Windows.Media.SpeechRecognition.SpeechRecognizer();
+                online_Speech_Recognition.OnlineSpeechRecognition = new Windows.Media.SpeechRecognition.SpeechRecognizer();
 
                 Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Constraints = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.FormFilling, "form filling");
 
                 Constraints.Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Max;
 
-                OnlineSpeechRecognition.Constraints.Add(Constraints);
+                online_Speech_Recognition.OnlineSpeechRecognition.Constraints.Add(Constraints);
 
-                Windows.Media.SpeechRecognition.SpeechRecognitionCompilationResult ConstratintsCompilation = await OnlineSpeechRecognition.CompileConstraintsAsync();
+                Windows.Media.SpeechRecognition.SpeechRecognitionCompilationResult ConstratintsCompilation = await online_Speech_Recognition.OnlineSpeechRecognition.CompileConstraintsAsync();
 
 
 
@@ -135,17 +133,16 @@ namespace Eva_5._0
 
                     case true:
 
+                        lock (MainWindow.Online_Speech_Recogniser_Listening)
+                        {
+                            MainWindow.Online_Speech_Recogniser_Listening = "true";
+                        }
 
-                        MainWindow.Online_Speech_Recogniser_Listening = false;
-
-                        MainWindow.Online_Speech_Recogniser_Listening = true;
-
-
-                        OnlineSpeechRecognition.ContinuousRecognitionSession.AutoStopSilenceTimeout = TimeSpan.FromSeconds(7);
-                        OnlineSpeechRecognition.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
-                        OnlineSpeechRecognition.ContinuousRecognitionSession.Completed += ContinuousRecognitionSession_Completed;
-                        OnlineSpeechRecognition.StateChanged += OnlineSpeechRecognition_StateChanged;
-                        await OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync();
+                        online_Speech_Recognition.OnlineSpeechRecognition.ContinuousRecognitionSession.AutoStopSilenceTimeout = TimeSpan.FromSeconds(7);
+                        online_Speech_Recognition.OnlineSpeechRecognition.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
+                        online_Speech_Recognition.OnlineSpeechRecognition.ContinuousRecognitionSession.Completed += ContinuousRecognitionSession_Completed;
+                        online_Speech_Recognition.OnlineSpeechRecognition.StateChanged += OnlineSpeechRecognition_StateChanged;
+                        await online_Speech_Recognition.OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync();
 
                         break;
 
@@ -171,27 +168,48 @@ namespace Eva_5._0
                 if (E.HResult == -2147199735)
                 {
 
+
+
                     Online_Speech_Recognition_Engine_Initiation_Successful = false;
 
-                    MainWindow.Online_Speech_Recogniser_Listening = false;
+                    
 
                     switch (App.PermisissionWindowOpen)
                     {
+
+
                         case false:
+
+
                             System.Windows.Application.Current.Dispatcher.Invoke(() =>
                             {
                                 ErrorWindow OpenPermissionDeclinedWindow = new ErrorWindow("Online Speech Recognition Access Denied");
                                 OpenPermissionDeclinedWindow.Show();
                             });
+
+
                             break;
 
+
+
+
+
+
+
                         case true:
+
 
                             App.InitiateErrorFunction = true;
                             App.ErrorFunction = "Online Speech Recognition Access Denied";
 
+
                             break;
+
+
                     }
+
+
+
                 }
             }
 
@@ -203,25 +221,48 @@ namespace Eva_5._0
 
         private static void OnlineSpeechRecognition_StateChanged(Windows.Media.SpeechRecognition.SpeechRecognizer sender, Windows.Media.SpeechRecognition.SpeechRecognizerStateChangedEventArgs args)
         {
-           
-            if(MainWindow.Online_Speech_Recogniser_Listening == true)
+            
+            lock(MainWindow.Online_Speech_Recogniser_Listening)
             {
-                if(args.State != Windows.Media.SpeechRecognition.SpeechRecognizerState.SpeechDetected)
+
+                if (MainWindow.Online_Speech_Recogniser_Listening == "true")
                 {
-                    lock (MainWindow.Online_Speech_Recogniser_Taking_Input)
+
+                    if(args.State == Windows.Media.SpeechRecognition.SpeechRecognizerState.Capturing)
                     {
-                        MainWindow.Online_Speech_Recogniser_Taking_Input = "true";
+
+                        lock (MainWindow.Online_Speech_Recogniser_Listening)
+                        {
+                            MainWindow.Online_Speech_Recogniser_Listening = "true";
+                        }
+                        
                     }
-                }
-                else
-                {
-                    lock (MainWindow.Online_Speech_Recogniser_Taking_Input)
+
+
+
+                    if (args.State == Windows.Media.SpeechRecognition.SpeechRecognizerState.SpeechDetected)
                     {
-                        MainWindow.Online_Speech_Recogniser_Taking_Input = "false";
+
+                        lock (MainWindow.Online_Speech_Recogniser_Taking_Input)
+                        {
+                            MainWindow.Online_Speech_Recogniser_Taking_Input = "true";
+                        }
+
                     }
+                    else
+                    {
+
+                        lock (MainWindow.Online_Speech_Recogniser_Taking_Input)
+                        {
+                            MainWindow.Online_Speech_Recogniser_Taking_Input = "false";
+                        }
+
+                    }
+
                 }
 
             }
+
 
         }
 
@@ -252,7 +293,6 @@ namespace Eva_5._0
 
                 }
 
-
                 await Stop_The_Online_Speech_Recognition();
 
             }
@@ -267,14 +307,27 @@ namespace Eva_5._0
 
 
 
-        public static Task<bool> Stop_The_Online_Speech_Recognition()
+        public static async Task<bool> Stop_The_Online_Speech_Recognition()
         {
             try
             {
+                Online_Speech_Recognition online_Speech_Recognition = new Online_Speech_Recognition();
 
-                MainWindow.Online_Speech_Recogniser_Listening = false;
+                lock(MainWindow.Online_Speech_Recogniser_Listening)
+                {
 
-                MainWindow.FunctionInitiated = false;
+                    lock(MainWindow.FunctionInitiated)
+                    {
+
+                        MainWindow.Online_Speech_Recogniser_Listening = "false";
+
+
+                        MainWindow.FunctionInitiated = "false";
+
+                    }
+
+                }
+
 
 
 
@@ -285,26 +338,24 @@ namespace Eva_5._0
 
 
 
-                lock(OnlineSpeechRecognition)
+                if (online_Speech_Recognition.OnlineSpeechRecognition != null)
                 {
-                    if (OnlineSpeechRecognition != null)
-                    {
-                        Task.Run(async() =>
-                        {
-                            await OnlineSpeechRecognition.ContinuousRecognitionSession.CancelAsync();
 
-                            OnlineSpeechRecognition.Dispose();
-                        });
-                    }
+                    await online_Speech_Recognition.OnlineSpeechRecognition.ContinuousRecognitionSession.CancelAsync();
+
+                    online_Speech_Recognition.OnlineSpeechRecognition.Dispose();
+
                 }
+
+                ParallelProcessing.Join();
 
             }
             catch 
             {
-                return Task.FromResult(false);
+                return false;
             }
 
-            return Task.FromResult(true);
+            return false;
         }
 
 
@@ -320,8 +371,6 @@ namespace Eva_5._0
 
         ~Online_Speech_Recognition()
         {
-            ParallelProcessing = null;
-
             System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect(2, GCCollectionMode.Forced, true, true);
         }
