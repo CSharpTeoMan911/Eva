@@ -142,6 +142,7 @@ namespace Eva_5._0
                         online_Speech_Recognition.OnlineSpeechRecognition.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
                         online_Speech_Recognition.OnlineSpeechRecognition.ContinuousRecognitionSession.Completed += ContinuousRecognitionSession_Completed;
                         online_Speech_Recognition.OnlineSpeechRecognition.StateChanged += OnlineSpeechRecognition_StateChanged;
+                        online_Speech_Recognition.OnlineSpeechRecognition.HypothesisGenerated += OnlineSpeechRecognition_HypothesisGenerated;
                         await online_Speech_Recognition.OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync();
 
                         break;
@@ -217,11 +218,11 @@ namespace Eva_5._0
             return Online_Speech_Recognition_Engine_Initiation_Successful;
         }
 
-
+        
 
         private static void OnlineSpeechRecognition_StateChanged(Windows.Media.SpeechRecognition.SpeechRecognizer sender, Windows.Media.SpeechRecognition.SpeechRecognizerStateChangedEventArgs args)
         {
-            
+
             lock(MainWindow.Online_Speech_Recogniser_Listening)
             {
 
@@ -269,6 +270,8 @@ namespace Eva_5._0
 
 
 
+
+
         private static async void ContinuousRecognitionSession_Completed(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionSession sender, Windows.Media.SpeechRecognition.SpeechContinuousRecognitionCompletedEventArgs args)
         {
             await Stop_The_Online_Speech_Recognition();
@@ -277,9 +280,24 @@ namespace Eva_5._0
 
 
 
+
+
+        private static void OnlineSpeechRecognition_HypothesisGenerated(Windows.Media.SpeechRecognition.SpeechRecognizer sender, Windows.Media.SpeechRecognition.SpeechRecognitionHypothesisGeneratedEventArgs args)
+        {
+            lock (MainWindow.Online_Speech_Recogniser_Listening)
+            {
+                MainWindow.Online_Speech_Recogniser_Listening = "true";
+            }
+        }
+
+
+
+
+
+
         private async static void ContinuousRecognitionSession_ResultGenerated(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionSession sender, Windows.Media.SpeechRecognition.SpeechContinuousRecognitionResultGeneratedEventArgs args)
         {
-
+            
             try
             {
 
@@ -297,6 +315,7 @@ namespace Eva_5._0
 
             }
             catch { }
+
         }
 
 
