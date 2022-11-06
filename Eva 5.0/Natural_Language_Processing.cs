@@ -31,6 +31,10 @@ namespace Eva_5._0
                 Sentence = Sentence.Replace("\n", " new line ");
             }
 
+            if (Sentence.Contains("#") == true)
+            {
+                Sentence = Sentence.Replace("#", "%23");
+            }
 
             // [ END ] REMOVE SPECIAL CHARACTERS 
 
