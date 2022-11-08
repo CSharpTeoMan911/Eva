@@ -36,7 +36,7 @@ namespace Eva_5._0
 
         private static System.Speech.Recognition.SpeechRecognitionEngine MainSpeechRecogniser;
 
-        public static double Speech_Recognition_Accuracy = 0.92;
+        public static double Speech_Recognition_Accuracy = 0.80;
 
         private int Online_Speech_Recogniser_Listening_TimeOut;
 
@@ -842,16 +842,16 @@ namespace Eva_5._0
                                 {
 
                                     case false:
-
+                                        System.Diagnostics.Debug.WriteLine(e.Result.Confidence);
                                         switch (e.Result.Confidence >= Speech_Recognition_Accuracy)
                                         {
                                             case true:
 
                                                 switch (e.Result.Text)
                                                 {
-                                                    case "Hey Eva":
+                                                    case "Eva":
 
-
+                                                        System.Diagnostics.Debug.WriteLine("Recognized");
 
                                                         lock (Online_Speech_Recogniser_Taking_Input)
                                                         {
@@ -1217,7 +1217,7 @@ namespace Eva_5._0
 
 
                         MainSpeechRecogniser.RequestRecognizerUpdate();
-                        System.Speech.Recognition.Choices Choices = new System.Speech.Recognition.Choices("Hey Eva", "Ei Ea");
+                        System.Speech.Recognition.Choices Choices = new System.Speech.Recognition.Choices("Eva", "Ei Ea");
                         System.Speech.Recognition.GrammarBuilder gb = new System.Speech.Recognition.GrammarBuilder();
                         gb.Culture = new System.Globalization.CultureInfo("en-GB");
                         gb.Append(Choices);
@@ -1227,12 +1227,12 @@ namespace Eva_5._0
 
                         if(MainSpeechRecogniser != null)
                         {
-                            MainSpeechRecogniser.LoadGrammarAsync(Grammar);
-                            MainSpeechRecogniser.SetInputToDefaultAudioDevice();
-                            MainSpeechRecogniser.RequestRecognizerUpdate();
+                            MainSpeechRecogniser?.LoadGrammarAsync(Grammar);
+                            MainSpeechRecogniser?.SetInputToDefaultAudioDevice();
+                            MainSpeechRecogniser?.RequestRecognizerUpdate();
 
 
-                            MainSpeechRecogniser.RecognizeAsync(System.Speech.Recognition.RecognizeMode.Multiple);
+                            MainSpeechRecogniser?.RecognizeAsync(System.Speech.Recognition.RecognizeMode.Multiple);
                             MainSpeechRecogniser.SpeechRecognized += MainSpeechRecogniser_SpeechRecognized;
                             MainSpeechRecogniser.RecognizeCompleted += MainSpeechRecogniser_RecognizeCompleted;
                             MainSpeechRecogniser.SpeechDetected += MainSpeechRecogniser_SpeechDetected;
@@ -1279,8 +1279,8 @@ namespace Eva_5._0
             {
                 if (MainSpeechRecogniser != null)
                 {
-                    MainSpeechRecogniser.RecognizeAsyncCancel();
-                    MainSpeechRecogniser.Dispose();
+                    MainSpeechRecogniser?.RecognizeAsyncCancel();
+                    MainSpeechRecogniser?.Dispose();
                 }
             }
             catch

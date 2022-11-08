@@ -127,7 +127,7 @@
                 </TextBlock>
 
 
-                <TextBlock x:Name="UserInstructionsContent" Margin="0,30,0,0" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;In order for Eva to execute commands, the&#x0a;user must do the following steps:&#x0a;&#x0a;1)  Press the &#xF781; button.&#x0a;&#x0a;2) When the button is displaying &#xE1D6;,&#x0a;    Eva is actively listening.&#x0a;&#x0a;3) Tell Eva the wake word [ Hey Eva ],&#x0a;    followed by a command. You must&#x0a;    wait one second before giving it a&#x0a;    command.&#x0a;&#x0a;    When the circle is changing its&#x0a;    colour in a bright blue colour,&#x0a;    then Eva is actively&#x0a;    listening.&#x0a;&#x0a;&#x0a;">
+                <TextBlock x:Name="UserInstructionsContent" Margin="0,30,0,0" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;In order for Eva to execute commands, the&#x0a;user must do the following steps:&#x0a;&#x0a;1)  Press the &#xF781; button.&#x0a;&#x0a;2) When the button is displaying &#xE1D6;,&#x0a;    Eva is actively listening.&#x0a;&#x0a;3) Tell Eva the wake word [ Eva ],&#x0a;    followed by a command. You must&#x0a;    wait one second before giving it a&#x0a;    command.&#x0a;&#x0a;    When the circle is changing its&#x0a;    colour in a bright blue colour,&#x0a;    then Eva is actively&#x0a;    listening.&#x0a;&#x0a;&#x0a;">
 
                     <TextBlock.Foreground>
                         <LinearGradientBrush>
