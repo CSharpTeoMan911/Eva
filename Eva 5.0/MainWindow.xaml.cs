@@ -36,7 +36,7 @@ namespace Eva_5._0
 
         private static System.Speech.Recognition.SpeechRecognitionEngine MainSpeechRecogniser;
 
-        public static double Speech_Recognition_Accuracy = 0.939;
+        public static double Speech_Recognition_Accuracy = 0.93;
 
         private int Online_Speech_Recogniser_Listening_TimeOut;
 
