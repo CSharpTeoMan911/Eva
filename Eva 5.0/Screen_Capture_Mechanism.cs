@@ -20,8 +20,9 @@ namespace Eva_5._0
         {
             try
             {
-                System.Windows.Rect screen_size = System.Windows.SystemParameters.WorkArea;
-                System.Drawing.Bitmap captureBitmap = new System.Drawing.Bitmap((int)screen_size.Width, (int)screen_size.Height, System.Drawing.Imaging.PixelFormat.Format64bppArgb);
+                int screen_height = (int)System.Windows.SystemParameters.PrimaryScreenHeight;
+                int screen_width = (int)System.Windows.SystemParameters.PrimaryScreenWidth;
+                System.Drawing.Bitmap captureBitmap = new System.Drawing.Bitmap(screen_width, screen_height, System.Drawing.Imaging.PixelFormat.Format64bppArgb);
                 System.Drawing.Rectangle captureRectangle = System.Windows.Forms.Screen.AllScreens[0].Bounds;
                 System.Drawing.Graphics captureGraphics = System.Drawing.Graphics.FromImage(captureBitmap);
                 captureGraphics.CopyFromScreen(captureRectangle.Left, captureRectangle.Top, 0, 0, captureRectangle.Size);
@@ -30,20 +31,16 @@ namespace Eva_5._0
 
 
 
-                string file_name = "Eva_Capture";
-
-
-
 
 
             File_Name_Generation:
+
+                string file_name = "Eva_Capture" + random_number_generator.Next(int.MaxValue).ToString();
 
                 string path_and_file_name = @"C:\Users\" + System.Environment.UserName + @"\Desktop\" + file_name + ".jpg";
 
                 if (System.IO.File.Exists(path_and_file_name))
                 {
-                    string current_file_name = file_name;
-                    file_name = current_file_name + random_number_generator.Next(int.MaxValue).ToString();
                     goto File_Name_Generation;
                 }
 
