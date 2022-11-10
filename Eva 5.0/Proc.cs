@@ -53,6 +53,10 @@ namespace Eva_5._0
                 case "Timer Process":
                     await TimerProcess(content as System.Collections.Concurrent.ConcurrentDictionary<string, int>);
                     break;
+
+                case "Screen Capture Process":
+                    await Screen_Capture();
+                    break;
             }
 
             return true;
@@ -142,16 +146,12 @@ namespace Eva_5._0
                     try
                     {
 
-                        switch (SoundOrOff == true)
+                        if (SoundOrOff == true)
                         {
-                            case true:
-                                switch (System.IO.File.Exists(System.IO.Path.GetFullPath("App execution.wav")))
-                                {
-                                    case true:
-                                        AppExecutionSoundEffect.Play();
-                                        break;
-                                }
-                                break;
+                            if (System.IO.File.Exists(@"App execution.wav"))
+                            {
+                                AppExecutionSoundEffect.Play();
+                            }
                         }
 
                     }
@@ -246,16 +246,12 @@ namespace Eva_5._0
 
                                 try
                                 {
-                                    switch (SoundOrOff == true)
+                                    if (SoundOrOff == true)
                                     {
-                                        case true:
-                                            switch (System.IO.File.Exists(@"App execution.wav"))
-                                            {
-                                                case true:
-                                                    AppExecutionSoundEffect.Play();
-                                                    break;
-                                            }
-                                            break;
+                                        if (System.IO.File.Exists(@"App execution.wav"))
+                                        {
+                                            AppExecutionSoundEffect.Play();
+                                        }
                                     }
                                 }
                                 catch { }
@@ -285,17 +281,12 @@ namespace Eva_5._0
                                     try
                                     {
 
-                                        switch (SoundOrOff == true)
+                                        if (SoundOrOff == true)
                                         {
-                                            case true:
-
-                                                switch (System.IO.File.Exists(@"App execution.wav"))
-                                                {
-                                                    case true:
-                                                        AppExecutionSoundEffect.Play();
-                                                        break;
-                                                }
-                                                break;
+                                            if (System.IO.File.Exists(@"App execution.wav"))
+                                            {
+                                                AppExecutionSoundEffect.Play();
+                                            }
                                         }
 
                                     }
@@ -346,16 +337,12 @@ namespace Eva_5._0
 
                                 try
                                 {
-                                    switch (SoundOrOff == true)
+                                    if (SoundOrOff == true)
                                     {
-                                        case true:
-                                            switch (System.IO.File.Exists(@"App closing.wav"))
-                                            {
-                                                case true:
-                                                    AppTerminationSoundEffect.Play();
-                                                    break;
-                                            }
-                                            break;
+                                        if (System.IO.File.Exists(@"App closing.wav"))
+                                        {
+                                            AppExecutionSoundEffect.Play();
+                                        }
                                     }
                                 }
                                 catch { }
@@ -421,16 +408,12 @@ namespace Eva_5._0
                 try
                 {
 
-                    switch (SoundOrOff == true)
+                    if (SoundOrOff == true)
                     {
-                        case true:
-                            switch (System.IO.File.Exists(@"App execution.wav"))
-                            {
-                                case true:
-                                    AppExecutionSoundEffect.Play();
-                                    break;
-                            }
-                            break;
+                        if (System.IO.File.Exists(@"App execution.wav"))
+                        {
+                            AppExecutionSoundEffect.Play();
+                        }
                     }
 
                 }
@@ -443,6 +426,35 @@ namespace Eva_5._0
            
 
             return true;
+        }
+
+
+        private static async Task<bool> Screen_Capture()
+        {
+            bool SoundOrOff = await Settings.Get_Settings();
+
+            System.Media.SoundPlayer AppExecutionSoundEffect = new System.Media.SoundPlayer("Screenshot_Sound_Effect.wav");
+
+            try
+            {
+
+                MainWindow.BeginExecutionAnimation = true;
+
+                if (SoundOrOff == true)
+                {
+                    if (System.IO.File.Exists(@"Screenshot_Sound_Effect.wav"))
+                    {
+                        AppExecutionSoundEffect.Play();
+                    }
+                }
+
+            }
+            catch
+            {
+
+            }
+
+            return await Screen_Capture_Mechanism.Screen_Capture_Initiator();
         }
 
 

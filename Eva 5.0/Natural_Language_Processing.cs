@@ -8,7 +8,7 @@ namespace Eva_5._0
 {
     internal class Natural_Language_Processing
     {
-       
+
         public static async Task<bool> PreProcessing<Sentence_Parameter>(Sentence_Parameter sentence_parameter)
         {
             string Sentence = sentence_parameter as string;
@@ -157,12 +157,9 @@ namespace Eva_5._0
 
                                 case false:
 
-                                    switch ((Sentence.IndexOf("search ") == 0) && (Sentence.Contains(" on ") == true))
+                                    if ((Sentence.IndexOf("search ") == 0) && (Sentence.Contains(" on ") == true))
                                     {
-                                        case true:
-
-                                            await PostProcessing<string, string>("search [Content] on [Web Application Keyword]", Sentence);
-                                            break;
+                                        await PostProcessing<string, string>("search [Content] on [Web Application Keyword]", Sentence);
                                     }
                                     break;
                             }
@@ -173,12 +170,12 @@ namespace Eva_5._0
 
 
 
-            
+
 
             switch (Sentence.IndexOf("set a ") == 0)
             {
                 case true:
-                    
+
                     switch (Sentence.IndexOf(" timer") == Sentence.Length - 6)
                     {
                         case true:
@@ -193,12 +190,9 @@ namespace Eva_5._0
                             {
                                 case true:
 
-                                    switch(Sentence.IndexOf(" timer ") == Sentence.Length - 13)
+                                    if (Sentence.IndexOf(" timer ") == Sentence.Length - 13)
                                     {
-                                        case true:
-
-                                            await PostProcessing<string, string>("set a [Timer Interval] timer please", Sentence);
-                                            break;
+                                        await PostProcessing<string, string>("set a [Timer Interval] timer please", Sentence);
                                     }
                                     break;
                             }
@@ -206,7 +200,7 @@ namespace Eva_5._0
                     }
                     break;
 
-               
+
 
                 case false:
 
@@ -214,12 +208,9 @@ namespace Eva_5._0
                     {
                         case true:
 
-                            switch(Sentence.IndexOf(" timer") == Sentence.Length - 6)
+                            if (Sentence.IndexOf(" timer") == Sentence.Length - 6)
                             {
-                                case true:
-
-                                    await PostProcessing<string, string>("please set a [Timer Interval] timer", Sentence);
-                                    break;
+                                await PostProcessing<string, string>("please set a [Timer Interval] timer", Sentence);
                             }
                             break;
                     }
@@ -227,6 +218,63 @@ namespace Eva_5._0
             }
 
 
+
+
+
+            //[ BEGIN ] PROCESSES THAT DO NOT  NATURAL LANGUAGE TEXT PROCESSING REQUIRE PROCESSING
+
+
+            //[ BEGIN ] SCREENSHOT PROCESS
+
+            switch (Sentence.IndexOf("take screenshot") == 0)
+            {
+                case true:
+                    await Proc<string, string, string>.ProcInitialisation("Screen Capture Process", null, null);
+                    break;
+
+                case false:
+
+                    switch (Sentence.IndexOf("take a screenshot") == 0)
+                    {
+                        case true:
+                            await Proc<string, string, string>.ProcInitialisation("Screen Capture Process", null, null);
+                            break;
+
+                        case false:
+
+                            switch (Sentence.IndexOf("take a screenshot please") == 0)
+                            {
+                                case true:
+                                    await Proc<string, string, string>.ProcInitialisation("Screen Capture Process", null, null);
+                                    break;
+
+                                case false:
+
+                                    switch (Sentence.IndexOf("please take a screenshot") == 0)
+                                    {
+                                        case true:
+                                            await Proc<string, string, string>.ProcInitialisation("Screen Capture Process", null, null);
+                                            break;
+
+                                        case false:
+
+                                            if (Sentence.IndexOf("screenshot") == 0)
+                                            {
+                                                await Proc<string, string, string>.ProcInitialisation("Screen Capture Process", null, null);
+                                            }
+                                            break;
+                                    }
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+            }
+
+            //[ BEGIN ] SCREENSHOT PROCESS
+
+
+            //[ END ] PROCESSES THAT DO NOT  NATURAL LANGUAGE TEXT PROCESSING REQUIRE PROCESSING
 
             return true;
         }
@@ -349,22 +397,16 @@ namespace Eva_5._0
 
                     for (int Index = "please search".Length; Index <= Sentence.Length - 1; Index++)
                     {
-                        switch (Index <= Sentence.LastIndexOf(" on ") - 1)
+                        if (Index <= Sentence.LastIndexOf(" on ") - 1)
                         {
-                            case true:
-                                WebApplicationSearchContent += Sentence[Index].ToString();
-                                break;
+                            WebApplicationSearchContent += Sentence[Index].ToString();
                         }
 
                         
 
-                        switch (Index >= Sentence.LastIndexOf(" on ") + 4)
+                        if (Index >= Sentence.LastIndexOf(" on ") + 4)
                         {
-                            case true:
-
-                                Application += Sentence[Index].ToString();
-
-                                break;
+                            Application += Sentence[Index].ToString();
                         }
                     }
 
@@ -434,11 +476,9 @@ namespace Eva_5._0
 
                                                                         case false:
 
-                                                                            switch (16 == Sentence.IndexOf(" amazon "))
+                                                                            if (16 == Sentence.IndexOf(" amazon "))
                                                                             {
-                                                                                case true:
-                                                                                    Application = "amazon";
-                                                                                    break;
+                                                                                Application = "amazon";
                                                                             }
 
                                                                             break;
@@ -534,11 +574,9 @@ namespace Eva_5._0
 
                                                                         case false:
 
-                                                                            switch (9 == Sentence.IndexOf(" amazon "))
+                                                                            if (9 == Sentence.IndexOf(" amazon "))
                                                                             {
-                                                                                case true:
-                                                                                    Application = "amazon";
-                                                                                    break;
+                                                                                Application = "amazon";
                                                                             }
                                                                             break;
                                                                     }
@@ -576,20 +614,14 @@ namespace Eva_5._0
 
                     for (int Index = 7; Index <= Sentence.Length - 1; Index++)
                     {
-                        switch (Index <= Sentence.LastIndexOf(" on ") - 1)
+                        if (Index <= Sentence.LastIndexOf(" on ") - 1)
                         {
-                            case true:
-                                WebApplicationSearchContent += Sentence[Index].ToString();
-                                break;
+                            WebApplicationSearchContent += Sentence[Index].ToString();
                         }
 
-                        switch (Index >= Sentence.LastIndexOf(" on ") + 4)
+                        if (Index >= Sentence.LastIndexOf(" on ") + 4)
                         {
-                            case true:
-
-                                Application += Sentence[Index].ToString();
-
-                                break;
+                            Application += Sentence[Index].ToString();
                         }
                     }
 
