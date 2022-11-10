@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Windows.Media;
 
 namespace Eva_5._0
@@ -20,18 +23,7 @@ namespace Eva_5._0
         {
             try
             {
-                int screen_height = (int)System.Windows.SystemParameters.VirtualScreenHeight;
-                int screen_width = (int)System.Windows.SystemParameters.VirtualScreenWidth;
-                System.Drawing.Bitmap captureBitmap = new System.Drawing.Bitmap(screen_width, screen_height, System.Drawing.Imaging.PixelFormat.Format64bppArgb);
-                System.Drawing.Rectangle captureRectangle = System.Windows.Forms.Screen.AllScreens[0].Bounds;
-                System.Drawing.Graphics captureGraphics = System.Drawing.Graphics.FromImage(captureBitmap);
-                captureGraphics.CopyFromScreen(captureRectangle.Left, captureRectangle.Top, 0, 0, captureRectangle.Size);
-
-
-
-
-
-
+               
 
             File_Name_Generation:
 
@@ -45,10 +37,17 @@ namespace Eva_5._0
                 }
 
 
+                Rectangle bounds = Screen.GetBounds(Point.Empty);
 
+                using (Bitmap bitmap = new Bitmap(bounds.Width, bounds.Height))
+                {
+                    using (Graphics g = Graphics.FromImage(bitmap))
+                    {
+                        g.CopyFromScreen(Point.Empty, Point.Empty, bounds.Size);
+                    }
+                    bitmap.Save(path_and_file_name, System.Drawing.Imaging.ImageFormat.Jpeg);
+                }
 
-
-                captureBitmap.Save(path_and_file_name, System.Drawing.Imaging.ImageFormat.Jpeg);
 
                 return Task.FromResult(true);
             }
