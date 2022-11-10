@@ -82,7 +82,7 @@ namespace Eva_5._0
 
             });
             ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.MTA);
-            ParallelProcessing.IsBackground = true;
+            ParallelProcessing.IsBackground = false;
             ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
             ParallelProcessing.Start();
 
