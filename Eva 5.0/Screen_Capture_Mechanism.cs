@@ -20,8 +20,8 @@ namespace Eva_5._0
         {
             try
             {
-                int screen_height = (int)System.Windows.SystemParameters.PrimaryScreenHeight;
-                int screen_width = (int)System.Windows.SystemParameters.PrimaryScreenWidth;
+                int screen_height = (int)System.Windows.SystemParameters.VirtualScreenHeight;
+                int screen_width = (int)System.Windows.SystemParameters.VirtualScreenWidth;
                 System.Drawing.Bitmap captureBitmap = new System.Drawing.Bitmap(screen_width, screen_height, System.Drawing.Imaging.PixelFormat.Format64bppArgb);
                 System.Drawing.Rectangle captureRectangle = System.Windows.Forms.Screen.AllScreens[0].Bounds;
                 System.Drawing.Graphics captureGraphics = System.Drawing.Graphics.FromImage(captureBitmap);
