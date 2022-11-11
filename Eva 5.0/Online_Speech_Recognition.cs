@@ -19,76 +19,70 @@ namespace Eva_5._0
 
 
 
-        public static Task<bool> Recogniser_Thread_Creation_And_Initiation()
+        public static async Task<bool> Recogniser_Thread_Creation_And_Initiation()
         {
             // Initiates the online speech recognition engine on another thread using parallel processing
 
 
+            // [ BEGIN ] Ensures that the virtual interface to the online speech recognition server on Windows 10/11 for the online speech recognition system is open, during the speech recognition session.
 
-            ParallelProcessing = new System.Threading.Thread(async() =>
+
+
+            try
             {
 
-                // [ BEGIN ] Ensures that the virtual interface to the online speech recognition server on Windows 10/11 for the online speech recognition system is open, during the speech recognition session.
 
-                try
+
+                bool Online_Speech_Recognition_Engine_Initiation_Successful = await Initiate_The_Online_Speech_Recognition_Engine();
+
+
+
+
+                if (Online_Speech_Recognition_Engine_Initiation_Successful == true)
                 {
 
-                    
-
-                    bool Online_Speech_Recognition_Engine_Initiation_Successful = await Initiate_The_Online_Speech_Recognition_Engine();
-
-
-
-
-                    if (Online_Speech_Recognition_Engine_Initiation_Successful == true)
+                    using (System.Diagnostics.Process Speech_Recognition_Server_Interface_Initiation = new System.Diagnostics.Process())
                     {
-
-                        using (System.Diagnostics.Process Speech_Recognition_Server_Interface_Initiation = new System.Diagnostics.Process())
+                        switch (Environment.Is64BitOperatingSystem)
                         {
-                            switch (Environment.Is64BitOperatingSystem)
-                            {
 
-                                case true:
+                            case true:
 
-                                    Speech_Recognition_Server_Interface_Initiation.StartInfo.FileName = @"C:\Program Files\WindowsApps\Microsoft.549981C3F5F10_4.2204.13303.0_x64__8wekyb3d8bbwe\Win32Bridge.Server.exe";
-                                    break;
+                                Speech_Recognition_Server_Interface_Initiation.StartInfo.FileName = @"C:\Program Files\WindowsApps\Microsoft.549981C3F5F10_4.2204.13303.0_x64__8wekyb3d8bbwe\Win32Bridge.Server.exe";
+                                break;
 
 
-                                case false:
+                            case false:
 
-                                    Speech_Recognition_Server_Interface_Initiation.StartInfo.FileName = @"C:\Program Files\WindowsApps\Microsoft.549981C3F5F10_4.2204.13303.0_x86__8wekyb3d8bbwe\Win32Bridge.Server.exe";
-                                    break;
+                                Speech_Recognition_Server_Interface_Initiation.StartInfo.FileName = @"C:\Program Files\WindowsApps\Microsoft.549981C3F5F10_4.2204.13303.0_x86__8wekyb3d8bbwe\Win32Bridge.Server.exe";
+                                break;
 
-                            }
-                            Speech_Recognition_Server_Interface_Initiation.StartInfo.UseShellExecute = true;
-                            Speech_Recognition_Server_Interface_Initiation.Start();
                         }
-
-
-                        using (System.Diagnostics.Process Speech_Recognition_Cortana_Search_Initiation = new System.Diagnostics.Process())
-                        {
-                            Speech_Recognition_Cortana_Search_Initiation.StartInfo.FileName = @"C:\Windows\SystemApps\Microsoft.Windows.Search_cw5n1h2txyewy\SearchApp.exe";
-                            Speech_Recognition_Cortana_Search_Initiation.StartInfo.UseShellExecute = true;
-                            Speech_Recognition_Cortana_Search_Initiation.Start();
-                        }
-
+                        Speech_Recognition_Server_Interface_Initiation.StartInfo.UseShellExecute = true;
+                        Speech_Recognition_Server_Interface_Initiation.Start();
                     }
 
 
+                    using (System.Diagnostics.Process Speech_Recognition_Cortana_Search_Initiation = new System.Diagnostics.Process())
+                    {
+                        Speech_Recognition_Cortana_Search_Initiation.StartInfo.FileName = @"C:\Windows\SystemApps\Microsoft.Windows.Search_cw5n1h2txyewy\SearchApp.exe";
+                        Speech_Recognition_Cortana_Search_Initiation.StartInfo.UseShellExecute = true;
+                        Speech_Recognition_Cortana_Search_Initiation.Start();
+                    }
+
                 }
-                catch{ }
 
-                // [ END ] Ensures that the virtual interface to the online speech recognition server on Windows 10/11 for the online speech recognition system is open, during the speech recognition session.
 
-            });
-            ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.MTA);
-            ParallelProcessing.IsBackground = false;
-            ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
-            ParallelProcessing.Start();
+            }
+            catch { }
+
+
+            // [ END ] Ensures that the virtual interface to the online speech recognition server on Windows 10/11 for the online speech recognition system is open, during the speech recognition session.
 
 
 
-            return Task.FromResult(true);
+
+            return true;
         }
 
 
@@ -143,7 +137,67 @@ namespace Eva_5._0
                         online_Speech_Recognition.OnlineSpeechRecognition.ContinuousRecognitionSession.Completed += ContinuousRecognitionSession_Completed;
                         online_Speech_Recognition.OnlineSpeechRecognition.StateChanged += OnlineSpeechRecognition_StateChanged;
                         online_Speech_Recognition.OnlineSpeechRecognition.HypothesisGenerated += OnlineSpeechRecognition_HypothesisGenerated;
-                        await online_Speech_Recognition.OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync();
+
+
+
+                        ParallelProcessing = new System.Threading.Thread(async () =>
+                        {
+                            try
+                            {
+                                await online_Speech_Recognition.OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync();
+                            }
+                            catch { }
+                        });
+                        ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.MTA);
+                        ParallelProcessing.IsBackground = false;
+                        ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
+                        ParallelProcessing.Start();
+
+
+
+                        ParallelProcessing = new System.Threading.Thread(async () =>
+                        {
+                            try
+                            {
+                                await online_Speech_Recognition.OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync();
+                            }
+                            catch { }
+                        });
+                        ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.MTA);
+                        ParallelProcessing.IsBackground = false;
+                        ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
+                        ParallelProcessing.Start();
+
+
+
+                        ParallelProcessing = new System.Threading.Thread(async () =>
+                        {
+                            try
+                            {
+                                await online_Speech_Recognition.OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync();
+                            }
+                            catch { }
+                        });
+                        ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.MTA);
+                        ParallelProcessing.IsBackground = false;
+                        ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
+                        ParallelProcessing.Start();
+
+
+
+                        ParallelProcessing = new System.Threading.Thread(async () =>
+                        {
+                            try
+                            {
+                                await online_Speech_Recognition.OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync();
+                            }
+                            catch { }
+                        });
+                        ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.MTA);
+                        ParallelProcessing.IsBackground = false;
+                        ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
+                        ParallelProcessing.Start();
+
 
                         break;
 

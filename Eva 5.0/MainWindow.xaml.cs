@@ -842,7 +842,7 @@ namespace Eva_5._0
                                 {
 
                                     case false:
-                                        System.Diagnostics.Debug.WriteLine(e.Result.Confidence);
+                                        
                                         switch (e.Result.Confidence >= Speech_Recognition_Accuracy)
                                         {
                                             case true:
@@ -851,7 +851,7 @@ namespace Eva_5._0
                                                 {
                                                     case "Eva":
 
-                                                        System.Diagnostics.Debug.WriteLine("Recognized");
+                                                        
 
                                                         lock (Online_Speech_Recogniser_Taking_Input)
                                                         {

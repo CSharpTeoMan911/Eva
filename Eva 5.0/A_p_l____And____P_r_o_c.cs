@@ -119,6 +119,9 @@ namespace Eva_5._0
                 A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("disk cleanup", "cleanmgr.exe");
 
 
+                A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("disc cleanup", "cleanmgr.exe");
+
+
                 A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("control panel", "control.exe");
 
 
@@ -479,6 +482,8 @@ namespace Eva_5._0
                 A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("visual studio code", "Code");
 
                 A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("disk cleanup", "cleanmgr");
+
+                A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("disc cleanup", "cleanmgr");
 
                 A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("control panel", "Control Panel");
 
