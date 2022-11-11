@@ -207,8 +207,22 @@ After the calibration is completed, in order to give commands to Eva say the wor
 ![Eva_Capture24348866](https://user-images.githubusercontent.com/87245086/201439151-fb4192a6-6f61-4aba-9b8a-08fc398fbf94.jpg)
 
 <br>
+<br>
+<br>
 
+# Extra informations
 
+<br>
+
+Eva is open source and free to use. You can find extra informations on the **Wiki** section of the repository. 
+
+<br>
+
+![Eva_Capture2116139740](https://user-images.githubusercontent.com/87245086/201439583-33776568-07bb-4217-842b-1506c87b6428.jpg)
+
+![Eva_Capture1481952206](https://user-images.githubusercontent.com/87245086/201439590-21d8f883-b1db-4dac-87da-a5839317fa07.jpg)
+
+<br>
 
 
 
