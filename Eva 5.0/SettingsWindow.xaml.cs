@@ -226,17 +226,15 @@ namespace Eva_5._0
 
                                     case false:
 
-                                        switch (App.ErrorAppShutdown)
+                                        if (App.ErrorAppShutdown == true)
                                         {
-                                            case true:
-                                                try
-                                                {
-                                                    AnimationAndFunctionalityTimer.Stop();
-                                                }
-                                                catch { }
+                                            try
+                                            {
+                                                AnimationAndFunctionalityTimer.Stop();
+                                            }
+                                            catch { }
 
-                                                this.Close();
-                                                break;
+                                            this.Close();
                                         }
 
                                         switch (Wheel1Angle <= 360)
@@ -683,19 +681,12 @@ namespace Eva_5._0
 
         ~SettingsWindow()
         {
-            switch (AnimationAndFunctionalityTimerDisposed)
+            if (AnimationAndFunctionalityTimerDisposed == false)
             {
-                case false:
-
-                    switch (AnimationAndFunctionalityTimer == null)
-                    {
-
-                        case false:
-
-                            AnimationAndFunctionalityTimer.Dispose();
-                            break;
-                    }
-                    break;
+                if (AnimationAndFunctionalityTimer != null)
+                {
+                    AnimationAndFunctionalityTimer.Dispose();
+                }
             }
 
             System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;

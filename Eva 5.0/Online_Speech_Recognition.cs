@@ -127,11 +127,6 @@ namespace Eva_5._0
 
                     case true:
 
-                        lock (MainWindow.Online_Speech_Recogniser_Listening)
-                        {
-                            MainWindow.Online_Speech_Recogniser_Listening = "true";
-                        }
-
                         online_Speech_Recognition.OnlineSpeechRecognition.ContinuousRecognitionSession.AutoStopSilenceTimeout = TimeSpan.FromSeconds(7);
                         online_Speech_Recognition.OnlineSpeechRecognition.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
                         online_Speech_Recognition.OnlineSpeechRecognition.ContinuousRecognitionSession.Completed += ContinuousRecognitionSession_Completed;
@@ -198,6 +193,11 @@ namespace Eva_5._0
                         ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
                         ParallelProcessing.Start();
 
+
+                        lock (MainWindow.Online_Speech_Recogniser_Listening)
+                        {
+                            MainWindow.Online_Speech_Recogniser_Listening = "true";
+                        }
 
                         break;
 
@@ -283,35 +283,19 @@ namespace Eva_5._0
                 if (MainWindow.Online_Speech_Recogniser_Listening == "true")
                 {
 
-                    if(args.State == Windows.Media.SpeechRecognition.SpeechRecognizerState.Capturing)
+                    switch(args.State)
                     {
-
-                        lock (MainWindow.Online_Speech_Recogniser_Listening)
-                        {
-                            MainWindow.Online_Speech_Recogniser_Listening = "true";
-                        }
-                        
-                    }
-
-
-
-                    if (args.State == Windows.Media.SpeechRecognition.SpeechRecognizerState.SpeechDetected)
-                    {
-
-                        lock (MainWindow.Online_Speech_Recogniser_Taking_Input)
-                        {
-                            MainWindow.Online_Speech_Recogniser_Taking_Input = "true";
-                        }
-
-                    }
-                    else
-                    {
-
-                        lock (MainWindow.Online_Speech_Recogniser_Taking_Input)
-                        {
+                        case Windows.Media.SpeechRecognition.SpeechRecognizerState.Idle:
                             MainWindow.Online_Speech_Recogniser_Taking_Input = "false";
-                        }
+                            break;
 
+                        case Windows.Media.SpeechRecognition.SpeechRecognizerState.Paused:
+                            MainWindow.Online_Speech_Recogniser_Taking_Input = "false";
+                            break;
+
+                        default:
+                            MainWindow.Online_Speech_Recogniser_Taking_Input = "true";
+                            break;
                     }
 
                 }
@@ -392,21 +376,21 @@ namespace Eva_5._0
                     lock(MainWindow.FunctionInitiated)
                     {
 
-                        MainWindow.Online_Speech_Recogniser_Listening = "false";
+                        lock (MainWindow.Online_Speech_Recogniser_Taking_Input)
+                        {
+
+                            MainWindow.Online_Speech_Recogniser_Taking_Input = "false";
 
 
-                        MainWindow.FunctionInitiated = "false";
+                            MainWindow.Online_Speech_Recogniser_Listening = "false";
+
+
+                            MainWindow.FunctionInitiated = "false";
+
+                        }
 
                     }
 
-                }
-
-
-
-
-                lock (MainWindow.Online_Speech_Recogniser_Taking_Input)
-                {
-                    MainWindow.Online_Speech_Recogniser_Taking_Input = "false";
                 }
 
 

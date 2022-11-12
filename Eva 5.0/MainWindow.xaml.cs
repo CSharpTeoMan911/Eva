@@ -128,7 +128,11 @@ namespace Eva_5._0
             // Check the administartive rights with which the application session is running. If the application rights are the ones of administrator, the application will close.
             // This is done to prevent any security problems due to the fact that the application is operating at a low level within the operating system.
 
+            // [ BEGIN ]
+
             new Check_Role();
+
+            // [ END ]
 
 
 
@@ -268,47 +272,45 @@ namespace Eva_5._0
 
 
 
-                                        if (Timer_Interval._isTimer == true)
+                                        switch (Timer_Interval._isTimer)
                                         {
+                                            case true:
+                                                OpenTimerMenuButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
 
-                                            OpenTimerMenuButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-
-                                            OpenTimerMenuButtonNotOffset.Color = (Color)ColorConverter.ConvertFromString("#FF11497F");
-
-
+                                                OpenTimerMenuButtonNotOffset.Color = (Color)ColorConverter.ConvertFromString("#FF11497F");
 
 
-                                            bool Time_Interval_Elapsed = await Timer_Interval.Calculate_Time_Interval_Left();
 
-                                            if (Time_Interval_Elapsed == true)
-                                            {
-                                                switch(App.TimerWindowOpen)
+
+                                                bool Time_Interval_Elapsed = await Timer_Interval.Calculate_Time_Interval_Left();
+
+                                                if (Time_Interval_Elapsed == true)
                                                 {
-                                                    case true:
+                                                    switch (App.TimerWindowOpen)
+                                                    {
+                                                        case true:
 
-                                                        Timer_Window.Ring_Timer = true;
-                                                        break;
+                                                            Timer_Window.Ring_Timer = true;
+                                                            break;
 
 
 
-                                                    case false:
+                                                        case false:
 
-                                                        Timer_Window.Ring_Timer = true;
+                                                            Timer_Window.Ring_Timer = true;
 
-                                                        Timer_Window timer = new Timer_Window();
-                                                        timer.ShowDialog();
-                                                        break;
+                                                            Timer_Window timer = new Timer_Window();
+                                                            timer.ShowDialog();
+                                                            break;
+                                                    }
                                                 }
-                                            }
+                                                break;
 
-                                        }
-                                        else
-                                        {
+                                            case false:
+                                                OpenTimerMenuButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FFD67A71");
 
-                                            OpenTimerMenuButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FFD67A71");
-
-                                            OpenTimerMenuButtonNotOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7F1111");
-
+                                                OpenTimerMenuButtonNotOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7F1111");
+                                                break;
                                         }
 
 
@@ -332,85 +334,86 @@ namespace Eva_5._0
 
 
 
-                                        if (BeginExecutionAnimation == true)
+                                        switch (BeginExecutionAnimation == true)
                                         {
 
+                                            case true:
+                                                Rotator.Width = 0;
 
-                                            Rotator.Width = 0;
+                                                switch (ExecutionAnimationArithmetic == 40)
+                                                {
+                                                    case true:
+                                                        OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                        OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                        ExecutionAnimationArithmetic = 0;
+                                                        BeginExecutionAnimation = false;
+                                                        break;
 
-                                            switch (ExecutionAnimationArithmetic == 40)
-                                            {
-                                                case true:
-                                                    OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                    OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                    ExecutionAnimationArithmetic = 0;
-                                                    BeginExecutionAnimation = false;
-                                                    break;
+                                                    case false:
+                                                        ExecutionAnimationArithmetic++;
 
-                                                case false:
-                                                    ExecutionAnimationArithmetic++;
+                                                        switch (ExecutionAnimationArithmetic)
+                                                        {
+                                                            case 4:
+                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                                break;
 
-                                                    switch (ExecutionAnimationArithmetic)
-                                                    {
-                                                        case 4:
-                                                            OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                            OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                            break;
+                                                            case 8:
+                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                                break;
 
-                                                        case 8:
-                                                            OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                            OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                            break;
+                                                            case 12:
+                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                                break;
 
-                                                        case 12:
-                                                            OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                            OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                            break;
+                                                            case 16:
+                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                                break;
 
-                                                        case 16:
-                                                            OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                            OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                            break;
+                                                            case 20:
+                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                                break;
 
-                                                        case 20:
-                                                            OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                            OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                            break;
+                                                            case 24:
+                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                                break;
 
-                                                        case 24:
-                                                            OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                            OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                            break;
+                                                            case 28:
+                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                                break;
 
-                                                        case 28:
-                                                            OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                            OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                            break;
+                                                            case 32:
+                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                                break;
 
-                                                        case 32:
-                                                            OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                            OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                            break;
+                                                            case 36:
+                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                                break;
 
-                                                        case 36:
-                                                            OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                            OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                            break;
+                                                            case 40:
+                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                                break;
+                                                        }
+                                                        break;
+                                                }
+                                                break;
 
-                                                        case 40:
-                                                            OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                            OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                            break;
-                                                    }
-                                                    break;
-                                            }
+                                            case false:
+                                                Rotator.Width = InitialRotatorWidth;
+                                                break;
 
                                         }
-                                        else
-                                        {
-                                            Rotator.Width = InitialRotatorWidth;
-                                        }
-
+                                        
 
 
 

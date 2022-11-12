@@ -143,17 +143,15 @@ namespace Eva_5._0
 
                                     case false:
 
-                                        switch (App.ErrorAppShutdown)
+                                        if (App.ErrorAppShutdown == true)
                                         {
-                                            case true:
-                                                try
-                                                {
-                                                    AnimationTimer.Stop();
-                                                }
-                                                catch { }
+                                            try
+                                            {
+                                                AnimationTimer.Stop();
+                                            }
+                                            catch { }
 
-                                                this.Close();
-                                                break;
+                                            this.Close();
                                         }
 
                                         switch (SwitchWindowOffset)
@@ -896,18 +894,12 @@ namespace Eva_5._0
 
         ~InstructionManual()
         {
-            switch (TimerDisposed)
+            if (TimerDisposed)
             {
-                case false:
-
-                    switch (AnimationTimer == null)
-                    {
-                        case false:
-
-                            AnimationTimer.Dispose();
-                            break;
-                    }
-                    break;
+                if (AnimationTimer != null)
+                {
+                    AnimationTimer.Dispose();
+                }
             }
         }
 
