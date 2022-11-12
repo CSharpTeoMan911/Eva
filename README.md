@@ -142,6 +142,14 @@ After the calibration is completed, in order to give commands to Eva say the wor
 
 <br>
 
+## It can take screenshots
+
+<br>
+
+![Eva_Capture2037081470](https://user-images.githubusercontent.com/87245086/201479017-97b49edf-d54c-46b9-87b0-c0feedac00a9.jpg)
+
+<br>
+
 ## It can search on Google
 
 <br>
