@@ -239,6 +239,53 @@ Eva is open source and free to use. You can find extra informations on the **Wik
 ![Eva_Capture1481952206](https://user-images.githubusercontent.com/87245086/201439590-21d8f883-b1db-4dac-87da-a5839317fa07.jpg)
 
 <br>
+<br>
+<br>
+
+<html>
+
+# Donations
+
+<head>
+
+
+
+</head>
+
+<body>
+
+### <div > <p>Please donate a any sum of money in order to <br> buy resources and certifications, in order to <br> maintain current projects like Eva or create <br> new projects. Any amount is welcomed, <br> thank you.  </p> </div>
+
+
+
+
+<br>
+
+<div > <p> 
+
+&nbsp; 
+
+![homeless-man-eats-soup-from-plate-near-ruins-helping-poor-hungry-people-during-epidemic_89718-689](https://user-images.githubusercontent.com/87245086/201202844-c935b319-239d-4992-a2d4-ac225d51e3f3.jpg)
+
+
+
+
+
+
+
+</p> </div>
+
+
+<br>
+<br>
+<br>
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate/?hosted_button_id=V5H8D2XRGRPHU)
+
+</body>
+
+</html>
 
 
 
