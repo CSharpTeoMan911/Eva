@@ -198,6 +198,14 @@ After the calibration is completed, in order to give commands to Eva say the wor
 
 <br>
 
+## It can search on Netflix
+
+<br>
+
+![Eva_Capture2144580495](https://user-images.githubusercontent.com/87245086/201479457-2f1c0609-9c41-4481-8142-30f6db61528a.jpg)
+
+<br>
+
 ## It can open and close the operating system's settings
 
 <br>
