@@ -254,7 +254,7 @@ Eva is open source and free to use. You can find extra informations on the **Wik
 
 <body>
 
-### <div > <p>Please donate a any sum of money in order to <br> buy resources and certifications, in order to <br> maintain current projects like Eva or create <br> new projects. Any amount is welcomed, <br> thank you.  </p> </div>
+### <div > <p>Please donate any sum of money in order to <br> buy resources and certifications, in order to <br> maintain current projects like Eva or create <br> new projects. Any amount is welcomed, <br> thank you.  </p> </div>
 
 
 
