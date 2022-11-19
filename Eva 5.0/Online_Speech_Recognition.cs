@@ -49,13 +49,11 @@ namespace Eva_5._0
                             {
 
                                 case true:
-
                                     Speech_Recognition_Server_Interface_Initiation.StartInfo.FileName = @"C:\Program Files\WindowsApps\Microsoft.549981C3F5F10_4.2204.13303.0_x64__8wekyb3d8bbwe\Win32Bridge.Server.exe";
                                     break;
 
 
                                 case false:
-
                                     Speech_Recognition_Server_Interface_Initiation.StartInfo.FileName = @"C:\Program Files\WindowsApps\Microsoft.549981C3F5F10_4.2204.13303.0_x86__8wekyb3d8bbwe\Win32Bridge.Server.exe";
                                     break;
 
@@ -104,8 +102,6 @@ namespace Eva_5._0
 
             bool Online_Speech_Recognition_Engine_Initiation_Successful = true;
 
-            int session_started_count = 0;
-
             try
             {
                 Online_Speech_Recognition online_Speech_Recognition = new Online_Speech_Recognition();
@@ -129,7 +125,6 @@ namespace Eva_5._0
 
 
                     case true:
-
                         online_Speech_Recognition.OnlineSpeechRecognitionEngine.ContinuousRecognitionSession.AutoStopSilenceTimeout = TimeSpan.FromSeconds(7);
                         online_Speech_Recognition.OnlineSpeechRecognitionEngine.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
                         online_Speech_Recognition.OnlineSpeechRecognitionEngine.ContinuousRecognitionSession.Completed += ContinuousRecognitionSession_Completed;
@@ -138,10 +133,8 @@ namespace Eva_5._0
 
 
 
-                    // START MULTIPLE ONLINE SPEECH RECOGNITION SESSIONS ON MULTIPLE THREADS
-                    //[ START ]
-
-                    Online_Speech_Recognition_Session:
+                        // START MULTIPLE ONLINE SPEECH RECOGNITION SESSIONS ON MULTIPLE THREADS
+                        // [ START ]
 
                         ParallelProcessing = new System.Threading.Thread(async () =>
                         {
@@ -161,23 +154,68 @@ namespace Eva_5._0
                         ParallelProcessing.IsBackground = false;
                         ParallelProcessing.Start();
 
-                        if (session_started_count < 3)
+                        ParallelProcessing = new System.Threading.Thread(async () =>
                         {
-                            session_started_count++;
-                            goto Online_Speech_Recognition_Session;
-                        }
+                            try
+                            {
+                                await online_Speech_Recognition.OnlineSpeechRecognitionEngine.ContinuousRecognitionSession.StartAsync();
+
+                                lock (MainWindow.Online_Speech_Recogniser_Listening)
+                                {
+                                    MainWindow.Online_Speech_Recogniser_Listening = "true";
+                                }
+                            }
+                            catch { }
+                        });
+                        ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.MTA);
+                        ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
+                        ParallelProcessing.IsBackground = false;
+                        ParallelProcessing.Start();
+
+                        ParallelProcessing = new System.Threading.Thread(async () =>
+                        {
+                            try
+                            {
+                                await online_Speech_Recognition.OnlineSpeechRecognitionEngine.ContinuousRecognitionSession.StartAsync();
+
+                                lock (MainWindow.Online_Speech_Recogniser_Listening)
+                                {
+                                    MainWindow.Online_Speech_Recogniser_Listening = "true";
+                                }
+                            }
+                            catch { }
+                        });
+                        ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.MTA);
+                        ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
+                        ParallelProcessing.IsBackground = false;
+                        ParallelProcessing.Start();
+
+                        ParallelProcessing = new System.Threading.Thread(async () =>
+                        {
+                            try
+                            {
+                                await online_Speech_Recognition.OnlineSpeechRecognitionEngine.ContinuousRecognitionSession.StartAsync();
+
+                                lock (MainWindow.Online_Speech_Recogniser_Listening)
+                                {
+                                    MainWindow.Online_Speech_Recogniser_Listening = "true";
+                                }
+                            }
+                            catch { }
+                        });
+                        ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.MTA);
+                        ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
+                        ParallelProcessing.IsBackground = false;
+                        ParallelProcessing.Start();
 
                         // [ END ]
-
                         break;
 
 
 
                     case false:
-
                         Online_Speech_Recognition_Engine_Initiation_Successful = false;
                         await Stop_The_Online_Speech_Recognition();
-
                         break;
 
                 }
@@ -201,9 +239,6 @@ namespace Eva_5._0
                                 OpenPermissionDeclinedWindow.Show();
                             });
                             break;
-
-
-
 
 
                         case true:
