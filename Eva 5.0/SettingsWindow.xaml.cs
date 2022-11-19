@@ -149,6 +149,7 @@ namespace Eva_5._0
             AnimationAndFunctionalityTimer.Interval = 10;
             AnimationAndFunctionalityTimer.Start();
 
+            this.Topmost = true;
 
 
             bool SoundOrOff = await Settings.Get_Settings();

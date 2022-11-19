@@ -1306,8 +1306,8 @@ namespace Eva_5._0
                 {
                     try
                     {
-                        AnimationAndFunctionalityTimer.Stop();
-                        AnimationAndFunctionalityTimer.Dispose();
+                        AnimationAndFunctionalityTimer?.Stop();
+                        AnimationAndFunctionalityTimer?.Dispose();
                     }
                     catch { }
                 }
@@ -1316,9 +1316,9 @@ namespace Eva_5._0
                 {
                     try
                     {
-                        MainSpeechRecogniser.RecognizeAsyncStop();
-                        MainSpeechRecogniser.RecognizeAsyncCancel();
-                        MainSpeechRecogniser.Dispose();
+                        MainSpeechRecogniser?.RecognizeAsyncStop();
+                        MainSpeechRecogniser?.RecognizeAsyncCancel();
+                        MainSpeechRecogniser?.Dispose();
                     }
                     catch { }
                 }

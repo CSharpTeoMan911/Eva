@@ -96,6 +96,8 @@ namespace Eva_5._0
             AnimationTimer.Elapsed += AnimationTimer_Elapsed;
             AnimationTimer.Interval = 10;
             AnimationTimer.Start();
+
+            this.Topmost = true;
         }
 
         private void AnimationTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)

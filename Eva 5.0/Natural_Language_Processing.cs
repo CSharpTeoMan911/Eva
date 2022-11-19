@@ -41,6 +41,9 @@ namespace Eva_5._0
 
 
 
+            // THE FIRST TOKENIZATION IS INITIATED. THE FIRST TOKENIZATION IS RESPONSIBLE FOR PARAMETER ASSOCIATION WITH THEIR RESPECTIVE COMMAND FORMATS
+            // [ BEGIN ]
+
             switch (Sentence.IndexOf("please open ") == 0)
             {
                 case true:
@@ -217,14 +220,17 @@ namespace Eva_5._0
                     break;
             }
 
+            // [ END ]
 
 
 
 
-            //[ BEGIN ] PROCESSES THAT DO NOT  NATURAL LANGUAGE TEXT PROCESSING REQUIRE PROCESSING
+            // PROCESSES THAT DO NOT NEED NATURAL LANGUAGE TEXT PROCESSING REQUIRE PROCESSING AND THEY ONLY REQUIRE THE FIRST TOKENIZATION
+            //[ BEGIN ]
 
 
-            //[ BEGIN ] SCREENSHOT PROCESS
+                    // SCREENSHOT PROCESS
+                    //[ BEGIN ]
 
             switch (Sentence.IndexOf("take screenshot") == 0)
             {
@@ -271,10 +277,10 @@ namespace Eva_5._0
                     break;
             }
 
-            //[ BEGIN ] SCREENSHOT PROCESS
+                    //[ END ]
 
 
-            //[ END ] PROCESSES THAT DO NOT  NATURAL LANGUAGE TEXT PROCESSING REQUIRE PROCESSING
+            //[ END ]
 
             return true;
         }
@@ -283,6 +289,10 @@ namespace Eva_5._0
 
         private static async Task<bool> PostProcessing<Parameter, Sentence_Parameter>(Parameter parameter, Sentence_Parameter sentence)
         {
+            // THE SECOND TOKENIZATION IS INITIATED. HERE THE CONTEXTUAL NATURAL LANGUAGE PROCESSING TAKES PLACE. THE KEYWORDS RELATED TO THE COMMAND FORMATS DETECTED ARE TOKENIZED.
+            // THE KEYWORDS FOR OPERATIONS, APPLICATIONS AND THE CONTENT FOR WEB SEARCH FUNCTIONS OR THE TIMER FUNCTION ARE EXTRACTED FROM THE SENTENCE.
+
+            // [ BEGIN ]
 
             string Application = String.Empty;
             string WebApplicationSearchContent = String.Empty;
@@ -1249,6 +1259,7 @@ namespace Eva_5._0
                     break;
             }
 
+            // [ END ]
 
             return true;
         }

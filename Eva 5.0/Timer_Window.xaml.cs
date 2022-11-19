@@ -163,6 +163,8 @@ namespace Eva_5._0
             Animation_And_Functionality_Timer.Interval = 10;
             Animation_And_Functionality_Timer.Elapsed += Animation_And_Functionality_Timer_Elapsed;
             Animation_And_Functionality_Timer.Start();
+
+            this.Topmost = true;
         }
 
         private void Animation_And_Functionality_Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
