@@ -8,7 +8,7 @@ using Windows.Media.ClosedCaptioning;
 
 namespace Eva_5._0
 {
-    internal class Online_Speech_Recognition:IDisposable
+    internal class Online_Speech_Recognition
     {
 
         private static System.Threading.Thread ParallelProcessing;
@@ -21,24 +21,18 @@ namespace Eva_5._0
 
         public static async Task<bool> Online_Speech_Recognition_Session_Creation_And_Initiation()
         {
+            // Ensures that the virtual interface to the online speech recognition server on Windows 10/11 for the online speech recognition system is open, during the speech recognition session.
+
+            // [ BEGIN ] 
 
 
-            bool Online_Speech_Recognition_Engine_Initiation_Successful = false;
+            bool Online_Speech_Recognition_Engine_Initiation_Successful = await Initiate_The_Online_Speech_Recognition_Engine();
 
 
 
-            try
+
+            if (Online_Speech_Recognition_Engine_Initiation_Successful == true)
             {
-
-                
-
-
-
-
-
-                // Ensures that the virtual interface to the online speech recognition server on Windows 10/11 for the online speech recognition system is open, during the speech recognition session.
-
-                // [ BEGIN ] 
 
                 using (System.Diagnostics.Process Speech_Recognition_Server_Interface_Initiation = new System.Diagnostics.Process())
                 {
@@ -60,40 +54,20 @@ namespace Eva_5._0
                 }
 
 
-
-
-
-                using (System.Diagnostics.Process Online_Speech_Recognition_Search_Initiation = new System.Diagnostics.Process())
+                using (System.Diagnostics.Process Speech_Recognition_Cortana_Search_Initiation = new System.Diagnostics.Process())
                 {
-                    Online_Speech_Recognition_Search_Initiation.StartInfo.FileName = @"C:\Windows\SystemApps\Microsoft.Windows.Search_cw5n1h2txyewy\SearchApp.exe";
-                    Online_Speech_Recognition_Search_Initiation.StartInfo.UseShellExecute = true;
-                    Online_Speech_Recognition_Search_Initiation.Start();
+                    Speech_Recognition_Cortana_Search_Initiation.StartInfo.FileName = @"C:\Windows\SystemApps\Microsoft.Windows.Search_cw5n1h2txyewy\SearchApp.exe";
+                    Speech_Recognition_Cortana_Search_Initiation.StartInfo.UseShellExecute = true;
+                    Speech_Recognition_Cortana_Search_Initiation.Start();
                 }
 
-                // [ END ]
-
-
-
-
-
-
-                // INITIATE AN ONLINE SPEECH RECOGNITION ENGINE OBJECT AND AN ONLINE SPEECH RECOGNITION SESSION FOR THAT SPEECH RECOGNITION ENGINE OBJECT
-
-                // [ BEGIN ]
-
-                Online_Speech_Recognition_Engine_Initiation_Successful = await Initiate_The_Online_Speech_Recognition_Engine();
-
-                // [ END ]
-
             }
-            catch { }
 
-
-            
+            // [ END ]
 
 
 
-            return Online_Speech_Recognition_Engine_Initiation_Successful;
+            return true;
         }
 
 
@@ -112,38 +86,41 @@ namespace Eva_5._0
 
             try
             {
+                Online_Speech_Recognition online_Speech_Recognition = new Online_Speech_Recognition();
 
-                using (Online_Speech_Recognition online_Speech_Recognition = new Online_Speech_Recognition())
+                online_Speech_Recognition.OnlineSpeechRecognitionEngine = new Windows.Media.SpeechRecognition.SpeechRecognizer();
+
+                Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Constraints = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.FormFilling, "form filling");
+
+                Constraints.Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Max;
+
+                online_Speech_Recognition.OnlineSpeechRecognitionEngine.Constraints.Add(Constraints);
+
+                Windows.Media.SpeechRecognition.SpeechRecognitionCompilationResult ConstratintsCompilation = await online_Speech_Recognition.OnlineSpeechRecognitionEngine.CompileConstraintsAsync();
+
+
+
+
+
+                switch (ConstratintsCompilation.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
                 {
-                    online_Speech_Recognition.OnlineSpeechRecognitionEngine = new Windows.Media.SpeechRecognition.SpeechRecognizer();
-
-                    Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Constraints = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.FormFilling, "form filling");
-
-                    Constraints.Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Max;
-
-                    online_Speech_Recognition.OnlineSpeechRecognitionEngine.Constraints.Add(Constraints);
-
-                    Windows.Media.SpeechRecognition.SpeechRecognitionCompilationResult ConstratintsCompilation = await online_Speech_Recognition.OnlineSpeechRecognitionEngine.CompileConstraintsAsync();
 
 
-
-                    switch (ConstratintsCompilation.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
-                    {
-
-
-                        case true:
-                            online_Speech_Recognition.OnlineSpeechRecognitionEngine.ContinuousRecognitionSession.AutoStopSilenceTimeout = TimeSpan.FromSeconds(7);
-                            online_Speech_Recognition.OnlineSpeechRecognitionEngine.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
-                            online_Speech_Recognition.OnlineSpeechRecognitionEngine.ContinuousRecognitionSession.Completed += ContinuousRecognitionSession_Completed;
-                            online_Speech_Recognition.OnlineSpeechRecognitionEngine.StateChanged += OnlineSpeechRecognition_StateChanged;
-                            online_Speech_Recognition.OnlineSpeechRecognitionEngine.HypothesisGenerated += OnlineSpeechRecognition_HypothesisGenerated;
+                    case true:
+                        online_Speech_Recognition.OnlineSpeechRecognitionEngine.ContinuousRecognitionSession.AutoStopSilenceTimeout = TimeSpan.FromSeconds(7);
+                        online_Speech_Recognition.OnlineSpeechRecognitionEngine.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
+                        online_Speech_Recognition.OnlineSpeechRecognitionEngine.ContinuousRecognitionSession.Completed += ContinuousRecognitionSession_Completed;
+                        online_Speech_Recognition.OnlineSpeechRecognitionEngine.StateChanged += OnlineSpeechRecognition_StateChanged;
+                        online_Speech_Recognition.OnlineSpeechRecognitionEngine.HypothesisGenerated += OnlineSpeechRecognition_HypothesisGenerated;
 
 
 
-                            // START MULTIPLE ONLINE SPEECH RECOGNITION SESSIONS ASYNCHRONOUSLY (ON DIFFERENT THREADS IF THE RUNTIME DECIDES TO DO SO)
-                            // [ START ]
+                        // START MULTIPLE ONLINE SPEECH RECOGNITION SESSIONS ON MULTIPLE THREADS
+                        // [ START ]
 
-                            for (int session = 1; session < 1000; session++)
+                        ParallelProcessing = new System.Threading.Thread(async () =>
+                        {
+                            try
                             {
                                 await online_Speech_Recognition.OnlineSpeechRecognitionEngine.ContinuousRecognitionSession.StartAsync();
 
@@ -152,18 +129,76 @@ namespace Eva_5._0
                                     MainWindow.Online_Speech_Recogniser_Listening = "true";
                                 }
                             }
+                            catch { }
+                        });
+                        ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.MTA);
+                        ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
+                        ParallelProcessing.IsBackground = false;
+                        ParallelProcessing.Start();
 
-                            // [ END ]
-                            break;
+                        ParallelProcessing = new System.Threading.Thread(async () =>
+                        {
+                            try
+                            {
+                                await online_Speech_Recognition.OnlineSpeechRecognitionEngine.ContinuousRecognitionSession.StartAsync();
+
+                                lock (MainWindow.Online_Speech_Recogniser_Listening)
+                                {
+                                    MainWindow.Online_Speech_Recogniser_Listening = "true";
+                                }
+                            }
+                            catch { }
+                        });
+                        ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.MTA);
+                        ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
+                        ParallelProcessing.IsBackground = false;
+                        ParallelProcessing.Start();
+
+                        ParallelProcessing = new System.Threading.Thread(async () =>
+                        {
+                            try
+                            {
+                                await online_Speech_Recognition.OnlineSpeechRecognitionEngine.ContinuousRecognitionSession.StartAsync();
+
+                                lock (MainWindow.Online_Speech_Recogniser_Listening)
+                                {
+                                    MainWindow.Online_Speech_Recogniser_Listening = "true";
+                                }
+                            }
+                            catch { }
+                        });
+                        ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.MTA);
+                        ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
+                        ParallelProcessing.IsBackground = false;
+                        ParallelProcessing.Start();
+
+                        ParallelProcessing = new System.Threading.Thread(async () =>
+                        {
+                            try
+                            {
+                                await online_Speech_Recognition.OnlineSpeechRecognitionEngine.ContinuousRecognitionSession.StartAsync();
+
+                                lock (MainWindow.Online_Speech_Recogniser_Listening)
+                                {
+                                    MainWindow.Online_Speech_Recogniser_Listening = "true";
+                                }
+                            }
+                            catch { }
+                        });
+                        ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.MTA);
+                        ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
+                        ParallelProcessing.IsBackground = false;
+                        ParallelProcessing.Start();
+
+                        // [ END ]
+                        break;
 
 
 
-                        case false:
-                            Online_Speech_Recognition_Engine_Initiation_Successful = false;
-                            await Stop_The_Online_Speech_Recognition();
-                            break;
-
-                    }
+                    case false:
+                        Online_Speech_Recognition_Engine_Initiation_Successful = false;
+                        await Stop_The_Online_Speech_Recognition();
+                        break;
 
                 }
 
@@ -241,6 +276,7 @@ namespace Eva_5._0
 
             }
 
+
         }
 
 
@@ -282,18 +318,7 @@ namespace Eva_5._0
 
                     if (App.StopRecognitionSession == false)
                     {
-                        ParallelProcessing = new System.Threading.Thread(async () =>
-                        {
-                            try
-                            {
-                                await Natural_Language_Processing.PreProcessing<string>(args.Result.Text);
-                            }
-                            catch { }
-                        });
-                        ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.MTA);
-                        ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
-                        ParallelProcessing.IsBackground = false;
-                        ParallelProcessing.Start();
+                        await Natural_Language_Processing.PreProcessing<string>(args.Result.Text);
                     }
 
                 }
@@ -313,10 +338,11 @@ namespace Eva_5._0
 
 
 
-        public static Task<bool> Stop_The_Online_Speech_Recognition()
+        public static async Task<bool> Stop_The_Online_Speech_Recognition()
         {
             try
             {
+                Online_Speech_Recognition online_Speech_Recognition = new Online_Speech_Recognition();
 
                 lock (MainWindow.Online_Speech_Recogniser_Listening)
                 {
@@ -341,39 +367,7 @@ namespace Eva_5._0
 
                 }
 
-            }
-            catch
-            {
-                return Task.FromResult(false);
-            }
 
-            return Task.FromResult(true);
-        }
-
-
-
-
-
-
-
-        public void Dispose()
-        {
-            try
-            {
-                Dispose(true);
-                GC.SuppressFinalize(this);
-            }
-            catch { }
-        }
-
-
-
-
-        private async void Dispose(bool disposing)
-        {
-            try
-            {
-                Online_Speech_Recognition online_Speech_Recognition = new Online_Speech_Recognition();
 
                 if (online_Speech_Recognition.OnlineSpeechRecognitionEngine != null)
                 {
@@ -381,9 +375,27 @@ namespace Eva_5._0
                     online_Speech_Recognition.OnlineSpeechRecognitionEngine?.Dispose();
                 }
 
-            } 
-            catch { }
+                if (ParallelProcessing != null)
+                {
+                    ParallelProcessing?.Join();
+                }
+
+            }
+            catch
+            {
+                return false;
+            }
+
+            return false;
         }
+
+
+
+
+
+
+
+
 
 
 
