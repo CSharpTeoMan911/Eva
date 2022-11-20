@@ -12,7 +12,7 @@ namespace Eva_5._0
 {
     internal class Screen_Capture_Mechanism
     {
-        private static Random random_number_generator = new Random();
+        private static readonly Random random_number_generator = new Random();
 
         public static async Task<bool> Screen_Capture_Initiator()
         {
