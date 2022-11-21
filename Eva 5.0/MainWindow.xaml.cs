@@ -40,8 +40,6 @@ namespace Eva_5._0
 
         private int Online_Speech_Recogniser_Listening_TimeOut;
 
-        private int Online_Speech_Recogniser_Not_Taking_Input_While_Activated_TimeOut;
-
 
         /// <summary>
         ///  Gradient Arithmetic For Neon Glow Chromatic Effect
@@ -54,12 +52,6 @@ namespace Eva_5._0
         public static string Online_Speech_Recogniser_Listening = "false";
 
         public static string FunctionInitiated = "false";
-
-        private static string Speech_Detected = "false";
-
-        public static string Online_Speech_Recogniser_Taking_Input = "false";
-
-        public static string Online_Speech_Recogniser_Restart = "false";
 
         // [ END ] STATIC OBJECTS OBJECTS THAT ARE ACCESSED IN A THREAD SAFE MANNER
 
@@ -225,24 +217,12 @@ namespace Eva_5._0
                                                     Online_Speech_Recogniser_Listening_TimeOut++;
 
 
-                                                    Task.Run(async() =>
-                                                    {
-                                                        await Online_Speech_Recognition_Locking_Prevention_Mechanism();
-                                                    });
-
-
 
                                                     switch (Online_Speech_Recogniser_Listening_TimeOut == 6000)
                                                     {
                                                         case true:
 
                                                             Online_Speech_Recogniser_Listening_TimeOut = 0;
-
-                                                            Task.Run(async () =>
-                                                            {
-                                                                await Online_Speech_Recognition.Stop_The_Online_Speech_Recognition();
-                                                            });
-
                                                             break;
 
                                                         case false:
@@ -685,7 +665,7 @@ namespace Eva_5._0
             }
         }
 
-        private async void MinimiseTheMainWindow(object sender, RoutedEventArgs e)
+        private void MinimiseTheMainWindow(object sender, RoutedEventArgs e)
         {
             if (MainWindowIsClosing == false)
             {
@@ -698,7 +678,10 @@ namespace Eva_5._0
 
                         Application.Current.MainWindow.WindowState = WindowState.Minimized;
 
-                        await Online_Speech_Recognition.Stop_The_Online_Speech_Recognition();
+                        lock(FunctionInitiated)
+                        {
+                            FunctionInitiated = "false";
+                        }
 
                     }
 
@@ -786,8 +769,6 @@ namespace Eva_5._0
 
                                     bool Wake_Word_Engine_Shutdown_Successful = await Close_The_Wake_Word_Engine();
 
-                                    await Online_Speech_Recognition.Stop_The_Online_Speech_Recognition();
-
 
                                     switch (Wake_Word_Engine_Shutdown_Successful)
                                     {
@@ -854,33 +835,7 @@ namespace Eva_5._0
                                                 {
                                                     case "Eva":
 
-                                                        
-
-                                                        lock (Online_Speech_Recogniser_Taking_Input)
-                                                        {
-
-                                                            if (Online_Speech_Recogniser_Taking_Input == "false")
-                                                            {
-
-                                                                if (Online_Speech_Recogniser_Not_Taking_Input_While_Activated_TimeOut > 250)
-                                                                {
-
-                                                                    Online_Speech_Recogniser_Not_Taking_Input_While_Activated_TimeOut = 0;
-
-
-                                                                    Task.Run(async () =>
-                                                                    {
-                                                                        await Online_Speech_Recognition.Stop_The_Online_Speech_Recognition();
-                                                                    });
-
-                                                                }
-
-                                                            }
-
-                                                        }
-
-
-
+                                                    
 
                                                     Wake_Word_Engine_Shutdown:
 
@@ -1074,72 +1029,7 @@ namespace Eva_5._0
 
 
 
-        private Task<bool> Online_Speech_Recognition_Locking_Prevention_Mechanism()
-        {
-
-            if (Speech_Detected == "true")
-            {
-
-                if (MainSpeechRecogniser.AudioState == System.Speech.Recognition.AudioState.Stopped)
-                {
-                    lock (Speech_Detected)
-                    {
-                        Speech_Detected = "false";
-                    }
-                }
-                else
-                {
-
-                    lock (Online_Speech_Recogniser_Taking_Input)
-                    {
-
-                        switch (Online_Speech_Recogniser_Taking_Input == "false")
-                        {
-
-                            case true:
-
-                                switch (Online_Speech_Recogniser_Not_Taking_Input_While_Activated_TimeOut < 702)
-                                {
-
-                                    case true:
-                                        
-                                        Online_Speech_Recogniser_Not_Taking_Input_While_Activated_TimeOut++;
-                                        break;
-
-
-
-                                    case false:
-
-
-                                        Task.Run(async () =>
-                                        {
-                                            await Online_Speech_Recognition.Stop_The_Online_Speech_Recognition();
-                                        });
-
-                                        break;
-
-                                }
-                                break;
-
-
-                            case false:
-
-                                Online_Speech_Recogniser_Not_Taking_Input_While_Activated_TimeOut = 0;
-                                break;
-
-                        }
-
-                    }
-
-
-
-                }
-
-            }
-
-            return Task.FromResult(true);
-        }
-
+       
 
 
 
@@ -1211,36 +1101,38 @@ namespace Eva_5._0
                 {
                     ParallelProcessing = new System.Threading.Thread(() =>
                     {
-                        MainSpeechRecogniser = new System.Speech.Recognition.SpeechRecognitionEngine(new System.Globalization.CultureInfo("en-GB"));
-
-                        MainSpeechRecogniser.BabbleTimeout = TimeSpan.FromSeconds(0);
-                        MainSpeechRecogniser.EndSilenceTimeout = TimeSpan.FromSeconds(0);
-                        MainSpeechRecogniser.InitialSilenceTimeout = TimeSpan.FromSeconds(0);
-                        MainSpeechRecogniser.EndSilenceTimeoutAmbiguous = TimeSpan.FromSeconds(0);
-
-
-                        MainSpeechRecogniser.RequestRecognizerUpdate();
-                        System.Speech.Recognition.Choices Choices = new System.Speech.Recognition.Choices("Eva", "Ei Ea");
-                        System.Speech.Recognition.GrammarBuilder gb = new System.Speech.Recognition.GrammarBuilder();
-                        gb.Culture = new System.Globalization.CultureInfo("en-GB");
-                        gb.Append(Choices);
-                        System.Speech.Recognition.Grammar Grammar = new System.Speech.Recognition.Grammar(gb);
-                        MainSpeechRecogniser.RequestRecognizerUpdate();
-
-
-                        if(MainSpeechRecogniser != null)
+                        try
                         {
-                            MainSpeechRecogniser?.LoadGrammarAsync(Grammar);
-                            MainSpeechRecogniser?.SetInputToDefaultAudioDevice();
-                            MainSpeechRecogniser?.RequestRecognizerUpdate();
+                            MainSpeechRecogniser = new System.Speech.Recognition.SpeechRecognitionEngine(new System.Globalization.CultureInfo("en-GB"));
+
+                            MainSpeechRecogniser.BabbleTimeout = TimeSpan.FromSeconds(0);
+                            MainSpeechRecogniser.EndSilenceTimeout = TimeSpan.FromSeconds(0);
+                            MainSpeechRecogniser.InitialSilenceTimeout = TimeSpan.FromSeconds(0);
+                            MainSpeechRecogniser.EndSilenceTimeoutAmbiguous = TimeSpan.FromSeconds(0);
 
 
-                            MainSpeechRecogniser?.RecognizeAsync(System.Speech.Recognition.RecognizeMode.Multiple);
-                            MainSpeechRecogniser.SpeechRecognized += MainSpeechRecogniser_SpeechRecognized;
-                            MainSpeechRecogniser.RecognizeCompleted += MainSpeechRecogniser_RecognizeCompleted;
-                            MainSpeechRecogniser.SpeechDetected += MainSpeechRecogniser_SpeechDetected;
+                            MainSpeechRecogniser.RequestRecognizerUpdate();
+                            System.Speech.Recognition.Choices Choices = new System.Speech.Recognition.Choices("Eva", "Ei Ea");
+                            System.Speech.Recognition.GrammarBuilder gb = new System.Speech.Recognition.GrammarBuilder();
+                            gb.Culture = new System.Globalization.CultureInfo("en-GB");
+                            gb.Append(Choices);
+                            System.Speech.Recognition.Grammar Grammar = new System.Speech.Recognition.Grammar(gb);
+                            MainSpeechRecogniser.RequestRecognizerUpdate();
+
+
+                            if (MainSpeechRecogniser != null)
+                            {
+                                MainSpeechRecogniser?.LoadGrammarAsync(Grammar);
+                                MainSpeechRecogniser?.SetInputToDefaultAudioDevice();
+                                MainSpeechRecogniser?.RequestRecognizerUpdate();
+
+
+                                MainSpeechRecogniser?.RecognizeAsync(System.Speech.Recognition.RecognizeMode.Multiple);
+                                MainSpeechRecogniser.SpeechRecognized += MainSpeechRecogniser_SpeechRecognized;
+                                MainSpeechRecogniser.RecognizeCompleted += MainSpeechRecogniser_RecognizeCompleted;
+                            }
                         }
-                        
+                        catch { }
 
                     });
 
@@ -1259,16 +1151,6 @@ namespace Eva_5._0
             return Task.FromResult(Wake_Word_Engine_Initiation_Successful);
         }
 
-
-
-
-        private void MainSpeechRecogniser_SpeechDetected(object sender, System.Speech.Recognition.SpeechDetectedEventArgs e)
-        {
-            lock(Speech_Detected)
-            {
-                Speech_Detected = "true";
-            }
-        }
 
 
 

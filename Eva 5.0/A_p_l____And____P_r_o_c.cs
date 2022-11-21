@@ -106,6 +106,9 @@ namespace Eva_5._0
                     A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("windows terminal", @"C:\Users\" + Environment.UserName + @"\AppData\Local\Microsoft\WindowsApps\wt.exe");
 
 
+                    A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("windows 10", @"C:\Users\" + Environment.UserName + @"\AppData\Local\Microsoft\WindowsApps\wt.exe");
+
+
                     A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("terminal", @"C:\Users\" + Environment.UserName + @"\AppData\Local\Microsoft\WindowsApps\wt.exe");
 
 
@@ -475,6 +478,8 @@ namespace Eva_5._0
 
                     A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("windows terminal", "WindowsTerminal");
 
+                    A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("windows 10", "WindowsTerminal");
+
                     A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("terminal", "WindowsTerminal");
 
                     A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("visual studio 2022", "devenv");
@@ -515,6 +520,8 @@ namespace Eva_5._0
                     A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryAdd("snip and sketch", "https://apps.microsoft.com/store/detail/snipping-tool/9MZ95KL8MR0L?hl=en-gb&gl=GB");
 
                     A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryAdd("windows terminal", "https://apps.microsoft.com/store/detail/windows-terminal/9N0DX20HK701?hl=en-zw&gl=zw");
+
+                    A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryAdd("windows 10", "https://apps.microsoft.com/store/detail/windows-terminal/9N0DX20HK701?hl=en-zw&gl=zw");
 
                     A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryAdd("terminal", "https://apps.microsoft.com/store/detail/windows-terminal/9N0DX20HK701?hl=en-zw&gl=zw");
 
