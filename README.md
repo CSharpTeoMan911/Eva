@@ -230,7 +230,7 @@ After the calibration is completed, in order to give commands to Eva say the wor
 
 <br>
 
-Eva is open source and free to use. You can find extra informations on the [**Wiki**](https://github.com/CSharpTeoMan911/Eva/wiki/Home/_edit) section of the repository. 
+Eva is open source and free to use. You can find extra informations on the [**Wiki**](https://github.com/CSharpTeoMan911/Eva/wiki) section of the repository. 
 
 <br>
 
