@@ -1105,31 +1105,34 @@ namespace Eva_5._0
                         {
                             MainSpeechRecogniser = new System.Speech.Recognition.SpeechRecognitionEngine(new System.Globalization.CultureInfo("en-GB"));
 
-                            MainSpeechRecogniser.BabbleTimeout = TimeSpan.FromSeconds(0);
-                            MainSpeechRecogniser.EndSilenceTimeout = TimeSpan.FromSeconds(0);
-                            MainSpeechRecogniser.InitialSilenceTimeout = TimeSpan.FromSeconds(0);
-                            MainSpeechRecogniser.EndSilenceTimeoutAmbiguous = TimeSpan.FromSeconds(0);
-
-
-                            MainSpeechRecogniser.RequestRecognizerUpdate();
-                            System.Speech.Recognition.Choices Choices = new System.Speech.Recognition.Choices("Eva", "Ei Ea");
-                            System.Speech.Recognition.GrammarBuilder gb = new System.Speech.Recognition.GrammarBuilder();
-                            gb.Culture = new System.Globalization.CultureInfo("en-GB");
-                            gb.Append(Choices);
-                            System.Speech.Recognition.Grammar Grammar = new System.Speech.Recognition.Grammar(gb);
-                            MainSpeechRecogniser.RequestRecognizerUpdate();
-
-
-                            if (MainSpeechRecogniser != null)
+                            lock (MainSpeechRecogniser)
                             {
-                                MainSpeechRecogniser?.LoadGrammarAsync(Grammar);
-                                MainSpeechRecogniser?.SetInputToDefaultAudioDevice();
-                                MainSpeechRecogniser?.RequestRecognizerUpdate();
+                                MainSpeechRecogniser.BabbleTimeout = TimeSpan.FromSeconds(0);
+                                MainSpeechRecogniser.EndSilenceTimeout = TimeSpan.FromSeconds(0);
+                                MainSpeechRecogniser.InitialSilenceTimeout = TimeSpan.FromSeconds(0);
+                                MainSpeechRecogniser.EndSilenceTimeoutAmbiguous = TimeSpan.FromSeconds(0);
 
 
-                                MainSpeechRecogniser?.RecognizeAsync(System.Speech.Recognition.RecognizeMode.Multiple);
-                                MainSpeechRecogniser.SpeechRecognized += MainSpeechRecogniser_SpeechRecognized;
-                                MainSpeechRecogniser.RecognizeCompleted += MainSpeechRecogniser_RecognizeCompleted;
+                                MainSpeechRecogniser.RequestRecognizerUpdate();
+                                System.Speech.Recognition.Choices Choices = new System.Speech.Recognition.Choices("Eva", "Ei Ea");
+                                System.Speech.Recognition.GrammarBuilder gb = new System.Speech.Recognition.GrammarBuilder();
+                                gb.Culture = new System.Globalization.CultureInfo("en-GB");
+                                gb.Append(Choices);
+                                System.Speech.Recognition.Grammar Grammar = new System.Speech.Recognition.Grammar(gb);
+                                MainSpeechRecogniser.RequestRecognizerUpdate();
+
+
+                                if (MainSpeechRecogniser != null)
+                                {
+                                    MainSpeechRecogniser?.LoadGrammarAsync(Grammar);
+                                    MainSpeechRecogniser?.SetInputToDefaultAudioDevice();
+                                    MainSpeechRecogniser?.RequestRecognizerUpdate();
+
+
+                                    MainSpeechRecogniser?.RecognizeAsync(System.Speech.Recognition.RecognizeMode.Multiple);
+                                    MainSpeechRecogniser.SpeechRecognized += MainSpeechRecogniser_SpeechRecognized;
+                                    MainSpeechRecogniser.RecognizeCompleted += MainSpeechRecogniser_RecognizeCompleted;
+                                }
                             }
                         }
                         catch { }
@@ -1162,10 +1165,13 @@ namespace Eva_5._0
 
             try
             {
-                if (MainSpeechRecogniser != null)
+                lock (MainSpeechRecogniser)
                 {
-                    MainSpeechRecogniser?.RecognizeAsyncCancel();
-                    MainSpeechRecogniser?.Dispose();
+                    if (MainSpeechRecogniser != null)
+                    {
+                        MainSpeechRecogniser?.RecognizeAsyncCancel();
+                        MainSpeechRecogniser?.Dispose();
+                    }
                 }
             }
             catch
@@ -1198,9 +1204,15 @@ namespace Eva_5._0
                 {
                     try
                     {
-                        MainSpeechRecogniser?.RecognizeAsyncStop();
-                        MainSpeechRecogniser?.RecognizeAsyncCancel();
-                        MainSpeechRecogniser?.Dispose();
+                        lock (MainSpeechRecogniser)
+                        {
+                            if (MainSpeechRecogniser != null)
+                            {
+                                MainSpeechRecogniser?.RecognizeAsyncStop();
+                                MainSpeechRecogniser?.RecognizeAsyncCancel();
+                                MainSpeechRecogniser?.Dispose();
+                            }
+                        }
                     }
                     catch { }
                 }

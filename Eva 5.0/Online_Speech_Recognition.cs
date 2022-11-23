@@ -229,7 +229,10 @@ namespace Eva_5._0
 
 
         ~Online_Speech_Recognition()
-        { }
+        {
+            System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
+            GC.Collect(2, GCCollectionMode.Forced);
+        }
 
     }
 }
