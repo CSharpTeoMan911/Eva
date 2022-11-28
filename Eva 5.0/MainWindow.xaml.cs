@@ -891,10 +891,10 @@ namespace Eva_5._0
                                                                     {
                                                                         FunctionInitiated = "true";
 
-                                                                        Task.Run(async() =>
-                                                                        {
-                                                                            await Online_Speech_Recognition.Online_Speech_Recognition_Session_Creation_And_Initiation();
-                                                                        });
+                                                                       Task speech_recognition =  Task.Run(async() => {
+                                                                           await Online_Speech_Recognition.Online_Speech_Recognition_Session_Creation_And_Initiation();
+                                                                       });
+                                                                       speech_recognition.Wait();
 
                                                                     }
 
