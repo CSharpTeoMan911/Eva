@@ -6,7 +6,26 @@ using System.Threading.Tasks;
 
 namespace Eva_5._0
 {
-    internal class Proc<ProcessType, Application, Content>:A_p_l____And____P_r_o_c
+
+
+    /////////////////////////////////////////////////////////////////////////////
+    ///                                                                       ///
+    ///                   PRODUCT: EVA A.I. ASSISTANT                         ///
+    ///                                                                       ///
+    ///                   AUTHOR: TEODOR MIHAIL                               ///
+    ///                                                                       ///
+    ///                                                                       ///
+    /// ANY UNAUTHORISED TRADEMARK USE OF THIS SOFTWARE IS PUNISHABLE BY LAW  ///
+    ///                                                                       ///
+    /// THE AUTHOR OF THIS SOFTWARE DOES NOT LET ANY PEOPLE PATENT OR USE     ///
+    /// THIS PRODUCT'S TRADEMARK.                                             ///
+    ///                                                                       ///
+    /// DO NOT REMOVE THIS FILE HEADER                                        ///
+    ///                                                                       ///
+    /////////////////////////////////////////////////////////////////////////////
+
+
+    internal class Proc<Content>:A_p_l____And____P_r_o_c
     {
 
         /*
@@ -33,21 +52,17 @@ namespace Eva_5._0
 
 
 
-        private static System.Threading.Thread ParallelProcessing;
-
-
-        public static async Task<bool> ProcInitialisation(ProcessType process_type, Application application, Content content)
+        public static async Task<bool> ProcInitialisation(string process_type, string application, Content content)
         {
 
-
-            switch (process_type as string)
+            switch (process_type)
             {
                 case "Online Process":
-                    await OnlineProcesses(application as string, content as string);
+                    await OnlineProcesses(application, content as string);
                     break;
 
                 case "System Process":
-                    await SystemProcesses(application as string, content as string);
+                    await SystemProcesses(application, content as string);
                     break;
 
                 case "Timer Process":
@@ -63,7 +78,7 @@ namespace Eva_5._0
         }
 
 
-        private static Task<bool> OnlineProcesses(string WebApplication, string SearchContent)
+        private static async Task<bool> OnlineProcesses(string WebApplication, string SearchContent)
         {
            
             System.Media.SoundPlayer AppExecutionSoundEffect = new System.Media.SoundPlayer("App execution.wav");
@@ -72,110 +87,100 @@ namespace Eva_5._0
             string Process = String.Empty;
 
 
-            ParallelProcessing = new System.Threading.Thread(async () =>
+            try
             {
+                bool SoundOrOff = await Settings.Get_Settings();
+
+                switch (WebApplication)
+                {
+                    case "youtube":
+
+                        Process = "https://www.youtube.com/results?search_query=";
+
+                        break;
+
+                    case "netflix":
+
+                        Process = "https://www.netflix.com/search?q=";
+
+                        break;
+
+                    case "wikipedia":
+
+                        Process = "https://en.wikipedia.org/wiki/";
+
+                        break;
+
+                    case "google":
+
+                        Process = "https://www.google.com/search?q=";
+
+                        break;
+
+                    case "google news":
+
+                        Process = "https://www.google.com/search?tbm=nws&q=";
+
+                        break;
+
+                    case "ebay":
+
+                        Process = "https://www.ebay.co.uk/sch/i.html?_nkw=";
+
+                        break;
+
+
+                    case "google images":
+
+                        Process = "https://www.google.com/search?tbm=isch&q=";
+
+                        break;
+
+
+                    case "amazon":
+
+                        Process = "https://www.amazon.co.uk/s?k=";
+
+                        break;
+                }
+
+
+                MainWindow.BeginExecutionAnimation = true;
+                using (System.Diagnostics.Process Online_Process = new System.Diagnostics.Process())
+                {
+                    Online_Process.StartInfo.FileName = Process + SearchContent;
+                    Online_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                    Online_Process.StartInfo.UseShellExecute = true;
+                    Online_Process.Start();
+
+                    new Set_Process_As_Foreground(Online_Process.MainWindowHandle);
+                }
+
                 try
                 {
-                    bool SoundOrOff = await Settings.Get_Settings();
 
-                    switch (WebApplication)
+                    if (SoundOrOff == true)
                     {
-                        case "youtube":
-
-                            Process = "https://www.youtube.com/results?search_query=";
-
-                            break;
-
-                        case "netflix":
-
-                            Process = "https://www.netflix.com/search?q=";
-
-                            break;
-
-                        case "wikipedia":
-
-                            Process = "https://en.wikipedia.org/wiki/";
-
-                            break;
-
-                        case "google":
-
-                            Process = "https://www.google.com/search?q=";
-
-                            break;
-
-                        case "google news":
-
-                            Process = "https://www.google.com/search?tbm=nws&q=";
-
-                            break;
-
-                        case "ebay":
-
-                            Process = "https://www.ebay.co.uk/sch/i.html?_nkw=";
-
-                            break;
-
-
-                        case "google images":
-
-                            Process = "https://www.google.com/search?tbm=isch&q=";
-
-                            break;
-
-
-                        case "amazon":
-
-                            Process = "https://www.amazon.co.uk/s?k=";
-
-                            break;
-                    }
-
-
-                    MainWindow.BeginExecutionAnimation = true;
-                    using (System.Diagnostics.Process Online_Process = new System.Diagnostics.Process())
-                    {
-                        Online_Process.StartInfo.FileName = Process + SearchContent;
-                        Online_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-                        Online_Process.StartInfo.UseShellExecute = true;
-                        Online_Process.Start();
-
-                        new Set_Process_As_Foreground(Online_Process.MainWindowHandle);
-                    }
-
-                    try
-                    {
-
-                        if (SoundOrOff == true)
+                        if (System.IO.File.Exists(@"App execution.wav"))
                         {
-                            if (System.IO.File.Exists(@"App execution.wav"))
-                            {
-                                AppExecutionSoundEffect.Play();
-                            }
+                            AppExecutionSoundEffect.Play();
                         }
-
                     }
-                    catch { }
 
-                    ParallelProcessing.Join();
-                    ParallelProcessing.Abort();
                 }
                 catch { }
 
-            });
-            ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
-            ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
-            ParallelProcessing.IsBackground = true;
-            ParallelProcessing.Start();
+            }
+            catch { }
 
 
 
 
 
-            return Task.FromResult(true);
+            return true;
         }
 
-        private static Task<bool> SystemProcesses(string Application, string Process)
+        private static async Task<bool> SystemProcesses(string Application, string Process)
         {
 
             System.Media.SoundPlayer AppExecutionSoundEffect = new System.Media.SoundPlayer("App execution.wav");
@@ -184,68 +189,100 @@ namespace Eva_5._0
 
 
 
-            ParallelProcessing = new System.Threading.Thread(async () =>
+            bool SoundOrOff = await Settings.Get_Settings();
+
+
+
+            string application_executable_name = String.Empty;
+
+            bool Application_Executable_Name_Retrieval_Result = A_p_l____And____P_r_o_c.A_p_l_Name__And__A_p_l___E_x__Name.TryGetValue(Application, out application_executable_name);
+
+
+
+            string application_process_name = String.Empty;
+
+            bool Application_Process_Name_Retrieval_Result = A_p_l____And____P_r_o_c.A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryGetValue(Application, out application_process_name);
+
+
+
+            string application_not_found_error_link = String.Empty;
+
+            bool Application_Not_Found_Error_Download_Link_Result = A_p_l____And____P_r_o_c.A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryGetValue(Application, out application_not_found_error_link);
+
+
+
+
+            switch (Process)
             {
-                bool SoundOrOff = await Settings.Get_Settings();
+                case "open":
+                    try
+                    {
+
+                        if (Application_Executable_Name_Retrieval_Result == true)
+                        {
+                            switch (application_executable_name[0].ToString() + application_executable_name[1].ToString() + application_executable_name[2].ToString() == "URI")
+                            {
+                                case true:
+
+                                    MainWindow.BeginExecutionAnimation = true;
+
+                                    await Windows.System.Launcher.LaunchUriAsync(new Uri(application_executable_name.Remove(0, 6)));
+                                    break;
+
+                                case false:
+
+                                    MainWindow.BeginExecutionAnimation = true;
+
+                                    using (System.Diagnostics.Process Application_Process = new System.Diagnostics.Process())
+                                    {
+                                        Application_Process.StartInfo.FileName = application_executable_name;
+                                        Application_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                                        Application_Process.StartInfo.UseShellExecute = true;
+                                        Application_Process.Start();
+
+                                        new Set_Process_As_Foreground(Application_Process.MainWindowHandle);
+                                    }
+                                    break;
+                            }
 
 
-
-                string application_executable_name = String.Empty;
-
-                bool Application_Executable_Name_Retrieval_Result = A_p_l____And____P_r_o_c.A_p_l_Name__And__A_p_l___E_x__Name.TryGetValue(Application, out application_executable_name);
-
-
-
-                string application_process_name = String.Empty;
-
-                bool Application_Process_Name_Retrieval_Result = A_p_l____And____P_r_o_c.A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryGetValue(Application, out application_process_name);
-
-
-
-                string application_not_found_error_link = String.Empty;
-
-                bool Application_Not_Found_Error_Download_Link_Result = A_p_l____And____P_r_o_c.A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryGetValue(Application, out application_not_found_error_link);
-
-
-                
-
-                switch (Process)
-                {
-                    case "open":
+                            try
+                            {
+                                if (SoundOrOff == true)
+                                {
+                                    if (System.IO.File.Exists(@"App execution.wav"))
+                                    {
+                                        AppExecutionSoundEffect.Play();
+                                    }
+                                }
+                            }
+                            catch { }
+                        }
+                    }
+                    catch
+                    {
 
                         try
                         {
-
-                            if (Application_Executable_Name_Retrieval_Result == true)
+                            if (Application_Not_Found_Error_Download_Link_Result == true)
                             {
-                                switch (application_executable_name[0].ToString() + application_executable_name[1].ToString() + application_executable_name[2].ToString() == "URI")
+
+                                MainWindow.BeginExecutionAnimation = true;
+
+                                using (System.Diagnostics.Process Application_Not_Found_Downdload_Link_Process = new System.Diagnostics.Process())
                                 {
-                                    case true:
+                                    Application_Not_Found_Downdload_Link_Process.StartInfo.FileName = application_not_found_error_link;
+                                    Application_Not_Found_Downdload_Link_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                                    Application_Not_Found_Downdload_Link_Process.StartInfo.UseShellExecute = true;
+                                    Application_Not_Found_Downdload_Link_Process.Start();
 
-                                        MainWindow.BeginExecutionAnimation = true;
-
-                                        await Windows.System.Launcher.LaunchUriAsync(new Uri(application_executable_name.Remove(0, 6)));
-                                        break;
-
-                                    case false:
-
-                                        MainWindow.BeginExecutionAnimation = true;
-
-                                        using (System.Diagnostics.Process Application_Process = new System.Diagnostics.Process())
-                                        {
-                                            Application_Process.StartInfo.FileName = application_executable_name;
-                                            Application_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-                                            Application_Process.StartInfo.UseShellExecute = true;
-                                            Application_Process.Start();
-
-                                            new Set_Process_As_Foreground(Application_Process.MainWindowHandle);
-                                        }
-                                        break;
+                                    new Set_Process_As_Foreground(Application_Not_Found_Downdload_Link_Process.MainWindowHandle);
                                 }
 
 
                                 try
                                 {
+
                                     if (SoundOrOff == true)
                                     {
                                         if (System.IO.File.Exists(@"App execution.wav"))
@@ -253,115 +290,60 @@ namespace Eva_5._0
                                             AppExecutionSoundEffect.Play();
                                         }
                                     }
+
                                 }
                                 catch { }
+
                             }
                         }
-                        catch
+                        catch { }
+
+                    }
+
+                    break;
+
+
+
+                case "close":
+                    if (Application_Process_Name_Retrieval_Result == true)
+                    {
+                        try
                         {
+
+                            MainWindow.BeginExecutionAnimation = true;
+
+                            if (application_process_name != "timer")
+                            {
+                                foreach (System.Diagnostics.Process p in System.Diagnostics.Process.GetProcessesByName(application_process_name))
+                                {
+                                    p.Kill();
+                                }
+                            }
+                            else
+                            {
+                                await Timer_Interval.Cancel_Time_Interval();
+                            }
 
                             try
                             {
-                                if (Application_Not_Found_Error_Download_Link_Result == true)
+                                if (SoundOrOff == true)
                                 {
-
-                                    MainWindow.BeginExecutionAnimation = true;
-
-                                    using (System.Diagnostics.Process Application_Not_Found_Downdload_Link_Process = new System.Diagnostics.Process())
+                                    if (System.IO.File.Exists(@"App closing.wav"))
                                     {
-                                        Application_Not_Found_Downdload_Link_Process.StartInfo.FileName = application_not_found_error_link;
-                                        Application_Not_Found_Downdload_Link_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-                                        Application_Not_Found_Downdload_Link_Process.StartInfo.UseShellExecute = true;
-                                        Application_Not_Found_Downdload_Link_Process.Start();
-
-                                        new Set_Process_As_Foreground(Application_Not_Found_Downdload_Link_Process.MainWindowHandle);
+                                        AppExecutionSoundEffect.Play();
                                     }
-
-
-                                    try
-                                    {
-
-                                        if (SoundOrOff == true)
-                                        {
-                                            if (System.IO.File.Exists(@"App execution.wav"))
-                                            {
-                                                AppExecutionSoundEffect.Play();
-                                            }
-                                        }
-
-                                    }
-                                    catch { }
-
                                 }
                             }
                             catch { }
-                            
                         }
-                        ParallelProcessing.Join();
-                        ParallelProcessing.Abort();
-
-
-                        break;
-
-
+                        catch { }
+                    }
+                    break;
+            }
 
 
 
-
-
-
-
-
-                    case "close":
-
-
-
-                        if (Application_Process_Name_Retrieval_Result == true)
-                        {
-                            try
-                            {
-                               
-                                MainWindow.BeginExecutionAnimation = true;
-
-                                if(application_process_name != "timer")
-                                {
-                                    foreach (System.Diagnostics.Process p in System.Diagnostics.Process.GetProcessesByName(application_process_name))
-                                    {
-                                        p.Kill();
-                                    }
-                                }
-                                else
-                                {
-                                    await Timer_Interval.Cancel_Time_Interval();
-                                }
-
-                                try
-                                {
-                                    if (SoundOrOff == true)
-                                    {
-                                        if (System.IO.File.Exists(@"App closing.wav"))
-                                        {
-                                            AppExecutionSoundEffect.Play();
-                                        }
-                                    }
-                                }
-                                catch { }
-                            }
-                            catch { }
-                        }
-                        break;
-                }
-
-            });
-
-            ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
-            ParallelProcessing.IsBackground = true;
-            ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
-            ParallelProcessing.Start();
-
-
-
-            return Task.FromResult(true);
+            return true;
         }
 
 
@@ -460,8 +442,6 @@ namespace Eva_5._0
 
         ~Proc()
         {
-            ParallelProcessing = null;
-
             System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect(2, GCCollectionMode.Forced, true, true);
         }

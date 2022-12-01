@@ -17,6 +17,25 @@ namespace Eva_5._0
     /// <summary>
     /// Interaction logic for InstructionManual.xaml
     /// </summary>
+
+
+    /////////////////////////////////////////////////////////////////////////////
+    ///                                                                       ///
+    ///                   PRODUCT: EVA A.I. ASSISTANT                         ///
+    ///                                                                       ///
+    ///                   AUTHOR: TEODOR MIHAIL                               ///
+    ///                                                                       ///
+    ///                                                                       ///
+    /// ANY UNAUTHORISED TRADEMARK USE OF THIS SOFTWARE IS PUNISHABLE BY LAW  ///
+    ///                                                                       ///
+    /// THE AUTHOR OF THIS SOFTWARE DOES NOT LET ANY PEOPLE PATENT OR USE     ///
+    /// THIS PRODUCT'S TRADEMARK.                                             ///
+    ///                                                                       ///
+    /// DO NOT REMOVE THIS FILE HEADER                                        ///
+    ///                                                                       ///
+    /////////////////////////////////////////////////////////////////////////////
+
+
     public partial class InstructionManual : Window
     {
 

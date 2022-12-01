@@ -3,14 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using Windows.Media.ClosedCaptioning;
 
 namespace Eva_5._0
 {
+
+    /////////////////////////////////////////////////////////////////////////////
+    ///                                                                       ///
+    ///                   PRODUCT: EVA A.I. ASSISTANT                         ///
+    ///                                                                       ///
+    ///                   AUTHOR: TEODOR MIHAIL                               ///
+    ///                                                                       ///
+    ///                                                                       ///
+    /// ANY UNAUTHORISED TRADEMARK USE OF THIS SOFTWARE IS PUNISHABLE BY LAW  ///
+    ///                                                                       ///
+    /// THE AUTHOR OF THIS SOFTWARE DOES NOT LET ANY PEOPLE PATENT OR USE     ///
+    /// THIS PRODUCT'S TRADEMARK.                                             ///
+    ///                                                                       ///
+    /// DO NOT REMOVE THIS FILE HEADER                                        ///
+    ///                                                                       ///
+    /////////////////////////////////////////////////////////////////////////////
+
+
     internal class Online_Speech_Recognition
     {
-
+     
         private static System.Threading.Thread ParallelProcessing;
 
 
@@ -19,52 +36,17 @@ namespace Eva_5._0
         {
 
 
-            // Ensures that the virtual interface to the online speech recognition server on Windows 10/11 for the online speech recognition system is open, during the speech recognition session.
-
+            // Initiate the online speech recognizer on another thread.
+            //
             // [ BEGIN ] 
 
 
             ParallelProcessing = new System.Threading.Thread(async() =>
             {
                 bool Online_Speech_Recognition_Engine_Initiation_Successful = await Initiate_The_Online_Speech_Recognition_Engine();
-
-
-
-
-                if (Online_Speech_Recognition_Engine_Initiation_Successful == true)
-                {
-
-                    using (System.Diagnostics.Process Speech_Recognition_Server_Interface_Initiation = new System.Diagnostics.Process())
-                    {
-                        switch (Environment.Is64BitOperatingSystem)
-                        {
-
-                            case true:
-                                Speech_Recognition_Server_Interface_Initiation.StartInfo.FileName = @"C:\Program Files\WindowsApps\Microsoft.549981C3F5F10_4.2204.13303.0_x64__8wekyb3d8bbwe\Win32Bridge.Server.exe";
-                                break;
-
-
-                            case false:
-                                Speech_Recognition_Server_Interface_Initiation.StartInfo.FileName = @"C:\Program Files\WindowsApps\Microsoft.549981C3F5F10_4.2204.13303.0_x86__8wekyb3d8bbwe\Win32Bridge.Server.exe";
-                                break;
-
-                        }
-                        Speech_Recognition_Server_Interface_Initiation.StartInfo.UseShellExecute = true;
-                        Speech_Recognition_Server_Interface_Initiation.Start();
-                    }
-
-
-                    using (System.Diagnostics.Process Speech_Recognition_Cortana_Search_Initiation = new System.Diagnostics.Process())
-                    {
-                        Speech_Recognition_Cortana_Search_Initiation.StartInfo.FileName = @"C:\Windows\SystemApps\Microsoft.Windows.Search_cw5n1h2txyewy\SearchApp.exe";
-                        Speech_Recognition_Cortana_Search_Initiation.StartInfo.UseShellExecute = true;
-                        Speech_Recognition_Cortana_Search_Initiation.Start();
-                    }
-
-                }
             });
             ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.MTA);
-            ParallelProcessing.Priority = System.Threading.ThreadPriority.AboveNormal;
+            ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
             ParallelProcessing.IsBackground = true;
             ParallelProcessing.Start();
 
@@ -144,7 +126,7 @@ namespace Eva_5._0
                                                         }
                                                     }
 
-                                                    await Natural_Language_Processing.PreProcessing<string>(Result.Text);
+                                                    await Natural_Language_Processing.PreProcessing(Result.Text);
 
                                                 Function_Not_Initiated:;
                                                     await OnlineSpeechRecognition.StopRecognitionAsync();

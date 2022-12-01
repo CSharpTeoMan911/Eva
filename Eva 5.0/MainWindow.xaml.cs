@@ -16,18 +16,26 @@ using System.Windows.Shapes;
 
 namespace Eva_5._0
 {
+
+    /////////////////////////////////////////////////////////////////////////////
+    ///                                                                       ///
+    ///                   PRODUCT: EVA A.I. ASSISTANT                         ///
+    ///                                                                       ///
+    ///                   AUTHOR: TEODOR MIHAIL                               ///
+    ///                                                                       ///
+    ///                                                                       ///
+    /// ANY UNAUTHORISED TRADEMARK USE OF THIS SOFTWARE IS PUNISHABLE BY LAW  ///
+    ///                                                                       ///
+    /// THE AUTHOR OF THIS SOFTWARE DOES NOT LET ANY PEOPLE PATENT OR USE     ///
+    /// THIS PRODUCT'S TRADEMARK.                                             ///
+    ///                                                                       ///
+    /// DO NOT REMOVE THIS FILE HEADER                                        ///
+    ///                                                                       ///
+    /////////////////////////////////////////////////////////////////////////////
+
+
     public partial class MainWindow : Window
     {
-
-        /////////////////////////////////////////////////////////////////////////////
-        ///                                                                       ///
-        ///                         TEODOR MIHAIL (2021)                          ///
-        ///                                                                       ///
-        /// ANY UNAUTHORISED COMMERCIAL USE OF THIS SOFTWARE IS PUNISHABLE BY LAW ///
-        ///                                                                       ///
-        ///                                                                       ///
-        /////////////////////////////////////////////////////////////////////////////
-
 
         private System.Threading.Thread ParallelProcessing;
 
@@ -127,10 +135,6 @@ namespace Eva_5._0
             // [ END ]
 
 
-
-
-
-
             InitialRotatorWidth = Rotator.ActualWidth;
 
 
@@ -221,12 +225,12 @@ namespace Eva_5._0
                                                     switch (Online_Speech_Recogniser_Listening_TimeOut == 6000)
                                                     {
                                                         case true:
-
                                                             Online_Speech_Recogniser_Listening_TimeOut = 0;
                                                             break;
 
-                                                        case false:
 
+
+                                                        case false:
                                                             OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF91E1FF");
                                                             OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF3099FF");
                                                             break;
@@ -239,9 +243,7 @@ namespace Eva_5._0
 
 
                                                 case "false":
-
                                                     Online_Speech_Recogniser_Listening_TimeOut = 0;
-
                                                     OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FFACC6D6");
                                                     OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
                                                     break;
@@ -256,11 +258,7 @@ namespace Eva_5._0
                                         {
                                             case true:
                                                 OpenTimerMenuButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-
                                                 OpenTimerMenuButtonNotOffset.Color = (Color)ColorConverter.ConvertFromString("#FF11497F");
-
-
-
 
                                                 bool Time_Interval_Elapsed = await Timer_Interval.Calculate_Time_Interval_Left();
 
@@ -269,16 +267,13 @@ namespace Eva_5._0
                                                     switch (App.TimerWindowOpen)
                                                     {
                                                         case true:
-
                                                             Timer_Window.Ring_Timer = true;
                                                             break;
 
 
 
                                                         case false:
-
                                                             Timer_Window.Ring_Timer = true;
-
                                                             Timer_Window timer = new Timer_Window();
                                                             timer.ShowDialog();
                                                             break;
@@ -288,7 +283,6 @@ namespace Eva_5._0
 
                                             case false:
                                                 OpenTimerMenuButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FFD67A71");
-
                                                 OpenTimerMenuButtonNotOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7F1111");
                                                 break;
                                         }
@@ -891,10 +885,10 @@ namespace Eva_5._0
                                                                     {
                                                                         FunctionInitiated = "true";
 
-                                                                       Task speech_recognition =  Task.Run(async() => {
-                                                                           await Online_Speech_Recognition.Online_Speech_Recognition_Session_Creation_And_Initiation();
-                                                                       });
-                                                                       speech_recognition.Wait();
+                                                                        Task.Run(async () =>
+                                                                        {
+                                                                            await Online_Speech_Recognition.Online_Speech_Recognition_Session_Creation_And_Initiation();
+                                                                        });
 
                                                                     }
 
@@ -935,91 +929,127 @@ namespace Eva_5._0
 
             try
             {
-                if (e.Error != null)
+                
+                switch (e.Error != null)
                 {
-
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        App.ErrorAppShutdown = true;
-                        Application.Current.MainWindow.Visibility = Visibility.Hidden;
-
-                        switch (App.PermisissionWindowOpen)
+                    case false:
+                        if (OnOff != 0)
                         {
-                            case false:
-
-                                System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-                                GC.Collect(0, GCCollectionMode.Forced, true, true);
-                                System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-                                GC.Collect(0, GCCollectionMode.Forced, true, true);
-                                System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-                                GC.Collect(0, GCCollectionMode.Forced, true, true);
-
-                                ErrorWindow OpenPermissionDeclinedWindow = new ErrorWindow("Mircrophone Access Denied");
-                                OpenPermissionDeclinedWindow.Show();
-
-                                break;
-
-                            case true:
-
-                                App.InitiateErrorFunction = true;
-                                App.ErrorFunction = "Mircrophone Access Denied";
-
-                                break;
-                        }
-
-                    });
-
-                }
-                else
-                {
-
-                    if (OnOff != 0)
-                    {
-
-                    Wake_Word_Engine_Initiation:
-
-
-                        int Wake_Word_Engine_Initiation_Error_Counter = 0;
-
-                        bool Wake_Word_Engine_Initiation_Successful = await Initiate_The_Wake_Word_Engine();
-
-
-
-                        if (Wake_Word_Engine_Initiation_Successful == false)
-                        {
-                            if (OnOff != 0)
+                            await Application.Current.Dispatcher.Invoke(async() =>
                             {
-                                switch (Wake_Word_Engine_Initiation_Error_Counter < 10)
+                            Wake_Word_Engine_Initiation:
+
+
+                                int Wake_Word_Engine_Initiation_Error_Counter = 0;
+
+                                bool Wake_Word_Engine_Initiation_Successful = await Initiate_The_Wake_Word_Engine();
+                                if (Wake_Word_Engine_Initiation_Successful == false)
                                 {
+                                    if (OnOff != 0)
+                                    {
+                                        switch (Wake_Word_Engine_Initiation_Error_Counter < 10)
+                                        {
 
-                                    case true:
+                                            case true:
 
-                                        Wake_Word_Engine_Initiation_Error_Counter++;
+                                                Wake_Word_Engine_Initiation_Error_Counter++;
 
-                                        goto Wake_Word_Engine_Initiation;
-
-
+                                                goto Wake_Word_Engine_Initiation;
 
 
-                                    case false:
 
-                                        OnOff = 0;
 
-                                        App.StopRecognitionSession = true;
+                                            case false:
 
-                                        SpeechRecognitionButton.Content = "\xF781";
+                                                OnOff = 0;
 
-                                        break;
+                                                App.StopRecognitionSession = true;
+
+                                                SpeechRecognitionButton.Content = "\xF781";
+
+                                                break;
+
+                                        }
+                                    }
 
                                 }
-                            }
+                            });
 
                         }
+                        break;
 
-                    }
 
+                    case true:
+                        switch (e.Error.HResult == -2147024891)
+                        {
+                            case true:
+                                Application.Current.Dispatcher.Invoke(() =>
+                                {
+                                    App.ErrorAppShutdown = true;
+                                    Application.Current.MainWindow.Visibility = Visibility.Hidden;
+
+                                    switch (App.PermisissionWindowOpen)
+                                    {
+                                        case false:
+
+                                            System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
+                                            GC.Collect(0, GCCollectionMode.Forced, true, true);
+
+                                            ErrorWindow OpenPermissionDeclinedWindow = new ErrorWindow("Mircrophone Access Denied");
+                                            OpenPermissionDeclinedWindow.Show();
+
+                                            break;
+
+                                        case true:
+
+                                            App.InitiateErrorFunction = true;
+                                            App.ErrorFunction = "Mircrophone Access Denied";
+
+                                            break;
+                                    }
+
+                                });
+                                break;
+
+
+
+                            case false:
+                                await Application.Current.Dispatcher.Invoke(async () =>
+                                {
+                                    bool Wake_Word_Engine_Shutdown_Successful = await Close_The_Wake_Word_Engine();
+
+
+                                    switch (Wake_Word_Engine_Shutdown_Successful)
+                                    {
+
+                                        case true:
+
+                                            SpeechRecognitionButton.Content = "\xF781";
+
+                                            App.StopRecognitionSession = true;
+
+                                            OnOff = 0;
+
+                                            break;
+
+
+
+
+                                        case false:
+
+                                            SpeechRecognitionButton.Content = "\xE1D6";
+
+                                            App.StopRecognitionSession = false;
+
+                                            break;
+
+                                    }
+                                });
+                                break;
+                        }
+                        break;
                 }
-
+               
             }
             catch { }
 
@@ -1107,23 +1137,22 @@ namespace Eva_5._0
 
                             lock (MainSpeechRecogniser)
                             {
-                                MainSpeechRecogniser.BabbleTimeout = TimeSpan.FromSeconds(0);
-                                MainSpeechRecogniser.EndSilenceTimeout = TimeSpan.FromSeconds(0);
-                                MainSpeechRecogniser.InitialSilenceTimeout = TimeSpan.FromSeconds(0);
-                                MainSpeechRecogniser.EndSilenceTimeoutAmbiguous = TimeSpan.FromSeconds(0);
-
-
-                                MainSpeechRecogniser.RequestRecognizerUpdate();
-                                System.Speech.Recognition.Choices Choices = new System.Speech.Recognition.Choices("Eva", "Ei Ea");
-                                System.Speech.Recognition.GrammarBuilder gb = new System.Speech.Recognition.GrammarBuilder();
-                                gb.Culture = new System.Globalization.CultureInfo("en-GB");
-                                gb.Append(Choices);
-                                System.Speech.Recognition.Grammar Grammar = new System.Speech.Recognition.Grammar(gb);
-                                MainSpeechRecogniser.RequestRecognizerUpdate();
-
-
                                 if (MainSpeechRecogniser != null)
                                 {
+                                    MainSpeechRecogniser.BabbleTimeout = TimeSpan.FromSeconds(0);
+                                    MainSpeechRecogniser.EndSilenceTimeout = TimeSpan.FromSeconds(0);
+                                    MainSpeechRecogniser.InitialSilenceTimeout = TimeSpan.FromSeconds(0);
+                                    MainSpeechRecogniser.EndSilenceTimeoutAmbiguous = TimeSpan.FromSeconds(0);
+
+
+                                    MainSpeechRecogniser.RequestRecognizerUpdate();
+                                    System.Speech.Recognition.Choices Choices = new System.Speech.Recognition.Choices("Eva", "Ei Ea");
+                                    System.Speech.Recognition.GrammarBuilder gb = new System.Speech.Recognition.GrammarBuilder();
+                                    gb.Culture = new System.Globalization.CultureInfo("en-GB");
+                                    gb.Append(Choices);
+                                    System.Speech.Recognition.Grammar Grammar = new System.Speech.Recognition.Grammar(gb);
+                                    MainSpeechRecogniser.RequestRecognizerUpdate();
+
                                     MainSpeechRecogniser?.LoadGrammarAsync(Grammar);
                                     MainSpeechRecogniser?.SetInputToDefaultAudioDevice();
                                     MainSpeechRecogniser?.RequestRecognizerUpdate();
@@ -1165,14 +1194,27 @@ namespace Eva_5._0
 
             try
             {
-                lock (MainSpeechRecogniser)
+                ParallelProcessing = new System.Threading.Thread(() =>
                 {
-                    if (MainSpeechRecogniser != null)
+                    try
                     {
-                        MainSpeechRecogniser?.RecognizeAsyncCancel();
-                        MainSpeechRecogniser?.Dispose();
+                        lock (MainSpeechRecogniser)
+                        {
+                            if (MainSpeechRecogniser != null)
+                            {
+                                MainSpeechRecogniser?.RecognizeAsyncCancel();
+                                MainSpeechRecogniser?.Dispose();
+                            }
+                        }
                     }
-                }
+                    catch { }
+
+                });
+
+                ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
+                ParallelProcessing.Priority = System.Threading.ThreadPriority.AboveNormal;
+                ParallelProcessing.IsBackground = true;
+                ParallelProcessing.Start();
             }
             catch
             {

@@ -8,6 +8,24 @@
         Title="Instruction Manual" Height="450" Width="800" Closing="InstructionManualWindowClosing" Loaded="InstructionManualWindowLoaded" SizeChanged="Window_Size_Changed" WindowStyle="None" AllowsTransparency="True" Opacity="0.98" Icon="/Eva icon.png">
 
 
+
+    <!--/////////////////////////////////////////////////////////////////////////////
+        ///                                                                       ///
+        ///                   PRODUCT: EVA A.I. ASSISTANT                         ///
+        ///                                                                       ///
+        ///                   AUTHOR: TEODOR MIHAIL                               ///
+        ///                                                                       ///
+        ///                                                                       ///
+        /// ANY UNAUTHORISED TRADEMARK USE OF THIS SOFTWARE IS PUNISHABLE BY LAW  ///
+        ///                                                                       ///
+        /// THE AUTHOR OF THIS SOFTWARE DOES NOT LET ANY PEOPLE PATENT OR USE     ///
+        /// THIS PRODUCT'S TRADEMARK.                                             ///
+        ///                                                                       ///
+        /// DO NOT REMOVE THIS FILE HEADER                                        ///
+        ///                                                                       ///
+        /////////////////////////////////////////////////////////////////////////////-->
+
+
     <Window.Clip>
         <RectangleGeometry x:Name="Instruction_Manual_Geometry" Rect="0,0,800,450" RadiusX="20" RadiusY="20"/>
     </Window.Clip>

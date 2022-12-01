@@ -6,14 +6,31 @@ using System.Threading.Tasks;
 
 namespace Eva_5._0
 {
+
+    /////////////////////////////////////////////////////////////////////////////
+    ///                                                                       ///
+    ///                   PRODUCT: EVA A.I. ASSISTANT                         ///
+    ///                                                                       ///
+    ///                   AUTHOR: TEODOR MIHAIL                               ///
+    ///                                                                       ///
+    ///                                                                       ///
+    /// ANY UNAUTHORISED TRADEMARK USE OF THIS SOFTWARE IS PUNISHABLE BY LAW  ///
+    ///                                                                       ///
+    /// THE AUTHOR OF THIS SOFTWARE DOES NOT LET ANY PEOPLE PATENT OR USE     ///
+    /// THIS PRODUCT'S TRADEMARK.                                             ///
+    ///                                                                       ///
+    /// DO NOT REMOVE THIS FILE HEADER                                        ///
+    ///                                                                       ///
+    /////////////////////////////////////////////////////////////////////////////
+
+
+
     internal class Natural_Language_Processing
     {
 
-        public static async Task<bool> PreProcessing<Sentence_Parameter>(Sentence_Parameter sentence_parameter)
+        public static async Task<bool> PreProcessing(string Sentence)
         {
-            string Sentence = sentence_parameter as string;
-
-
+           
 
             // [ BEGIN ] REMOVE SPECIAL CHARACTERS 
             //
@@ -235,7 +252,7 @@ namespace Eva_5._0
             switch (Sentence.IndexOf("take screenshot") == 0)
             {
                 case true:
-                    await Proc<string, string, string>.ProcInitialisation("Screen Capture Process", null, null);
+                    await Proc<string>.ProcInitialisation("Screen Capture Process", null, null);
                     break;
 
                 case false:
@@ -243,7 +260,7 @@ namespace Eva_5._0
                     switch (Sentence.IndexOf("take a screenshot") == 0)
                     {
                         case true:
-                            await Proc<string, string, string>.ProcInitialisation("Screen Capture Process", null, null);
+                            await Proc<string>.ProcInitialisation("Screen Capture Process", null, null);
                             break;
 
                         case false:
@@ -251,7 +268,7 @@ namespace Eva_5._0
                             switch (Sentence.IndexOf("take a screenshot please") == 0)
                             {
                                 case true:
-                                    await Proc<string, string, string>.ProcInitialisation("Screen Capture Process", null, null);
+                                    await Proc<string>.ProcInitialisation("Screen Capture Process", null, null);
                                     break;
 
                                 case false:
@@ -259,14 +276,14 @@ namespace Eva_5._0
                                     switch (Sentence.IndexOf("please take a screenshot") == 0)
                                     {
                                         case true:
-                                            await Proc<string, string, string>.ProcInitialisation("Screen Capture Process", null, null);
+                                            await Proc<string>.ProcInitialisation("Screen Capture Process", null, null);
                                             break;
 
                                         case false:
 
                                             if (Sentence.IndexOf("screenshot") == 0)
                                             {
-                                                await Proc<string, string, string>.ProcInitialisation("Screen Capture Process", null, null);
+                                                await Proc<string>.ProcInitialisation("Screen Capture Process", null, null);
                                             }
                                             break;
                                     }
@@ -323,8 +340,8 @@ namespace Eva_5._0
                     }
 
 
-                    
-                    await Proc<string, string, string>.ProcInitialisation("System Process", Application, "open");
+
+                    await Proc<string>.ProcInitialisation("System Process", Application, "open");
                     break;
 
                 case "open [Application] please":
@@ -334,7 +351,7 @@ namespace Eva_5._0
                         Application += Sentence[Index];
 
                     }
-                    await Proc<string, string, string>.ProcInitialisation("System Process", Application, "open");
+                    await Proc<string>.ProcInitialisation("System Process", Application, "open");
                     break;
 
                 case "open [Application] now":
@@ -344,7 +361,7 @@ namespace Eva_5._0
                         Application += Sentence[Index];
 
                     }
-                    await Proc<string, string, string>.ProcInitialisation("System Process", Application, "open");
+                    await Proc<string>.ProcInitialisation("System Process", Application, "open");
                     break;
 
                 case "open [Application]":
@@ -354,7 +371,7 @@ namespace Eva_5._0
                         Application += Sentence[Index];
 
                     }
-                    await Proc<string, string, string>.ProcInitialisation("System Process", Application, "open");
+                    await Proc<string>.ProcInitialisation("System Process", Application, "open");
                     break;
 
 
@@ -367,7 +384,7 @@ namespace Eva_5._0
                         Application += Sentence[Index];
 
                     }
-                    await Proc<string, string, string>.ProcInitialisation("System Process", Application, "close");
+                    await Proc<string>.ProcInitialisation("System Process", Application, "close");
                     break;
 
                 case "close [Application] please":
@@ -377,7 +394,7 @@ namespace Eva_5._0
                         Application += Sentence[Index];
 
                     }
-                    await Proc<string, string, string>.ProcInitialisation("System Process", Application, "close");
+                    await Proc<string>.ProcInitialisation("System Process", Application, "close");
                     break;
 
                 case "close [Application] now":
@@ -387,7 +404,7 @@ namespace Eva_5._0
                         Application += Sentence[Index];
 
                     }
-                    await Proc<string, string, string>.ProcInitialisation("System Process", Application, "close");
+                    await Proc<string>.ProcInitialisation("System Process", Application, "close");
                     break;
 
                 case "close [Application]":
@@ -397,7 +414,7 @@ namespace Eva_5._0
                         Application += Sentence[Index];
 
                     }
-                    await Proc<string, string, string>.ProcInitialisation("System Process", Application, "close");
+                    await Proc<string>.ProcInitialisation("System Process", Application, "close");
                     break;
 
 
@@ -423,7 +440,7 @@ namespace Eva_5._0
                    
 
                     Application = Application.Trim();
-                    await Proc<string, string, string>.ProcInitialisation("Online Process", Application, WebApplicationSearchContent);
+                    await Proc<string>.ProcInitialisation("Online Process", Application, WebApplicationSearchContent);
                     break;
 
 
@@ -516,7 +533,7 @@ namespace Eva_5._0
 
 
 
-                    await Proc<string, string, string>.ProcInitialisation("Online Process", Application, WebApplicationSearchContent);
+                    await Proc<string>.ProcInitialisation("Online Process", Application, WebApplicationSearchContent);
                     break;
 
 
@@ -614,7 +631,7 @@ namespace Eva_5._0
 
                     WebApplicationSearchContent = WebApplicationSearchContent.Trim();
 
-                    await Proc<string, string, string>.ProcInitialisation("Online Process", Application, WebApplicationSearchContent);
+                    await Proc<string>.ProcInitialisation("Online Process", Application, WebApplicationSearchContent);
                     break;
 
 
@@ -638,7 +655,7 @@ namespace Eva_5._0
                     Application = Application.Trim();
                     WebApplicationSearchContent = WebApplicationSearchContent.Trim();
 
-                    await Proc<string, string, string>.ProcInitialisation("Online Process", Application, WebApplicationSearchContent);
+                    await Proc<string>.ProcInitialisation("Online Process", Application, WebApplicationSearchContent);
                     break;
 
 
@@ -844,7 +861,7 @@ namespace Eva_5._0
                     }
 
 
-                    await Proc<string, string, System.Collections.Concurrent.ConcurrentDictionary<string, int>>.ProcInitialisation("Timer Process", null, time_interval);
+                    await Proc<System.Collections.Concurrent.ConcurrentDictionary<string, int>>.ProcInitialisation("Timer Process", null, time_interval);
 
                     break;
 
@@ -1047,7 +1064,7 @@ namespace Eva_5._0
                     }
 
 
-                    await Proc<string, string, System.Collections.Concurrent.ConcurrentDictionary<string, int>>.ProcInitialisation("Timer Process", null, time_interval);
+                    await Proc<System.Collections.Concurrent.ConcurrentDictionary<string, int>>.ProcInitialisation("Timer Process", null, time_interval);
 
                     break;
 
@@ -1254,7 +1271,7 @@ namespace Eva_5._0
                     }
 
 
-                    await Proc<string, string, System.Collections.Concurrent.ConcurrentDictionary<string, int>>.ProcInitialisation("Timer Process", null, time_interval);
+                    await Proc<System.Collections.Concurrent.ConcurrentDictionary<string, int>>.ProcInitialisation("Timer Process", null, time_interval);
 
                     break;
             }

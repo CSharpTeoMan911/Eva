@@ -7,6 +7,24 @@
         mc:Ignorable="d"
         Title="Timer" Height="150" Width="250" WindowStyle="None" AllowsTransparency="True" Opacity="0.94" Focusable="False" Loaded="Timer_Window_Loaded" Closing="Timer_Window_Closing" Icon="/Eva icon.png">
 
+
+    <!--/////////////////////////////////////////////////////////////////////////////
+        ///                                                                       ///
+        ///                   PRODUCT: EVA A.I. ASSISTANT                         ///
+        ///                                                                       ///
+        ///                   AUTHOR: TEODOR MIHAIL                               ///
+        ///                                                                       ///
+        ///                                                                       ///
+        /// ANY UNAUTHORISED TRADEMARK USE OF THIS SOFTWARE IS PUNISHABLE BY LAW  ///
+        ///                                                                       ///
+        /// THE AUTHOR OF THIS SOFTWARE DOES NOT LET ANY PEOPLE PATENT OR USE     ///
+        /// THIS PRODUCT'S TRADEMARK.                                             ///
+        ///                                                                       ///
+        /// DO NOT REMOVE THIS FILE HEADER                                        ///
+        ///                                                                       ///
+        /////////////////////////////////////////////////////////////////////////////-->
+
+
     <Window.Background>
 
         <LinearGradientBrush StartPoint="0.5,1" EndPoint="0,1">
