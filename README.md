@@ -79,8 +79,8 @@ The time complexity of the natural language processing engine is in O(n) in the 
 
 <br>
 
-Eva uses an algorithm developed by me in order for the application to have those beautiful graphical user interface effects. This algorithm functions by increasing the offset of the gradient by using a sumation that is incrementing the value of the gradient until it reaches a threshhold value. When the threshhold value is reached, a sumation is used to decrement the value of the gradient until it reaches its original value.
-
+Eva uses an algorithm developed by me in order for the application to have those beautiful graphical user interface effects. This algorithm functions by increasing the offset of the gradient by using a sumation that is incrementing the value of the gradient until it reaches a threshold value. When the threshold value is reached, a sumation is used to decrement the value of the gradient until it reaches its original value. This gradient fluctuation formula can also be interpreted as two linear functions that are instantiated when each function's threshold value has to be reached.The aforementioned functions are y = x + v and y = x - v respectively, where y is the resulting gradient value, x is the current gradient value, and v is the value to be added or substracted from the current gradient value, and where x, y, and v
+are greater than zero.
 <br>
 <br>
 <br>
