@@ -929,12 +929,11 @@ namespace Eva_5._0
 
             try
             {
-                
-                if(e.Error != null)
+                await Application.Current.Dispatcher.Invoke(async() =>
                 {
-                    if(e.Error.HResult == -2147024891)
+                    if (e.Error != null)
                     {
-                        Application.Current.Dispatcher.Invoke(() =>
+                        if (e.Error.HResult == -2147024891)
                         {
                             App.ErrorAppShutdown = true;
                             Application.Current.MainWindow.Visibility = Visibility.Hidden;
@@ -958,56 +957,25 @@ namespace Eva_5._0
 
                                     break;
                             }
-
-                        });
-                    }
-                }
-                else
-                {
-                    await Application.Current.Dispatcher.Invoke(async () =>
-                    {
-                   
-                        bool Wake_Word_Engine_Shutdown_Successful = await Close_The_Wake_Word_Engine();
-
-                        switch (Wake_Word_Engine_Shutdown_Successful)
-                        {
-
-                            case true:
-
-                                SpeechRecognitionButton.Content = "\xF781";
-
-                                App.StopRecognitionSession = true;
-
-                                OnOff = 0;
-
-
-                                bool Wake_Word_Engine_Initiation_Successful = await Initiate_The_Wake_Word_Engine();
-
-                                if (Wake_Word_Engine_Initiation_Successful == true)
-                                {
-                                    SpeechRecognitionButton.Content = "\xE1D6";
-
-                                    App.StopRecognitionSession = false;
-                                }
-
-                                break;
-
-
-
-
-                            case false:
-
-                                SpeechRecognitionButton.Content = "\xE1D6";
-
-                                App.StopRecognitionSession = false;
-
-                                break;
-
                         }
+                    }
 
-                    });
-                }
-               
+                    if(OnOff != 0)
+                    {
+                        bool Wake_Word_Engine_Initiation_Successful = await Initiate_The_Wake_Word_Engine();
+
+                        if (Wake_Word_Engine_Initiation_Successful == false)
+                        {
+                            SpeechRecognitionButton.Content = "\xF781";
+
+                            App.StopRecognitionSession = true;
+
+                            OnOff = 0;
+                        }
+                    }
+
+                });
+
             }
             catch { }
 
