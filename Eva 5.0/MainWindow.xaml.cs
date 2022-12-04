@@ -930,124 +930,82 @@ namespace Eva_5._0
             try
             {
                 
-                switch (e.Error != null)
+                if(e.Error != null)
                 {
-                    case false:
-                        if (OnOff != 0)
+                    if(e.Error.HResult == -2147024891)
+                    {
+                        Application.Current.Dispatcher.Invoke(() =>
                         {
-                            await Application.Current.Dispatcher.Invoke(async() =>
+                            App.ErrorAppShutdown = true;
+                            Application.Current.MainWindow.Visibility = Visibility.Hidden;
+
+                            switch (App.PermisissionWindowOpen)
                             {
-                            Wake_Word_Engine_Initiation:
+                                case false:
 
+                                    System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
+                                    GC.Collect(0, GCCollectionMode.Forced, true, true);
 
-                                int Wake_Word_Engine_Initiation_Error_Counter = 0;
+                                    ErrorWindow OpenPermissionDeclinedWindow = new ErrorWindow("Mircrophone Access Denied");
+                                    OpenPermissionDeclinedWindow.Show();
+
+                                    break;
+
+                                case true:
+
+                                    App.InitiateErrorFunction = true;
+                                    App.ErrorFunction = "Mircrophone Access Denied";
+
+                                    break;
+                            }
+
+                        });
+                    }
+                }
+                else
+                {
+                    await Application.Current.Dispatcher.Invoke(async () =>
+                    {
+                   
+                        bool Wake_Word_Engine_Shutdown_Successful = await Close_The_Wake_Word_Engine();
+
+                        switch (Wake_Word_Engine_Shutdown_Successful)
+                        {
+
+                            case true:
+
+                                SpeechRecognitionButton.Content = "\xF781";
+
+                                App.StopRecognitionSession = true;
+
+                                OnOff = 0;
+
 
                                 bool Wake_Word_Engine_Initiation_Successful = await Initiate_The_Wake_Word_Engine();
-                                if (Wake_Word_Engine_Initiation_Successful == false)
+
+                                if (Wake_Word_Engine_Initiation_Successful == true)
                                 {
-                                    if (OnOff != 0)
-                                    {
-                                        switch (Wake_Word_Engine_Initiation_Error_Counter < 10)
-                                        {
+                                    SpeechRecognitionButton.Content = "\xE1D6";
 
-                                            case true:
-
-                                                Wake_Word_Engine_Initiation_Error_Counter++;
-
-                                                goto Wake_Word_Engine_Initiation;
-
-
-
-
-                                            case false:
-
-                                                OnOff = 0;
-
-                                                App.StopRecognitionSession = true;
-
-                                                SpeechRecognitionButton.Content = "\xF781";
-
-                                                break;
-
-                                        }
-                                    }
-
+                                    App.StopRecognitionSession = false;
                                 }
-                            });
 
-                        }
-                        break;
-
-
-                    case true:
-                        switch (e.Error.HResult == -2147024891)
-                        {
-                            case true:
-                                Application.Current.Dispatcher.Invoke(() =>
-                                {
-                                    App.ErrorAppShutdown = true;
-                                    Application.Current.MainWindow.Visibility = Visibility.Hidden;
-
-                                    switch (App.PermisissionWindowOpen)
-                                    {
-                                        case false:
-
-                                            System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-                                            GC.Collect(0, GCCollectionMode.Forced, true, true);
-
-                                            ErrorWindow OpenPermissionDeclinedWindow = new ErrorWindow("Mircrophone Access Denied");
-                                            OpenPermissionDeclinedWindow.Show();
-
-                                            break;
-
-                                        case true:
-
-                                            App.InitiateErrorFunction = true;
-                                            App.ErrorFunction = "Mircrophone Access Denied";
-
-                                            break;
-                                    }
-
-                                });
                                 break;
+
 
 
 
                             case false:
-                                await Application.Current.Dispatcher.Invoke(async () =>
-                                {
-                                    bool Wake_Word_Engine_Shutdown_Successful = await Close_The_Wake_Word_Engine();
 
+                                SpeechRecognitionButton.Content = "\xE1D6";
 
-                                    switch (Wake_Word_Engine_Shutdown_Successful)
-                                    {
+                                App.StopRecognitionSession = false;
 
-                                        case true:
-
-                                            SpeechRecognitionButton.Content = "\xF781";
-
-                                            App.StopRecognitionSession = true;
-
-                                            OnOff = 0;
-
-                                            break;
-
-
-
-
-                                        case false:
-
-                                            SpeechRecognitionButton.Content = "\xE1D6";
-
-                                            App.StopRecognitionSession = false;
-
-                                            break;
-
-                                    }
-                                });
                                 break;
+
                         }
-                        break;
+
+                    });
                 }
                
             }
