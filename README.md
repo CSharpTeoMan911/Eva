@@ -43,7 +43,7 @@ Eva uses natural language processing in two ways, and these are speech recogniti
 
 <br>
 
-The contextual command and content extraction natural language processing engine is built into the application in order for Eva to understand the commands given by the user and their content. The application's natural language processing engine is doing this by following some steps. First it is doing some tokenization in order to understand what process it has to execute and what extra parameters must be extracted from the input, in order to satify the process. This is done by analysing the input and by searching for some keywords that have to be at a certain index within the sentence. For example, if the command given is "open chrome", because the word open is the first word, the natural language processing engine categorised the command as a process in which a certain application is opened. If the command given is "search leopard 1 tank blueprint on google", because the first word is search, the tokenisation is pointing to the parameter related to web search. If the tokenization did not match the sentence with any parameter, than no process will be executed. 
+The contextual command and content extraction natural language processing engine is built into the application in order for Eva to understand the commands given by the user and their content, and this command and content extraction natural language processing engine is built by me. The application's natural language processing engine is doing this by following some steps. First it is doing some tokenization in order to understand what process it has to execute and what extra parameters must be extracted from the input, in order to satify the process. This is done by analysing the input and by searching for some keywords that have to be at a certain index within the sentence. For example, if the command given is "open chrome", because the word open is the first word, the natural language processing engine categorised the command as a process in which a certain application is opened. If the command given is "search leopard 1 tank blueprint on google", because the first word is search, the tokenisation is pointing to the parameter related to web search. If the tokenization did not match the sentence with any parameter, than no process will be executed. 
 
 <br>
 
@@ -68,6 +68,19 @@ __________________________________________________________
 
 The time complexity of the natural language processing engine is in O(n) in the worst case scenario and O(n - ( n - ci )) in the best case scenario, where "ci" stands for current index where the engine could not match the input with any patern related to any process.
 
+<br>
+<br>
+<br>
+
+# Gradient fluctuation formula
+<br>
+
+![Gradient Fluctuation Formula For Animations](https://user-images.githubusercontent.com/87245086/205466011-f7030d0c-1ac5-4cce-b969-21ff8cd95c0c.png)
+
+<br>
+
+Eva uses an algorithm developed by me in order for the application to have those beautiful graphical user interface effects. This algorithm functions by increasing the offset of the gradient by using a sumation that is incrementing the value of the gradient until it reaches a threshold value. When the threshold value is reached, a sumation is used to decrement the value of the gradient until it reaches its original value. This gradient fluctuation formula can also be interpreted as two linear functions that are instantiated when each function's threshold value has to be reached.The aforementioned functions are y = x + v and y = x - v respectively, where y is the resulting gradient value, x is the current gradient value, and v is the value to be added or substracted from the current gradient value, and where x, y, and v
+are greater than zero.
 <br>
 <br>
 <br>
