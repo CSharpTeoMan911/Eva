@@ -53,6 +53,11 @@ namespace Eva_5._0
                 Sentence = Sentence.Replace("#", "%23");
             }
 
+            if (Sentence.Contains("&") == true)
+            {
+                Sentence = Sentence.Replace("&", " and ");
+            }
+
             // [ END ] REMOVE SPECIAL CHARACTERS 
 
 
