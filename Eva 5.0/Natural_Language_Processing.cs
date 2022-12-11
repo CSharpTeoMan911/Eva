@@ -30,8 +30,8 @@ namespace Eva_5._0
 
         public static async Task<bool> PreProcessing(string Sentence)
         {
-           
 
+            System.Diagnostics.Debug.WriteLine(Sentence);
             // [ BEGIN ] REMOVE SPECIAL CHARACTERS 
             //
             //            [ NOTE ] :
@@ -1178,87 +1178,11 @@ namespace Eva_5._0
 
                                     if (Time_Unit_Received == false)
                                     {
-                                        switch (Word_Buffer)
+                                        if (Word_Buffer == "one")
                                         {
-                                            case "one":
+                                            Time_Unit_Value_Buffer = 1;
 
-                                                Time_Unit_Value_Buffer = 1;
-
-                                                Time_Unit_Received = true;
-
-                                                break;
-
-
-                                            case "two":
-
-                                                Time_Unit_Value_Buffer = 2;
-
-                                                Time_Unit_Received = true;
-
-                                                break;
-
-
-                                            case "three":
-
-                                                Time_Unit_Value_Buffer = 3;
-
-                                                Time_Unit_Received = true;
-
-                                                break;
-
-
-                                            case "four":
-
-                                                Time_Unit_Value_Buffer = 4;
-
-                                                Time_Unit_Received = true;
-
-                                                break;
-
-
-                                            case "five":
-
-                                                Time_Unit_Value_Buffer = 5;
-
-                                                Time_Unit_Received = true;
-
-                                                break;
-
-
-                                            case "six":
-
-                                                Time_Unit_Value_Buffer = 6;
-
-                                                Time_Unit_Received = true;
-
-                                                break;
-
-
-                                            case "seven":
-
-                                                Time_Unit_Value_Buffer = 7;
-
-                                                Time_Unit_Received = true;
-
-                                                break;
-
-
-                                            case "eight":
-
-                                                Time_Unit_Value_Buffer = 8;
-
-                                                Time_Unit_Received = true;
-
-                                                break;
-
-
-                                            case "nine":
-
-                                                Time_Unit_Value_Buffer = 9;
-
-                                                Time_Unit_Received = true;
-
-                                                break;
+                                            Time_Unit_Received = true;
                                         }
 
                                     }
