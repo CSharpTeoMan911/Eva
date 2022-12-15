@@ -43,52 +43,52 @@ namespace Eva_5._0
 
             if (Sentence.Contains("|") == true)
             {
-                Sentence.Replace("|", " and ");
+                Sentence.Replace("|", " pipe ");
             }
 
             if (Sentence.Contains(">") == true)
             {
-                Sentence.Replace(">", " and ");
+                Sentence.Replace(">", " greater than ");
             }
 
             if (Sentence.Contains("<") == true)
             {
-                Sentence.Replace("<", " and ");
+                Sentence.Replace("<", " less than ");
             }
 
             if (Sentence.Contains("^") == true)
             {
-                Sentence.Replace("^", " and ");
+                Sentence.Replace("^", " raised to ");
             }
 
             if (Sentence.Contains("%") == true)
             {
-                Sentence.Replace("&", " and ");
+                Sentence.Replace("%", " percent ");
             }
 
             if (Sentence.Contains(";") == true)
             {
-                Sentence.Replace(";", " and ");
+                Sentence.Replace(";", " semicolon ");
             }
 
             if (Sentence.Contains("\"") == true)
             {
-                Sentence.Replace("\"", " and ");
+                Sentence.Replace("\"", " double quote ");
             }
 
             if (Sentence.Contains("'") == true)
             {
-                Sentence.Replace("'", " and ");
+                Sentence.Replace("'", " quote ");
             }
 
             if (Sentence.Contains("\\") == true)
             {
-                Sentence.Replace("\\", " and ");
+                Sentence.Replace("\\", " back slash ");
             }
 
             if (Sentence.Contains("/") == true)
             {
-                Sentence.Replace("/", " and ");
+                Sentence.Replace("/", " forward slash ");
             }
 
             // [ END ] REMOVE SPECIAL CHARACTERS 
