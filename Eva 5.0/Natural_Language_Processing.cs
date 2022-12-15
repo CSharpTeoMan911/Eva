@@ -31,37 +31,7 @@ namespace Eva_5._0
         public static async Task<bool> PreProcessing(string Sentence)
         {
 
-            System.Diagnostics.Debug.WriteLine(Sentence);
-            // [ BEGIN ] REMOVE SPECIAL CHARACTERS 
-            //
-            //            [ NOTE ] :
-            //
-            //            THE CURRENT ONLINE SPEECH RECOGNITION ENGINE'S GRAMMAR FORMAT IS SET FOR FORM FILLING.
-            //            THIS IMPLIES THAT IT COULD TAKE SOME WORDS OR SEQUENCES OF WORDS SUCH AS [ NEW LINE ] 
-            //            AND PARSE THEM INTO SPECIAL CHARACTERS, IN THIS EXAMPLE THIS SPECIAL CHARACTER WILL
-            //            BE [ \n ].
-
-
-
-            if (Sentence.Contains("\n") == true)
-            {
-                Sentence = Sentence.Replace("\n", " new line ");
-            }
-
-            if (Sentence.Contains("#") == true)
-            {
-                Sentence = Sentence.Replace("#", "%23");
-            }
-
-            if (Sentence.Contains("&") == true)
-            {
-                Sentence = Sentence.Replace("&", " and ");
-            }
-
-            // [ END ] REMOVE SPECIAL CHARACTERS 
-
-
-
+            Sentence = await Special_Character_Replacement.Remove_Special_Characters_Initiator(Sentence);
 
             // THE FIRST TOKENIZATION IS INITIATED. THE FIRST TOKENIZATION IS RESPONSIBLE FOR PARAMETER ASSOCIATION WITH THEIR RESPECTIVE COMMAND FORMATS
             // [ BEGIN ]

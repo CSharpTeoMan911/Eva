@@ -148,7 +148,7 @@ namespace Eva_5._0
                 MainWindow.BeginExecutionAnimation = true;
                 using (System.Diagnostics.Process Online_Process = new System.Diagnostics.Process())
                 {
-                    Online_Process.StartInfo.FileName = Process + SearchContent;
+                    Online_Process.StartInfo.FileName = await Special_Character_Replacement.Remove_Special_Characters_Initiator(Process) + await Special_Character_Replacement.Remove_Special_Characters_Initiator(SearchContent);
                     Online_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
                     Online_Process.StartInfo.UseShellExecute = true;
                     Online_Process.Start();
@@ -235,7 +235,7 @@ namespace Eva_5._0
 
                                     using (System.Diagnostics.Process Application_Process = new System.Diagnostics.Process())
                                     {
-                                        Application_Process.StartInfo.FileName = application_executable_name;
+                                        Application_Process.StartInfo.FileName = await Special_Character_Replacement.Remove_Special_Characters_Initiator(application_executable_name);
                                         Application_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
                                         Application_Process.StartInfo.UseShellExecute = true;
                                         Application_Process.Start();
@@ -271,7 +271,7 @@ namespace Eva_5._0
 
                                 using (System.Diagnostics.Process Application_Not_Found_Downdload_Link_Process = new System.Diagnostics.Process())
                                 {
-                                    Application_Not_Found_Downdload_Link_Process.StartInfo.FileName = application_not_found_error_link;
+                                    Application_Not_Found_Downdload_Link_Process.StartInfo.FileName = await Special_Character_Replacement.Remove_Special_Characters_Initiator(application_not_found_error_link); ;
                                     Application_Not_Found_Downdload_Link_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
                                     Application_Not_Found_Downdload_Link_Process.StartInfo.UseShellExecute = true;
                                     Application_Not_Found_Downdload_Link_Process.Start();
@@ -314,7 +314,7 @@ namespace Eva_5._0
 
                             if (application_process_name != "timer")
                             {
-                                foreach (System.Diagnostics.Process p in System.Diagnostics.Process.GetProcessesByName(application_process_name))
+                                foreach (System.Diagnostics.Process p in System.Diagnostics.Process.GetProcessesByName(await Special_Character_Replacement.Remove_Special_Characters_Initiator(application_process_name)))
                                 {
                                     p.Kill();
                                 }

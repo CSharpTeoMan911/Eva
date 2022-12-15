@@ -1,0 +1,100 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Eva_5._0
+{
+    internal class Special_Character_Replacement
+    {
+        public static async Task<string> Remove_Special_Characters_Initiator(string Sentence)
+        {
+            return await Remove_Special_Characters(Sentence);
+        }
+
+        private static Task<string> Remove_Special_Characters(string Sentence)
+        {
+            // [ BEGIN ] REMOVE SPECIAL CHARACTERS 
+            //
+            //            [ NOTE ] :
+            //
+            //            THE INPUT COULD TAKE SOME WORDS OR SEQUENCES OF WORDS SUCH AS [ NEW LINE ] 
+            //            AND PARSE THEM INTO SPECIAL CHARACTERS, IN THIS EXAMPLE THIS SPECIAL CHARACTER WILL
+            //            BE [ \n ], THUS TAKING THE INPUT WRONGLY. THE INPUT COULD ALSO HAVE SPECIAL
+            //            CHARACTERS THAT POSSES A RISK TO SECURITY BY ALLOWING ATTACKERS TO INJECT
+            //            COMMANDS INTO THE SHELL OF THE OS WHEN A PROCESS IS EXECUTED.
+
+
+            if (Sentence.Contains("\n") == true)
+            {
+                Sentence.Replace("\n", " new line ");
+            }
+
+            if (Sentence.Contains("#") == true)
+            {
+                Sentence.Replace("#", "%23");
+            }
+
+            if (Sentence.Contains("&") == true)
+            {
+                Sentence.Replace("&", " and ");
+            }
+
+            if (Sentence.Contains("|") == true)
+            {
+                Sentence.Replace("|", " and ");
+            }
+
+            if (Sentence.Contains(">") == true)
+            {
+                Sentence.Replace(">", " and ");
+            }
+
+            if (Sentence.Contains("<") == true)
+            {
+                Sentence.Replace("<", " and ");
+            }
+
+            if (Sentence.Contains("^") == true)
+            {
+                Sentence.Replace("^", " and ");
+            }
+
+            if (Sentence.Contains("%") == true)
+            {
+                Sentence.Replace("&", " and ");
+            }
+
+            if (Sentence.Contains(";") == true)
+            {
+                Sentence.Replace(";", " and ");
+            }
+
+            if (Sentence.Contains("\"") == true)
+            {
+                Sentence.Replace("\"", " and ");
+            }
+
+            if (Sentence.Contains("'") == true)
+            {
+                Sentence.Replace("'", " and ");
+            }
+
+            if (Sentence.Contains("\\") == true)
+            {
+                Sentence.Replace("\\", " and ");
+            }
+
+            if (Sentence.Contains("/") == true)
+            {
+                Sentence.Replace("/", " and ");
+            }
+
+            // [ END ] REMOVE SPECIAL CHARACTERS 
+
+
+            return Task.FromResult(Sentence);
+        }
+    }
+}
