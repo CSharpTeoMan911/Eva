@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xrpb="http://XamlRadialProgressBar/DotNet"
         xmlns:local="clr-namespace:Eva_5._0"
         mc:Ignorable="d"
         Title="Eva" Height="159" Width="260" Loaded="WindowLoaded" Closing="MainWindowClosing" ResizeMode="NoResize"  Opacity="0.94" AllowsTransparency="True" WindowStyle="None" Icon="/Eva icon.png" Focusable="False">
@@ -58,6 +59,140 @@
 
         <Rectangle  Grid.ColumnSpan="5" Fill="Transparent" MouseDown="MoveTheWindow" Focusable="False"/>
 
+        <!--<TextBlock Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Consolas" Foreground="Red" FontSize="20" Text="20"/>-->
+
+        <Path Grid.Row="1" Grid.Column="4" StrokeThickness="2">
+            <Path.Effect>
+                <BlurEffect Radius="1"/>
+            </Path.Effect>
+
+            <Path.Stroke>
+                <LinearGradientBrush StartPoint="0.5, 1">
+                    <GradientStop Color="#FF041F44" Offset="0.6"/>
+                    <GradientStop Color="#FF043961"/>
+                </LinearGradientBrush>
+            </Path.Stroke>
+            <Path.Data>
+                <PathGeometry>
+                    <PathGeometry.Figures>
+                        <PathFigureCollection>
+                            <PathFigure StartPoint="0,100">
+                                <PathFigure.Segments>
+                                    <PathSegmentCollection>
+                                        <BezierSegment Point1="50,10" Point2="10,30" Point3="60,18" />
+                                    </PathSegmentCollection>
+                                </PathFigure.Segments>
+                            </PathFigure>
+                        </PathFigureCollection>
+                    </PathGeometry.Figures>
+                </PathGeometry>
+            </Path.Data>
+        </Path>
+
+        <Path Grid.Row="1" Grid.Column="4" StrokeThickness="2">
+            <Path.Effect>
+                <BlurEffect Radius="1"/>
+            </Path.Effect>
+
+            <Path.Stroke>
+                <LinearGradientBrush StartPoint="0.5, 1">
+                    <GradientStop Color="#FF041F44" Offset="0.3"/>
+                    <GradientStop Color="#FF043961"/>
+                </LinearGradientBrush>
+            </Path.Stroke>
+            <Path.Data>
+                <PathGeometry>
+                    <PathGeometry.Figures>
+                        <PathFigureCollection>
+                            <PathFigure StartPoint="60,200">
+                                <PathFigure.Segments>
+                                    <PathSegmentCollection>
+                                        <BezierSegment Point1="50,10" Point2="10,35" Point3="60,22" />
+                                    </PathSegmentCollection>
+                                </PathFigure.Segments>
+                            </PathFigure>
+                        </PathFigureCollection>
+                    </PathGeometry.Figures>
+                </PathGeometry>
+            </Path.Data>
+        </Path>
+
+        <Rectangle Grid.Row="2" Grid.Column="4" Height="31.5" Width="45" HorizontalAlignment="Right">
+
+            <Rectangle.Clip>
+                <RectangleGeometry Rect="0,0,50,31.5" RadiusX="2" RadiusY="2"/>
+            </Rectangle.Clip>
+            
+            <Rectangle.Fill>
+                <LinearGradientBrush StartPoint="0.5, 1">
+                    <GradientStop Color="Black" Offset="1.5"/>
+                    <GradientStop Color="#FF212121"/>
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+
+        <Rectangle Grid.Row="2" Grid.Column="4" Width="40" Height="25" Margin="0,0,2.5,0" HorizontalAlignment="Right">
+            <Rectangle.Effect>
+                <BlurEffect Radius="2"/>
+            </Rectangle.Effect>
+            
+
+
+            <Rectangle.Clip>
+                <RectangleGeometry Rect="0,0,40,25" RadiusX="2" RadiusY="2"/>
+            </Rectangle.Clip>
+
+            <Rectangle.Fill>
+                <LinearGradientBrush StartPoint="0.5, 1">
+                    <GradientStop Color="Black" Offset="1.5"/>
+                    <GradientStop Color="#FF0A0A0A"/>
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+
+        <TextBlock x:Name="Online_Speech_Recognition_Timer_Display" Grid.Row="2" Grid.Column="4" HorizontalAlignment="Center" Margin="5,0,0,0" VerticalAlignment="Center" FontFamily="Consolas" FontSize="20" FontWeight="Bold"  Text="0">
+            <TextBlock.Effect>
+                <BlurEffect Radius="2"/>
+            </TextBlock.Effect>
+            
+            <TextBlock.Foreground>
+                <LinearGradientBrush StartPoint="0.5, 1">
+                    <GradientStop Color="#FF010813" Offset="1.5"/>
+                    <GradientStop Color="#FF005184"/>
+                </LinearGradientBrush>
+            </TextBlock.Foreground>
+        </TextBlock>
+
+        <Rectangle Grid.Row="2" Grid.Column="4" Width="38" Height="23" Margin="0,0,3.5,0" HorizontalAlignment="Right" Opacity="0.2">
+
+            <Rectangle.Effect>
+                <BlurEffect Radius="2"/>
+            </Rectangle.Effect>
+            
+            <Rectangle.Clip>
+                <RectangleGeometry Rect="0,0,40,25" RadiusX="2" RadiusY="2"/>
+            </Rectangle.Clip>
+
+            <Rectangle.Fill>
+                <LinearGradientBrush StartPoint="0.5, 1">
+                    <GradientStop Color="#FF1B1B1B" Offset="0.4"/>
+                    <GradientStop Color="#FF313131"/>
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+
+
+        <!--Grid.Row="1" Grid.RowSpan="2" Grid.Column="2"--><!--
+        <xrpb:RadialProgressBar Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="9" HorizontalAlignment="Center" VerticalAlignment="Center" Height="68" Width="68" Value="100" Background="Transparent">
+
+            <xrpb:RadialProgressBar.Foreground>
+                <LinearGradientBrush StartPoint="0.5, 1">
+                    <GradientStop Color="#FFA51306" Offset="1.5"/>
+                    <GradientStop Color="#FF9C0101"/>
+                </LinearGradientBrush>
+            </xrpb:RadialProgressBar.Foreground>
+               
+        </xrpb:RadialProgressBar>-->
 
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="3" Grid.ColumnSpan="2">

@@ -29,7 +29,7 @@ namespace Eva_5._0
     {
      
         private static System.Threading.Thread ParallelProcessing;
-
+        public static DateTime online_speech_recognition_timeout;
 
 
         public static Task<bool> Online_Speech_Recognition_Session_Creation_And_Initiation()
@@ -67,9 +67,10 @@ namespace Eva_5._0
 
         private static async Task<bool> Initiate_The_Online_Speech_Recognition_Engine()
         {
-
+            
             try
             {
+                online_speech_recognition_timeout = DateTime.Now;
 
                 using (Windows.Media.SpeechRecognition.SpeechRecognizer OnlineSpeechRecognition = new Windows.Media.SpeechRecognition.SpeechRecognizer())
                 {
@@ -90,12 +91,11 @@ namespace Eva_5._0
                                 MainWindow.Online_Speech_Recogniser_Listening = "true";
                             }
 
-                            OnlineSpeechRecognition.Timeouts.BabbleTimeout = TimeSpan.FromSeconds(7);
-                            OnlineSpeechRecognition.Timeouts.EndSilenceTimeout = TimeSpan.FromSeconds(7);
-                            OnlineSpeechRecognition.Timeouts.InitialSilenceTimeout = TimeSpan.FromSeconds(7);
+                            OnlineSpeechRecognition.Timeouts.BabbleTimeout = TimeSpan.FromSeconds(9);
+                            OnlineSpeechRecognition.Timeouts.EndSilenceTimeout = TimeSpan.FromSeconds(9);
+                            OnlineSpeechRecognition.Timeouts.InitialSilenceTimeout = TimeSpan.FromSeconds(9);
 
                             Windows.Media.SpeechRecognition.SpeechRecognitionResult Result = await OnlineSpeechRecognition.RecognizeAsync();
-
 
                             switch (Result.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
                             {
@@ -111,6 +111,7 @@ namespace Eva_5._0
                                         case true:
                                             await OnlineSpeechRecognition.StopRecognitionAsync();
                                             OnlineSpeechRecognition.Dispose();
+                                            await OS_Online_Speech_Recognition_Interface_Shutdown();
                                             break;
 
 
@@ -131,12 +132,14 @@ namespace Eva_5._0
                                                 Function_Not_Initiated:;
                                                     await OnlineSpeechRecognition.StopRecognitionAsync();
                                                     OnlineSpeechRecognition.Dispose();
+                                                    await OS_Online_Speech_Recognition_Interface_Shutdown();
                                                     break;
 
 
                                                 case true:
                                                     await OnlineSpeechRecognition.StopRecognitionAsync();
                                                     OnlineSpeechRecognition.Dispose();
+                                                    await OS_Online_Speech_Recognition_Interface_Shutdown();
                                                     break;
                                             }
                                             break;
@@ -151,6 +154,7 @@ namespace Eva_5._0
                                 case false:
                                     await OnlineSpeechRecognition.StopRecognitionAsync();
                                     OnlineSpeechRecognition.Dispose();
+                                    await OS_Online_Speech_Recognition_Interface_Shutdown();
                                     break;
                             }
                             break;
@@ -197,11 +201,33 @@ namespace Eva_5._0
                 MainWindow.FunctionInitiated = "false";
             }
 
-
-
             return true;
         }
 
+
+        private static Task<bool> OS_Online_Speech_Recognition_Interface_Shutdown()
+        {
+
+            // SHUT DOWN THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE
+            // BEGIN
+
+      
+            try
+            {
+                foreach (System.Diagnostics.Process online_speech_recognition_interface in System.Diagnostics.Process.GetProcessesByName("SpeechRuntime"))
+                {
+                    online_speech_recognition_interface.Kill();
+                }
+            }
+            catch
+            {
+                return Task.FromResult(false);
+            }
+
+            // END
+
+            return Task.FromResult(true);
+        }
 
 
 

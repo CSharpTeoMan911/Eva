@@ -37,6 +37,13 @@ namespace Eva_5._0
     public partial class MainWindow : Window
     {
 
+        private string[] Online_Speech_Recognition_Timeout_Timer_UI_Intervals = new string[10] { "9", "8", "7", "6", "5", "4", "3", "2", "1", "0" };
+
+        private short Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index;
+
+        private short target_value = 1000;
+
+
         private System.Threading.Thread ParallelProcessing;
 
         private System.Timers.Timer AnimationAndFunctionalityTimer;
@@ -45,8 +52,6 @@ namespace Eva_5._0
         private static System.Speech.Recognition.SpeechRecognitionEngine MainSpeechRecogniser;
 
         public static double Speech_Recognition_Accuracy = 0.80;
-
-        private int Online_Speech_Recogniser_Listening_TimeOut;
 
 
         /// <summary>
@@ -213,29 +218,33 @@ namespace Eva_5._0
 
                                             switch (Online_Speech_Recogniser_Listening)
                                             {
-
-
                                                 case "true":
-
-
-                                                    Online_Speech_Recogniser_Listening_TimeOut++;
-
-
-
-                                                    switch (Online_Speech_Recogniser_Listening_TimeOut == 6000)
+                                                    switch (((TimeSpan)(DateTime.Now - Online_Speech_Recognition.online_speech_recognition_timeout)).TotalMilliseconds >= 9000)
                                                     {
                                                         case true:
-                                                            Online_Speech_Recogniser_Listening_TimeOut = 0;
+                                                            Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
+                                                            Online_Speech_Recognition_Timer_Display.Text = String.Empty;
                                                             break;
 
 
 
                                                         case false:
+                                                            if(((TimeSpan)(DateTime.Now - Online_Speech_Recognition.online_speech_recognition_timeout)).TotalMilliseconds >= target_value - 300)
+                                                            {
+                                                                if(target_value <= 10000)
+                                                                {
+                                                                    target_value += 1000;
+                                                                    Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index++;
+                                                                }
+                                                            }
+
+                                                            Online_Speech_Recognition_Timer_Display.Text = Online_Speech_Recognition_Timeout_Timer_UI_Intervals[Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index];
+
+
                                                             OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF91E1FF");
                                                             OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF3099FF");
                                                             break;
                                                     }
-
                                                     break;
 
 
@@ -243,12 +252,12 @@ namespace Eva_5._0
 
 
                                                 case "false":
-                                                    Online_Speech_Recogniser_Listening_TimeOut = 0;
+                                                    target_value = 1000;
+                                                    Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
+                                                    Online_Speech_Recognition_Timer_Display.Text = String.Empty;
                                                     OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FFACC6D6");
                                                     OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
                                                     break;
-
-
                                             }
                                         }
 
@@ -1071,13 +1080,13 @@ namespace Eva_5._0
                                     MainSpeechRecogniser.EndSilenceTimeoutAmbiguous = TimeSpan.FromSeconds(0);
 
 
-                                    MainSpeechRecogniser.RequestRecognizerUpdate();
+                                    MainSpeechRecogniser?.RequestRecognizerUpdate();
                                     System.Speech.Recognition.Choices Choices = new System.Speech.Recognition.Choices("Eva", "Ei Ea");
                                     System.Speech.Recognition.GrammarBuilder gb = new System.Speech.Recognition.GrammarBuilder();
                                     gb.Culture = new System.Globalization.CultureInfo("en-GB");
-                                    gb.Append(Choices);
+                                    gb?.Append(Choices);
                                     System.Speech.Recognition.Grammar Grammar = new System.Speech.Recognition.Grammar(gb);
-                                    MainSpeechRecogniser.RequestRecognizerUpdate();
+                                    MainSpeechRecogniser?.RequestRecognizerUpdate();
 
                                     MainSpeechRecogniser?.LoadGrammarAsync(Grammar);
                                     MainSpeechRecogniser?.SetInputToDefaultAudioDevice();
