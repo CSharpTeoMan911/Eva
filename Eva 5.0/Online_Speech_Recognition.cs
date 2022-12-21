@@ -86,7 +86,9 @@ namespace Eva_5._0
                     switch (ConstratintsCompilation.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
                     {
                         case true:
-                            lock(MainWindow.Online_Speech_Recogniser_Listening)
+                            OnlineSpeechRecognition.StateChanged += OnlineSpeechRecognition_StateChanged;
+
+                            lock (MainWindow.Online_Speech_Recogniser_Listening)
                             {
                                 MainWindow.Online_Speech_Recogniser_Listening = "true";
                             }
@@ -144,7 +146,6 @@ namespace Eva_5._0
                                             }
                                             break;
                                     }
-
                                     break;
 
 
@@ -166,7 +167,6 @@ namespace Eva_5._0
             }
             catch (Exception E)
             {
-
                 if (E.HResult == -2147199735)
                 {
                     switch (App.PermisissionWindowOpen)
@@ -186,7 +186,6 @@ namespace Eva_5._0
                             break;
                     }
                 }
-
             }
 
 
@@ -204,6 +203,18 @@ namespace Eva_5._0
             return true;
         }
 
+        private static void OnlineSpeechRecognition_StateChanged(Windows.Media.SpeechRecognition.SpeechRecognizer sender, Windows.Media.SpeechRecognition.SpeechRecognizerStateChangedEventArgs args)
+        {
+            if(sender.State == Windows.Media.SpeechRecognition.SpeechRecognizerState.SpeechDetected)
+            {
+                lock(MainWindow.Speech_Detected)
+                {
+                    MainWindow.Speech_Detected = "true";
+                }
+
+                online_speech_recognition_timeout = DateTime.Now;
+            }
+        }
 
         private static Task<bool> OS_Online_Speech_Recognition_Interface_Shutdown()
         {
