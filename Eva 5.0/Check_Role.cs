@@ -28,15 +28,7 @@ namespace Eva_5._0
     {
         public Check_Role()
         {
-            new Check_Role(true);
-        }
-
-        private Check_Role(bool check_current_user_role)
-        {
-            if(check_current_user_role == true)
-            {
-                Check_User_Role();
-            }
+            Check_User_Role();
         }
 
         private void Check_User_Role()

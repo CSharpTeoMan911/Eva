@@ -64,9 +64,13 @@ namespace Eva_5._0
 
         public static string Online_Speech_Recogniser_Listening = "false";
 
-        public static string FunctionInitiated = "false";
+        public static string Online_Speech_Recogniser_Thread_Initiated = "false";
 
         public static string Speech_Detected = "false";
+
+        public static string Window_Minimsed = "false";
+
+        public static string Online_Speech_Recogniser_Disabled = "false";
 
         // [ END ] STATIC OBJECTS OBJECTS THAT ARE ACCESSED IN A THREAD SAFE MANNER
 
@@ -103,6 +107,7 @@ namespace Eva_5._0
         ///  Gradient Arithmetic For Neon Glow Chromatic Effect
         /// </summary>
 
+        private bool Colour_Switch;
 
         private int Button_Timeout;
 
@@ -126,7 +131,13 @@ namespace Eva_5._0
         }
 
 
-        
+        private class OS_Online_Speech_Recognition_Interface_Shutdown_Mitigator_Class:Online_Speech_Recognition
+        {
+            public static async Task<bool> OS_Online_Speech_Recognition_Interface_Shutdown_Mitigator()
+            {
+                return await OS_Online_Speech_Recognition_Interface_Shutdown();
+            }
+        }
 
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
@@ -215,12 +226,41 @@ namespace Eva_5._0
 
                                         Application.Current.MainWindow.Topmost = true;
 
+                                        if(Application.Current.MainWindow.WindowState == WindowState.Normal)
+                                        {
+                                            lock(Window_Minimsed)
+                                            {
+                                                Window_Minimsed = "false";
+                                            }
+                                        }
+
                                         lock(Online_Speech_Recogniser_Listening)
                                         {
 
                                             switch (Online_Speech_Recogniser_Listening)
                                             {
                                                 case "true":
+
+                                                    if(Window_Minimsed == "true" || Online_Speech_Recogniser_Disabled == "true")
+                                                    {
+                                                        Online_Speech_Recogniser_Listening = "false";
+                                                    }
+                                                  
+
+                                                    if(Online_Speech_Recogniser_Thread_Initiated == "true")
+                                                    {
+                                                        if (Online_Speech_Recognition.ThreadCounter == 0)
+                                                        {
+                                                            Task.Run(async () =>
+                                                            {
+                                                                await OS_Online_Speech_Recognition_Interface_Shutdown_Mitigator_Class.OS_Online_Speech_Recognition_Interface_Shutdown_Mitigator();
+                                                            });
+
+                                                            Online_Speech_Recogniser_Thread_Initiated = "false";
+                                                            Online_Speech_Recogniser_Listening = "false";
+                                                        }
+                                                    }
+
                                                     switch (((TimeSpan)(DateTime.Now - Online_Speech_Recognition.online_speech_recognition_timeout)).TotalMilliseconds >= 9000)
                                                     {
                                                         case true:
@@ -265,9 +305,11 @@ namespace Eva_5._0
 
 
                                                 case "false":
+                                                    Online_Speech_Recognition.ThreadCounter = 0;
                                                     target_value = 1000;
                                                     Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
                                                     Online_Speech_Recognition_Timer_Display.Text = String.Empty;
+                                                    Online_Speech_Recogniser_Thread_Initiated = "false";
                                                     OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FFACC6D6");
                                                     OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
                                                     break;
@@ -321,10 +363,7 @@ namespace Eva_5._0
                                                 break;
 
                                             case false:
-                                                RotationValue++;
-                                                RotationValue++;
-                                                RotationValue++;
-                                                RotationValue++;
+                                                RotationValue += 4;
                                                 break;
                                         }
 
@@ -348,57 +387,22 @@ namespace Eva_5._0
                                                     case false:
                                                         ExecutionAnimationArithmetic++;
 
-                                                        switch (ExecutionAnimationArithmetic)
+                                                        if(ExecutionAnimationArithmetic >= 4 && ExecutionAnimationArithmetic % 4 == 0)
                                                         {
-                                                            case 4:
-                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                                break;
+                                                            switch (Colour_Switch)
+                                                            {
+                                                                case true:
+                                                                    OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                                    OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                                    Colour_Switch = false;
+                                                                    break;
 
-                                                            case 8:
-                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                                break;
-
-                                                            case 12:
-                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                                break;
-
-                                                            case 16:
-                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                                break;
-
-                                                            case 20:
-                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                                break;
-
-                                                            case 24:
-                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                                break;
-
-                                                            case 28:
-                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                                break;
-
-                                                            case 32:
-                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                                break;
-
-                                                            case 36:
-                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                                break;
-
-                                                            case 40:
-                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                                break;
+                                                                case false:
+                                                                    OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                                    OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                                    Colour_Switch = true;
+                                                                    break;
+                                                            }
                                                         }
                                                         break;
                                                 }
@@ -694,9 +698,9 @@ namespace Eva_5._0
 
                         Application.Current.MainWindow.WindowState = WindowState.Minimized;
 
-                        lock(FunctionInitiated)
+                        lock(Window_Minimsed)
                         {
-                            FunctionInitiated = "false";
+                            Window_Minimsed = "true";
                         }
 
                     }
@@ -762,6 +766,11 @@ namespace Eva_5._0
 
                                             App.StopRecognitionSession = false;
 
+                                            lock(Online_Speech_Recogniser_Disabled)
+                                            {
+                                                Online_Speech_Recogniser_Disabled = "false";
+                                            }
+
                                             break;
 
 
@@ -796,6 +805,11 @@ namespace Eva_5._0
                                             App.StopRecognitionSession = true;
 
                                             OnOff = 0;
+
+                                            lock (Online_Speech_Recogniser_Disabled)
+                                            {
+                                                Online_Speech_Recogniser_Disabled = "true";
+                                            }
 
                                             break;
 
@@ -892,27 +906,20 @@ namespace Eva_5._0
 
 
 
-
-
                                                         if (Timer_Window.Ring_Timer == false)
                                                         {
 
-                                                            lock(FunctionInitiated)
+                                                            lock(Online_Speech_Recogniser_Listening)
                                                             {
 
-                                                                if (FunctionInitiated == "false")
+                                                                if (Application.Current.MainWindow.WindowState == WindowState.Normal)
                                                                 {
+                                                                    Online_Speech_Recogniser_Listening = "true";
 
-                                                                    if (Application.Current.MainWindow.WindowState == WindowState.Normal)
+                                                                    Task.Run(async () =>
                                                                     {
-                                                                        FunctionInitiated = "true";
-
-                                                                        Task.Run(async () =>
-                                                                        {
-                                                                            await Online_Speech_Recognition.Online_Speech_Recognition_Session_Creation_And_Initiation();
-                                                                        });
-
-                                                                    }
+                                                                        await Online_Speech_Recognition.Online_Speech_Recognition_Session_Creation_And_Initiation();
+                                                                    });
 
                                                                 }
 
