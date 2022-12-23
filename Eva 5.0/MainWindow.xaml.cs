@@ -245,7 +245,6 @@ namespace Eva_5._0
                                                     {
                                                         Online_Speech_Recogniser_Listening = "false";
                                                     }
-                                                  
 
                                                     if(Online_Speech_Recogniser_Thread_Initiated == "true")
                                                     {
@@ -263,43 +262,46 @@ namespace Eva_5._0
 
                                                     if(Online_Speech_Recognition.online_speech_recognition_timeout != null)
                                                     {
-                                                        switch (((TimeSpan)(DateTime.Now - Online_Speech_Recognition.online_speech_recognition_timeout)).TotalMilliseconds >= 9000)
+                                                        if(Online_Speech_Recognition.ThreadCounter > 0)
                                                         {
-                                                            case true:
-                                                                Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
-                                                                Online_Speech_Recognition_Timer_Display.Text = String.Empty;
-                                                                Online_Speech_Recogniser_Listening = "false";
-                                                                break;
+                                                            switch (((TimeSpan)(DateTime.Now - Online_Speech_Recognition.online_speech_recognition_timeout)).TotalMilliseconds >= 9000)
+                                                            {
+                                                                case true:
+                                                                    Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
+                                                                    Online_Speech_Recognition_Timer_Display.Text = String.Empty;
+                                                                    Online_Speech_Recogniser_Listening = "false";
+                                                                    break;
 
 
 
-                                                            case false:
-                                                                lock (Speech_Detected)
-                                                                {
-                                                                    if (Speech_Detected == "true")
+                                                                case false:
+                                                                    lock (Speech_Detected)
                                                                     {
-                                                                        Speech_Detected = "false";
-                                                                        target_value = 1000;
-                                                                        Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
-                                                                        Online_Speech_Recognition_Timer_Display.Text = String.Empty;
+                                                                        if (Speech_Detected == "true")
+                                                                        {
+                                                                            Speech_Detected = "false";
+                                                                            target_value = 1000;
+                                                                            Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
+                                                                            Online_Speech_Recognition_Timer_Display.Text = String.Empty;
+                                                                        }
                                                                     }
-                                                                }
 
-                                                                if (((TimeSpan)(DateTime.Now - Online_Speech_Recognition.online_speech_recognition_timeout)).TotalMilliseconds >= target_value - 300)
-                                                                {
-                                                                    if (target_value <= 10000)
+                                                                    if (((TimeSpan)(DateTime.Now - Online_Speech_Recognition.online_speech_recognition_timeout)).TotalMilliseconds >= target_value - 300)
                                                                     {
-                                                                        target_value += 1000;
-                                                                        Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index++;
+                                                                        if (target_value <= 10000)
+                                                                        {
+                                                                            target_value += 1000;
+                                                                            Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index++;
+                                                                        }
                                                                     }
-                                                                }
 
-                                                                Online_Speech_Recognition_Timer_Display.Text = Online_Speech_Recognition_Timeout_Timer_UI_Intervals[Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index];
+                                                                    Online_Speech_Recognition_Timer_Display.Text = Online_Speech_Recognition_Timeout_Timer_UI_Intervals[Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index];
 
 
-                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF91E1FF");
-                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF3099FF");
-                                                                break;
+                                                                    OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF91E1FF");
+                                                                    OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF3099FF");
+                                                                    break;
+                                                            }
                                                         }
                                                     }
                                                     break;

@@ -41,24 +41,24 @@ namespace Eva_5._0
             // [ BEGIN ]
             // 
 
-            if (ThreadCounter <= 5)
+            lock (MainWindow.Online_Speech_Recogniser_Thread_Initiated)
             {
-                lock(MainWindow.Online_Speech_Recogniser_Thread_Initiated)
+                lock (MainWindow.Online_Speech_Recogniser_Listening)
                 {
-                    lock(MainWindow.Online_Speech_Recogniser_Listening)
+                    lock (MainWindow.Online_Speech_Recogniser_Disabled)
                     {
-                        MainWindow.Online_Speech_Recogniser_Thread_Initiated = "true";
-
-                        MainWindow.Online_Speech_Recogniser_Listening = "true";
-
-                        lock(MainWindow.Online_Speech_Recogniser_Disabled)
+                        lock (MainWindow.Window_Minimised)
                         {
-                            lock(MainWindow.Window_Minimised)
+                            if (MainWindow.Online_Speech_Recogniser_Disabled == "false")
                             {
-                                if(MainWindow.Online_Speech_Recogniser_Disabled == "false")
+                                if (MainWindow.Window_Minimised == "false")
                                 {
-                                    if(MainWindow.Window_Minimised == "false")
+                                    if (ThreadCounter < 3)
                                     {
+                                        MainWindow.Online_Speech_Recogniser_Thread_Initiated = "true";
+
+                                        MainWindow.Online_Speech_Recogniser_Listening = "true";
+
                                         ThreadCounter++;
 
                                         ParallelProcessing = new System.Threading.Thread(async () =>
@@ -202,6 +202,8 @@ namespace Eva_5._0
             {
                 ThreadCounter--;
             }
+
+            ParallelProcessing.Join();
 
             return true;
         }
