@@ -68,7 +68,7 @@ namespace Eva_5._0
 
         public static string Speech_Detected = "false";
 
-        public static string Window_Minimsed = "false";
+        public static string Window_Minimised = "false";
 
         public static string Online_Speech_Recogniser_Disabled = "false";
 
@@ -135,7 +135,7 @@ namespace Eva_5._0
         {
             public static async Task<bool> OS_Online_Speech_Recognition_Interface_Shutdown_Mitigator()
             {
-                return await OS_Online_Speech_Recognition_Interface_Shutdown();
+                return await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(false);
             }
         }
 
@@ -228,9 +228,9 @@ namespace Eva_5._0
 
                                         if(Application.Current.MainWindow.WindowState == WindowState.Normal)
                                         {
-                                            lock(Window_Minimsed)
+                                            lock(Window_Minimised)
                                             {
-                                                Window_Minimsed = "false";
+                                                Window_Minimised = "false";
                                             }
                                         }
 
@@ -241,7 +241,7 @@ namespace Eva_5._0
                                             {
                                                 case "true":
 
-                                                    if(Window_Minimsed == "true" || Online_Speech_Recogniser_Disabled == "true")
+                                                    if(Window_Minimised == "true" || Online_Speech_Recogniser_Disabled == "true")
                                                     {
                                                         Online_Speech_Recogniser_Listening = "false";
                                                     }
@@ -261,42 +261,46 @@ namespace Eva_5._0
                                                         }
                                                     }
 
-                                                    switch (((TimeSpan)(DateTime.Now - Online_Speech_Recognition.online_speech_recognition_timeout)).TotalMilliseconds >= 9000)
+                                                    if(Online_Speech_Recognition.online_speech_recognition_timeout != null)
                                                     {
-                                                        case true:
-                                                            Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
-                                                            Online_Speech_Recognition_Timer_Display.Text = String.Empty;
-                                                            break;
+                                                        switch (((TimeSpan)(DateTime.Now - Online_Speech_Recognition.online_speech_recognition_timeout)).TotalMilliseconds >= 9000)
+                                                        {
+                                                            case true:
+                                                                Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
+                                                                Online_Speech_Recognition_Timer_Display.Text = String.Empty;
+                                                                Online_Speech_Recogniser_Listening = "false";
+                                                                break;
 
 
 
-                                                        case false:
-                                                            lock(Speech_Detected)
-                                                            {
-                                                                if(Speech_Detected == "true")
+                                                            case false:
+                                                                lock (Speech_Detected)
                                                                 {
-                                                                    Speech_Detected = "false";
-                                                                    target_value = 1000;
-                                                                    Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
-                                                                    Online_Speech_Recognition_Timer_Display.Text = String.Empty;
+                                                                    if (Speech_Detected == "true")
+                                                                    {
+                                                                        Speech_Detected = "false";
+                                                                        target_value = 1000;
+                                                                        Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
+                                                                        Online_Speech_Recognition_Timer_Display.Text = String.Empty;
+                                                                    }
                                                                 }
-                                                            }
 
-                                                            if(((TimeSpan)(DateTime.Now - Online_Speech_Recognition.online_speech_recognition_timeout)).TotalMilliseconds >= target_value - 300)
-                                                            {
-                                                                if(target_value <= 10000)
+                                                                if (((TimeSpan)(DateTime.Now - Online_Speech_Recognition.online_speech_recognition_timeout)).TotalMilliseconds >= target_value - 300)
                                                                 {
-                                                                    target_value += 1000;
-                                                                    Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index++;
+                                                                    if (target_value <= 10000)
+                                                                    {
+                                                                        target_value += 1000;
+                                                                        Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index++;
+                                                                    }
                                                                 }
-                                                            }
 
-                                                            Online_Speech_Recognition_Timer_Display.Text = Online_Speech_Recognition_Timeout_Timer_UI_Intervals[Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index];
+                                                                Online_Speech_Recognition_Timer_Display.Text = Online_Speech_Recognition_Timeout_Timer_UI_Intervals[Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index];
 
 
-                                                            OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF91E1FF");
-                                                            OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF3099FF");
-                                                            break;
+                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF91E1FF");
+                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF3099FF");
+                                                                break;
+                                                        }
                                                     }
                                                     break;
 
@@ -306,6 +310,8 @@ namespace Eva_5._0
 
                                                 case "false":
                                                     Online_Speech_Recognition.ThreadCounter = 0;
+                                                    Online_Speech_Recognition.online_speech_recognition_timeout = null;
+
                                                     target_value = 1000;
                                                     Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
                                                     Online_Speech_Recognition_Timer_Display.Text = String.Empty;
@@ -698,9 +704,9 @@ namespace Eva_5._0
 
                         Application.Current.MainWindow.WindowState = WindowState.Minimized;
 
-                        lock(Window_Minimsed)
+                        lock(Window_Minimised)
                         {
-                            Window_Minimsed = "true";
+                            Window_Minimised = "true";
                         }
 
                     }
@@ -908,23 +914,10 @@ namespace Eva_5._0
 
                                                         if (Timer_Window.Ring_Timer == false)
                                                         {
-
-                                                            lock(Online_Speech_Recogniser_Listening)
+                                                            if (Application.Current.MainWindow.WindowState == WindowState.Normal)
                                                             {
-
-                                                                if (Application.Current.MainWindow.WindowState == WindowState.Normal)
-                                                                {
-                                                                    Online_Speech_Recogniser_Listening = "true";
-
-                                                                    Task.Run(async () =>
-                                                                    {
-                                                                        await Online_Speech_Recognition.Online_Speech_Recognition_Session_Creation_And_Initiation();
-                                                                    });
-
-                                                                }
-
+                                                                await Online_Speech_Recognition.Online_Speech_Recognition_Session_Creation_And_Initiation();
                                                             }
-
                                                         }
 
 
@@ -964,27 +957,32 @@ namespace Eva_5._0
                     {
                         if (e.Error.HResult == -2147024891)
                         {
-                            App.ErrorAppShutdown = true;
-                            Application.Current.MainWindow.Visibility = Visibility.Hidden;
-
-                            switch (App.PermisissionWindowOpen)
+                            if(Application.Current.MainWindow != null)
                             {
-                                case false:
+                                if(OnOff == 1)
+                                {
+                                    OnOff = 0;
+                                    await Close_The_Wake_Word_Engine();
 
-                                    System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-                                    GC.Collect(0, GCCollectionMode.Forced, true, true);
+                                    App.ErrorAppShutdown = true;
+                                    Application.Current.MainWindow.Visibility = Visibility.Hidden;
 
-                                    ErrorWindow OpenPermissionDeclinedWindow = new ErrorWindow("Mircrophone Access Denied");
-                                    OpenPermissionDeclinedWindow.Show();
+                                    switch (App.PermisissionWindowOpen)
+                                    {
+                                        case false:
+                                            System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
+                                            GC.Collect(0, GCCollectionMode.Forced, true, true);
 
-                                    break;
+                                            ErrorWindow OpenPermissionDeclinedWindow = new ErrorWindow("Mircrophone Access Denied");
+                                            OpenPermissionDeclinedWindow.Show();
+                                            break;
 
-                                case true:
-
-                                    App.InitiateErrorFunction = true;
-                                    App.ErrorFunction = "Mircrophone Access Denied";
-
-                                    break;
+                                        case true:
+                                            App.InitiateErrorFunction = true;
+                                            App.ErrorFunction = "Mircrophone Access Denied";
+                                            break;
+                                    }
+                                }
                             }
                         }
                     }
@@ -996,9 +994,7 @@ namespace Eva_5._0
                         if (Wake_Word_Engine_Initiation_Successful == false)
                         {
                             SpeechRecognitionButton.Content = "\xF781";
-
                             App.StopRecognitionSession = true;
-
                             OnOff = 0;
                         }
                     }

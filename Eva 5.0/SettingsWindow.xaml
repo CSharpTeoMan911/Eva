@@ -65,6 +65,11 @@
         <StackPanel Orientation="Horizontal" Grid.Column ="3" Grid.ColumnSpan="2" HorizontalAlignment="Right">
 
             <Button  Grid.Column="4" Margin="20,20,20,0" BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Left" Content="&#xEF2D;" FontFamily="Segoe MDL2 Assets" FontSize="20" Click="MinimiseTheWindow" Style="{StaticResource MyButtonStyle}">
+
+                <Button.Effect>
+                    <DropShadowEffect/>
+                </Button.Effect>
+
                 <Button.Foreground>
                     <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                         <GradientStop Color="#FF7BBFD8" x:Name="MinimiseTheWindowOffset" Offset="1"/>
@@ -75,6 +80,11 @@
 
 
             <Button  Grid.Column="4" Margin="0,20,20,0" BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Right" Content="&#xEF2C;" FontFamily="Segoe MDL2 Assets" FontSize="20" Click="CloseTheWindow" Style="{StaticResource MyButtonStyle}">
+
+                <Button.Effect>
+                    <DropShadowEffect/>
+                </Button.Effect>
+                
                 <Button.Foreground>
                     <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                         <GradientStop Color="#FF7BBFD8" x:Name="CloseButtonOffset" Offset="1"/>
