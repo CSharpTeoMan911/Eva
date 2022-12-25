@@ -264,53 +264,42 @@ namespace Eva_5._0
                                                     {
                                                         if(Online_Speech_Recognition.ThreadCounter > 0)
                                                         {
-                                                            switch(Online_Speech_Recognition.online_speech_recognition_timeout != null)
+                                                            switch (((TimeSpan)(DateTime.Now - Online_Speech_Recognition.online_speech_recognition_timeout)).TotalMilliseconds >= 9000)
                                                             {
                                                                 case true:
-                                                                    switch (((TimeSpan)(DateTime.Now - Online_Speech_Recognition.online_speech_recognition_timeout)).TotalMilliseconds >= 9000)
-                                                                    {
-                                                                        case true:
-                                                                            Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
-                                                                            Online_Speech_Recognition_Timer_Display.Text = String.Empty;
-                                                                            Online_Speech_Recogniser_Listening = "false";
-                                                                            break;
-
-
-
-                                                                        case false:
-                                                                            lock (Speech_Detected)
-                                                                            {
-                                                                                if (Speech_Detected == "true")
-                                                                                {
-                                                                                    Speech_Detected = "false";
-                                                                                    target_value = 1000;
-                                                                                    Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
-                                                                                    Online_Speech_Recognition_Timer_Display.Text = String.Empty;
-                                                                                }
-                                                                            }
-
-                                                                            if (((TimeSpan)(DateTime.Now - Online_Speech_Recognition.online_speech_recognition_timeout)).TotalMilliseconds >= target_value - 300)
-                                                                            {
-                                                                                if (target_value <= 10000)
-                                                                                {
-                                                                                    target_value += 1000;
-                                                                                    Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index++;
-                                                                                }
-                                                                            }
-
-                                                                            Online_Speech_Recognition_Timer_Display.Text = Online_Speech_Recognition_Timeout_Timer_UI_Intervals[Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index];
-
-
-                                                                            OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF91E1FF");
-                                                                            OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF3099FF");
-                                                                            break;
-                                                                    }
-                                                                    break;
-
-                                                                case false:
                                                                     Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
                                                                     Online_Speech_Recognition_Timer_Display.Text = String.Empty;
                                                                     Online_Speech_Recogniser_Listening = "false";
+                                                                    break;
+
+
+
+                                                                case false:
+                                                                    lock (Speech_Detected)
+                                                                    {
+                                                                        if (Speech_Detected == "true")
+                                                                        {
+                                                                            Speech_Detected = "false";
+                                                                            target_value = 1000;
+                                                                            Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
+                                                                            Online_Speech_Recognition_Timer_Display.Text = String.Empty;
+                                                                        }
+                                                                    }
+
+                                                                    if (((TimeSpan)(DateTime.Now - Online_Speech_Recognition.online_speech_recognition_timeout)).TotalMilliseconds >= target_value - 300)
+                                                                    {
+                                                                        if (target_value <= 10000)
+                                                                        {
+                                                                            target_value += 1000;
+                                                                            Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index++;
+                                                                        }
+                                                                    }
+
+                                                                    Online_Speech_Recognition_Timer_Display.Text = Online_Speech_Recognition_Timeout_Timer_UI_Intervals[Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index];
+
+
+                                                                    OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF91E1FF");
+                                                                    OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF3099FF");
                                                                     break;
                                                             }
                                                         }
@@ -783,8 +772,6 @@ namespace Eva_5._0
 
                                             SpeechRecognitionButton.Content = "\xE1D6";
 
-                                            App.StopRecognitionSession = false;
-
                                             lock(Online_Speech_Recogniser_Disabled)
                                             {
                                                 Online_Speech_Recogniser_Disabled = "false";
@@ -798,8 +785,6 @@ namespace Eva_5._0
                                         case false:
 
                                             OnOff = 0;
-
-                                            App.StopRecognitionSession = true;
 
                                             SpeechRecognitionButton.Content = "\xF781";
 
@@ -821,7 +806,6 @@ namespace Eva_5._0
 
                                             SpeechRecognitionButton.Content = "\xF781";
 
-                                            App.StopRecognitionSession = true;
 
                                             OnOff = 0;
 
@@ -839,7 +823,6 @@ namespace Eva_5._0
 
                                             SpeechRecognitionButton.Content = "\xE1D6";
 
-                                            App.StopRecognitionSession = false;
 
                                             break;
 
@@ -913,8 +896,6 @@ namespace Eva_5._0
                                                                     case false:
 
                                                                         SpeechRecognitionButton.Content = "\xE1D6";
-
-                                                                        App.StopRecognitionSession = false;
 
                                                                         break;
 
@@ -1007,7 +988,6 @@ namespace Eva_5._0
                         if (Wake_Word_Engine_Initiation_Successful == false)
                         {
                             SpeechRecognitionButton.Content = "\xF781";
-                            App.StopRecognitionSession = true;
                             OnOff = 0;
                         }
                     }

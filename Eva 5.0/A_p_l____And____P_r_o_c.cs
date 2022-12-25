@@ -29,6 +29,8 @@ namespace Eva_5._0
 
         protected readonly static System.Collections.Concurrent.ConcurrentDictionary<string, string> A_p_l_Name__And__A_p_l___E_x__Name = new System.Collections.Concurrent.ConcurrentDictionary<string, string>();
 
+        protected readonly static System.Collections.Concurrent.ConcurrentDictionary<string, string> W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name = new System.Collections.Concurrent.ConcurrentDictionary<string, string>();
+
         protected readonly static System.Collections.Concurrent.ConcurrentDictionary<string, string> A_p_l_Name__And__A_p_l___P_r_o_c_Name = new System.Collections.Concurrent.ConcurrentDictionary<string, string>();
 
         protected readonly static System.Collections.Concurrent.ConcurrentDictionary<string, string> A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k = new System.Collections.Concurrent.ConcurrentDictionary<string, string>();
@@ -513,6 +515,29 @@ namespace Eva_5._0
                     A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("control panel", "Control Panel");
 
 
+
+            
+                    // WEB APPLICATIONS
+                    //
+                    // BEGIN
+
+                    W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("youtube", "https://www.youtube.com/results?search_query=");
+
+                    W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("netflix", "https://www.netflix.com/search?q=");
+
+                    W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("wikipedia", "https://en.wikipedia.org/wiki/");
+
+                    W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("google", "https://www.google.com/search?q=");
+
+                    W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("google news", "https://www.google.com/search?tbm=nws&q=");
+
+                    W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("ebay", "https://www.ebay.co.uk/sch/i.html?_nkw=");
+
+                    W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("google images", "https://www.google.com/search?tbm=isch&q=");
+
+                    W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("amazon", "https://www.amazon.co.uk/s?k=");
+
+                    // END
 
 
 

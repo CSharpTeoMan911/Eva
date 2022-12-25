@@ -91,58 +91,7 @@ namespace Eva_5._0
             {
                 bool SoundOrOff = await Settings.Get_Settings();
 
-                switch (WebApplication)
-                {
-                    case "youtube":
-
-                        Process = "https://www.youtube.com/results?search_query=";
-
-                        break;
-
-                    case "netflix":
-
-                        Process = "https://www.netflix.com/search?q=";
-
-                        break;
-
-                    case "wikipedia":
-
-                        Process = "https://en.wikipedia.org/wiki/";
-
-                        break;
-
-                    case "google":
-
-                        Process = "https://www.google.com/search?q=";
-
-                        break;
-
-                    case "google news":
-
-                        Process = "https://www.google.com/search?tbm=nws&q=";
-
-                        break;
-
-                    case "ebay":
-
-                        Process = "https://www.ebay.co.uk/sch/i.html?_nkw=";
-
-                        break;
-
-
-                    case "google images":
-
-                        Process = "https://www.google.com/search?tbm=isch&q=";
-
-                        break;
-
-
-                    case "amazon":
-
-                        Process = "https://www.amazon.co.uk/s?k=";
-
-                        break;
-                }
+                W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryGetValue(WebApplication, out Process);
 
 
                 MainWindow.BeginExecutionAnimation = true;
@@ -172,8 +121,6 @@ namespace Eva_5._0
 
             }
             catch { }
-
-
 
 
 

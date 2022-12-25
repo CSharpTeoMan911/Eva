@@ -53,10 +53,6 @@ namespace Eva_5._0
 
 
 
-        public static bool StopRecognitionSession;
-
-
-
 
 
         public App()
@@ -73,7 +69,6 @@ namespace Eva_5._0
 
         ~App()
         {
-            StopRecognitionSession = true;
             ErrorFunction = null;
 
             System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
