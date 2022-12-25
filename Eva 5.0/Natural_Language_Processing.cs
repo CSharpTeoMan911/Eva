@@ -40,7 +40,7 @@ namespace Eva_5._0
             {
                 case true:
 
-                    await PostProcessing<string, string>("please open [Application]", Sentence);
+                    await PostProcessing("please open [Application]", Sentence);
                     break;
 
                 case false:
@@ -49,25 +49,25 @@ namespace Eva_5._0
                     {
                         case true:
 
-                            switch (Sentence.LastIndexOf(" please") + 6 == Sentence.Length - 1)
+                            switch (Sentence.LastIndexOf(" please") + " please".Length - 1 == Sentence.Length - 1)
                             {
                                 case true:
 
-                                    await PostProcessing<string, string>("open [Application] please", Sentence);
+                                    await PostProcessing("open [Application] please", Sentence);
                                     break;
 
                                 case false:
 
-                                    switch (Sentence.LastIndexOf(" now") + 3 == Sentence.Length - 1)
+                                    switch (Sentence.LastIndexOf(" now") + " now".Length - 1 == Sentence.Length - 1)
                                     {
                                         case true:
 
-                                            await PostProcessing<string, string>("open [Application] now", Sentence);
+                                            await PostProcessing("open [Application] now", Sentence);
                                             break;
 
                                         case false:
 
-                                            await PostProcessing<string, string>("open [Application]", Sentence);
+                                            await PostProcessing("open [Application]", Sentence);
                                             break;
                                     }
 
@@ -84,7 +84,7 @@ namespace Eva_5._0
             {
                 case true:
 
-                    await PostProcessing<string, string>("please close [Application]", Sentence);
+                    await PostProcessing("please close [Application]", Sentence);
                     break;
 
                 case false:
@@ -93,25 +93,25 @@ namespace Eva_5._0
                     {
                         case true:
 
-                            switch (Sentence.LastIndexOf(" please") + 6 == Sentence.Length - 1)
+                            switch (Sentence.LastIndexOf(" please") + " please".Length - 1 == Sentence.Length - 1)
                             {
                                 case true:
 
-                                    await PostProcessing<string, string>("close [Application] please", Sentence);
+                                    await PostProcessing("close [Application] please", Sentence);
                                     break;
 
                                 case false:
 
-                                    switch (Sentence.LastIndexOf(" now") + 3 == Sentence.Length - 1)
+                                    switch (Sentence.LastIndexOf(" now") + " now".Length - 1 == Sentence.Length - 1)
                                     {
                                         case true:
 
-                                            await PostProcessing<string, string>("close [Application] now", Sentence);
+                                            await PostProcessing("close [Application] now", Sentence);
                                             break;
 
                                         case false:
 
-                                            await PostProcessing<string, string>("close [Application]", Sentence);
+                                            await PostProcessing("close [Application]", Sentence);
                                             break;
                                     }
 
@@ -129,7 +129,7 @@ namespace Eva_5._0
             {
                 case true:
 
-                    await PostProcessing<string, string>("please search on [Web Application Keyword] [Content]", Sentence);
+                    await PostProcessing("please search on [Web Application Keyword] [Content]", Sentence);
                     break;
 
                 case false:
@@ -138,7 +138,7 @@ namespace Eva_5._0
                     {
                         case true:
 
-                            await PostProcessing<string, string>("please search [Content] on [Web Application Keyword]", Sentence);
+                            await PostProcessing("please search [Content] on [Web Application Keyword]", Sentence);
                             break;
 
                         case false:
@@ -147,14 +147,14 @@ namespace Eva_5._0
                             {
                                 case true:
 
-                                    await PostProcessing<string, string>("search on [Web Application Keyword] [Content]", Sentence);
+                                    await PostProcessing("search on [Web Application Keyword] [Content]", Sentence);
                                     break;
 
                                 case false:
 
                                     if ((Sentence.IndexOf("search ") == 0) && (Sentence.Contains(" on ") == true))
                                     {
-                                        await PostProcessing<string, string>("search [Content] on [Web Application Keyword]", Sentence);
+                                        await PostProcessing("search [Content] on [Web Application Keyword]", Sentence);
                                     }
                                     break;
                             }
@@ -175,7 +175,7 @@ namespace Eva_5._0
                     {
                         case true:
 
-                            await PostProcessing<string, string>("set a [Timer Interval] timer", Sentence);
+                            await PostProcessing("set a [Timer Interval] timer", Sentence);
                             break;
 
 
@@ -187,7 +187,7 @@ namespace Eva_5._0
 
                                     if (Sentence.IndexOf(" timer ") == Sentence.Length - 13)
                                     {
-                                        await PostProcessing<string, string>("set a [Timer Interval] timer please", Sentence);
+                                        await PostProcessing("set a [Timer Interval] timer please", Sentence);
                                     }
                                     break;
                             }
@@ -205,7 +205,7 @@ namespace Eva_5._0
 
                             if (Sentence.IndexOf(" timer") == Sentence.Length - 6)
                             {
-                                await PostProcessing<string, string>("please set a [Timer Interval] timer", Sentence);
+                                await PostProcessing("please set a [Timer Interval] timer", Sentence);
                             }
                             break;
                     }
@@ -279,7 +279,7 @@ namespace Eva_5._0
 
 
 
-        private static async Task<bool> PostProcessing<Parameter, Sentence_Parameter>(Parameter parameter, Sentence_Parameter sentence)
+        private static async Task<bool> PostProcessing(string Param, string Sentence)
         {
             // THE SECOND TOKENIZATION IS INITIATED. HERE THE CONTEXTUAL NATURAL LANGUAGE PROCESSING TAKES PLACE. THE KEYWORDS RELATED TO THE COMMAND FORMATS DETECTED ARE TOKENIZED.
             // THE KEYWORDS FOR OPERATIONS, APPLICATIONS AND THE CONTENT FOR WEB SEARCH FUNCTIONS OR THE TIMER FUNCTION ARE EXTRACTED FROM THE SENTENCE.
@@ -289,18 +289,6 @@ namespace Eva_5._0
             string Application = String.Empty;
             string WebApplicationSearchContent = String.Empty;
 
-            string Sentence = sentence as string;
-            string Param = parameter as string;
-
-
-
-
-            bool Time_Unit_Received = false;
-
-            int Time_Unit_Value_Buffer = 0;
-
-            string Word_Buffer = String.Empty;
-
             System.Collections.Concurrent.ConcurrentDictionary<string, int> time_interval = new System.Collections.Concurrent.ConcurrentDictionary<string, int>();
 
 
@@ -308,20 +296,17 @@ namespace Eva_5._0
             {
                 case "please open [Application]":
 
-                    for (int Index = 12; Index <= Sentence.Length - 1; Index++)
+                    for (int Index = "please open ".Length; Index <= Sentence.Length - 1; Index++)
                     {
                         Application += Sentence[Index];
 
                     }
-
-
-
                     await Proc<string>.ProcInitialisation("System Process", Application, "open");
                     break;
 
                 case "open [Application] please":
 
-                    for (int Index = 5; Index <= Sentence.LastIndexOf(" please") - 1; Index++)
+                    for (int Index = "open ".Length; Index <= Sentence.LastIndexOf(" please") - 1; Index++)
                     {
                         Application += Sentence[Index];
 
@@ -331,7 +316,7 @@ namespace Eva_5._0
 
                 case "open [Application] now":
 
-                    for (int Index = 5; Index <= Sentence.LastIndexOf(" now") - 1; Index++)
+                    for (int Index = "open ".Length; Index <= Sentence.LastIndexOf(" now") - 1; Index++)
                     {
                         Application += Sentence[Index];
 
@@ -341,7 +326,7 @@ namespace Eva_5._0
 
                 case "open [Application]":
 
-                    for (int Index = 5; Index <= Sentence.Length - 1; Index++)
+                    for (int Index = "open ".Length ; Index <= Sentence.Length - 1; Index++)
                     {
                         Application += Sentence[Index];
 
@@ -354,7 +339,7 @@ namespace Eva_5._0
 
                 case "please close [Application]":
 
-                    for (int Index = 13; Index <= Sentence.Length - 1; Index++)
+                    for (int Index = "please close ".Length; Index <= Sentence.Length - 1; Index++)
                     {
                         Application += Sentence[Index];
 
@@ -364,7 +349,7 @@ namespace Eva_5._0
 
                 case "close [Application] please":
 
-                    for (int Index = 6; Index <= Sentence.LastIndexOf(" please") - 1; Index++)
+                    for (int Index = "close ".Length; Index <= Sentence.LastIndexOf(" please") - 1; Index++)
                     {
                         Application += Sentence[Index];
 
@@ -374,7 +359,7 @@ namespace Eva_5._0
 
                 case "close [Application] now":
 
-                    for (int Index = 6; Index <= Sentence.LastIndexOf(" now") - 1; Index++)
+                    for (int Index = "close ".Length; Index <= Sentence.LastIndexOf(" now") - 1; Index++)
                     {
                         Application += Sentence[Index];
 
@@ -384,7 +369,7 @@ namespace Eva_5._0
 
                 case "close [Application]":
 
-                    for (int Index = 6; Index <= Sentence.Length - 1; Index++)
+                    for (int Index = "close ".Length; Index <= Sentence.Length - 1; Index++)
                     {
                         Application += Sentence[Index];
 
@@ -397,24 +382,15 @@ namespace Eva_5._0
 
                 case "please search [Content] on [Web Application Keyword]":
 
-                    for (int Index = "please search".Length; Index <= Sentence.Length - 1; Index++)
+                    Sentence = Sentence + " ";
+
+                    Application = await Web_Application_Selector(Sentence.LastIndexOf(" on ") + " on ".Length - 1, Sentence);
+
+                    for (int Index = "please search".Length; Index < Sentence.LastIndexOf(" on "); Index++)
                     {
-                        if (Index <= Sentence.LastIndexOf(" on ") - 1)
-                        {
-                            WebApplicationSearchContent += Sentence[Index].ToString();
-                        }
-
-                        
-
-                        if (Index >= Sentence.LastIndexOf(" on ") + 4)
-                        {
-                            Application += Sentence[Index].ToString();
-                        }
+                        WebApplicationSearchContent += Sentence[Index].ToString();
                     }
 
-                   
-
-                    Application = Application.Trim();
                     await Proc<string>.ProcInitialisation("Online Process", Application, WebApplicationSearchContent);
                     break;
 
@@ -423,81 +399,7 @@ namespace Eva_5._0
 
                 case "please search on [Web Application Keyword] [Content]":
 
-                    switch (16 == Sentence.IndexOf(" google images "))
-                    {
-                        case true:
-                            Application = "google images";
-                            break;
-
-                        case false:
-                            switch (16 == Sentence.IndexOf(" google news "))
-                            {
-                                case true:
-                                    Application = "google news";
-                                    break;
-
-                                case false:
-
-                                    switch (16 == Sentence.IndexOf(" google "))
-                                    {
-                                        case true:
-                                            Application = "google";
-                                            break;
-
-                                        case false:
-
-                                            switch (16 == Sentence.IndexOf(" wikipedia "))
-                                            {
-                                                case true:
-                                                    Application = "wikipedia";
-                                                    break;
-
-                                                case false:
-
-                                                    switch (16 == Sentence.IndexOf(" ebay "))
-                                                    {
-                                                        case true:
-                                                            Application = "ebay";
-                                                            break;
-
-                                                        case false:
-
-                                                            switch (16 == Sentence.IndexOf(" netflix "))
-                                                            {
-                                                                case true:
-                                                                    Application = "netflix";
-                                                                    break;
-
-                                                                case false:
-
-                                                                    switch (16 == Sentence.IndexOf(" youtube "))
-                                                                    {
-                                                                        case true:
-                                                                            Application = "youtube";
-                                                                            break;
-
-                                                                        case false:
-
-                                                                            if (16 == Sentence.IndexOf(" amazon "))
-                                                                            {
-                                                                                Application = "amazon";
-                                                                            }
-
-                                                                            break;
-                                                                    }
-                                                                    break;
-                                                            }
-                                                            break;
-                                                    }
-                                                    break;
-                                            }
-                                            break;
-                                    }
-                                    break;
-                            }
-                            break;
-                    }
-
+                    Application = await Web_Application_Selector("please search on ".Length - 1, Sentence);
 
                     for (int Index = "please search on ".Length + Application.Length; Index <= Sentence.Length - 1; Index++)
                     {
@@ -506,97 +408,15 @@ namespace Eva_5._0
 
                     WebApplicationSearchContent = WebApplicationSearchContent.Trim();
 
-
-
                     await Proc<string>.ProcInitialisation("Online Process", Application, WebApplicationSearchContent);
                     break;
 
 
 
 
-
-                    
-
                 case "search on [Web Application Keyword] [Content]":
 
-
-                    switch (9 == Sentence.IndexOf(" google images "))
-                    {
-                        case true:
-                            Application = "google images";
-                            break;
-
-                        case false:
-
-                            switch (9 == Sentence.IndexOf(" google news "))
-                            {
-                                case true:
-                                    Application = "google news";
-                                    break;
-
-                                case false:
-
-                                    switch (9 == Sentence.IndexOf(" google "))
-                                    {
-                                        case true:
-                                            Application = "google";
-                                            break;
-
-                                        case false:
-
-                                            switch (9 == Sentence.IndexOf(" wikipedia "))
-                                            {
-                                                case true:
-                                                    Application = "wikipedia";
-                                                    break;
-
-                                                case false:
-
-                                                    switch (9 == Sentence.IndexOf(" ebay "))
-                                                    {
-                                                        case true:
-                                                            Application = "ebay";
-                                                            break;
-
-                                                        case false:
-
-                                                            switch (9 == Sentence.IndexOf(" netflix "))
-                                                            {
-                                                                case true:
-                                                                    Application = "netflix";
-                                                                    break;
-
-                                                                case false:
-
-                                                                    switch (9 == Sentence.IndexOf(" youtube "))
-                                                                    {
-                                                                        case true:
-                                                                            Application = "youtube";
-                                                                            break;
-
-                                                                        case false:
-
-                                                                            if (9 == Sentence.IndexOf(" amazon "))
-                                                                            {
-                                                                                Application = "amazon";
-                                                                            }
-                                                                            break;
-                                                                    }
-                                                                    break;
-                                                            }
-                                                            break;
-                                                    }
-                                                    break;
-                                            }
-                                            break;
-                                    }
-                                    break;
-                            }
-                            break;
-                    }
-
-
-                    
+                    Application = await Web_Application_Selector("search on ".Length - 1, Sentence);
 
                     for (int Index = "search on ".Length + Application.Length; Index <= Sentence.Length - 1; Index++)
                     {
@@ -614,20 +434,14 @@ namespace Eva_5._0
 
                 case "search [Content] on [Web Application Keyword]":
 
-                    for (int Index = 7; Index <= Sentence.Length - 1; Index++)
-                    {
-                        if (Index <= Sentence.LastIndexOf(" on ") - 1)
-                        {
-                            WebApplicationSearchContent += Sentence[Index].ToString();
-                        }
+                    Sentence = Sentence + " ";
 
-                        if (Index >= Sentence.LastIndexOf(" on ") + 4)
-                        {
-                            Application += Sentence[Index].ToString();
-                        }
+                    for (int Index = 7; Index < Sentence.LastIndexOf(" on "); Index++)
+                    {
+                        WebApplicationSearchContent += Sentence[Index].ToString();
                     }
 
-                    Application = Application.Trim();
+                    Application = await Web_Application_Selector(Sentence.LastIndexOf(" on ") + " on ".Length - 1, Sentence);
                     WebApplicationSearchContent = WebApplicationSearchContent.Trim();
 
                     await Proc<string>.ProcInitialisation("Online Process", Application, WebApplicationSearchContent);
@@ -636,542 +450,24 @@ namespace Eva_5._0
 
 
                 case "set a [Timer Interval] timer":
-
-                    Time_Unit_Received = false;
-
-                    Time_Unit_Value_Buffer = 0;
-
-                    Word_Buffer = String.Empty;
-
-
-                    
-
-
-
-                    for (int Index = 6; Index <= Sentence.Length - 6; Index++)
-                    {
-                        if (Sentence[Index].ToString() == " ")
-                        {
-
-                            if (Time_Unit_Received == true)
-                            {
-
-                                if ((Word_Buffer == "hour") || (Word_Buffer == "hours"))
-                                {
-
-                                    int buffer = 0;
-
-                                    bool retrieval_result = time_interval.TryGetValue("hours", out buffer);
-
-                                    if(retrieval_result == false)
-                                    {
-                                        time_interval.TryAdd("hours", Time_Unit_Value_Buffer);
-
-                                        Time_Unit_Value_Buffer = 0;
-
-                                        Time_Unit_Received = false;
-                                    }
-                                    else
-                                    {
-                                        break;
-                                    }
-
-                                }
-                                else if ((Word_Buffer.Trim() == "minute") || (Word_Buffer.Trim() == "minutes"))
-                                {
-
-                                    int buffer = 0;
-
-                                    bool retrieval_result = time_interval.TryGetValue("minutes", out buffer);
-
-                                    if(retrieval_result == false)
-                                    {
-                                        time_interval.TryAdd("minutes", Time_Unit_Value_Buffer);
-
-                                        Time_Unit_Value_Buffer = 0;
-
-                                        Time_Unit_Received = false;
-                                    }
-                                    else
-                                    {
-                                        break;
-                                    }
-
-                                }
-                                else if ((Word_Buffer == "second") || (Word_Buffer == "seconds"))
-                                {
-
-                                    int buffer = 0;
-
-                                    bool retrieval_result = time_interval.TryGetValue("seconds", out buffer);
-
-                                    if(retrieval_result == false)
-                                    {
-                                        time_interval.TryAdd("seconds", Time_Unit_Value_Buffer);
-
-                                        Time_Unit_Value_Buffer = 0;
-
-                                        Time_Unit_Received = false;
-                                    }
-                                    else
-                                    {
-                                        break;
-                                    }
-
-                                }
-                              
-                            }
-                            else
-                            {
-                                try
-                                {
-
-                                    double Number_Verification_Buffer = Convert.ToDouble(Word_Buffer);
-
-                                    Time_Unit_Value_Buffer = Convert.ToInt32(Word_Buffer);
-
-                                    Time_Unit_Received = true;
-
-                                }
-                                catch
-                                {
-
-                                    if (Time_Unit_Received == false)
-                                    {
-                                        switch (Word_Buffer)
-                                        {
-                                            case "one":
-
-                                                Time_Unit_Value_Buffer = 1;
-
-                                                Time_Unit_Received = true;
-
-                                                break;
-
-
-                                            case "two":
-
-                                                Time_Unit_Value_Buffer = 2;
-
-                                                Time_Unit_Received = true;
-
-                                                break;
-
-
-                                            case "three":
-
-                                                Time_Unit_Value_Buffer = 3;
-
-                                                Time_Unit_Received = true;
-
-                                                break;
-
-
-                                            case "four":
-
-                                                Time_Unit_Value_Buffer = 4;
-
-                                                Time_Unit_Received = true;
-
-                                                break;
-
-
-                                            case "five":
-
-                                                Time_Unit_Value_Buffer = 5;
-
-                                                Time_Unit_Received = true;
-
-                                                break;
-
-
-                                            case "six":
-
-                                                Time_Unit_Value_Buffer = 6;
-
-                                                Time_Unit_Received = true;
-
-                                                break;
-
-
-                                            case "seven":
-
-                                                Time_Unit_Value_Buffer = 7;
-
-                                                Time_Unit_Received = true;
-
-                                                break;
-
-
-                                            case "eight":
-
-                                                Time_Unit_Value_Buffer = 8;
-
-                                                Time_Unit_Received = true;
-
-                                                break;
-
-
-                                            case "nine":
-
-                                                Time_Unit_Value_Buffer = 9;
-
-                                                Time_Unit_Received = true;
-
-                                                break;
-                                        }
-                                   
-                                    }
-                                  
-                                }
-                            }
-                           
-
-                            Word_Buffer = String.Empty;
-                        }
-                        else
-                        {
-                            Word_Buffer += Sentence[Index].ToString();
-                        }
-                    }
-
+                    await Timer_Time_Selector(Sentence, time_interval, "set a ".Length - 1);
 
                     await Proc<System.Collections.Concurrent.ConcurrentDictionary<string, int>>.ProcInitialisation("Timer Process", null, time_interval);
-
                     break;
 
 
                 case "set a [Timer Interval] timer please":
-
-                    Time_Unit_Received = false;
-
-                    Time_Unit_Value_Buffer = 0;
-
-                    Word_Buffer = String.Empty;
-
-
-
-                    for (int Index = 6; Index <= Sentence.Length - 13; Index++)
-                    {
-                        if (Sentence[Index].ToString() == " ")
-                        {
-
-                            if (Time_Unit_Received == true)
-                            {
-
-                                if ((Word_Buffer == "hour") || (Word_Buffer == "hours"))
-                                {
-
-                                    int buffer = 0;
-
-                                    bool retrieval_result = time_interval.TryGetValue("hours", out buffer);
-
-                                    if (retrieval_result == false)
-                                    {
-                                        time_interval.TryAdd("hours", Time_Unit_Value_Buffer);
-
-                                        Time_Unit_Value_Buffer = 0;
-
-                                        Time_Unit_Received = false;
-                                    }
-                                    else
-                                    {
-                                        break;
-                                    }
-
-                                }
-                                else if ((Word_Buffer.Trim() == "minute") || (Word_Buffer.Trim() == "minutes"))
-                                {
-
-                                    int buffer = 0;
-
-                                    bool retrieval_result = time_interval.TryGetValue("minutes", out buffer);
-
-                                    if (retrieval_result == false)
-                                    {
-                                        time_interval.TryAdd("minutes", Time_Unit_Value_Buffer);
-
-                                        Time_Unit_Value_Buffer = 0;
-
-                                        Time_Unit_Received = false;
-                                    }
-                                    else
-                                    {
-                                        break;
-                                    }
-
-                                }
-                                else if ((Word_Buffer == "second") || (Word_Buffer == "seconds"))
-                                {
-
-                                    int buffer = 0;
-
-                                    bool retrieval_result = time_interval.TryGetValue("seconds", out buffer);
-
-                                    if (retrieval_result == false)
-                                    {
-                                        time_interval.TryAdd("seconds", Time_Unit_Value_Buffer);
-
-                                        Time_Unit_Value_Buffer = 0;
-
-                                        Time_Unit_Received = false;
-                                    }
-                                    else
-                                    {
-                                        break;
-                                    }
-
-                                }
-
-                            }
-                            else
-                            {
-                                try
-                                {
-
-                                    double Number_Verification_Buffer = Convert.ToDouble(Word_Buffer);
-
-                                    Time_Unit_Value_Buffer = Convert.ToInt32(Word_Buffer);
-
-                                    Time_Unit_Received = true;
-
-                                }
-                                catch
-                                {
-
-                                    if (Time_Unit_Received == false)
-                                    {
-                                        switch (Word_Buffer)
-                                        {
-                                            case "one":
-
-                                                Time_Unit_Value_Buffer = 1;
-
-                                                Time_Unit_Received = true;
-
-                                                break;
-
-
-                                            case "two":
-
-                                                Time_Unit_Value_Buffer = 2;
-
-                                                Time_Unit_Received = true;
-
-                                                break;
-
-
-                                            case "three":
-
-                                                Time_Unit_Value_Buffer = 3;
-
-                                                Time_Unit_Received = true;
-
-                                                break;
-
-
-                                            case "four":
-
-                                                Time_Unit_Value_Buffer = 4;
-
-                                                Time_Unit_Received = true;
-
-                                                break;
-
-
-                                            case "five":
-
-                                                Time_Unit_Value_Buffer = 5;
-
-                                                Time_Unit_Received = true;
-
-                                                break;
-
-
-                                            case "six":
-
-                                                Time_Unit_Value_Buffer = 6;
-
-                                                Time_Unit_Received = true;
-
-                                                break;
-
-
-                                            case "seven":
-
-                                                Time_Unit_Value_Buffer = 7;
-
-                                                Time_Unit_Received = true;
-
-                                                break;
-
-
-                                            case "eight":
-
-                                                Time_Unit_Value_Buffer = 8;
-
-                                                Time_Unit_Received = true;
-
-                                                break;
-
-
-                                            case "nine":
-
-                                                Time_Unit_Value_Buffer = 9;
-
-                                                Time_Unit_Received = true;
-
-                                                break;
-                                        }
-
-                                    }
-
-                                }
-                            }
-
-
-                            Word_Buffer = String.Empty;
-                        }
-                        else
-                        {
-                            Word_Buffer += Sentence[Index].ToString();
-                        }
-                    }
-
+                    await Timer_Time_Selector(Sentence, time_interval, "set a ".Length - 1);
 
                     await Proc<System.Collections.Concurrent.ConcurrentDictionary<string, int>>.ProcInitialisation("Timer Process", null, time_interval);
-
                     break;
 
 
 
                 case "please set a [Timer Interval] timer":
-
-                    Time_Unit_Received = false;
-
-                    Time_Unit_Value_Buffer = 0;
-
-                    Word_Buffer = String.Empty;
-
-
-
-
-
-
-                    for (int Index = 13; Index <= Sentence.Length - 6; Index++)
-                    {
-                        if (Sentence[Index].ToString() == " ")
-                        {
-
-                            if (Time_Unit_Received == true)
-                            {
-
-                                if ((Word_Buffer == "hour") || (Word_Buffer == "hours"))
-                                {
-
-                                    int buffer = 0;
-
-                                    bool retrieval_result = time_interval.TryGetValue("hours", out buffer);
-
-                                    if (retrieval_result == false)
-                                    {
-                                        time_interval.TryAdd("hours", Time_Unit_Value_Buffer);
-
-                                        Time_Unit_Value_Buffer = 0;
-
-                                        Time_Unit_Received = false;
-                                    }
-                                    else
-                                    {
-                                        break;
-                                    }
-
-                                }
-                                else if ((Word_Buffer.Trim() == "minute") || (Word_Buffer.Trim() == "minutes"))
-                                {
-
-                                    int buffer = 0;
-
-                                    bool retrieval_result = time_interval.TryGetValue("minutes", out buffer);
-
-                                    if (retrieval_result == false)
-                                    {
-                                        time_interval.TryAdd("minutes", Time_Unit_Value_Buffer);
-
-                                        Time_Unit_Value_Buffer = 0;
-
-                                        Time_Unit_Received = false;
-                                    }
-                                    else
-                                    {
-                                        break;
-                                    }
-
-                                }
-                                else if ((Word_Buffer == "second") || (Word_Buffer == "seconds"))
-                                {
-
-                                    int buffer = 0;
-
-                                    bool retrieval_result = time_interval.TryGetValue("seconds", out buffer);
-
-                                    if (retrieval_result == false)
-                                    {
-                                        time_interval.TryAdd("seconds", Time_Unit_Value_Buffer);
-
-                                        Time_Unit_Value_Buffer = 0;
-
-                                        Time_Unit_Received = false;
-                                    }
-                                    else
-                                    {
-                                        break;
-                                    }
-
-                                }
-
-                            }
-                            else
-                            {
-                                try
-                                {
-
-                                    double Number_Verification_Buffer = Convert.ToDouble(Word_Buffer);
-
-                                    Time_Unit_Value_Buffer = Convert.ToInt32(Word_Buffer);
-
-                                    Time_Unit_Received = true;
-
-                                }
-                                catch
-                                {
-
-                                    if (Time_Unit_Received == false)
-                                    {
-                                        if (Word_Buffer == "one")
-                                        {
-                                            Time_Unit_Value_Buffer = 1;
-
-                                            Time_Unit_Received = true;
-                                        }
-
-                                    }
-
-                                }
-                            }
-
-
-                            Word_Buffer = String.Empty;
-                        }
-                        else
-                        {
-                            Word_Buffer += Sentence[Index].ToString();
-                        }
-                    }
-
+                    await Timer_Time_Selector(Sentence, time_interval, "please set a ".Length - 1);
 
                     await Proc<System.Collections.Concurrent.ConcurrentDictionary<string, int>>.ProcInitialisation("Timer Process", null, time_interval);
-
                     break;
             }
 
@@ -1180,7 +476,207 @@ namespace Eva_5._0
             return true;
         }
 
+        private static Task<bool> Timer_Time_Selector(string Sentence, System.Collections.Concurrent.ConcurrentDictionary<string, int> time_interval, int start_index)
+        {
 
+            bool Time_Unit_Received = false;
+
+            int Time_Unit_Value_Buffer = 0;
+
+            string Word_Buffer = String.Empty;
+
+            int buffer = 0;
+
+
+
+            for (int Index = start_index; Index <= Sentence.Length - 6; Index++)
+            {
+                if (Sentence[Index].ToString() == " ")
+                {
+
+                    if (Time_Unit_Received == true)
+                    {
+
+                        if ((Word_Buffer == "hour") || (Word_Buffer == "hours"))
+                        {
+
+                            bool retrieval_result = time_interval.TryGetValue("hours", out buffer);
+
+                            if (retrieval_result == false)
+                            {
+                                time_interval.TryAdd("hours", Time_Unit_Value_Buffer);
+
+                                Time_Unit_Value_Buffer = 0;
+
+                                Time_Unit_Received = false;
+                            }
+                            else
+                            {
+                                break;
+                            }
+
+                        }
+                        else if ((Word_Buffer.Trim() == "minute") || (Word_Buffer.Trim() == "minutes"))
+                        {
+
+                            bool retrieval_result = time_interval.TryGetValue("minutes", out buffer);
+
+                            if (retrieval_result == false)
+                            {
+                                time_interval.TryAdd("minutes", Time_Unit_Value_Buffer);
+
+                                Time_Unit_Value_Buffer = 0;
+
+                                Time_Unit_Received = false;
+                            }
+                            else
+                            {
+                                break;
+                            }
+
+                        }
+                        else if ((Word_Buffer == "second") || (Word_Buffer == "seconds"))
+                        {
+
+                            bool retrieval_result = time_interval.TryGetValue("seconds", out buffer);
+
+                            if (retrieval_result == false)
+                            {
+                                time_interval.TryAdd("seconds", Time_Unit_Value_Buffer);
+
+                                Time_Unit_Value_Buffer = 0;
+
+                                Time_Unit_Received = false;
+                            }
+                            else
+                            {
+                                break;
+                            }
+
+                        }
+
+                    }
+                    else
+                    {
+                        try
+                        {
+
+                            double Number_Verification_Buffer = Convert.ToDouble(Word_Buffer);
+
+                            Time_Unit_Value_Buffer = Convert.ToInt32(Word_Buffer);
+
+                            Time_Unit_Received = true;
+
+                        }
+                        catch
+                        {
+
+                            if (Time_Unit_Received == false)
+                            {
+                                if (Word_Buffer == "one")
+                                {
+                                    Time_Unit_Value_Buffer = 1;
+
+                                    Time_Unit_Received = true;
+                                }
+
+                            }
+
+                        }
+                    }
+
+
+                    Word_Buffer = String.Empty;
+                }
+                else
+                {
+                    Word_Buffer += Sentence[Index].ToString();
+                }
+            }
+
+            return Task.FromResult(true);
+        }
+
+        private static Task<string> Web_Application_Selector(int start_index, string Sentence)
+        {
+            string Web_Application = "google";
+
+            switch (start_index == Sentence.IndexOf(" google images "))
+            {
+                case true:
+                    Web_Application = "google images";
+                    break;
+
+                case false:
+                    switch (start_index == Sentence.IndexOf(" google news "))
+                    {
+                        case true:
+                            Web_Application = "google news";
+                            break;
+
+                        case false:
+
+                            switch (start_index == Sentence.IndexOf(" google "))
+                            {
+                                case true:
+                                    Web_Application = "google";
+                                    break;
+
+                                case false:
+
+                                    switch (start_index == Sentence.IndexOf(" wikipedia "))
+                                    {
+                                        case true:
+                                            Web_Application = "wikipedia";
+                                            break;
+
+                                        case false:
+
+                                            switch (start_index == Sentence.IndexOf(" ebay "))
+                                            {
+                                                case true:
+                                                    Web_Application = "ebay";
+                                                    break;
+
+                                                case false:
+
+                                                    switch (start_index == Sentence.IndexOf(" netflix "))
+                                                    {
+                                                        case true:
+                                                            Web_Application = "netflix";
+                                                            break;
+
+                                                        case false:
+
+                                                            switch (start_index == Sentence.IndexOf(" youtube "))
+                                                            {
+                                                                case true:
+                                                                    Web_Application = "youtube";
+                                                                    break;
+
+                                                                case false:
+
+                                                                    if (start_index == Sentence.IndexOf(" amazon "))
+                                                                    {
+                                                                        Web_Application = "amazon";
+                                                                    }
+                                                                    break;
+                                                            }
+                                                            break;
+                                                    }
+                                                    break;
+                                            }
+                                            break;
+                                    }
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+            }
+
+            return Task.FromResult(Web_Application);
+        }
         ~Natural_Language_Processing()
         {
             System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;

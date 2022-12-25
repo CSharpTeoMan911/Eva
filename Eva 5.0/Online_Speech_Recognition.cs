@@ -236,7 +236,10 @@ namespace Eva_5._0
                             //
                             // BEGIN
 
-                            online_speech_recognition_interface.Refresh();
+                            for(int refresh_counter = 0; refresh_counter < 5; refresh_counter++)
+                            {
+                                online_speech_recognition_interface.Refresh();
+                            }
 
                             // END
                             break;
