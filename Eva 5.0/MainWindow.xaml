@@ -28,7 +28,7 @@
 
     <Window.Background>
         <LinearGradientBrush StartPoint="0.5, 1">
-            <GradientStop Color="#FF2B2828" Offset="1.5"/>
+            <GradientStop Color="#FF2B2828" Offset="2.5"/>
             <GradientStop Color="#FF121111"/>
         </LinearGradientBrush>
     </Window.Background>
@@ -63,7 +63,7 @@
 
         <Path Grid.Row="1" Grid.Column="4" StrokeThickness="2">
             <Path.Effect>
-                <BlurEffect Radius="1"/>
+                <DropShadowEffect ShadowDepth="6.5" BlurRadius="10"/>
             </Path.Effect>
 
             <Path.Stroke>
@@ -90,8 +90,9 @@
         </Path>
 
         <Path Grid.Row="1" Grid.Column="4" StrokeThickness="2">
+
             <Path.Effect>
-                <BlurEffect Radius="1"/>
+                <DropShadowEffect ShadowDepth="6.5" BlurRadius="10"/>
             </Path.Effect>
 
             <Path.Stroke>
@@ -119,6 +120,9 @@
 
         <Rectangle Grid.Row="2" Grid.Column="4" Height="31.5" Width="45" HorizontalAlignment="Right">
 
+            <Rectangle.Effect>
+                <BlurEffect Radius="2"/>
+            </Rectangle.Effect>
             
             <Rectangle.Clip>
                 <RectangleGeometry Rect="0,0,50,31.5" RadiusX="2" RadiusY="2"/>
@@ -169,7 +173,7 @@
             <Rectangle.Effect>
                 <BlurEffect Radius="2"/>
             </Rectangle.Effect>
-            
+
             <Rectangle.Clip>
                 <RectangleGeometry Rect="0,0,40,25" RadiusX="2" RadiusY="2"/>
             </Rectangle.Clip>
@@ -183,25 +187,16 @@
         </Rectangle>
 
 
-        <!--Grid.Row="1" Grid.RowSpan="2" Grid.Column="2"--><!--
-        <xrpb:RadialProgressBar Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="9" HorizontalAlignment="Center" VerticalAlignment="Center" Height="68" Width="68" Value="100" Background="Transparent">
-
-            <xrpb:RadialProgressBar.Foreground>
-                <LinearGradientBrush StartPoint="0.5, 1">
-                    <GradientStop Color="#FFA51306" Offset="1.5"/>
-                    <GradientStop Color="#FF9C0101"/>
-                </LinearGradientBrush>
-            </xrpb:RadialProgressBar.Foreground>
-               
-        </xrpb:RadialProgressBar>-->
-
-
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="3" Grid.ColumnSpan="2">
 
 
 
             <Button Focusable="False" x:Name="MinimiseTheWindowButton" Click="MinimiseTheMainWindow" Margin="0,5,7,0" HorizontalAlignment="Right" VerticalAlignment="Top" Content="&#xEF2D;" FontSize="20" FontFamily="Segoe MDL2 Assets" Background="Transparent" Style="{StaticResource MyButtonStyle}">
 
+                <Button.Effect>
+                    <DropShadowEffect BlurRadius="15"/>
+                </Button.Effect>
+                
                 <Button.Foreground>
                     <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                         <GradientStop Color="#FF7BBFD8" x:Name="MinimiseTheWindowOffset" Offset="1"/>
@@ -214,6 +209,10 @@
 
             <Button Focusable="False" x:Name="CloseTheWindowButton" Click="CloseTheApplication" Margin="7,5,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" Content="&#xEF2C;" FontSize="20" FontFamily="Segoe MDL2 Assets" Background="Transparent" BorderBrush="Transparent" Style="{StaticResource MyButtonStyle}">
 
+                <Button.Effect>
+                    <DropShadowEffect BlurRadius="15"/>
+                </Button.Effect>
+                
                 <Button.Foreground>
                     <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                         <GradientStop Color="#FF7BBFD8" x:Name="CloseTheWindowButtonOffset" Offset="1"/>
@@ -241,14 +240,19 @@
         <Button Focusable="False" x:Name="OpenTimerMenuButton" Click="OpenTimerWindow" BorderBrush="Transparent" Background="Transparent" Margin="5,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="2" FontFamily="Segoe MDL2 Assets" FontSize="18" Content="&#xED5A;" Style="{StaticResource MyButtonStyle}">
             <Button.Foreground>
                 <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                    <GradientStop Color="#FF7BBFD8" x:Name="OpenTimerMenuButtonOffset" Offset="1"/>
-                    <GradientStop Color="#FF11497F" x:Name="OpenTimerMenuButtonNotOffset"/>
+                    <GradientStop Color="#FFD67A71" x:Name="OpenTimerMenuButtonOffset" Offset="1"/>
+                    <GradientStop Color="#FF7F1111" x:Name="OpenTimerMenuButtonNotOffset"/>
                 </LinearGradientBrush>
             </Button.Foreground>
         </Button>
 
 
         <Button Focusable="False" x:Name="SpeechRecognitionButton" Click="StartOrStopSpeechRecognition" Grid.Column="2" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center" BorderBrush="Transparent" Background="Transparent" FontFamily="Segoe MDL2 Assets" FontSize="22" Content="&#xF781;" Style="{StaticResource MyButtonStyle}">
+
+            <Button.Effect>
+                <DropShadowEffect ShadowDepth="2"/>
+            </Button.Effect>
+            
             <Button.Foreground>
                 <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                     <GradientStop Color="#FF7BBFD8" x:Name="SpeechRecognitionButtonOffset" Offset="1"/>
@@ -270,7 +274,7 @@
         <Ellipse Focusable="False" x:Name="InnerElipse" Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" Height="44" Width="44" Fill="#FF121111"/>
 
 
-        <Rectangle Focusable="False" Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="Rotator"  Height="55" Width="16" Fill="#FF121111" RenderTransformOrigin="0.5,0.5">
+        <Rectangle Focusable="False" Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="Rotator"  Height="57" Width="16" Fill="#FF121111" RenderTransformOrigin="0.5,0.5">
 
             <Rectangle.Effect>
                 <BlurEffect/>

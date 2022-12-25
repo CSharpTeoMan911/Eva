@@ -28,7 +28,28 @@ namespace Eva_5._0
     internal class Proc<Content>:A_p_l____And____P_r_o_c
     {
 
+
+        /////////////////////////////////////////////////////////////////////////////
+        ///                                                                       ///
+        ///                   PRODUCT: EVA A.I. ASSISTANT                         ///
+        ///                                                                       ///
+        ///                   AUTHOR: TEODOR MIHAIL                               ///
+        ///                                                                       ///
+        ///                                                                       ///
+        /// ANY UNAUTHORISED TRADEMARK USE OF THIS SOFTWARE IS PUNISHABLE BY LAW  ///
+        ///                                                                       ///
+        /// THE AUTHOR OF THIS SOFTWARE DOES NOT LET ANY PEOPLE PATENT OR USE     ///
+        /// THIS PRODUCT'S TRADEMARK.                                             ///
+        ///                                                                       ///
+        /// DO NOT REMOVE THIS FILE HEADER                                        ///
+        ///                                                                       ///
+        /////////////////////////////////////////////////////////////////////////////
+        
+        
         /*
+         * 
+         * 
+         * 
          * 
          * ALL THE PROCESSES (ONLINE OR SYSTEM RELATED) ARE MULTITHREADED WITHIN AN ASYNCHRONOUS CALL STACK.
          * 
@@ -48,7 +69,25 @@ namespace Eva_5._0
          * COPY THEM IN THE APPLICATION'S DESIRED BIN FOLDER
          * 
          * 
+         * 
+         * 
          */
+
+
+        private sealed class Process_Execution_Mitigator:MainWindow
+        {
+            public static Task<bool> Process_Execution_Mitigator_Task()
+            {
+
+                lock (Online_Speech_Recogniser_Listening)
+                {
+                    Online_Speech_Recogniser_Listening = "false";
+                }
+
+                return Task.FromResult(true);
+            }
+
+        }
 
 
 
@@ -73,6 +112,8 @@ namespace Eva_5._0
                     await Screen_Capture();
                     break;
             }
+
+            await Process_Execution_Mitigator.Process_Execution_Mitigator_Task();
 
             return true;
         }
@@ -385,6 +426,7 @@ namespace Eva_5._0
 
             return await Screen_Capture_Mechanism.Screen_Capture_Initiator();
         }
+
 
 
         ~Proc()

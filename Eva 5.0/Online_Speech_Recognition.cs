@@ -25,11 +25,9 @@ namespace Eva_5._0
     /////////////////////////////////////////////////////////////////////////////
 
 
-    internal class Online_Speech_Recognition
+    internal class Online_Speech_Recognition:MainWindow
     {
         private static System.Threading.Thread ParallelProcessing;
-        public static DateTime? online_speech_recognition_timeout;
-        public static int ThreadCounter;
 
 
         public static Task<bool> Online_Speech_Recognition_Session_Creation_And_Initiation()
@@ -41,24 +39,24 @@ namespace Eva_5._0
             // [ BEGIN ]
             // 
 
-            lock (MainWindow.Online_Speech_Recogniser_Thread_Initiated)
+            lock (Online_Speech_Recogniser_Thread_Initiated)
             {
-                lock (MainWindow.Online_Speech_Recogniser_Listening)
+                lock (Online_Speech_Recogniser_Listening)
                 {
-                    lock (MainWindow.Online_Speech_Recogniser_Disabled)
+                    lock (Online_Speech_Recogniser_Disabled)
                     {
-                        lock (MainWindow.Window_Minimised)
+                        lock (Window_Minimised)
                         {
-                            if (MainWindow.Online_Speech_Recogniser_Disabled == "false")
+                            if (Online_Speech_Recogniser_Disabled == "false")
                             {
-                                if (MainWindow.Window_Minimised == "false")
+                                if (Window_Minimised == "false")
                                 {
                                     if (ThreadCounter < 3)
                                     {
                                         ThreadCounter++;
 
-                                        MainWindow.Online_Speech_Recogniser_Thread_Initiated = "true";
-                                        MainWindow.Online_Speech_Recogniser_Listening = "true";
+                                        Online_Speech_Recogniser_Thread_Initiated = "true";
+                                        Online_Speech_Recogniser_Listening = "true";
 
                                         ParallelProcessing = new System.Threading.Thread(async () =>
                                         {
@@ -137,11 +135,11 @@ namespace Eva_5._0
 
 
                                         case false:
-                                            lock (MainWindow.Online_Speech_Recogniser_Disabled)
+                                            lock (Online_Speech_Recogniser_Disabled)
                                             {
-                                                lock (MainWindow.Window_Minimised)
+                                                lock (Window_Minimised)
                                                 {
-                                                    if (MainWindow.Window_Minimised == "true" || MainWindow.Online_Speech_Recogniser_Disabled == "true")
+                                                    if (Window_Minimised == "true" || Online_Speech_Recogniser_Disabled == "true")
                                                     {
                                                         goto Function_Not_Initiated;
                                                     }
@@ -212,9 +210,9 @@ namespace Eva_5._0
         {
             if(sender.State == Windows.Media.SpeechRecognition.SpeechRecognizerState.SpeechDetected)
             {
-                lock(MainWindow.Speech_Detected)
+                lock(Speech_Detected)
                 {
-                    MainWindow.Speech_Detected = "true";
+                    Speech_Detected = "true";
                 }
 
                 online_speech_recognition_timeout = DateTime.Now;

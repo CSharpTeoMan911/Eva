@@ -25,6 +25,24 @@ namespace Eva_5._0
 
 
 
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
+    //                                                                                                  //
+    //       CONTEXTUAL NATURAL LANGUAGE PROCESSING ENGINE ( NATURAL LANGUAGE UNDERSTANDING ENGINE )    //
+    //                                                                                                  //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
+    //                                                                                                  //
+    //          TIME COMPLEXITIES:                                                                      //
+    //                                                                                                  //
+    //          WORST: O(N)                                                                             //
+    //                                                                                                  //
+    //          BEST: O(N - ci)     ===>  "ci = current index of the sentence where                     //
+    //                                          did not match with any command patern"                  //
+    //                                                                                                  //
+    //                                                                                                  //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
     internal class Natural_Language_Processing
     {
 

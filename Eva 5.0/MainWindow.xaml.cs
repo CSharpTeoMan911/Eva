@@ -62,17 +62,24 @@ namespace Eva_5._0
 
         // [ BEGIN ] STATIC OBJECTS OBJECTS THAT ARE ACCESSED IN A THREAD SAFE MANNER
 
-        public static string Online_Speech_Recogniser_Listening = "false";
+        protected static string Online_Speech_Recogniser_Listening = "false";
 
-        public static string Online_Speech_Recogniser_Thread_Initiated = "false";
+        protected static string Online_Speech_Recogniser_Thread_Initiated = "false";
 
-        public static string Speech_Detected = "false";
+        protected static string Speech_Detected = "false";
 
-        public static string Window_Minimised = "false";
+        protected static string Window_Minimised = "false";
 
-        public static string Online_Speech_Recogniser_Disabled = "false";
+        protected static string Online_Speech_Recogniser_Disabled = "false";
 
         // [ END ] STATIC OBJECTS OBJECTS THAT ARE ACCESSED IN A THREAD SAFE MANNER
+
+
+
+
+        protected static DateTime? online_speech_recognition_timeout;
+
+        protected static int ThreadCounter;
 
 
 
@@ -248,7 +255,7 @@ namespace Eva_5._0
 
                                                     if(Online_Speech_Recogniser_Thread_Initiated == "true")
                                                     {
-                                                        if (Online_Speech_Recognition.ThreadCounter == 0)
+                                                        if (ThreadCounter == 0)
                                                         {
                                                             Task.Run(async () =>
                                                             {
@@ -260,11 +267,11 @@ namespace Eva_5._0
                                                         }
                                                     }
 
-                                                    if(Online_Speech_Recognition.online_speech_recognition_timeout != null)
+                                                    if(online_speech_recognition_timeout != null)
                                                     {
-                                                        if(Online_Speech_Recognition.ThreadCounter > 0)
+                                                        if(ThreadCounter > 0)
                                                         {
-                                                            switch (((TimeSpan)(DateTime.Now - Online_Speech_Recognition.online_speech_recognition_timeout)).TotalMilliseconds >= 9000)
+                                                            switch (((TimeSpan)(DateTime.Now - online_speech_recognition_timeout)).TotalMilliseconds >= 9000)
                                                             {
                                                                 case true:
                                                                     Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
@@ -286,7 +293,7 @@ namespace Eva_5._0
                                                                         }
                                                                     }
 
-                                                                    if (((TimeSpan)(DateTime.Now - Online_Speech_Recognition.online_speech_recognition_timeout)).TotalMilliseconds >= target_value - 300)
+                                                                    if (((TimeSpan)(DateTime.Now - online_speech_recognition_timeout)).TotalMilliseconds >= target_value - 300)
                                                                     {
                                                                         if (target_value <= 10000)
                                                                         {
@@ -311,8 +318,8 @@ namespace Eva_5._0
 
 
                                                 case "false":
-                                                    Online_Speech_Recognition.ThreadCounter = 0;
-                                                    Online_Speech_Recognition.online_speech_recognition_timeout = null;
+                                                    ThreadCounter = 0;
+                                                    online_speech_recognition_timeout = null;
 
                                                     target_value = 1000;
                                                     Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
@@ -1167,9 +1174,6 @@ namespace Eva_5._0
 
             return Task.FromResult(Wake_Word_Engine_Shutdown_Successful);
         }
-
-
-        
 
 
         ~MainWindow()
