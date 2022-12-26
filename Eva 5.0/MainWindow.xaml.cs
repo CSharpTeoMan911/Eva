@@ -138,13 +138,47 @@ namespace Eva_5._0
         }
 
 
-        private class OS_Online_Speech_Recognition_Interface_Shutdown_Mitigator_Class:Online_Speech_Recognition
+        protected static Task<bool> OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(bool refresh)
         {
-            public static async Task<bool> OS_Online_Speech_Recognition_Interface_Shutdown_Mitigator()
+
+            try
             {
-                await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(true);
-                return await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(false);
+
+                foreach (System.Diagnostics.Process online_speech_recognition_interface in System.Diagnostics.Process.GetProcessesByName("SpeechRuntime"))
+                {
+                    switch (refresh)
+                    {
+                        case true:
+                            // REFRESH THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS
+                            //
+                            // BEGIN
+
+                            online_speech_recognition_interface.Refresh();
+
+                            // END
+                            break;
+
+
+
+                        case false:
+                            // SHUT DOWN THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS
+                            //
+                            // BEGIN
+
+                            online_speech_recognition_interface.Kill();
+
+                            // END
+                            break;
+                    }
+                }
+
             }
+            catch
+            {
+                return Task.FromResult(false);
+            }
+
+            return Task.FromResult(true);
         }
 
 
@@ -260,7 +294,7 @@ namespace Eva_5._0
                                                         {
                                                             Task.Run(async () =>
                                                             {
-                                                                await OS_Online_Speech_Recognition_Interface_Shutdown_Mitigator_Class.OS_Online_Speech_Recognition_Interface_Shutdown_Mitigator();
+                                                                await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(false);
                                                             });
 
                                                             Online_Speech_Recogniser_Thread_Initiated = "false";

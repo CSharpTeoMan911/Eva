@@ -93,15 +93,13 @@ namespace Eva_5._0
             int Online_Speech_Recogniser_Constraint_Compilation_Procedure_Error_Counter = 0;
             int Online_Speech_Recogniser_Speech_Recognition_Procedure_Error_Counter = 0;
 
-
+        Online_Speech_Recognition_Session_Initiation:
             try
             {
                 online_speech_recognition_timeout = DateTime.Now;
 
                 using (Windows.Media.SpeechRecognition.SpeechRecognizer OnlineSpeechRecognition = new Windows.Media.SpeechRecognition.SpeechRecognizer())
                 {
-
-                Constraint_Compilation_Procedure:
                     Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Constraints = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.WebSearch, "web search");
                     Constraints.Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Max;
                     OnlineSpeechRecognition.Constraints.Add(Constraints);
@@ -168,14 +166,14 @@ namespace Eva_5._0
                                     if(OnlineSpeechRecognition != null)
                                     {
                                         await OnlineSpeechRecognition.StopRecognitionAsync();
-                                        OnlineSpeechRecognition.Constraints.Remove(Constraints);
+                                        OnlineSpeechRecognition.Dispose();
+                                        await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(true);
                                     }
 
-                                    if (Online_Speech_Recogniser_Speech_Recognition_Procedure_Error_Counter < 10)
+                                    if (Online_Speech_Recogniser_Speech_Recognition_Procedure_Error_Counter < 20)
                                     {
                                         Online_Speech_Recogniser_Speech_Recognition_Procedure_Error_Counter++;
-                                        goto Constraint_Compilation_Procedure;
-                                        
+                                        goto Online_Speech_Recognition_Session_Initiation;
                                     }
                                     break;
                             }
@@ -185,13 +183,14 @@ namespace Eva_5._0
                             if (OnlineSpeechRecognition != null)
                             {
                                 await OnlineSpeechRecognition.StopRecognitionAsync();
-                                OnlineSpeechRecognition.Constraints.Remove(Constraints);
+                                OnlineSpeechRecognition.Dispose();
+                                await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(true);
                             }
 
-                            if (Online_Speech_Recogniser_Constraint_Compilation_Procedure_Error_Counter < 10)
+                            if (Online_Speech_Recogniser_Constraint_Compilation_Procedure_Error_Counter < 20)
                             {
                                 Online_Speech_Recogniser_Constraint_Compilation_Procedure_Error_Counter++;
-                                goto Constraint_Compilation_Procedure;
+                                goto Online_Speech_Recognition_Session_Initiation;
                             }
                             break;
 
@@ -236,48 +235,7 @@ namespace Eva_5._0
             }
         }
 
-        protected static Task<bool> OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(bool refresh)
-        {
-
-            try
-            {
-
-                foreach (System.Diagnostics.Process online_speech_recognition_interface in System.Diagnostics.Process.GetProcessesByName("SpeechRuntime"))
-                {
-                    switch (refresh)
-                    {
-                        case true:
-                            // REFRESH THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS
-                            //
-                            // BEGIN
-
-                            online_speech_recognition_interface.Refresh();
-
-                            // END
-                            break;
-
-
-
-                        case false:
-                            // SHUT DOWN THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS
-                            //
-                            // BEGIN
-
-                            online_speech_recognition_interface.Kill();
-
-                            // END
-                            break;
-                    }
-                }
-
-            }
-            catch
-            {
-                return Task.FromResult(false);
-            }
-
-            return Task.FromResult(true);
-        }
+        
 
         ~Online_Speech_Recognition()
         {
