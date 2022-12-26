@@ -4,7 +4,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.Media.ClosedCaptioning;
 
 namespace Eva_5._0
 {
@@ -29,6 +28,7 @@ namespace Eva_5._0
     internal class Online_Speech_Recognition:MainWindow
     {
         private static System.Threading.Thread ParallelProcessing;
+        private static Random random_delay_generator = new Random();
 
 
         public static Task<bool> Online_Speech_Recognition_Session_Creation_And_Initiation()
@@ -91,9 +91,9 @@ namespace Eva_5._0
 
         private static async Task<bool> Initiate_The_Online_Speech_Recognition_Engine()
         {
-
             int Online_Speech_Recogniser_Constraint_Compilation_Procedure_Error_Counter = 0;
             int Online_Speech_Recogniser_Speech_Recognition_Procedure_Error_Counter = 0;
+
 
             try
             {
@@ -119,15 +119,15 @@ namespace Eva_5._0
                             OnlineSpeechRecognition.Timeouts.EndSilenceTimeout = TimeSpan.FromSeconds(9);
                             OnlineSpeechRecognition.Timeouts.InitialSilenceTimeout = TimeSpan.FromSeconds(9);
 
-                        Speech_Recognition_Procedure:
                             Windows.Media.SpeechRecognition.SpeechRecognitionResult Result = await OnlineSpeechRecognition.RecognizeAsync();
-
                             await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(true);
+
+                            
 
                             switch (Result.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
                             {
                                 case true:
-
+                                   
                                     switch ((Result.Text == String.Empty) || (Result.Text == null))
                                     {
                                         case true:
@@ -169,12 +169,14 @@ namespace Eva_5._0
                                     if(OnlineSpeechRecognition != null)
                                     {
                                         await OnlineSpeechRecognition.StopRecognitionAsync();
+                                        OnlineSpeechRecognition.Constraints.Remove(Constraints);
                                     }
 
-                                    if (Online_Speech_Recogniser_Speech_Recognition_Procedure_Error_Counter < 100)
+                                    if (Online_Speech_Recogniser_Speech_Recognition_Procedure_Error_Counter < 10)
                                     {
                                         Online_Speech_Recogniser_Speech_Recognition_Procedure_Error_Counter++;
-                                        goto Speech_Recognition_Procedure;
+                                        goto Constraint_Compilation_Procedure;
+                                        
                                     }
                                     break;
                             }
@@ -184,9 +186,10 @@ namespace Eva_5._0
                             if (OnlineSpeechRecognition != null)
                             {
                                 await OnlineSpeechRecognition.StopRecognitionAsync();
+                                OnlineSpeechRecognition.Constraints.Remove(Constraints);
                             }
 
-                            if (Online_Speech_Recogniser_Constraint_Compilation_Procedure_Error_Counter < 100)
+                            if (Online_Speech_Recogniser_Constraint_Compilation_Procedure_Error_Counter < 10)
                             {
                                 Online_Speech_Recogniser_Constraint_Compilation_Procedure_Error_Counter++;
                                 goto Constraint_Compilation_Procedure;

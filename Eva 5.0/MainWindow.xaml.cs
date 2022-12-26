@@ -142,6 +142,7 @@ namespace Eva_5._0
         {
             public static async Task<bool> OS_Online_Speech_Recognition_Interface_Shutdown_Mitigator()
             {
+                await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(true);
                 return await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(false);
             }
         }
@@ -324,7 +325,6 @@ namespace Eva_5._0
                                                     target_value = 1000;
                                                     Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
                                                     Online_Speech_Recognition_Timer_Display.Text = String.Empty;
-                                                    Online_Speech_Recogniser_Thread_Initiated = "false";
                                                     OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FFACC6D6");
                                                     OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
                                                     break;
