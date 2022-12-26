@@ -28,7 +28,6 @@ namespace Eva_5._0
     internal class Online_Speech_Recognition:MainWindow
     {
         private static System.Threading.Thread ParallelProcessing;
-        private static Random random_delay_generator = new Random();
 
 
         public static Task<bool> Online_Speech_Recognition_Session_Creation_And_Initiation()
