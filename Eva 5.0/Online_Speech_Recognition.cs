@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Media.ClosedCaptioning;
@@ -100,6 +101,7 @@ namespace Eva_5._0
 
                 using (Windows.Media.SpeechRecognition.SpeechRecognizer OnlineSpeechRecognition = new Windows.Media.SpeechRecognition.SpeechRecognizer())
                 {
+
                 Constraint_Compilation_Procedure:
                     Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Constraints = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.WebSearch, "web search");
                     Constraints.Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Max;
@@ -129,8 +131,11 @@ namespace Eva_5._0
                                     switch ((Result.Text == String.Empty) || (Result.Text == null))
                                     {
                                         case true:
-                                            await OnlineSpeechRecognition.StopRecognitionAsync();
-                                            OnlineSpeechRecognition.Dispose();
+                                            if (OnlineSpeechRecognition != null)
+                                            {
+                                                await OnlineSpeechRecognition.StopRecognitionAsync();
+                                                OnlineSpeechRecognition.Dispose();
+                                            }
                                             break;
 
 
@@ -149,8 +154,11 @@ namespace Eva_5._0
                                             await Natural_Language_Processing.PreProcessing(Result.Text);
 
                                         Function_Not_Initiated:;
-                                            await OnlineSpeechRecognition.StopRecognitionAsync();
-                                            OnlineSpeechRecognition.Dispose();
+                                            if (OnlineSpeechRecognition != null)
+                                            {
+                                                await OnlineSpeechRecognition.StopRecognitionAsync();
+                                                OnlineSpeechRecognition.Dispose();
+                                            }
                                             break;
                                     }
                                     break;
@@ -158,8 +166,12 @@ namespace Eva_5._0
 
 
                                 case false:
-                                    await OnlineSpeechRecognition.StopRecognitionAsync();
-                                    if(Online_Speech_Recogniser_Speech_Recognition_Procedure_Error_Counter < 10)
+                                    if(OnlineSpeechRecognition != null)
+                                    {
+                                        await OnlineSpeechRecognition.StopRecognitionAsync();
+                                    }
+
+                                    if (Online_Speech_Recogniser_Speech_Recognition_Procedure_Error_Counter < 100)
                                     {
                                         Online_Speech_Recogniser_Speech_Recognition_Procedure_Error_Counter++;
                                         goto Speech_Recognition_Procedure;
@@ -169,9 +181,12 @@ namespace Eva_5._0
                             break;
 
                         case false:
-                            await OnlineSpeechRecognition.StopRecognitionAsync();
-                            OnlineSpeechRecognition.Constraints.Remove(Constraints);
-                            if (Online_Speech_Recogniser_Constraint_Compilation_Procedure_Error_Counter < 10)
+                            if (OnlineSpeechRecognition != null)
+                            {
+                                await OnlineSpeechRecognition.StopRecognitionAsync();
+                            }
+
+                            if (Online_Speech_Recogniser_Constraint_Compilation_Procedure_Error_Counter < 100)
                             {
                                 Online_Speech_Recogniser_Constraint_Compilation_Procedure_Error_Counter++;
                                 goto Constraint_Compilation_Procedure;

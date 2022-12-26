@@ -43,7 +43,7 @@ namespace Eva_5._0
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    internal class Natural_Language_Processing
+    internal class Natural_Language_Processing:A_p_l____And____P_r_o_c
     {
 
         public static async Task<bool> PreProcessing(string Sentence)
@@ -509,6 +509,7 @@ namespace Eva_5._0
 
             for (int Index = start_index; Index <= Sentence.Length - 6; Index++)
             {
+
                 if (Sentence[Index].ToString() == " ")
                 {
 
@@ -588,18 +589,72 @@ namespace Eva_5._0
                         }
                         catch
                         {
+                            // CHANGE NON NUMBERIC REPRESENTATIONS OF NUMBERS WITH NUMERIC REPRESENTATIONS
+                            //
+                            // BEGIN
 
                             if (Time_Unit_Received == false)
                             {
-                                if (Word_Buffer == "one")
+                                switch (Word_Buffer)
                                 {
-                                    Time_Unit_Value_Buffer = 1;
+                                    case "one":
+                                        Time_Unit_Value_Buffer = 1;
 
-                                    Time_Unit_Received = true;
+                                        Time_Unit_Received = true;
+                                        break;
+
+                                    case "two":
+                                        Time_Unit_Value_Buffer = 2;
+
+                                        Time_Unit_Received = true;
+                                        break;
+
+                                    case "three":
+                                        Time_Unit_Value_Buffer = 3;
+
+                                        Time_Unit_Received = true;
+                                        break;
+
+                                    case "four":
+                                        Time_Unit_Value_Buffer = 4;
+
+                                        Time_Unit_Received = true;
+                                        break;
+
+                                    case "five":
+                                        Time_Unit_Value_Buffer = 5;
+
+                                        Time_Unit_Received = true;
+                                        break;
+
+                                    case "six":
+                                        Time_Unit_Value_Buffer = 6;
+
+                                        Time_Unit_Received = true;
+                                        break;
+
+                                    case "seven":
+                                        Time_Unit_Value_Buffer = 7;
+
+                                        Time_Unit_Received = true;
+                                        break;
+
+                                    case "eight":
+                                        Time_Unit_Value_Buffer = 8;
+
+                                        Time_Unit_Received = true;
+                                        break;
+
+                                    case "nine":
+                                        Time_Unit_Value_Buffer = 9;
+
+                                        Time_Unit_Received = true;
+                                        break;
                                 }
 
                             }
 
+                            // END
                         }
                     }
 
@@ -617,84 +672,24 @@ namespace Eva_5._0
 
         private static Task<string> Web_Application_Selector(int start_index, string Sentence)
         {
-            string Web_Application = "google";
-
-            switch (start_index == Sentence.IndexOf(" google images "))
+            for(int i = 0; i < 8; i++)
             {
-                case true:
-                    Web_Application = "google images";
-                    break;
+                string Token_Buffer = String.Empty;
+                W_e_b__A_p_l_Name__Tokens.TryGetValue(i, out Token_Buffer);
 
-                case false:
-                    switch (start_index == Sentence.IndexOf(" google news "))
-                    {
-                        case true:
-                            Web_Application = "google news";
-                            break;
+                if (start_index == Sentence.IndexOf(Token_Buffer))
+                {
+                    StringBuilder Token_Buffer_String_Builder = new StringBuilder(Token_Buffer);
+                    Token_Buffer_String_Builder.Remove(Token_Buffer_String_Builder.Length - 1, 1);
+                    Token_Buffer_String_Builder.Remove(0, 1);
 
-                        case false:
-
-                            switch (start_index == Sentence.IndexOf(" google "))
-                            {
-                                case true:
-                                    Web_Application = "google";
-                                    break;
-
-                                case false:
-
-                                    switch (start_index == Sentence.IndexOf(" wikipedia "))
-                                    {
-                                        case true:
-                                            Web_Application = "wikipedia";
-                                            break;
-
-                                        case false:
-
-                                            switch (start_index == Sentence.IndexOf(" ebay "))
-                                            {
-                                                case true:
-                                                    Web_Application = "ebay";
-                                                    break;
-
-                                                case false:
-
-                                                    switch (start_index == Sentence.IndexOf(" netflix "))
-                                                    {
-                                                        case true:
-                                                            Web_Application = "netflix";
-                                                            break;
-
-                                                        case false:
-
-                                                            switch (start_index == Sentence.IndexOf(" youtube "))
-                                                            {
-                                                                case true:
-                                                                    Web_Application = "youtube";
-                                                                    break;
-
-                                                                case false:
-
-                                                                    if (start_index == Sentence.IndexOf(" amazon "))
-                                                                    {
-                                                                        Web_Application = "amazon";
-                                                                    }
-                                                                    break;
-                                                            }
-                                                            break;
-                                                    }
-                                                    break;
-                                            }
-                                            break;
-                                    }
-                                    break;
-                            }
-                            break;
-                    }
-                    break;
+                    return Task.FromResult(Token_Buffer_String_Builder.ToString());
+                }
             }
 
-            return Task.FromResult(Web_Application);
+            return Task.FromResult(String.Empty);
         }
+
         ~Natural_Language_Processing()
         {
             System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;

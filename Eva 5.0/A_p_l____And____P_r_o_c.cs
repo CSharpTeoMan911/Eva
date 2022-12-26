@@ -31,6 +31,8 @@ namespace Eva_5._0
 
         protected readonly static System.Collections.Concurrent.ConcurrentDictionary<string, string> W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name = new System.Collections.Concurrent.ConcurrentDictionary<string, string>();
 
+        protected readonly static System.Collections.Concurrent.ConcurrentDictionary<int, string> W_e_b__A_p_l_Name__Tokens = new System.Collections.Concurrent.ConcurrentDictionary<int, string>();
+
         protected readonly static System.Collections.Concurrent.ConcurrentDictionary<string, string> A_p_l_Name__And__A_p_l___P_r_o_c_Name = new System.Collections.Concurrent.ConcurrentDictionary<string, string>();
 
         protected readonly static System.Collections.Concurrent.ConcurrentDictionary<string, string> A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k = new System.Collections.Concurrent.ConcurrentDictionary<string, string>();
@@ -536,6 +538,30 @@ namespace Eva_5._0
                     W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("google images", "https://www.google.com/search?tbm=isch&q=");
 
                     W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("amazon", "https://www.amazon.co.uk/s?k=");
+
+                    // END
+
+
+
+                    // WEB APPLICATIONS TOKENS
+                    //
+                    // BEGIN
+
+                    W_e_b__A_p_l_Name__Tokens.TryAdd(0, " google images ");
+
+                    W_e_b__A_p_l_Name__Tokens.TryAdd(1, " google news ");
+
+                    W_e_b__A_p_l_Name__Tokens.TryAdd(2, " google ");
+
+                    W_e_b__A_p_l_Name__Tokens.TryAdd(3, " wikipedia ");
+
+                    W_e_b__A_p_l_Name__Tokens.TryAdd(4, " ebay ");
+
+                    W_e_b__A_p_l_Name__Tokens.TryAdd(5, " netflix ");
+
+                    W_e_b__A_p_l_Name__Tokens.TryAdd(6, " youtube ");
+
+                    W_e_b__A_p_l_Name__Tokens.TryAdd(7, " amazon ");
 
                     // END
 
