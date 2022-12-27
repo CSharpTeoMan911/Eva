@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -89,6 +90,14 @@ namespace Eva_5._0
 
         }
 
+
+        private sealed class Recycle_Bine_Cleanup_Implementor:Recycle_Bine_Cleanup
+        {
+            public async static Task<bool> Empty_Recycle_Bin_Implementor()
+            {
+                return await Empty_Recycle_Bin();
+            }
+        }
 
 
         public static async Task<bool> ProcInitialisation(string process_type, string application, Content content)
@@ -211,24 +220,62 @@ namespace Eva_5._0
                             switch (application_executable_name[0].ToString() + application_executable_name[1].ToString() + application_executable_name[2].ToString() == "URI")
                             {
                                 case true:
-
                                     MainWindow.BeginExecutionAnimation = true;
 
                                     await Windows.System.Launcher.LaunchUriAsync(new Uri(application_executable_name.Remove(0, 6)));
                                     break;
 
+
+
                                 case false:
-
-                                    MainWindow.BeginExecutionAnimation = true;
-
-                                    using (System.Diagnostics.Process Application_Process = new System.Diagnostics.Process())
+                                    switch(application_executable_name[0].ToString() + application_executable_name[1].ToString() + application_executable_name[2].ToString() == "CMD")
                                     {
-                                        Application_Process.StartInfo.FileName = await Special_Character_Replacement.Remove_Special_Characters_Initiator(application_executable_name);
-                                        Application_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-                                        Application_Process.StartInfo.UseShellExecute = true;
-                                        Application_Process.Start();
+                                        case true:
+                                            MainWindow.BeginExecutionAnimation = true;
 
-                                        new Set_Process_As_Foreground(Application_Process.MainWindowHandle);
+                                            using (System.Diagnostics.Process Application_Process = new System.Diagnostics.Process())
+                                            {
+                                                Application_Process.StartInfo.FileName = "cmd";
+                                                Application_Process.StartInfo.Arguments = "/k " + application_executable_name.Remove(0, 6);
+                                                Application_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                                                Application_Process.StartInfo.CreateNoWindow = true;
+                                                Application_Process.StartInfo.UseShellExecute = true;
+                                                Application_Process.Start();
+                                            }
+                                            break;
+
+
+
+                                        case false:
+                                            MainWindow.BeginExecutionAnimation = true;
+
+                                            switch (application_executable_name[0].ToString() + application_executable_name[1].ToString() + application_executable_name[2].ToString() == "APP")
+                                            {
+                                                case true:
+
+                                                    switch(application_executable_name.Remove(0, 6))
+                                                    {
+                                                        case "recycle bin cleanup":
+                                                            await Recycle_Bine_Cleanup_Implementor.Empty_Recycle_Bin_Implementor();
+                                                            break;
+                                                    }
+                                                    break;
+
+
+
+                                                case false:
+                                                    using (System.Diagnostics.Process Application_Process = new System.Diagnostics.Process())
+                                                    {
+                                                        Application_Process.StartInfo.FileName = await Special_Character_Replacement.Remove_Special_Characters_Initiator(application_executable_name);
+                                                        Application_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                                                        Application_Process.StartInfo.UseShellExecute = true;
+                                                        Application_Process.Start();
+
+                                                        new Set_Process_As_Foreground(Application_Process.MainWindowHandle);
+                                                    }
+                                                    break;
+                                            }
+                                            break;
                                     }
                                     break;
                             }
@@ -247,9 +294,9 @@ namespace Eva_5._0
                             catch { }
                         }
                     }
-                    catch
+                    catch(Exception E)
                     {
-
+                        System.Diagnostics.Debug.WriteLine("Error: " + E.Message);
                         try
                         {
                             if (Application_Not_Found_Error_Download_Link_Result == true)

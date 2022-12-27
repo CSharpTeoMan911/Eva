@@ -33,7 +33,6 @@ namespace Eva_5._0
         public static Task<bool> Online_Speech_Recognition_Session_Creation_And_Initiation()
         {
 
-
             // Initiate the online speech recognizer on another thread.
             //
             // [ BEGIN ]

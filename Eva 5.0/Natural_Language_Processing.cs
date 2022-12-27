@@ -672,10 +672,12 @@ namespace Eva_5._0
 
         private static Task<string> Web_Application_Selector(int start_index, string Sentence)
         {
-            for(int i = 0; i < 8; i++)
+            int web_app_key = 0;
+
+            while(web_app_key < 8)
             {
                 string Token_Buffer = String.Empty;
-                W_e_b__A_p_l_Name__Tokens.TryGetValue(i, out Token_Buffer);
+                W_e_b__A_p_l_Name__Tokens.TryGetValue(web_app_key, out Token_Buffer);
 
                 if (start_index == Sentence.IndexOf(Token_Buffer))
                 {
@@ -685,6 +687,8 @@ namespace Eva_5._0
 
                     return Task.FromResult(Token_Buffer_String_Builder.ToString());
                 }
+
+                web_app_key++;
             }
 
             return Task.FromResult(String.Empty);

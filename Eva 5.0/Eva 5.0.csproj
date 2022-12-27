@@ -122,6 +122,7 @@
     </Compile>
     <Compile Include="Natural_Language_Processing.cs" />
     <Compile Include="Online_Speech_Recognition.cs" />
+    <Compile Include="Recycle_Bine_Cleanup.cs" />
     <Compile Include="Screen_Capture_Mechanism.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsWindow.xaml.cs">

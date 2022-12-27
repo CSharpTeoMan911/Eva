@@ -152,6 +152,12 @@ namespace Eva_5._0
                     A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("control panel", "control.exe");
 
 
+                    A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("temporary files", "CMD = START %TEMP%");
+
+
+                    A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("recycle bin cleanup", "APP = recycle bin cleanup");
+
+
 
 
 
@@ -474,7 +480,7 @@ namespace Eva_5._0
 
                     A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("opera", "Opera");
 
-                    A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("calculator", "Calculator");
+                    A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("calculator", "CalculatorApp");
 
                     A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("paint", "mspaint");
 
