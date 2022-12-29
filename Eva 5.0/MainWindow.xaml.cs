@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Speech.Synthesis;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -49,6 +51,14 @@ namespace Eva_5._0
         private System.Timers.Timer AnimationAndFunctionalityTimer;
 
 
+        private static DateTime current_online_speech_recogniser_time_activation = DateTime.Now;
+
+
+        protected static System.Diagnostics.Stopwatch online_speech_recogniser_lock_state_time_elapsed = new System.Diagnostics.Stopwatch();
+
+        private static bool online_speech_recogniser_lock_state_time_elapsed_is_enabled;
+
+
         private static System.Speech.Recognition.SpeechRecognitionEngine MainSpeechRecogniser;
 
         public static double Speech_Recognition_Accuracy = 0.80;
@@ -71,6 +81,10 @@ namespace Eva_5._0
         protected static string Window_Minimised = "false";
 
         protected static string Online_Speech_Recogniser_Disabled = "false";
+
+        protected static string Online_Speech_Recogniser_State = "Idle";
+
+        protected static string Main_Speech_Recogniser_Speech_Detected = "false";
 
         // [ END ] STATIC OBJECTS OBJECTS THAT ARE ACCESSED IN A THREAD SAFE MANNER
 
@@ -138,11 +152,14 @@ namespace Eva_5._0
         }
 
 
+
         protected static Task<bool> OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(bool refresh)
         {
 
             try
             {
+
+            SpeechRuntime:
 
                 foreach (System.Diagnostics.Process online_speech_recognition_interface in System.Diagnostics.Process.GetProcessesByName("SpeechRuntime"))
                 {
@@ -166,6 +183,11 @@ namespace Eva_5._0
                             // BEGIN
 
                             online_speech_recognition_interface.Kill();
+
+                            if (System.Diagnostics.Process.GetProcessesByName("SpeechRuntime").Count() > 0)
+                            {
+                                goto SpeechRuntime;
+                            }
 
                             // END
                             break;
@@ -283,6 +305,41 @@ namespace Eva_5._0
                                             {
                                                 case "true":
 
+                                                    lock(Online_Speech_Recogniser_State)
+                                                    {
+                                                        switch (Online_Speech_Recogniser_State == "Idle" || Online_Speech_Recogniser_State == "Paused")
+                                                        {
+                                                            case true:
+                                                                
+                                                                if(online_speech_recogniser_lock_state_time_elapsed_is_enabled == false)
+                                                                {
+                                                                    online_speech_recogniser_lock_state_time_elapsed.Start();
+                                                                    online_speech_recogniser_lock_state_time_elapsed_is_enabled = true;
+                                                                }
+
+                                                                if (online_speech_recogniser_lock_state_time_elapsed_is_enabled == true)
+                                                                {
+                                                                    if(online_speech_recogniser_lock_state_time_elapsed.ElapsedMilliseconds > 3000)
+                                                                    {
+                                                                        Task.Run(async() =>
+                                                                        {
+                                                                            await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(false);
+                                                                            ThreadCounter = 0;
+                                                                            Online_Speech_Recogniser_Listening = "false";
+                                                                        });
+                                                                    }
+                                                                }
+                                                                break;
+
+                                                            case false:
+                                                                online_speech_recogniser_lock_state_time_elapsed.Stop();
+                                                                online_speech_recogniser_lock_state_time_elapsed.Reset();
+                                                                online_speech_recogniser_lock_state_time_elapsed_is_enabled = false;
+                                                                break;
+                                                        }
+                                                    }
+
+
                                                     if(Window_Minimised == "true" || Online_Speech_Recogniser_Disabled == "true")
                                                     {
                                                         Online_Speech_Recogniser_Listening = "false";
@@ -361,6 +418,10 @@ namespace Eva_5._0
                                                     Online_Speech_Recognition_Timer_Display.Text = String.Empty;
                                                     OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FFACC6D6");
                                                     OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+
+                                                    online_speech_recogniser_lock_state_time_elapsed.Stop();
+                                                    online_speech_recogniser_lock_state_time_elapsed.Reset();
+                                                    online_speech_recogniser_lock_state_time_elapsed_is_enabled = false;
                                                     break;
                                             }
                                         }
@@ -951,7 +1012,11 @@ namespace Eva_5._0
                                                         {
                                                             if (Application.Current.MainWindow.WindowState == WindowState.Normal)
                                                             {
-                                                                await Online_Speech_Recognition.Online_Speech_Recognition_Session_Creation_And_Initiation();
+                                                                if (((TimeSpan)(DateTime.Now - current_online_speech_recogniser_time_activation)).TotalSeconds > 2)
+                                                                {
+                                                                    await Online_Speech_Recognition.Online_Speech_Recognition_Session_Creation_And_Initiation();
+                                                                    current_online_speech_recogniser_time_activation = DateTime.Now;
+                                                                }
                                                             }
                                                         }
 
@@ -1146,6 +1211,7 @@ namespace Eva_5._0
                                     MainSpeechRecogniser?.RecognizeAsync(System.Speech.Recognition.RecognizeMode.Multiple);
                                     MainSpeechRecogniser.SpeechRecognized += MainSpeechRecogniser_SpeechRecognized;
                                     MainSpeechRecogniser.RecognizeCompleted += MainSpeechRecogniser_RecognizeCompleted;
+                                    MainSpeechRecogniser.AudioStateChanged += MainSpeechRecogniser_AudioStateChanged;
                                 }
                             }
                         }
@@ -1168,9 +1234,22 @@ namespace Eva_5._0
             return Task.FromResult(Wake_Word_Engine_Initiation_Successful);
         }
 
+        private void MainSpeechRecogniser_AudioStateChanged(object sender, System.Speech.Recognition.AudioStateChangedEventArgs e)
+        {
+            lock(Main_Speech_Recogniser_Speech_Detected)
+            {
+                switch(e.AudioState)
+                {
+                    case System.Speech.Recognition.AudioState.Speech:
+                        Main_Speech_Recogniser_Speech_Detected = "true";
+                        break;
 
-
-
+                    default:
+                        Main_Speech_Recogniser_Speech_Detected = "false";
+                        break;
+                }
+            }
+        }
 
         public Task<bool> Close_The_Wake_Word_Engine()
         {
@@ -1208,6 +1287,12 @@ namespace Eva_5._0
 
             return Task.FromResult(Wake_Word_Engine_Shutdown_Successful);
         }
+
+
+
+
+
+
 
 
         ~MainWindow()

@@ -200,7 +200,7 @@ namespace Eva_5._0
             }
             catch (Exception E)
             {
-                if (E.HResult == -2147199735)
+                if(E.HResult == -2147199735)
                 {
                     if (App.PermisissionWindowOpen == false)
                     {
@@ -232,9 +232,12 @@ namespace Eva_5._0
 
                 online_speech_recognition_timeout = DateTime.Now;
             }
-        }
 
-        
+            lock(Online_Speech_Recogniser_State)
+            {
+                Online_Speech_Recogniser_State = sender.State.ToString();
+            }
+        }
 
         ~Online_Speech_Recognition()
         {
