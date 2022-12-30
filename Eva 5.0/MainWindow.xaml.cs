@@ -84,8 +84,6 @@ namespace Eva_5._0
 
         protected static string Online_Speech_Recogniser_State = "Idle";
 
-        protected static string Main_Speech_Recogniser_Speech_Detected = "false";
-
         // [ END ] STATIC OBJECTS OBJECTS THAT ARE ACCESSED IN A THREAD SAFE MANNER
 
 
@@ -152,47 +150,60 @@ namespace Eva_5._0
         }
 
 
+        protected enum OS_Online_Speech_Recognition_Interface_Operation_Option
+        {
+            Kill_Process,
+            Clear_Cache
+        }
 
-        protected static Task<bool> OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(bool refresh)
+
+
+
+        protected static Task<bool> OS_Online_Speech_Recognition_Interface_Controller(OS_Online_Speech_Recognition_Interface_Operation_Option option)
         {
 
             try
             {
 
-            SpeechRuntime:
-
-                foreach (System.Diagnostics.Process online_speech_recognition_interface in System.Diagnostics.Process.GetProcessesByName("SpeechRuntime"))
+                switch (option)
                 {
-                    switch (refresh)
-                    {
-                        case true:
-                            // REFRESH THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS
-                            //
-                            // BEGIN
+                    case OS_Online_Speech_Recognition_Interface_Operation_Option.Kill_Process:
+                        // SHUT DOWN THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS
+                        //
+                        // BEGIN
 
-                            online_speech_recognition_interface.Refresh();
-
-                            // END
-                            break;
-
-
-
-                        case false:
-                            // SHUT DOWN THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS
-                            //
-                            // BEGIN
-
-                            online_speech_recognition_interface.Kill();
+                    OS_Online_Speech_Recognition_Kill_Process:
+                        foreach (System.Diagnostics.Process online_speech_recognition_interface in System.Diagnostics.Process.GetProcessesByName("SpeechRuntime"))
+                        {
+                            if(online_speech_recognition_interface.HasExited == false)
+                            {
+                                online_speech_recognition_interface.Kill();
+                            }
 
                             if (System.Diagnostics.Process.GetProcessesByName("SpeechRuntime").Count() > 0)
                             {
-                                goto SpeechRuntime;
+                                goto OS_Online_Speech_Recognition_Kill_Process;
                             }
+                        }
 
-                            // END
-                            break;
-                    }
+                        // END
+                        break;
+
+                    case OS_Online_Speech_Recognition_Interface_Operation_Option.Clear_Cache:
+                        // REFRESH THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS
+                        //
+                        // BEGIN
+
+                        foreach (System.Diagnostics.Process online_speech_recognition_interface in System.Diagnostics.Process.GetProcessesByName("SpeechRuntime"))
+                        {
+                            online_speech_recognition_interface.Refresh();
+                        }
+
+                        // END
+                        break;
+
                 }
+
 
             }
             catch
@@ -319,12 +330,11 @@ namespace Eva_5._0
 
                                                                 if (online_speech_recogniser_lock_state_time_elapsed_is_enabled == true)
                                                                 {
-                                                                    if(online_speech_recogniser_lock_state_time_elapsed.ElapsedMilliseconds > 3000)
+                                                                    if(online_speech_recogniser_lock_state_time_elapsed.ElapsedMilliseconds > 4000)
                                                                     {
-                                                                        Task.Run(async() =>
+                                                                        Task.Run(async () =>
                                                                         {
-                                                                            await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(false);
-                                                                            ThreadCounter = 0;
+                                                                            await OS_Online_Speech_Recognition_Interface_Controller(OS_Online_Speech_Recognition_Interface_Operation_Option.Kill_Process);
                                                                             Online_Speech_Recogniser_Listening = "false";
                                                                         });
                                                                     }
@@ -351,7 +361,7 @@ namespace Eva_5._0
                                                         {
                                                             Task.Run(async () =>
                                                             {
-                                                                await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(false);
+                                                                await OS_Online_Speech_Recognition_Interface_Controller(OS_Online_Speech_Recognition_Interface_Operation_Option.Kill_Process);
                                                             });
 
                                                             Online_Speech_Recogniser_Thread_Initiated = "false";
@@ -1211,7 +1221,6 @@ namespace Eva_5._0
                                     MainSpeechRecogniser?.RecognizeAsync(System.Speech.Recognition.RecognizeMode.Multiple);
                                     MainSpeechRecogniser.SpeechRecognized += MainSpeechRecogniser_SpeechRecognized;
                                     MainSpeechRecogniser.RecognizeCompleted += MainSpeechRecogniser_RecognizeCompleted;
-                                    MainSpeechRecogniser.AudioStateChanged += MainSpeechRecogniser_AudioStateChanged;
                                 }
                             }
                         }
@@ -1234,22 +1243,6 @@ namespace Eva_5._0
             return Task.FromResult(Wake_Word_Engine_Initiation_Successful);
         }
 
-        private void MainSpeechRecogniser_AudioStateChanged(object sender, System.Speech.Recognition.AudioStateChangedEventArgs e)
-        {
-            lock(Main_Speech_Recogniser_Speech_Detected)
-            {
-                switch(e.AudioState)
-                {
-                    case System.Speech.Recognition.AudioState.Speech:
-                        Main_Speech_Recogniser_Speech_Detected = "true";
-                        break;
-
-                    default:
-                        Main_Speech_Recogniser_Speech_Detected = "false";
-                        break;
-                }
-            }
-        }
 
         public Task<bool> Close_The_Wake_Word_Engine()
         {
