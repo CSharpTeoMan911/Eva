@@ -192,8 +192,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Windows.SDK.Contracts">
-      <Version>10.0.25267-preview</Version>
+      <Version>10.0.22621.755</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.25267-preview" />
     <PackageReference Include="System.Runtime.InteropServices.WindowsRuntime">
       <Version>4.3.0</Version>
     </PackageReference>

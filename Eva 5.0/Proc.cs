@@ -294,9 +294,8 @@ namespace Eva_5._0
                             catch { }
                         }
                     }
-                    catch(Exception E)
+                    catch
                     {
-                        System.Diagnostics.Debug.WriteLine("Error: " + E.Message);
                         try
                         {
                             if (Application_Not_Found_Error_Download_Link_Result == true)
@@ -334,7 +333,6 @@ namespace Eva_5._0
                         catch { }
 
                     }
-
                     break;
 
 

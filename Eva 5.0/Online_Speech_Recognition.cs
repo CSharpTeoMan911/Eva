@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Eva_5._0
@@ -50,7 +47,7 @@ namespace Eva_5._0
                             {
                                 if (Window_Minimised == "false")
                                 {
-                                    if (ThreadCounter < 3)
+                                    if (ThreadCounter < 2)
                                     {
                                         ThreadCounter++;
 
@@ -110,15 +107,14 @@ namespace Eva_5._0
                     {
                         case true:
                             OnlineSpeechRecognition.StateChanged += OnlineSpeechRecognition_StateChanged;
-
                             OnlineSpeechRecognition.Timeouts.BabbleTimeout = TimeSpan.FromSeconds(9);
                             OnlineSpeechRecognition.Timeouts.EndSilenceTimeout = TimeSpan.FromSeconds(9);
                             OnlineSpeechRecognition.Timeouts.InitialSilenceTimeout = TimeSpan.FromSeconds(9);
 
                             Windows.Media.SpeechRecognition.SpeechRecognitionResult Result = await OnlineSpeechRecognition.RecognizeAsync();
-                            await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(true);
+                            await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache);
 
-                            
+
 
                             switch (Result.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
                             {
@@ -166,7 +162,6 @@ namespace Eva_5._0
                                     {
                                         await OnlineSpeechRecognition.StopRecognitionAsync();
                                         OnlineSpeechRecognition.Dispose();
-                                        await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(true);
                                     }
 
                                     if (Online_Speech_Recogniser_Speech_Recognition_Procedure_Error_Counter < 20)
@@ -183,7 +178,6 @@ namespace Eva_5._0
                             {
                                 await OnlineSpeechRecognition.StopRecognitionAsync();
                                 OnlineSpeechRecognition.Dispose();
-                                await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(true);
                             }
 
                             if (Online_Speech_Recogniser_Constraint_Compilation_Procedure_Error_Counter < 20)
@@ -212,6 +206,7 @@ namespace Eva_5._0
                     }
                 }
             }
+
 
             if (ThreadCounter > 0)
             {

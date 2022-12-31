@@ -51,8 +51,6 @@ namespace Eva_5._0
         private System.Timers.Timer AnimationAndFunctionalityTimer;
 
 
-        private static DateTime current_online_speech_recogniser_time_activation = DateTime.Now;
-
 
         protected static System.Diagnostics.Stopwatch online_speech_recogniser_lock_state_time_elapsed = new System.Diagnostics.Stopwatch();
 
@@ -152,46 +150,61 @@ namespace Eva_5._0
         }
 
 
+        protected enum Online_Speech_Recognition_Interface_Operation
+        {
+            Online_Speech_Recognition_Interface_Clear_Cache,
+            Online_Speech_Recognition_Interface_Shutdown
+        }
 
-        protected static Task<bool> OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(bool refresh)
+
+        protected static Task<bool> OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation operation)
         {
 
             try
             {
 
-            SpeechRuntime:
-
-                foreach (System.Diagnostics.Process online_speech_recognition_interface in System.Diagnostics.Process.GetProcessesByName("SpeechRuntime"))
+                switch (operation)
                 {
-                    switch (refresh)
-                    {
-                        case true:
-                            // REFRESH THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS
-                            //
-                            // BEGIN
+                    case Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache:
+                        // REFRESH THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS
+                        //
+                        // BEGIN
 
-                            online_speech_recognition_interface.Refresh();
-
-                            // END
-                            break;
-
-
-
-                        case false:
-                            // SHUT DOWN THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS
-                            //
-                            // BEGIN
-
-                            online_speech_recognition_interface.Kill();
-
-                            if (System.Diagnostics.Process.GetProcessesByName("SpeechRuntime").Count() > 0)
+                        foreach (System.Diagnostics.Process online_speech_recognition_interface in System.Diagnostics.Process.GetProcessesByName("SpeechRuntime"))
+                        {
+                            if(online_speech_recognition_interface.HasExited == false)
                             {
-                                goto SpeechRuntime;
+                                online_speech_recognition_interface.Refresh();
                             }
+                        }
 
-                            // END
-                            break;
-                    }
+                        // END
+                        break;
+
+
+
+                    case Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown:
+                        // SHUT DOWN THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS
+                        //
+                        // BEGIN
+
+                    Online_Speech_Recognition_Interface_Shutdown:
+
+                        foreach (System.Diagnostics.Process online_speech_recognition_interface in System.Diagnostics.Process.GetProcessesByName("SpeechRuntime"))
+                        {
+                            if(online_speech_recognition_interface.HasExited == false)
+                            {
+                                online_speech_recognition_interface.Kill();
+
+                                if (System.Diagnostics.Process.GetProcessesByName("SpeechRuntime").Count() > 0)
+                                {
+                                    goto Online_Speech_Recognition_Interface_Shutdown;
+                                }
+                            }
+                        }
+
+                        // END
+                        break;
                 }
 
             }
@@ -222,7 +235,7 @@ namespace Eva_5._0
 
             AnimationAndFunctionalityTimer = new System.Timers.Timer();
             AnimationAndFunctionalityTimer.Elapsed += AnimationAndFunctionalityTimer_Elapsed;
-            AnimationAndFunctionalityTimer.Interval = 10;
+            AnimationAndFunctionalityTimer.Interval = 60;
             AnimationAndFunctionalityTimer.Start();
         }
 
@@ -319,11 +332,11 @@ namespace Eva_5._0
 
                                                                 if (online_speech_recogniser_lock_state_time_elapsed_is_enabled == true)
                                                                 {
-                                                                    if(online_speech_recogniser_lock_state_time_elapsed.ElapsedMilliseconds > 3000)
+                                                                    if(online_speech_recogniser_lock_state_time_elapsed.ElapsedMilliseconds > 4000)
                                                                     {
                                                                         Task.Run(async() =>
                                                                         {
-                                                                            await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(false);
+                                                                            await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
                                                                             ThreadCounter = 0;
                                                                             Online_Speech_Recogniser_Listening = "false";
                                                                         });
@@ -351,7 +364,7 @@ namespace Eva_5._0
                                                         {
                                                             Task.Run(async () =>
                                                             {
-                                                                await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(false);
+                                                                await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
                                                             });
 
                                                             Online_Speech_Recogniser_Thread_Initiated = "false";
@@ -473,7 +486,7 @@ namespace Eva_5._0
                                                 break;
 
                                             case false:
-                                                RotationValue += 4;
+                                                RotationValue += 9;
                                                 break;
                                         }
 
@@ -495,7 +508,7 @@ namespace Eva_5._0
                                                         break;
 
                                                     case false:
-                                                        ExecutionAnimationArithmetic++;
+                                                        ExecutionAnimationArithmetic+= 4;
 
                                                         if(ExecutionAnimationArithmetic >= 4 && ExecutionAnimationArithmetic % 4 == 0)
                                                         {
@@ -545,7 +558,7 @@ namespace Eva_5._0
                                                 {
                                                     case true:
                                                         MinimiseTheWindowOffsetArithmetic--;
-                                                        MinimiseTheWindowOffset.Offset += 0.02;
+                                                        MinimiseTheWindowOffset.Offset += 0.04;
                                                         break;
 
                                                     case false:
@@ -557,11 +570,11 @@ namespace Eva_5._0
 
                                             case false:
 
-                                                switch (MinimiseTheWindowOffsetArithmetic < 45)
+                                                switch (MinimiseTheWindowOffsetArithmetic < 22)
                                                 {
                                                     case true:
                                                         MinimiseTheWindowOffsetArithmetic++;
-                                                        MinimiseTheWindowOffset.Offset -= 0.02;
+                                                        MinimiseTheWindowOffset.Offset -= 0.04;
                                                         break;
 
                                                     case false:
@@ -582,7 +595,7 @@ namespace Eva_5._0
                                                 {
                                                     case true:
                                                         CloseTheWindowButtonOffsetArithmetic--;
-                                                        CloseTheWindowButtonOffset.Offset += 0.02;
+                                                        CloseTheWindowButtonOffset.Offset += 0.04;
                                                         break;
 
                                                     case false:
@@ -594,11 +607,11 @@ namespace Eva_5._0
 
                                             case false:
 
-                                                switch (CloseTheWindowButtonOffsetArithmetic < 45)
+                                                switch (CloseTheWindowButtonOffsetArithmetic < 22)
                                                 {
                                                     case true:
                                                         CloseTheWindowButtonOffsetArithmetic++;
-                                                        CloseTheWindowButtonOffset.Offset -= 0.02;
+                                                        CloseTheWindowButtonOffset.Offset -= 0.04;
                                                         break;
 
                                                     case false:
@@ -619,7 +632,7 @@ namespace Eva_5._0
                                                 {
                                                     case true:
                                                         OpenSettingsMenuButtonOffsetArithmetic--;
-                                                        OpenSettingsMenuButtonOffset.Offset += 0.02;
+                                                        OpenSettingsMenuButtonOffset.Offset += 0.04;
                                                         break;
 
                                                     case false:
@@ -631,11 +644,11 @@ namespace Eva_5._0
 
                                             case false:
 
-                                                switch (OpenSettingsMenuButtonOffsetArithmetic < 45)
+                                                switch (OpenSettingsMenuButtonOffsetArithmetic < 22)
                                                 {
                                                     case true:
                                                         OpenSettingsMenuButtonOffsetArithmetic++;
-                                                        OpenSettingsMenuButtonOffset.Offset -= 0.02;
+                                                        OpenSettingsMenuButtonOffset.Offset -= 0.04;
                                                         break;
 
                                                     case false:
@@ -656,7 +669,7 @@ namespace Eva_5._0
                                                 {
                                                     case true:
                                                         OpenTimerMenuButtonOffsetArithmetic--;
-                                                        OpenTimerMenuButtonOffset.Offset += 0.02;
+                                                        OpenTimerMenuButtonOffset.Offset += 0.04;
                                                         break;
 
                                                     case false:
@@ -668,11 +681,11 @@ namespace Eva_5._0
 
                                             case false:
 
-                                                switch (OpenTimerMenuButtonOffsetArithmetic < 45)
+                                                switch (OpenTimerMenuButtonOffsetArithmetic < 22)
                                                 {
                                                     case true:
                                                         OpenTimerMenuButtonOffsetArithmetic++;
-                                                        OpenTimerMenuButtonOffset.Offset -= 0.02;
+                                                        OpenTimerMenuButtonOffset.Offset -= 0.04;
                                                         break;
 
                                                     case false:
@@ -694,7 +707,7 @@ namespace Eva_5._0
                                                 {
                                                     case true:
                                                         SpeechRecognitionButtonOffsetArithmetic--;
-                                                        SpeechRecognitionButtonOffset.Offset += 0.02;
+                                                        SpeechRecognitionButtonOffset.Offset += 0.04;
                                                         break;
 
                                                     case false:
@@ -706,11 +719,11 @@ namespace Eva_5._0
 
                                             case false:
 
-                                                switch (SpeechRecognitionButtonOffsetArithmetic < 45)
+                                                switch (SpeechRecognitionButtonOffsetArithmetic < 22)
                                                 {
                                                     case true:
                                                         SpeechRecognitionButtonOffsetArithmetic++;
-                                                        SpeechRecognitionButtonOffset.Offset -= 0.02;
+                                                        SpeechRecognitionButtonOffset.Offset -= 0.04;
                                                         break;
 
                                                     case false:
@@ -731,7 +744,7 @@ namespace Eva_5._0
                                                 {
                                                     case true:
                                                         OuterElipseOffsetArithmetic--;
-                                                        OuterElipseOffset.Offset += 0.02;
+                                                        OuterElipseOffset.Offset += 0.04;
                                                         break;
 
                                                     case false:
@@ -743,11 +756,11 @@ namespace Eva_5._0
 
                                             case false:
 
-                                                switch (OuterElipseOffsetArithmetic < 45)
+                                                switch (OuterElipseOffsetArithmetic < 22)
                                                 {
                                                     case true:
                                                         OuterElipseOffsetArithmetic++;
-                                                        OuterElipseOffset.Offset -= 0.02;
+                                                        OuterElipseOffset.Offset -= 0.04;
                                                         break;
 
                                                     case false:
@@ -1012,11 +1025,7 @@ namespace Eva_5._0
                                                         {
                                                             if (Application.Current.MainWindow.WindowState == WindowState.Normal)
                                                             {
-                                                                if (((TimeSpan)(DateTime.Now - current_online_speech_recogniser_time_activation)).TotalSeconds > 2)
-                                                                {
-                                                                    await Online_Speech_Recognition.Online_Speech_Recognition_Session_Creation_And_Initiation();
-                                                                    current_online_speech_recogniser_time_activation = DateTime.Now;
-                                                                }
+                                                                await Online_Speech_Recognition.Online_Speech_Recognition_Session_Creation_And_Initiation();
                                                             }
                                                         }
 
@@ -1211,7 +1220,6 @@ namespace Eva_5._0
                                     MainSpeechRecogniser?.RecognizeAsync(System.Speech.Recognition.RecognizeMode.Multiple);
                                     MainSpeechRecogniser.SpeechRecognized += MainSpeechRecogniser_SpeechRecognized;
                                     MainSpeechRecogniser.RecognizeCompleted += MainSpeechRecogniser_RecognizeCompleted;
-                                    MainSpeechRecogniser.AudioStateChanged += MainSpeechRecogniser_AudioStateChanged;
                                 }
                             }
                         }
@@ -1234,22 +1242,6 @@ namespace Eva_5._0
             return Task.FromResult(Wake_Word_Engine_Initiation_Successful);
         }
 
-        private void MainSpeechRecogniser_AudioStateChanged(object sender, System.Speech.Recognition.AudioStateChangedEventArgs e)
-        {
-            lock(Main_Speech_Recogniser_Speech_Detected)
-            {
-                switch(e.AudioState)
-                {
-                    case System.Speech.Recognition.AudioState.Speech:
-                        Main_Speech_Recogniser_Speech_Detected = "true";
-                        break;
-
-                    default:
-                        Main_Speech_Recogniser_Speech_Detected = "false";
-                        break;
-                }
-            }
-        }
 
         public Task<bool> Close_The_Wake_Word_Engine()
         {
