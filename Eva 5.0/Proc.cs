@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -77,7 +75,6 @@ namespace Eva_5._0
          */
 
 
-
         private sealed class Process_Execution_Mitigator:MainWindow
         {
             public static Task<bool> Process_Execution_Mitigator_Task()
@@ -94,8 +91,18 @@ namespace Eva_5._0
         }
 
 
+        private sealed class Recycle_Bine_Cleanup_Implementor:Recycle_Bine_Cleanup
+        {
+            public async static Task<bool> Empty_Recycle_Bin_Implementor()
+            {
+                return await Empty_Recycle_Bin();
+            }
+        }
+
+
         public static async Task<bool> ProcInitialisation(string process_type, string application, Content content)
         {
+
             switch (process_type)
             {
                 case "Online Process":
@@ -119,7 +126,6 @@ namespace Eva_5._0
 
             return true;
         }
-
 
 
         private static async Task<bool> OnlineProcesses(string WebApplication, string SearchContent)
@@ -170,7 +176,6 @@ namespace Eva_5._0
 
             return true;
         }
-
 
         private static async Task<bool> SystemProcesses(string Application, string Process)
         {
@@ -248,21 +253,12 @@ namespace Eva_5._0
                                             {
                                                 case true:
 
-                                                    string application_name = String.Empty;
-
-                                                    A_p_l_Name__And__A_p_l___E_x__Name.TryGetValue(application_executable_name.Remove(0, 6), out application_name);
-
-                                                   
-                                                    for(int index = 0; index < S_u_b__A_p_l___L_i_s_t.Count(); index++)
+                                                    switch(application_executable_name.Remove(0, 6))
                                                     {
-                                                        Tuple<string, Task<bool>> sub_application = S_u_b__A_p_l___L_i_s_t.ElementAt(index);
-
-                                                        if(sub_application.Item1 == application_executable_name)
-                                                        {
-                                                            await sub_application.Item2;
-                                                        }
+                                                        case "recycle bin cleanup":
+                                                            await Recycle_Bine_Cleanup_Implementor.Empty_Recycle_Bin_Implementor();
+                                                            break;
                                                     }
-
                                                     break;
 
 

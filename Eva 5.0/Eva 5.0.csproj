@@ -122,6 +122,7 @@
     </Compile>
     <Compile Include="Natural_Language_Processing.cs" />
     <Compile Include="Online_Speech_Recognition.cs" />
+    <Compile Include="Recycle_Bine_Cleanup.cs" />
     <Compile Include="Screen_Capture_Mechanism.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsWindow.xaml.cs">
@@ -191,11 +192,8 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Windows.SDK.Contracts">
-      <Version>10.0.22621.755</Version>
+      <Version>10.0.25267-preview</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.25247-preview" />
-    <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.18362.2005" />
-    <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.25267-preview" />
     <PackageReference Include="System.Runtime.InteropServices.WindowsRuntime">
       <Version>4.3.0</Version>
     </PackageReference>

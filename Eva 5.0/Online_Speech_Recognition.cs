@@ -116,6 +116,7 @@ namespace Eva_5._0
                             OnlineSpeechRecognition.Timeouts.InitialSilenceTimeout = TimeSpan.FromSeconds(9);
 
                             Windows.Media.SpeechRecognition.SpeechRecognitionResult Result = await OnlineSpeechRecognition.RecognizeAsync();
+                            await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(true);
 
                             
 
@@ -153,7 +154,6 @@ namespace Eva_5._0
                                             {
                                                 await OnlineSpeechRecognition.StopRecognitionAsync();
                                                 OnlineSpeechRecognition.Dispose();
-                                                await OS_Online_Speech_Recognition_Interface_Controller(OS_Online_Speech_Recognition_Interface_Operation_Option.Clear_Cache);
                                             }
                                             break;
                                     }
@@ -166,7 +166,7 @@ namespace Eva_5._0
                                     {
                                         await OnlineSpeechRecognition.StopRecognitionAsync();
                                         OnlineSpeechRecognition.Dispose();
-                                        await OS_Online_Speech_Recognition_Interface_Controller(OS_Online_Speech_Recognition_Interface_Operation_Option.Clear_Cache);
+                                        await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(true);
                                     }
 
                                     if (Online_Speech_Recogniser_Speech_Recognition_Procedure_Error_Counter < 20)
@@ -183,6 +183,7 @@ namespace Eva_5._0
                             {
                                 await OnlineSpeechRecognition.StopRecognitionAsync();
                                 OnlineSpeechRecognition.Dispose();
+                                await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(true);
                             }
 
                             if (Online_Speech_Recogniser_Constraint_Compilation_Procedure_Error_Counter < 20)

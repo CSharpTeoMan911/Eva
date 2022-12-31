@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Documents;
 
 namespace Eva_5._0
 {
@@ -28,10 +26,6 @@ namespace Eva_5._0
     
     internal class A_p_l____And____P_r_o_c
     {
-        protected readonly static List<Tuple<string, Task<bool>>> S_u_b__A_p_l___L_i_s_t = new List<Tuple<string, Task<bool>>>();
-
-
-
 
         protected readonly static System.Collections.Concurrent.ConcurrentDictionary<string, string> A_p_l_Name__And__A_p_l___E_x__Name = new System.Collections.Concurrent.ConcurrentDictionary<string, string>();
 
@@ -50,33 +44,11 @@ namespace Eva_5._0
 
 
 
-        // SUB-APPLICATIONS
-        //
-        // BEGIN
-
-        [DllImport("Shell32.dll")]
-        private static extern int SHEmptyRecycleBin(IntPtr hwnd, string pszRootPath, int dwFlags);
-
-        protected static Task<bool> Empty_Recycle_Bin()
-        {
-            SHEmptyRecycleBin(IntPtr.Zero, null, 1);
-            return Task.FromResult(true);
-        }
-
-        // END
-
-
-
-
-
 
         public A_p_l____And____P_r_o_c()
         {
             new A_p_l____And____P_r_o_c(true);
         }
-
-
-
 
 
 
@@ -89,17 +61,6 @@ namespace Eva_5._0
             {
                 ParallelProcessing = new System.Threading.Thread(() =>
                 {
-
-                    // ADD SUB-APPLICATIONS
-                    // 
-                    // BEGIN
-
-                    S_u_b__A_p_l___L_i_s_t.Add(new Tuple<string, Task<bool>>("recycle bin cleanup", Empty_Recycle_Bin()));
-
-                    // END
-
-
-
 
                     A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("chrome", "chrome.exe");
 
