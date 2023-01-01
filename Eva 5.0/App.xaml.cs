@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Eva_5._0
@@ -29,8 +24,8 @@ namespace Eva_5._0
     /// DO NOT REMOVE THIS FILE HEADER                                        ///
     ///                                                                       ///
     /////////////////////////////////////////////////////////////////////////////
-    
-    
+
+
     public partial class App : Application
     {
        

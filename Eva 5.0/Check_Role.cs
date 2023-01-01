@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Eva_5._0
 {
@@ -22,8 +18,8 @@ namespace Eva_5._0
     /// DO NOT REMOVE THIS FILE HEADER                                        ///
     ///                                                                       ///
     /////////////////////////////////////////////////////////////////////////////
-    
-    
+
+
     internal class Check_Role
     {
         public Check_Role()

@@ -1,20 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Speech.Synthesis;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
+
 
 namespace Eva_5._0
 {
@@ -138,7 +129,7 @@ namespace Eva_5._0
 
         private double InitialRotatorWidth;
 
-        int RotationValue;
+        private double RotationValue;
 
         private byte OnOff;
 
@@ -235,7 +226,7 @@ namespace Eva_5._0
 
             AnimationAndFunctionalityTimer = new System.Timers.Timer();
             AnimationAndFunctionalityTimer.Elapsed += AnimationAndFunctionalityTimer_Elapsed;
-            AnimationAndFunctionalityTimer.Interval = 60;
+            AnimationAndFunctionalityTimer.Interval = 45;
             AnimationAndFunctionalityTimer.Start();
         }
 
@@ -486,7 +477,7 @@ namespace Eva_5._0
                                                 break;
 
                                             case false:
-                                                RotationValue += 9;
+                                                RotationValue += 7.5;
                                                 break;
                                         }
 

@@ -62,9 +62,7 @@
         <!--<TextBlock Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Consolas" Foreground="Red" FontSize="20" Text="20"/>-->
 
         <Path Grid.Row="1" Grid.Column="4" StrokeThickness="2">
-            <Path.Effect>
-                <DropShadowEffect ShadowDepth="6.5" BlurRadius="10"/>
-            </Path.Effect>
+         
 
             <Path.Stroke>
                 <LinearGradientBrush StartPoint="0.5, 1">
@@ -91,9 +89,6 @@
 
         <Path Grid.Row="1" Grid.Column="4" StrokeThickness="2">
 
-            <Path.Effect>
-                <DropShadowEffect ShadowDepth="6.5" BlurRadius="10"/>
-            </Path.Effect>
 
             <Path.Stroke>
                 <LinearGradientBrush StartPoint="0.5, 1">
@@ -193,10 +188,7 @@
 
             <Button Focusable="False" x:Name="MinimiseTheWindowButton" Click="MinimiseTheMainWindow" Margin="0,5,7,0" HorizontalAlignment="Right" VerticalAlignment="Top" Content="&#xEF2D;" FontSize="20" FontFamily="Segoe MDL2 Assets" Background="Transparent" Style="{StaticResource MyButtonStyle}">
 
-                <Button.Effect>
-                    <DropShadowEffect BlurRadius="15"/>
-                </Button.Effect>
-                
+              
                 <Button.Foreground>
                     <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                         <GradientStop Color="#FF7BBFD8" x:Name="MinimiseTheWindowOffset" Offset="1"/>
@@ -209,9 +201,6 @@
 
             <Button Focusable="False" x:Name="CloseTheWindowButton" Click="CloseTheApplication" Margin="7,5,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" Content="&#xEF2C;" FontSize="20" FontFamily="Segoe MDL2 Assets" Background="Transparent" BorderBrush="Transparent" Style="{StaticResource MyButtonStyle}">
 
-                <Button.Effect>
-                    <DropShadowEffect BlurRadius="15"/>
-                </Button.Effect>
                 
                 <Button.Foreground>
                     <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
@@ -249,9 +238,6 @@
 
         <Button Focusable="False" x:Name="SpeechRecognitionButton" Click="StartOrStopSpeechRecognition" Grid.Column="2" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center" BorderBrush="Transparent" Background="Transparent" FontFamily="Segoe MDL2 Assets" FontSize="22" Content="&#xF781;" Style="{StaticResource MyButtonStyle}">
 
-            <Button.Effect>
-                <DropShadowEffect ShadowDepth="2"/>
-            </Button.Effect>
             
             <Button.Foreground>
                 <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
@@ -276,9 +262,6 @@
 
         <Rectangle Focusable="False" Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="Rotator"  Height="57" Width="16" Fill="#FF121111" RenderTransformOrigin="0.5,0.5">
 
-            <Rectangle.Effect>
-                <BlurEffect/>
-            </Rectangle.Effect>
             
             <Rectangle.RenderTransform>
                 <RotateTransform  Angle="90"/>
