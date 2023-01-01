@@ -23,6 +23,7 @@ namespace Eva_5._0
 
     internal class Online_Speech_Recognition:MainWindow
     {
+        private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Constraints = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.WebSearch, "web search");
         private static System.Threading.Thread ParallelProcessing;
 
 
@@ -34,35 +35,26 @@ namespace Eva_5._0
             // [ BEGIN ]
             // 
 
-            lock (Online_Speech_Recogniser_Thread_Initiated)
+            lock (Online_Speech_Recogniser_Listening)
             {
-                lock (Online_Speech_Recogniser_Listening)
+                lock (Online_Speech_Recogniser_Disabled)
                 {
-                    lock (Online_Speech_Recogniser_Disabled)
+                    lock (Window_Minimised)
                     {
-                        lock (Window_Minimised)
+                        if (Online_Speech_Recogniser_Disabled == "false")
                         {
-                            if (Online_Speech_Recogniser_Disabled == "false")
+                            if (Window_Minimised == "false")
                             {
-                                if (Window_Minimised == "false")
+                                Online_Speech_Recogniser_Listening = "true";
+
+                                ParallelProcessing = new System.Threading.Thread(async () =>
                                 {
-                                    if (ThreadCounter < 2)
-                                    {
-                                        ThreadCounter++;
-
-                                        Online_Speech_Recogniser_Thread_Initiated = "true";
-                                        Online_Speech_Recogniser_Listening = "true";
-
-                                        ParallelProcessing = new System.Threading.Thread(async () =>
-                                        {
-                                            bool Online_Speech_Recognition_Engine_Initiation_Successful = await Initiate_The_Online_Speech_Recognition_Engine();
-                                        });
-                                        ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.MTA);
-                                        ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
-                                        ParallelProcessing.IsBackground = false;
-                                        ParallelProcessing.Start();
-                                    }
-                                }
+                                    bool Online_Speech_Recognition_Engine_Initiation_Successful = await Initiate_The_Online_Speech_Recognition_Engine();
+                                });
+                                ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.MTA);
+                                ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
+                                ParallelProcessing.IsBackground = false;
+                                ParallelProcessing.Start();
                             }
                         }
                     }
@@ -92,10 +84,11 @@ namespace Eva_5._0
             try
             {
                 online_speech_recognition_timeout = DateTime.Now;
+                Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.Now;
+
 
                 using (Windows.Media.SpeechRecognition.SpeechRecognizer OnlineSpeechRecognition = new Windows.Media.SpeechRecognition.SpeechRecognizer())
                 {
-                    Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Constraints = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.WebSearch, "web search");
                     Constraints.Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Max;
                     OnlineSpeechRecognition.Constraints.Add(Constraints);
 
@@ -110,9 +103,9 @@ namespace Eva_5._0
                             OnlineSpeechRecognition.Timeouts.EndSilenceTimeout = TimeSpan.FromSeconds(9);
                             OnlineSpeechRecognition.Timeouts.InitialSilenceTimeout = TimeSpan.FromSeconds(9);
 
+
                             Windows.Media.SpeechRecognition.SpeechRecognitionResult Result = await OnlineSpeechRecognition.RecognizeAsync();
                             await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache);
-
 
 
                             switch (Result.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
@@ -127,10 +120,17 @@ namespace Eva_5._0
                                                 await OnlineSpeechRecognition.StopRecognitionAsync();
                                                 OnlineSpeechRecognition.Dispose();
                                             }
+
+                                            if (Online_Speech_Recogniser_Speech_Recognition_Procedure_Error_Counter < 20)
+                                            {
+                                                Online_Speech_Recogniser_Speech_Recognition_Procedure_Error_Counter++;
+                                                goto Online_Speech_Recognition_Session_Initiation;
+                                            }
                                             break;
 
 
                                         case false:
+
                                             lock (Online_Speech_Recogniser_Disabled)
                                             {
                                                 lock (Window_Minimised)
@@ -206,10 +206,9 @@ namespace Eva_5._0
                 }
             }
 
-
-            if (ThreadCounter > 0)
+            lock(Online_Speech_Recogniser_Listening)
             {
-                ThreadCounter--;
+                Online_Speech_Recogniser_Listening = "false";
             }
 
             return true;
@@ -224,6 +223,7 @@ namespace Eva_5._0
                     Speech_Detected = "true";
                 }
 
+                Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.Now;
                 online_speech_recognition_timeout = DateTime.Now;
             }
 

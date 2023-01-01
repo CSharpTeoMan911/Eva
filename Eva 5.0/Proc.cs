@@ -41,8 +41,8 @@ namespace Eva_5._0
         /// DO NOT REMOVE THIS FILE HEADER                                        ///
         ///                                                                       ///
         /////////////////////////////////////////////////////////////////////////////
-        
-        
+
+
         /*
          * 
          * 
@@ -52,7 +52,7 @@ namespace Eva_5._0
          * 
          * 
          * 
-         * THIS WAS DONE IN ORDER TO ENSURE A SMOOTH OPERABILITY AND ALSO TO AVOID THE THREAD OVERLOAD OF ANY CORE.
+         * THIS WAS DONE IN ORDER TO ENSURE A SMOOTH OPERABILITY AND ALSO TO AVOID THE THREAD OVERLOAD OF ANY CPU CORE.
          * 
          * 
          * 
@@ -71,20 +71,9 @@ namespace Eva_5._0
          */
 
 
-        private sealed class Process_Execution_Mitigator:MainWindow
-        {
-            public static Task<bool> Process_Execution_Mitigator_Task()
-            {
-
-                lock (Online_Speech_Recogniser_Listening)
-                {
-                    Online_Speech_Recogniser_Listening = "false";
-                }
-
-                return Task.FromResult(true);
-            }
-
-        }
+        private static System.Media.SoundPlayer AppExecutionSoundEffect = new System.Media.SoundPlayer("App execution.wav");
+        private static System.Media.SoundPlayer AppTerminationSoundEffect = new System.Media.SoundPlayer("App closing.wav");
+        private static System.Media.SoundPlayer ScreenshotExecutionSoundEffect = new System.Media.SoundPlayer("Screenshot_Sound_Effect.wav");
 
 
         private sealed class Recycle_Bine_Cleanup_Implementor:Recycle_Bine_Cleanup
@@ -92,6 +81,20 @@ namespace Eva_5._0
             public async static Task<bool> Empty_Recycle_Bin_Implementor()
             {
                 return await Empty_Recycle_Bin();
+            }
+        }
+
+
+        private sealed class Begin_Application_Execution_Animation:MainWindow
+        {
+            public static Task<bool> Start_The_Application_Execution_Animation()
+            {
+                lock(BeginExecutionAnimation)
+                {
+                    BeginExecutionAnimation = "true";
+                }
+
+                return Task.FromResult(true);
             }
         }
 
@@ -118,18 +121,13 @@ namespace Eva_5._0
                     break;
             }
 
-            await Process_Execution_Mitigator.Process_Execution_Mitigator_Task();
-
             return true;
         }
 
 
         private static async Task<bool> OnlineProcesses(string WebApplication, string SearchContent)
         {
-           
-            System.Media.SoundPlayer AppExecutionSoundEffect = new System.Media.SoundPlayer("App execution.wav");
-
-
+            
             string Process = String.Empty;
 
 
@@ -139,8 +137,8 @@ namespace Eva_5._0
 
                 W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryGetValue(WebApplication, out Process);
 
+                await Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
 
-                MainWindow.BeginExecutionAnimation = true;
                 using (System.Diagnostics.Process Online_Process = new System.Diagnostics.Process())
                 {
                     Online_Process.StartInfo.FileName = await Special_Character_Replacement.Remove_Special_Characters_Initiator(Process) + await Special_Character_Replacement.Remove_Special_Characters_Initiator(SearchContent);
@@ -148,7 +146,7 @@ namespace Eva_5._0
                     Online_Process.StartInfo.UseShellExecute = true;
                     Online_Process.Start();
 
-                    new Set_Process_As_Foreground(Online_Process.MainWindowHandle);
+                    await SetForegroundWindowInitiator(Online_Process.MainWindowHandle);
                 }
 
                 try
@@ -175,12 +173,6 @@ namespace Eva_5._0
 
         private static async Task<bool> SystemProcesses(string Application, string Process)
         {
-
-            System.Media.SoundPlayer AppExecutionSoundEffect = new System.Media.SoundPlayer("App execution.wav");
-            System.Media.SoundPlayer AppTerminationSoundEffect = new System.Media.SoundPlayer("App closing.wav");
-
-
-
 
             bool SoundOrOff = await Settings.Get_Settings();
 
@@ -216,7 +208,7 @@ namespace Eva_5._0
                             switch (application_executable_name[0].ToString() + application_executable_name[1].ToString() + application_executable_name[2].ToString() == "URI")
                             {
                                 case true:
-                                    MainWindow.BeginExecutionAnimation = true;
+                                    await Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
 
                                     await Windows.System.Launcher.LaunchUriAsync(new Uri(application_executable_name.Remove(0, 6)));
                                     break;
@@ -227,7 +219,7 @@ namespace Eva_5._0
                                     switch(application_executable_name[0].ToString() + application_executable_name[1].ToString() + application_executable_name[2].ToString() == "CMD")
                                     {
                                         case true:
-                                            MainWindow.BeginExecutionAnimation = true;
+                                            await Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
 
                                             using (System.Diagnostics.Process Application_Process = new System.Diagnostics.Process())
                                             {
@@ -243,7 +235,7 @@ namespace Eva_5._0
 
 
                                         case false:
-                                            MainWindow.BeginExecutionAnimation = true;
+                                            await Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
 
                                             switch (application_executable_name[0].ToString() + application_executable_name[1].ToString() + application_executable_name[2].ToString() == "APP")
                                             {
@@ -267,7 +259,7 @@ namespace Eva_5._0
                                                         Application_Process.StartInfo.UseShellExecute = true;
                                                         Application_Process.Start();
 
-                                                        new Set_Process_As_Foreground(Application_Process.MainWindowHandle);
+                                                        await SetForegroundWindowInitiator(Application_Process.MainWindowHandle);
                                                     }
                                                     break;
                                             }
@@ -296,8 +288,7 @@ namespace Eva_5._0
                         {
                             if (Application_Not_Found_Error_Download_Link_Result == true)
                             {
-
-                                MainWindow.BeginExecutionAnimation = true;
+                                await Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
 
                                 using (System.Diagnostics.Process Application_Not_Found_Downdload_Link_Process = new System.Diagnostics.Process())
                                 {
@@ -306,7 +297,7 @@ namespace Eva_5._0
                                     Application_Not_Found_Downdload_Link_Process.StartInfo.UseShellExecute = true;
                                     Application_Not_Found_Downdload_Link_Process.Start();
 
-                                    new Set_Process_As_Foreground(Application_Not_Found_Downdload_Link_Process.MainWindowHandle);
+                                   await SetForegroundWindowInitiator(Application_Not_Found_Downdload_Link_Process.MainWindowHandle);
                                 }
 
 
@@ -338,8 +329,7 @@ namespace Eva_5._0
                     {
                         try
                         {
-
-                            MainWindow.BeginExecutionAnimation = true;
+                            await Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
 
                             if (application_process_name != "timer")
                             {
@@ -359,7 +349,7 @@ namespace Eva_5._0
                                 {
                                     if (System.IO.File.Exists(@"App closing.wav"))
                                     {
-                                        AppExecutionSoundEffect.Play();
+                                        AppTerminationSoundEffect.Play();
                                     }
                                 }
                             }
@@ -384,11 +374,6 @@ namespace Eva_5._0
 
                 bool SoundOrOff = await Settings.Get_Settings();
 
-                System.Media.SoundPlayer AppExecutionSoundEffect = new System.Media.SoundPlayer("App execution.wav");
-
-
-
-
                 int hours_interval = 0;
 
                 Timer_Time_Intervals.TryGetValue("hours", out hours_interval);
@@ -410,11 +395,7 @@ namespace Eva_5._0
 
                 await Timer_Interval.Set_Time_Interval(hours_interval, minutes_interval, seconds_interval);
 
-                MainWindow.BeginExecutionAnimation = true;
-
-
-
-
+                await Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
 
                 try
                 {
@@ -444,18 +425,15 @@ namespace Eva_5._0
         {
             bool SoundOrOff = await Settings.Get_Settings();
 
-            System.Media.SoundPlayer AppExecutionSoundEffect = new System.Media.SoundPlayer("Screenshot_Sound_Effect.wav");
-
             try
             {
-
-                MainWindow.BeginExecutionAnimation = true;
+                await Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
 
                 if (SoundOrOff == true)
                 {
                     if (System.IO.File.Exists(@"Screenshot_Sound_Effect.wav"))
                     {
-                        AppExecutionSoundEffect.Play();
+                        ScreenshotExecutionSoundEffect.Play();
                     }
                 }
 

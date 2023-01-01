@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace Eva_5._0
 {
@@ -38,6 +40,18 @@ namespace Eva_5._0
 
         private readonly System.Threading.Thread ParallelProcessing;
 
+
+
+        // Import the operating system's user32.dll in order to use the operating system's window focus functionality through the WinAPI
+        [DllImport("user32.dll")]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+
+        // Each time the method is called through its constructor, the integer pointer of the application's handle within the operating system is passed and set as the top window
+        protected static Task<bool> SetForegroundWindowInitiator(IntPtr Process_Window_Handle)
+        {
+            return Task.FromResult(SetForegroundWindow(Process_Window_Handle));
+        }
 
 
 

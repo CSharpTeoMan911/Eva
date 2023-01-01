@@ -29,12 +29,28 @@ namespace Eva_5._0
 
     public partial class MainWindow : Window
     {
+        private static RotateTransform Rotate = new RotateTransform();
 
-        private string[] Online_Speech_Recognition_Timeout_Timer_UI_Intervals = new string[10] { "9", "8", "7", "6", "5", "4", "3", "2", "1", "0" };
+        private static System.Collections.Generic.List<string> Online_Speech_Recognition_Timeout_Timer_UI_Intervals = new System.Collections.Generic.List<string>() { "9", "8", "7", "6", "5", "4", "3", "2", "1", "0" };
 
         private short Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index;
 
         private short target_value = 1000;
+
+
+
+
+        // ONLINE SPEECH RECOGNITION ACTIVATION DELAY MACHANISM VARIABLES 
+        //
+        // BEGIN
+
+        protected static DateTime? Online_Speech_Recogniser_Activation_Delay_Detector = null;
+
+        private static double Online_Speech_Recogniser_Activation_Delay = 3.5;
+
+        // END
+
+
 
 
         private System.Threading.Thread ParallelProcessing;
@@ -48,9 +64,10 @@ namespace Eva_5._0
         private static bool online_speech_recogniser_lock_state_time_elapsed_is_enabled;
 
 
+
         private static System.Speech.Recognition.SpeechRecognitionEngine MainSpeechRecogniser;
 
-        public static double Speech_Recognition_Accuracy = 0.80;
+        private static double Speech_Recognition_Accuracy = 0.80;
 
 
         /// <summary>
@@ -63,7 +80,7 @@ namespace Eva_5._0
 
         protected static string Online_Speech_Recogniser_Listening = "false";
 
-        protected static string Online_Speech_Recogniser_Thread_Initiated = "false";
+        protected static string BeginExecutionAnimation = "false";
 
         protected static string Speech_Detected = "false";
 
@@ -81,8 +98,6 @@ namespace Eva_5._0
 
 
         protected static DateTime? online_speech_recognition_timeout;
-
-        protected static int ThreadCounter;
 
 
 
@@ -122,8 +137,6 @@ namespace Eva_5._0
         private int Button_Timeout;
 
         private bool MainWindowIsClosing;
-
-        public static dynamic BeginExecutionAnimation = false;
 
         private static byte ExecutionAnimationArithmetic;
 
@@ -309,7 +322,17 @@ namespace Eva_5._0
                                             {
                                                 case "true":
 
-                                                    lock(Online_Speech_Recogniser_State)
+
+                                                    lock(Online_Speech_Recogniser_Disabled)
+                                                    {
+                                                        if (Window_Minimised == "true" || Online_Speech_Recogniser_Disabled == "true")
+                                                        {
+                                                            Online_Speech_Recogniser_Listening = "false";
+                                                        }
+                                                    }
+
+
+                                                    lock (Online_Speech_Recogniser_State)
                                                     {
                                                         switch (Online_Speech_Recogniser_State == "Idle" || Online_Speech_Recogniser_State == "Paused")
                                                         {
@@ -328,7 +351,6 @@ namespace Eva_5._0
                                                                         Task.Run(async() =>
                                                                         {
                                                                             await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
-                                                                            ThreadCounter = 0;
                                                                             Online_Speech_Recogniser_Listening = "false";
                                                                         });
                                                                     }
@@ -344,67 +366,45 @@ namespace Eva_5._0
                                                     }
 
 
-                                                    if(Window_Minimised == "true" || Online_Speech_Recogniser_Disabled == "true")
-                                                    {
-                                                        Online_Speech_Recogniser_Listening = "false";
-                                                    }
-
-                                                    if(Online_Speech_Recogniser_Thread_Initiated == "true")
-                                                    {
-                                                        if (ThreadCounter == 0)
-                                                        {
-                                                            Task.Run(async () =>
-                                                            {
-                                                                await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
-                                                            });
-
-                                                            Online_Speech_Recogniser_Thread_Initiated = "false";
-                                                            Online_Speech_Recogniser_Listening = "false";
-                                                        }
-                                                    }
-
                                                     if(online_speech_recognition_timeout != null)
                                                     {
-                                                        if(ThreadCounter > 0)
+                                                        switch (((TimeSpan)(DateTime.Now - online_speech_recognition_timeout)).TotalMilliseconds >= 9000)
                                                         {
-                                                            switch (((TimeSpan)(DateTime.Now - online_speech_recognition_timeout)).TotalMilliseconds >= 9000)
-                                                            {
-                                                                case true:
-                                                                    Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
-                                                                    Online_Speech_Recognition_Timer_Display.Text = String.Empty;
-                                                                    Online_Speech_Recogniser_Listening = "false";
-                                                                    break;
+                                                            case true:
+                                                                Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
+                                                                Online_Speech_Recognition_Timer_Display.Text = String.Empty;
+                                                                Online_Speech_Recogniser_Listening = "false";
+                                                                break;
 
 
 
-                                                                case false:
-                                                                    lock (Speech_Detected)
+                                                            case false:
+                                                                lock (Speech_Detected)
+                                                                {
+                                                                    if (Speech_Detected == "true")
                                                                     {
-                                                                        if (Speech_Detected == "true")
-                                                                        {
-                                                                            Speech_Detected = "false";
-                                                                            target_value = 1000;
-                                                                            Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
-                                                                            Online_Speech_Recognition_Timer_Display.Text = String.Empty;
-                                                                        }
+                                                                        Speech_Detected = "false";
+                                                                        target_value = 1000;
+                                                                        Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
+                                                                        Online_Speech_Recognition_Timer_Display.Text = String.Empty;
                                                                     }
+                                                                }
 
-                                                                    if (((TimeSpan)(DateTime.Now - online_speech_recognition_timeout)).TotalMilliseconds >= target_value - 300)
+                                                                if (((TimeSpan)(DateTime.Now - online_speech_recognition_timeout)).TotalMilliseconds >= target_value - 300)
+                                                                {
+                                                                    if (target_value <= 10000)
                                                                     {
-                                                                        if (target_value <= 10000)
-                                                                        {
-                                                                            target_value += 1000;
-                                                                            Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index++;
-                                                                        }
+                                                                        target_value += 1000;
+                                                                        Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index++;
                                                                     }
+                                                                }
 
-                                                                    Online_Speech_Recognition_Timer_Display.Text = Online_Speech_Recognition_Timeout_Timer_UI_Intervals[Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index];
+                                                                Online_Speech_Recognition_Timer_Display.Text = Online_Speech_Recognition_Timeout_Timer_UI_Intervals[Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index];
 
 
-                                                                    OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF91E1FF");
-                                                                    OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF3099FF");
-                                                                    break;
-                                                            }
+                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF91E1FF");
+                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF3099FF");
+                                                                break;
                                                         }
                                                     }
                                                     break;
@@ -414,7 +414,6 @@ namespace Eva_5._0
 
 
                                                 case "false":
-                                                    ThreadCounter = 0;
                                                     online_speech_recognition_timeout = null;
 
                                                     target_value = 1000;
@@ -482,61 +481,56 @@ namespace Eva_5._0
                                         }
 
 
-
-                                        switch (BeginExecutionAnimation == true)
+                                        lock(BeginExecutionAnimation)
                                         {
+                                            switch (BeginExecutionAnimation == "true")
+                                            {
 
-                                            case true:
-                                                Rotator.Width = 0;
+                                                case true:
+                                                    Rotator.Width = 0;
 
-                                                switch (ExecutionAnimationArithmetic == 40)
-                                                {
-                                                    case true:
-                                                        OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                        OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                        ExecutionAnimationArithmetic = 0;
-                                                        BeginExecutionAnimation = false;
-                                                        break;
+                                                    switch (ExecutionAnimationArithmetic == 40)
+                                                    {
+                                                        case true:
+                                                            OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                            OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                            ExecutionAnimationArithmetic = 0;
+                                                            BeginExecutionAnimation = "false";
+                                                            break;
 
-                                                    case false:
-                                                        ExecutionAnimationArithmetic+= 4;
+                                                        case false:
+                                                            ExecutionAnimationArithmetic += 4;
 
-                                                        if(ExecutionAnimationArithmetic >= 4 && ExecutionAnimationArithmetic % 4 == 0)
-                                                        {
-                                                            switch (Colour_Switch)
+                                                            if (ExecutionAnimationArithmetic >= 4 && ExecutionAnimationArithmetic % 4 == 0)
                                                             {
-                                                                case true:
-                                                                    OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                                    OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                                    Colour_Switch = false;
-                                                                    break;
+                                                                switch (Colour_Switch)
+                                                                {
+                                                                    case true:
+                                                                        OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                                        OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                                        Colour_Switch = false;
+                                                                        break;
 
-                                                                case false:
-                                                                    OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                                    OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                                    Colour_Switch = true;
-                                                                    break;
+                                                                    case false:
+                                                                        OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                                        OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                                        Colour_Switch = true;
+                                                                        break;
+                                                                }
                                                             }
-                                                        }
-                                                        break;
-                                                }
-                                                break;
+                                                            break;
+                                                    }
+                                                    break;
 
-                                            case false:
-                                                Rotator.Width = InitialRotatorWidth;
-                                                break;
+                                                case false:
+                                                    Rotator.Width = InitialRotatorWidth;
+                                                    break;
 
+                                            }
                                         }
-                                        
 
 
-
-                                        RotateTransform Rotate = new RotateTransform()
-                                        {
-
-                                            Angle = RotationValue
-                                        };
-
+                                        Rotate.Angle = RotationValue;
                                         Rotator.RenderTransform = Rotate;
 
 
@@ -1016,7 +1010,10 @@ namespace Eva_5._0
                                                         {
                                                             if (Application.Current.MainWindow.WindowState == WindowState.Normal)
                                                             {
-                                                                await Online_Speech_Recognition.Online_Speech_Recognition_Session_Creation_And_Initiation();
+                                                                if (await Online_Speech_Recogniser_Delay_Calculator() == true)
+                                                                {
+                                                                    await Online_Speech_Recognition.Online_Speech_Recognition_Session_Creation_And_Initiation();
+                                                                }
                                                             }
                                                         }
 
@@ -1171,7 +1168,7 @@ namespace Eva_5._0
 
 
 
-        public Task<bool> Initiate_The_Wake_Word_Engine()
+        private Task<bool> Initiate_The_Wake_Word_Engine()
         {
             bool Wake_Word_Engine_Initiation_Successful = true;
 
@@ -1234,7 +1231,7 @@ namespace Eva_5._0
         }
 
 
-        public Task<bool> Close_The_Wake_Word_Engine()
+        private Task<bool> Close_The_Wake_Word_Engine()
         {
             bool Wake_Word_Engine_Shutdown_Successful = true;
 
@@ -1274,7 +1271,37 @@ namespace Eva_5._0
 
 
 
+        private static Task<bool> Online_Speech_Recogniser_Delay_Calculator()
+        {
+            // DISCOVERED THROUGH RESEARCH AND EXPERIMENTATION THAT THE
+            // SERVERS ARE THROWING DROPPING REQUESTS THAT ARE MADE IF
+            // THE NUMBER OF REQUESTS MADE EXCEEDS A CERTAIN LIMIT.
+            //
+            // THIS DISCOVERY WAS MADE BY OBSERVING A GEOMETRICAL
+            // RELATED TO THE FACT THAT, IF REQUESTS ARE MADE ONE
+            // AFTER ANOTHER, THE 5th REQUEST IS THE ONE THAT WILL
+            // FAIL, AND AFTERWARDS IF CONTINOUS REQUESTS ARE MADE
+            // A NUMER OF 3 OR 4 REQUESTS WILL BE DROPPED ONE AFTER
+            // ANOTHER.
+            //
+            // THIS BEHAVIOUR IS NORMAL IN ALL ONLINE SPEECH RECOGNITION
+            // ENGINES BECAUSE ALL OF THEM HAVE A REQUEST LIMIT THAT IS
+            // SET.
+            
 
+            if (Online_Speech_Recogniser_Activation_Delay_Detector == null)
+            {
+                return Task.FromResult(true);
+            }
+            else if (((TimeSpan)(DateTime.Now - Online_Speech_Recogniser_Activation_Delay_Detector)).TotalSeconds > Online_Speech_Recogniser_Activation_Delay)
+            {
+                return Task.FromResult(true);
+            }
+            else
+            {
+                return Task.FromResult(false);
+            }
+        }
 
 
 

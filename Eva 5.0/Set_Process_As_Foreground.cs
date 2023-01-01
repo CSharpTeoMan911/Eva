@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.Activation;
 
 namespace Eva_5._0
 {
@@ -19,19 +21,4 @@ namespace Eva_5._0
     /// DO NOT REMOVE THIS FILE HEADER                                        ///
     ///                                                                       ///
     /////////////////////////////////////////////////////////////////////////////
-
-
-    internal class Set_Process_As_Foreground
-    {
-        // Import the operating system's user32.dll in order to use the operating system's window focus functionality through the WinAPI
-        [DllImport("user32.dll")]
-        private static extern bool SetForegroundWindow(IntPtr hWnd);
-
-
-        // Each time the class is initialised through its constructor, the integer pointer of the application's handle within the operating system is passed and set as the top window
-        public Set_Process_As_Foreground(IntPtr Process_Window_Handle)
-        {
-            SetForegroundWindow(Process_Window_Handle);
-        }
-    }
 }
