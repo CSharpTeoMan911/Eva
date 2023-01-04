@@ -4,12 +4,7 @@ namespace Eva_5._0
 {
     internal class Special_Character_Replacement
     {
-        public static async Task<string> Remove_Special_Characters_Initiator(string Sentence)
-        {
-            return await Remove_Special_Characters(Sentence);
-        }
-
-        private static Task<string> Remove_Special_Characters(string Sentence)
+        protected static Task<string> Remove_Special_Characters(string Sentence)
         {
             // [ BEGIN ] REMOVE SPECIAL CHARACTERS 
             //
@@ -22,69 +17,72 @@ namespace Eva_5._0
             //            COMMANDS INTO THE SHELL OF THE OS WHEN A PROCESS IS EXECUTED.
 
 
-            if (Sentence.Contains("\n") == true)
+            if(Sentence != null)
             {
-                Sentence.Replace("\n", " new line ");
-            }
+                if (Sentence.Contains("\n") == true)
+                {
+                    Sentence = Sentence.Replace("\n", " new line ");
+                }
 
-            if (Sentence.Contains("#") == true)
-            {
-                Sentence.Replace("#", "%23");
-            }
+                if (Sentence.Contains("#") == true)
+                {
+                    Sentence = Sentence.Replace("#", "%23");
+                }
 
-            if (Sentence.Contains("&") == true)
-            {
-                Sentence.Replace("&", " and ");
-            }
+                if (Sentence.Contains("&") == true)
+                {
+                    Sentence = Sentence.Replace("&", " and ");
+                }
 
-            if (Sentence.Contains("|") == true)
-            {
-                Sentence.Replace("|", " pipe ");
-            }
+                if (Sentence.Contains("|") == true)
+                {
+                    Sentence = Sentence.Replace("|", " pipe ");
+                }
 
-            if (Sentence.Contains(">") == true)
-            {
-                Sentence.Replace(">", " greater than ");
-            }
+                if (Sentence.Contains(">") == true)
+                {
+                    Sentence = Sentence.Replace(">", " greater than ");
+                }
 
-            if (Sentence.Contains("<") == true)
-            {
-                Sentence.Replace("<", " less than ");
-            }
+                if (Sentence.Contains("<") == true)
+                {
+                    Sentence = Sentence.Replace("<", " less than ");
+                }
 
-            if (Sentence.Contains("^") == true)
-            {
-                Sentence.Replace("^", " raised to ");
-            }
+                if (Sentence.Contains("^") == true)
+                {
+                    Sentence = Sentence.Replace("^", " raised to ");
+                }
 
-            if (Sentence.Contains("%") == true)
-            {
-                Sentence.Replace("%", " percent ");
-            }
+                if (Sentence.Contains("%") == true)
+                {
+                    Sentence = Sentence.Replace("%", " percent ");
+                }
 
-            if (Sentence.Contains(";") == true)
-            {
-                Sentence.Replace(";", " semicolon ");
-            }
+                if (Sentence.Contains(";") == true)
+                {
+                    Sentence = Sentence.Replace(";", " semicolon ");
+                }
 
-            if (Sentence.Contains("\"") == true)
-            {
-                Sentence.Replace("\"", " double quote ");
-            }
+                if (Sentence.Contains("\"") == true)
+                {
+                    Sentence = Sentence.Replace("\"", " double quote ");
+                }
 
-            if (Sentence.Contains("'") == true)
-            {
-                Sentence.Replace("'", " quote ");
-            }
+                if (Sentence.Contains("'") == true)
+                {
+                    Sentence = Sentence.Replace("'", " quote ");
+                }
 
-            if (Sentence.Contains("\\") == true)
-            {
-                Sentence.Replace("\\", " back slash ");
-            }
+                if (Sentence.Contains("\\") == true)
+                {
+                    Sentence = Sentence.Replace("\\", " backslash ");
+                }
 
-            if (Sentence.Contains("/") == true)
-            {
-                Sentence.Replace("/", " forward slash ");
+                if (Sentence.Contains("/") == true)
+                {
+                    Sentence = Sentence.Replace("/", " forwardslash ");
+                }
             }
 
             // [ END ] REMOVE SPECIAL CHARACTERS 

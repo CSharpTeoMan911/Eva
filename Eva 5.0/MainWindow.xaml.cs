@@ -46,7 +46,7 @@ namespace Eva_5._0
 
         protected static DateTime? Online_Speech_Recogniser_Activation_Delay_Detector = null;
 
-        private static double Online_Speech_Recogniser_Activation_Delay = 3.5;
+        private static double Online_Speech_Recogniser_Activation_Delay = 3.6;
 
         // END
 
@@ -771,6 +771,41 @@ namespace Eva_5._0
         private void MainWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             MainWindowIsClosing = true;
+
+            try
+            {
+                if (AnimationAndFunctionalityTimer != null)
+                {
+                    try
+                    {
+                        AnimationAndFunctionalityTimer?.Stop();
+                        AnimationAndFunctionalityTimer?.Dispose();
+                    }
+                    catch { }
+                }
+
+                if (MainSpeechRecogniser != null)
+                {
+                    try
+                    {
+                        lock (MainSpeechRecogniser)
+                        {
+                            if (MainSpeechRecogniser != null)
+                            {
+                                MainSpeechRecogniser?.RecognizeAsyncStop();
+                                MainSpeechRecogniser?.RecognizeAsyncCancel();
+                                MainSpeechRecogniser?.Dispose();
+                            }
+                        }
+                    }
+                    catch { }
+                }
+
+                BeginExecutionAnimation = null;
+
+                ParallelProcessing = null;
+            }
+            catch { }
         }
 
         private void MoveTheWindow(object sender, MouseButtonEventArgs e)
@@ -1084,7 +1119,7 @@ namespace Eva_5._0
                         }
                     }
 
-                    if(OnOff != 0)
+                    if (OnOff != 0)
                     {
                         bool Wake_Word_Engine_Initiation_Successful = await Initiate_The_Wake_Word_Engine();
 
@@ -1180,10 +1215,12 @@ namespace Eva_5._0
                     {
                         try
                         {
+
                             MainSpeechRecogniser = new System.Speech.Recognition.SpeechRecognitionEngine(new System.Globalization.CultureInfo("en-GB"));
 
                             lock (MainSpeechRecogniser)
                             {
+                                
                                 if (MainSpeechRecogniser != null)
                                 {
                                     MainSpeechRecogniser.BabbleTimeout = TimeSpan.FromSeconds(0);
@@ -1216,8 +1253,8 @@ namespace Eva_5._0
                     });
 
                     ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
-                    ParallelProcessing.Priority = System.Threading.ThreadPriority.AboveNormal;
-                    ParallelProcessing.IsBackground = true;
+                    ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
+                    ParallelProcessing.IsBackground = false;
                     ParallelProcessing.Start();
                     
                 }
@@ -1238,27 +1275,14 @@ namespace Eva_5._0
 
             try
             {
-                ParallelProcessing = new System.Threading.Thread(() =>
+                lock (MainSpeechRecogniser)
                 {
-                    try
+                    if (MainSpeechRecogniser != null)
                     {
-                        lock (MainSpeechRecogniser)
-                        {
-                            if (MainSpeechRecogniser != null)
-                            {
-                                MainSpeechRecogniser?.RecognizeAsyncCancel();
-                                MainSpeechRecogniser?.Dispose();
-                            }
-                        }
+                        MainSpeechRecogniser?.RecognizeAsyncCancel();
+                        MainSpeechRecogniser?.Dispose();
                     }
-                    catch { }
-
-                });
-
-                ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
-                ParallelProcessing.Priority = System.Threading.ThreadPriority.AboveNormal;
-                ParallelProcessing.IsBackground = true;
-                ParallelProcessing.Start();
+                }
             }
             catch
             {
@@ -1307,45 +1331,8 @@ namespace Eva_5._0
 
         ~MainWindow()
         {
-            try
-            {
-                if (AnimationAndFunctionalityTimer != null)
-                {
-                    try
-                    {
-                        AnimationAndFunctionalityTimer?.Stop();
-                        AnimationAndFunctionalityTimer?.Dispose();
-                    }
-                    catch { }
-                }
-
-                if (MainSpeechRecogniser != null)
-                {
-                    try
-                    {
-                        lock (MainSpeechRecogniser)
-                        {
-                            if (MainSpeechRecogniser != null)
-                            {
-                                MainSpeechRecogniser?.RecognizeAsyncStop();
-                                MainSpeechRecogniser?.RecognizeAsyncCancel();
-                                MainSpeechRecogniser?.Dispose();
-                            }
-                        }
-                    }
-                    catch { }
-                }
-
-                BeginExecutionAnimation = null;
-
-                ParallelProcessing = null;
-
-
-                System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-                GC.Collect(2, GCCollectionMode.Forced);
-            }
-            catch { }
-
+            System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
+            GC.Collect(2, GCCollectionMode.Forced);
         }
 
 

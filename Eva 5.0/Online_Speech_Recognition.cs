@@ -112,19 +112,13 @@ namespace Eva_5._0
                             {
                                 case true:
                                    
-                                    switch ((Result.Text == String.Empty) || (Result.Text == null))
+                                    switch ((Result.Text == String.Empty) || (Result == null))
                                     {
                                         case true:
                                             if (OnlineSpeechRecognition != null)
                                             {
                                                 await OnlineSpeechRecognition.StopRecognitionAsync();
                                                 OnlineSpeechRecognition.Dispose();
-                                            }
-
-                                            if (Online_Speech_Recogniser_Speech_Recognition_Procedure_Error_Counter < 20)
-                                            {
-                                                Online_Speech_Recogniser_Speech_Recognition_Procedure_Error_Counter++;
-                                                goto Online_Speech_Recognition_Session_Initiation;
                                             }
                                             break;
 

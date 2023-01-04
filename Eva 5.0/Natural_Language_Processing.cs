@@ -44,10 +44,19 @@ namespace Eva_5._0
     internal class Natural_Language_Processing:A_p_l____And____P_r_o_c
     {
 
-        public static async Task<bool> PreProcessing(string Sentence)
+        private sealed class Special_Character_Replacement_Implementor:Special_Character_Replacement
+        {
+            public async static Task<string> Remove_Special_Characters_Procedure(string Sentence)
+            {
+                return await Special_Character_Replacement.Remove_Special_Characters(Sentence);
+            }
+        }
+
+
+        public static async Task<bool> PreProcessing(string Result)
         {
 
-            Sentence = await Special_Character_Replacement.Remove_Special_Characters_Initiator(Sentence);
+            string Sentence = await Special_Character_Replacement_Implementor.Remove_Special_Characters_Procedure(Result);
 
             // THE FIRST TOKENIZATION IS INITIATED. THE FIRST TOKENIZATION IS RESPONSIBLE FOR PARAMETER ASSOCIATION WITH THEIR RESPECTIVE COMMAND FORMATS
             // [ BEGIN ]
