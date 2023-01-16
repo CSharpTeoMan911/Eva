@@ -54,11 +54,6 @@ namespace Eva_5._0
                     Sentence = Sentence.Replace("^", " raised to ");
                 }
 
-                if (Sentence.Contains("%") == true)
-                {
-                    Sentence = Sentence.Replace("%", " percent ");
-                }
-
                 if (Sentence.Contains(";") == true)
                 {
                     Sentence = Sentence.Replace(";", " semicolon ");

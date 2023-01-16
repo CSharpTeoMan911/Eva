@@ -680,13 +680,21 @@ namespace Eva_5._0
         private static Task<string> Web_Application_Selector(int start_index, string Sentence)
         {
             int web_app_key = 0;
+            int index = start_index;
+            string web_app = String.Empty;
+
+            while(index < Sentence.Length)
+            {
+                web_app += Sentence[index].ToString();
+                index++;
+            }
 
             while(web_app_key < 8)
             {
                 string Token_Buffer = String.Empty;
                 W_e_b__A_p_l_Name__Tokens.TryGetValue(web_app_key, out Token_Buffer);
 
-                if (start_index == Sentence.IndexOf(Token_Buffer))
+                if (Token_Buffer == web_app)
                 {
                     StringBuilder Token_Buffer_String_Builder = new StringBuilder(Token_Buffer);
                     Token_Buffer_String_Builder.Remove(Token_Buffer_String_Builder.Length - 1, 1);
