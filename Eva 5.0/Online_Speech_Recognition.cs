@@ -27,6 +27,14 @@ namespace Eva_5._0
         private static System.Threading.Thread ParallelProcessing;
 
 
+        private sealed class Wake_Word_Engine_Mitigator : Wake_Word_Engine
+        {
+            public static async Task<bool> Wake_Word_Engine_Start()
+            {
+                return await Start_The_Wake_Word_Engine();
+            }
+        }
+
         public static Task<bool> Online_Speech_Recognition_Session_Creation_And_Initiation()
         {
 
@@ -187,6 +195,7 @@ namespace Eva_5._0
             }
             catch (Exception E)
             {
+                System.Diagnostics.Debug.WriteLine(E.Message);
                 if(E.HResult == -2147199735)
                 {
                     if (App.PermisissionWindowOpen == false)

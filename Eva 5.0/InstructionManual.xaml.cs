@@ -154,15 +154,18 @@ namespace Eva_5._0
 
                                     case false:
 
-                                        if (App.ErrorAppShutdown == true)
+                                        if (App.Application_Error_Shutdown)
                                         {
                                             try
                                             {
-                                                AnimationTimer.Stop();
+                                                if (AnimationTimer != null)
+                                                {
+                                                    AnimationTimer.Stop();
+                                                }
+
+                                                this.Close();
                                             }
                                             catch { }
-
-                                            this.Close();
                                         }
 
                                         switch (SwitchWindowOffset)
@@ -611,74 +614,6 @@ namespace Eva_5._0
                                         }
 
 
-                                        switch (SwitchOffsetTroubleshootingContentTextBlockOffset2)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticTroubleshootingContentTextBlockOffset2 <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticTroubleshootingContentTextBlockOffset2++;
-                                                        TroubleshootingContentTextBlockOffset2.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetTroubleshootingContentTextBlockOffset2 = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticTroubleshootingContentTextBlockOffset2 > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticTroubleshootingContentTextBlockOffset2--;
-                                                        TroubleshootingContentTextBlockOffset2.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetTroubleshootingContentTextBlockOffset2 = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-
-                                        switch (SwitchOffsetTroubleshootingContentTextBlockOffset3)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticTroubleshootingContentTextBlockOffset3 <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticTroubleshootingContentTextBlockOffset3++;
-                                                        TroubleshootingContentTextBlockOffset3.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetTroubleshootingContentTextBlockOffset3 = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticTroubleshootingContentTextBlockOffset3 > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticTroubleshootingContentTextBlockOffset3--;
-                                                        TroubleshootingContentTextBlockOffset3.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetTroubleshootingContentTextBlockOffset3 = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-
                                         switch (SwitchOffsetExtraFeaturesTextBlockOffset)
                                         {
                                             case false:
@@ -862,18 +797,9 @@ namespace Eva_5._0
             System.Diagnostics.Process.Start(e.Uri.ToString());
         }
 
-        private void Open_Control_Panel_At_Speech_Recognition(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        private async void Open_Settings_At_Speech_Recognition(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
-            using (System.Diagnostics.Process ControlPanel = new System.Diagnostics.Process())
-            {
-                ControlPanel.StartInfo.FileName = "control.exe";
-                ControlPanel.StartInfo.WorkingDirectory = Environment.SystemDirectory + "control.exe";
-                ControlPanel.StartInfo.Arguments = "/name Microsoft.SpeechRecognition";
-                ControlPanel.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-                ControlPanel.StartInfo.UseShellExecute = true;
-                ControlPanel.Start();
-            }
-
+            await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:speech"));
         }
 
         private void Window_Size_Changed(object sender, SizeChangedEventArgs e)
@@ -913,6 +839,5 @@ namespace Eva_5._0
                 }
             }
         }
-
     }
 }

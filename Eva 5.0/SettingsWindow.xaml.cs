@@ -238,17 +238,7 @@ namespace Eva_5._0
 
                                     case false:
 
-                                        if (App.ErrorAppShutdown == true)
-                                        {
-                                            try
-                                            {
-                                                AnimationAndFunctionalityTimer.Stop();
-                                            }
-                                            catch { }
-
-                                            this.Close();
-                                        }
-
+                                        
                                         switch (Wheel1Angle <= 360)
                                         {
                                             case true:

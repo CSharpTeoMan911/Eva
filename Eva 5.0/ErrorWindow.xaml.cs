@@ -67,8 +67,18 @@ namespace Eva_5._0
         }
 
 
+        private sealed class Wake_Word_Engine_Mitigator : Wake_Word_Engine
+        {
+            public static async Task<bool> Wake_Word_Engine_Stop()
+            {
+                return await Stop_The_Wake_Word_Engine();
+            }
+        }
+
+
         private async Task<bool> MicrophoneAccessDenied()
         {
+            App.Application_Error_Shutdown = true;
 
             try
             {
@@ -104,6 +114,8 @@ namespace Eva_5._0
 
         private async Task<bool> OnlineSpeechRecognitionAccessDenied()
         {
+            
+
             try
             {
                 System.Media.SoundPlayer ErrorSoundEffect = new System.Media.SoundPlayer("Privacy statement declined or mic not available.wav");
@@ -564,37 +576,6 @@ namespace Eva_5._0
                                                 ErrorPageTitleAnimation = 0;
                                                 break;
                                         }
-
-
-                                        switch (App.InitiateErrorFunction)
-                                        {
-                                            case true:
-
-                                                App.InitiateErrorFunction = false;
-
-                                                switch (App.ErrorFunction)
-                                                {
-                                                    case "Mircrophone Access Denied":
-
-                                                        Task.Run(async () =>
-                                                        {
-                                                            await MicrophoneAccessDenied();
-                                                        });
-
-                                                        break;
-
-                                                    case "Online Speech Recognition Access Denied":
-
-                                                        Task.Run(async () =>
-                                                        {
-                                                            await OnlineSpeechRecognitionAccessDenied();
-                                                        });
-
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
                                         break;
 
                                 }
@@ -611,16 +592,15 @@ namespace Eva_5._0
             TimerDisposed = true;
         }
 
-        private void ErrorWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        private async void ErrorWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (App.ErrorAppShutdown == true)
-            {
-
-                Application.Current.MainWindow.Close();
-
-            }
-
             App.PermisissionWindowOpen = false;
+
+            if(App.Application_Error_Shutdown == true)
+            {
+                await Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
+                Environment.Exit(0);
+            }
         }
 
 

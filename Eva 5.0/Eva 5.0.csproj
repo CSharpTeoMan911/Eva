@@ -92,7 +92,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Speech" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -113,6 +113,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="A_p_l____And____P_r_o_c.cs" />
+    <Compile Include="Check_Microphone_Permission.cs" />
     <Compile Include="Check_Role.cs" />
     <Compile Include="ErrorWindow.xaml.cs">
       <DependentUpon>ErrorWindow.xaml</DependentUpon>
@@ -133,6 +134,7 @@
     <Compile Include="Timer_Window.xaml.cs">
       <DependentUpon>Timer_Window.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Wake_Word_Engine.cs" />
     <Page Include="ErrorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -225,6 +227,7 @@
   <ItemGroup>
     <Content Include="App closing.wav" />
     <Content Include="App execution.wav" />
+    <Content Include="main.py" />
     <Content Include="Privacy statement declined or mic not available.wav" />
   </ItemGroup>
   <ItemGroup>

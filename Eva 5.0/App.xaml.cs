@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Eva_5._0
@@ -37,17 +38,18 @@ namespace Eva_5._0
 
         public static bool TimerWindowOpen;
 
-
-
-        public static bool ErrorAppShutdown;
-
-        public static bool InitiateErrorFunction;
-
-        public static string ErrorFunction;
+        public static bool Application_Error_Shutdown;
 
 
 
 
+        private sealed class Wake_Word_Engine_Mitigator : Wake_Word_Engine
+        {
+            public static async Task<bool> Wake_Word_Engine_Stop()
+            {
+                return await Stop_The_Wake_Word_Engine();
+            }
+        }
 
 
         public App()
@@ -60,14 +62,23 @@ namespace Eva_5._0
 
 
 
+        protected override async void OnExit(ExitEventArgs e)
+        {
+            base.OnExit(e);
+            await Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
+        }
+
 
 
         ~App()
         {
-            ErrorFunction = null;
-
             System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect(2, GCCollectionMode.Forced, true, true);
+
+            Task.Run(async() =>
+            {
+                await Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
+            });
         }
     }
 }

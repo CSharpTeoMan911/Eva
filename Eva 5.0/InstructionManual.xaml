@@ -234,12 +234,16 @@
 
 
 
-                <TextBlock x:Name="TroubleshootingContents1" Margin="0,30,0,0" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;If Eva cannot hear you open Control Panel,&#x0a;">
+                <TextBlock x:Name="TroubleshootingContents1" Margin="0,30,0,0" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;If Eva cannot hear you open the Settings page and go to&#x0a;">
                     
                     <Hyperlink
                         NavigateUri=""
-                        RequestNavigate="Open_Control_Panel_At_Speech_Recognition">
-                        go to Ease of access -> Speech Recognition
+                        RequestNavigate="Open_Settings_At_Speech_Recognition">
+                        <StackPanel>
+                            <TextBlock Text="Time and Language -> Speech -> Microphone. Under the
+                        &#x0a;Microphone section, press the Get Stared button and 
+                        &#x0a;follow the instructions.&#x0a;&#x0a;&#x0a;"/>
+                        </StackPanel>
                     </Hyperlink>
 
 
@@ -257,38 +261,7 @@
 
 
 
-                <TextBlock x:Name="TroubleshootingContents2" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="and select Set up microphone.&#x0a;&#x0a;If Eva cannot understand you clearly,&#x0a;open Control Panel and then go to:&#x0a;Ease of Access -> Speech Recognition ->&#x0a;">
-                    
-                    <Hyperlink
-                        NavigateUri=""
-                        RequestNavigate="Open_Control_Panel_At_Speech_Recognition">
-                        Train your computer to better understand you
-                    </Hyperlink>
-
-
-
-
-
-                    <TextBlock.Foreground>
-                        <LinearGradientBrush>
-                            <GradientStop Color="#FF7BBFD8" x:Name="TroubleshootingContentTextBlockOffset2" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </TextBlock.Foreground>
-
-                </TextBlock>
-
-
-                <TextBlock x:Name="TroubleshootingContents3" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;Follow the instructions for speech calibration&#x0a;and read minimum 8 paragraphs.&#x0a;&#x0a;If Eva still has problems hearing you, try turning&#x0a;the speech recognition on and off via the&#x0a;microphone button.&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;">
-                   
-                    <TextBlock.Foreground>
-                        <LinearGradientBrush>
-                            <GradientStop Color="#FF7BBFD8" x:Name="TroubleshootingContentTextBlockOffset3" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </TextBlock.Foreground>
-
-                </TextBlock>
+               
 
 
                 
