@@ -1,13 +1,5 @@
 # Eva
 
-<br>
-<br>
-
-## DOWNLOAD
-
-<br>
-
-Download Eva: https://drive.google.com/file/d/1C-Ep7ZblUXAeMYrihCb6QWnhA0tTG9bg/view?usp=sharing
 
 <br>
 <br>
@@ -17,6 +9,15 @@ Download Eva: https://drive.google.com/file/d/1C-Ep7ZblUXAeMYrihCb6QWnhA0tTG9bg/
 <br>
 
 Changed the wake word engine from Windows Speech Recognition (SAPI) to PocketSphinx
+
+<br>
+<br>
+
+## DOWNLOAD
+
+<br>
+
+Download Eva: https://drive.google.com/file/d/1C-Ep7ZblUXAeMYrihCb6QWnhA0tTG9bg/view?usp=sharing
 
 <br>
 <br>
@@ -45,7 +46,8 @@ _______________________________________
 <br>
 
 
-![Speech recognition infrasctructure](https://user-images.githubusercontent.com/87245086/201427695-53614eb8-4783-432a-860b-5a2f8c60c012.jpg)
+![Wake Word Mechanism](https://user-images.githubusercontent.com/87245086/213821144-680842ce-ad66-432f-ba6e-5595b2122650.png)
+
 
 <br>
 
