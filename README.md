@@ -1,5 +1,6 @@
 # Eva
 
+
 <br>
 <br>
 
@@ -7,8 +8,16 @@
 
 <br>
 
-Completly solved the issue related to the online speech recognition stability. The reason behind the intrreruption of the online speech recogniser's operation was caused if a large number of requests were made. This problem was solved purely based on deduction and knowledge related to APIs. Online speech recognition systems usually have a set number of requests that can be made per a certain set period of time. Surpassing the aforementioned limit will make the server drop user's requests.
-The fix to this issue was to implement a limiter of 3.5 seconds between the requests. This means that users must wait 3.5 seconds between commands.
+Changed the wake word engine from Windows Speech Recognition (SAPI) to PocketSphinx
+
+<br>
+<br>
+
+## DOWNLOAD
+
+<br>
+
+Download Eva: https://drive.google.com/file/d/1X5f-P0spJNHHBdPmxEW29vWdrizM8tTp/view?usp=sharing
 
 <br>
 <br>
@@ -37,7 +46,8 @@ _______________________________________
 <br>
 
 
-![Speech recognition infrasctructure](https://user-images.githubusercontent.com/87245086/201427695-53614eb8-4783-432a-860b-5a2f8c60c012.jpg)
+![Wake Word Mechanism](https://user-images.githubusercontent.com/87245086/213821144-680842ce-ad66-432f-ba6e-5595b2122650.png)
+
 
 <br>
 
