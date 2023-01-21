@@ -17,7 +17,16 @@ Changed the wake word engine from Windows Speech Recognition (SAPI) to PocketSph
 
 <br>
 
-Download Eva: https://drive.google.com/file/d/1WZhpHsxyX4qoAUeFdF2ZuZYwlrzzz60z/view?usp=sharing
+Download Eva: https://drive.google.com/file/d/1ON3AHIj6YITHiHpyOl1GW4vJSd73wy5L/view?usp=sharing
+
+<br>
+<br>
+
+## DEVELOPER SUPPORT
+
+<br>
+
+Click this link to see how to set up the environment for developent: https://github.com/CSharpTeoMan911/Eva/wiki/Visual-Studio-configuration-and-operational-prerequisites
 
 <br>
 <br>
