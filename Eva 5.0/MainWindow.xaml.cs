@@ -47,7 +47,7 @@ namespace Eva_5._0
 
         protected static DateTime? Online_Speech_Recogniser_Activation_Delay_Detector = null;
 
-        private static double Online_Speech_Recogniser_Activation_Delay = 3.6;
+        private static double Online_Speech_Recogniser_Activation_Delay = 3.4;
 
         // END
 
@@ -129,11 +129,13 @@ namespace Eva_5._0
         ///  Gradient Arithmetic For Neon Glow Chromatic Effect
         /// </summary>
 
+        protected static bool Wake_Word_Detection_Initiated;
+
+        protected static bool MainWindowIsClosing;
+
         private bool Colour_Switch;
 
         private int Button_Timeout;
-
-        private bool MainWindowIsClosing;
 
         private static byte ExecutionAnimationArithmetic;
 

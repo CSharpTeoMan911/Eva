@@ -7,7 +7,6 @@ namespace Eva_5._0
 {
     internal class Wake_Word_Engine:MainWindow
     {
-        private static bool Wake_Word_Engine_Started;
         protected static Task<bool> Start_The_Wake_Word_Engine()
         {
             try
@@ -20,9 +19,11 @@ namespace Eva_5._0
                 wake_word_process.StartInfo.Arguments = "main.py";
                 wake_word_process.Start();
 
-                Wake_Word_Engine_Started = true;
-
-                Wake_Word_Detector();
+                if (Wake_Word_Detection_Initiated == false)
+                {
+                    Wake_Word_Detection_Initiated = true;
+                    Wake_Word_Detector();
+                }
 
                 return Task.FromResult(true);
             }
@@ -55,8 +56,6 @@ namespace Eva_5._0
                     }
                 }
 
-                Wake_Word_Engine_Started = false;
-
                 return Task.FromResult(true);
             }
             catch 
@@ -65,7 +64,7 @@ namespace Eva_5._0
             }
         }
 
-        private static async void Wake_Word_Detector()
+        private static void Wake_Word_Detector()
         {
             System.Net.Sockets.Socket wake_word_detection_socket = new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork, System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp);
 
@@ -74,7 +73,7 @@ namespace Eva_5._0
                 wake_word_detection_socket.Bind(new System.Net.IPEndPoint(System.Net.IPAddress.Any, 1025));
                 wake_word_detection_socket.Listen(1);
 
-                while (Wake_Word_Engine_Started == true)
+                while (MainWindowIsClosing == false)
                 {
                     try
                     {
@@ -86,7 +85,7 @@ namespace Eva_5._0
 
                         if (wake_word_detected_decoded == "eva")
                         {
-                            lock(Wake_Word_Detected)
+                            lock (Wake_Word_Detected)
                             {
                                 Wake_Word_Detected = "true";
                             }
@@ -101,21 +100,7 @@ namespace Eva_5._0
                 wake_word_detection_socket.Close();
                 wake_word_detection_socket.Dispose();
             }
-            catch 
-            {
-                await Stop_The_Wake_Word_Engine();
-
-                try
-                {
-                    if(wake_word_detection_socket != null)
-                    {
-                        wake_word_detection_socket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
-                        wake_word_detection_socket.Close();
-                        wake_word_detection_socket.Dispose();
-                    }
-                }
-                catch {}
-            }
+            catch { }
         }
     }
 
