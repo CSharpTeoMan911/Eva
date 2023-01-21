@@ -85,10 +85,6 @@ namespace Eva_5._0
 
         private static async Task<bool> Initiate_The_Online_Speech_Recognition_Engine()
         {
-            int Online_Speech_Recogniser_Constraint_Compilation_Procedure_Error_Counter = 0;
-            int Online_Speech_Recogniser_Speech_Recognition_Procedure_Error_Counter = 0;
-
-        Online_Speech_Recognition_Session_Initiation:
             try
             {
                 online_speech_recognition_timeout = DateTime.Now;
@@ -164,12 +160,6 @@ namespace Eva_5._0
                                         await OnlineSpeechRecognition.StopRecognitionAsync();
                                         OnlineSpeechRecognition.Dispose();
                                     }
-
-                                    if (Online_Speech_Recogniser_Speech_Recognition_Procedure_Error_Counter < 20)
-                                    {
-                                        Online_Speech_Recogniser_Speech_Recognition_Procedure_Error_Counter++;
-                                        goto Online_Speech_Recognition_Session_Initiation;
-                                    }
                                     break;
                             }
                             break;
@@ -179,12 +169,6 @@ namespace Eva_5._0
                             {
                                 await OnlineSpeechRecognition.StopRecognitionAsync();
                                 OnlineSpeechRecognition.Dispose();
-                            }
-
-                            if (Online_Speech_Recogniser_Constraint_Compilation_Procedure_Error_Counter < 20)
-                            {
-                                Online_Speech_Recogniser_Constraint_Compilation_Procedure_Error_Counter++;
-                                goto Online_Speech_Recognition_Session_Initiation;
                             }
                             break;
 

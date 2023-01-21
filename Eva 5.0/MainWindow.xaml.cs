@@ -47,7 +47,7 @@ namespace Eva_5._0
 
         protected static DateTime? Online_Speech_Recogniser_Activation_Delay_Detector = null;
 
-        private static double Online_Speech_Recogniser_Activation_Delay = 3.55;
+        private static double Online_Speech_Recogniser_Activation_Delay = 3.6;
 
         // END
 
@@ -353,17 +353,23 @@ namespace Eva_5._0
                                         {
                                             lock (Wake_Word_Detected)
                                             {
-                                                System.Threading.Thread ParallelProcessing = new System.Threading.Thread(async () =>
+                                                lock (Online_Speech_Recogniser_Disabled)
                                                 {
-                                                    if (await Online_Speech_Recogniser_Delay_Calculator() == true)
+                                                    if(Online_Speech_Recogniser_Disabled == "false")
                                                     {
-                                                        await Online_Speech_Recognition.Online_Speech_Recognition_Session_Creation_And_Initiation();
+                                                        System.Threading.Thread ParallelProcessing = new System.Threading.Thread(async () =>
+                                                        {
+                                                            if (await Online_Speech_Recogniser_Delay_Calculator() == true)
+                                                            {
+                                                                await Online_Speech_Recognition.Online_Speech_Recognition_Session_Creation_And_Initiation();
+                                                            }
+                                                        });
+                                                        ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
+                                                        ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
+                                                        ParallelProcessing.IsBackground = false;
+                                                        ParallelProcessing.Start();
                                                     }
-                                                });
-                                                ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
-                                                ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
-                                                ParallelProcessing.IsBackground = false;
-                                                ParallelProcessing.Start();
+                                                }
                                             }
 
                                             Wake_Word_Detected = "false";
@@ -937,6 +943,12 @@ namespace Eva_5._0
                                         switch (OnOff)
                                         {
                                             case 1:
+
+                                                lock(Online_Speech_Recogniser_Disabled)
+                                                {
+                                                    Online_Speech_Recogniser_Disabled = "false";
+                                                }
+
                                                 Application.Current.Dispatcher.Invoke(() =>
                                                 {
                                                     SpeechRecognitionButton.Content = "\xE1D6";
@@ -948,6 +960,12 @@ namespace Eva_5._0
 
 
                                             case 2:
+
+                                                lock (Online_Speech_Recogniser_Disabled)
+                                                {
+                                                    Online_Speech_Recogniser_Disabled = "true";
+                                                }
+
                                                 Application.Current.Dispatcher.Invoke(() =>
                                                 {
                                                     SpeechRecognitionButton.Content = "\xF781";
