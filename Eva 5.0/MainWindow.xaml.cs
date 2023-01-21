@@ -47,7 +47,7 @@ namespace Eva_5._0
 
         protected static DateTime? Online_Speech_Recogniser_Activation_Delay_Detector = null;
 
-        private static double Online_Speech_Recogniser_Activation_Delay = 3.4;
+        private static double Online_Speech_Recogniser_Activation_Delay = 3.55;
 
         // END
 
