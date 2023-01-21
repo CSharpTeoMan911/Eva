@@ -4,7 +4,7 @@ import socket
 import sys
 
 
-speech = LiveSpeech(lm=False, keyphrase='eva', kws_threshold=1e-12)
+speech = LiveSpeech(lm=False, keyphrase='eva', kws_threshold=1e-9)
 
 
 def wake_word_operation_application_socket():
