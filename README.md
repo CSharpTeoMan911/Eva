@@ -36,7 +36,7 @@ Eva is an A.I. assistant that has the purpose of helping users multi-task. It al
 
 <br>
 
-The Eva's core technologies are the Microsoft SAPI In-proc speech recognition engine, the Microsoft online speech recognition engine, the Dot NET framework, Windows Presentation Foundation ( WPF ), and the Universal Windows Platforms ( UWP ). 
+The Eva's core technologies are the PocketSphinx In-proc speech recognition engine, the Microsoft online speech recognition engine, the Dot NET framework, Windows Presentation Foundation ( WPF ), and the Universal Windows Platforms ( UWP ). 
 
 <br>
 
@@ -51,7 +51,7 @@ _______________________________________
 
 <br>
 
-The SAPI speech recogniser is listening permanently, if listening function is activated. Once it recognises the word "Eva", the online speech recognition engine is activated. The online speech recognition engine has the role of extracting the commands and their content.
+The PocketSphinx speech recogniser is listening permanently, if the listening function is activated. Once it recognises the word "Eva", the online speech recognition engine is activated. The online speech recognition engine has the role of extracting the commands and their content.
 
 <br>
 <br>
@@ -61,7 +61,7 @@ ____________________________________
 
 <br>
 
-Eva uses natural language processing in two ways, and these are speech recognition and contextual command and content extraction. Both the SAPI and the Online Speech Recognition engines use natural language processing in order to extract the words from any audio medium, and these are built into both of the engines. 
+Eva uses natural language processing in two ways, and these are speech recognition and contextual command and content extraction. Both the PocketSphinx and the Online Speech Recognition engines use natural language processing in order to extract the words from any audio medium, and these are built into both of the engines. 
 
 <br>
 
@@ -112,19 +112,11 @@ are greater than zero.
 
 <br>
 
-Go to the ***Code*** section within the Eva repository page and click on the **Eva.msi** file.
+Go to the ***DOWNLOAD*** section within the Eva's README.md page and click on the link.
 
 <br>
 
-![Eva_Capture1813376314](https://user-images.githubusercontent.com/87245086/201436057-964f4bee-cc88-4b69-8e8d-038bcbd8a988.jpg)
-
-<br>
-
-Then press the download button. 
-
-<br>
-
-![Eva_Capture998562387](https://user-images.githubusercontent.com/87245086/201436191-e12c7bb2-7117-4f3b-beba-726a1561846d.jpg)
+![Eva_Capture733714694](https://user-images.githubusercontent.com/87245086/213866622-d3982009-8c14-4772-8958-a12f979806fd.jpg)
 
 
 <br>
@@ -135,19 +127,7 @@ Then press the download button.
 
 <br>
 
-When Eva is installed for the first time, open the **Control Panel**. Then go to the *Ease of Access* section, and then go to the **Speech Recognition** section and then select the **Train your computer to better understand you** option. This must be done in order to calibrate the **wake word engine** using machine learning. Read between 5 paragraphs and 1 full training session, greater the number of paragraphs better the accuracy. 
-
-<br>
-
-![Eva_Capture1797867301](https://user-images.githubusercontent.com/87245086/201437240-f2bb4a28-e74d-431a-8800-abd414b5abdc.jpg)
-
-![Eva_Capture2023817709](https://user-images.githubusercontent.com/87245086/201437245-2cafbd4f-1fae-46f9-b9bc-c48c825dfb95.jpg)
-
-![Eva_Capture1180289878](https://user-images.githubusercontent.com/87245086/201437249-d96dcbeb-d656-4b52-8aba-a318cafe7a97.jpg)
-
-<br>
-
-After the calibration is completed, in order to give commands to Eva say the word "Eva" followed by the desired command. For example, say "Eva" than after Eva is activated say "search robots are cool on Google". You can find detailed instructions about commands and the command paterns and troubleshooting within the instruction manual of Eva.
+In order to give commands to Eva say the word "Eva" followed by the desired command. For example, say "Eva" than after Eva is activated say "search robots are cool on Google". You can find detailed instructions about commands and the command paterns and troubleshooting within the instruction manual of Eva.
 
 <br>
 
