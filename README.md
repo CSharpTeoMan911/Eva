@@ -21,6 +21,15 @@ Download Eva: https://drive.google.com/file/d/1ZGXBFnZhagVCQxVgKCA-U6B6Y0RmAHzd/
 
 <br>
 <br>
+
+## DEVELOPER SUPPORT
+
+<br>
+
+Click this link to see how to set up the environment for developent: https://github.com/CSharpTeoMan911/Eva/wiki/Visual-Studio-configuration-and-operational-prerequisites
+
+<br>
+<br>
 <br>
 <br>
 
