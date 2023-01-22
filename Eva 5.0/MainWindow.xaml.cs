@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using Windows.Devices.Sensors;
-using Windows.Networking.Connectivity;
 
 namespace Eva_5._0
 {
@@ -304,6 +301,7 @@ namespace Eva_5._0
 
                             Application.Current.Dispatcher.Invoke(async() =>
                             {
+
                                 switch (Application.Current.MainWindow == null)
                                 {
 
@@ -327,7 +325,21 @@ namespace Eva_5._0
 
                                         Application.Current.MainWindow.Topmost = true;
 
-                                        if(App.Application_Error_Shutdown)
+                                        if (Online_Speech_Recogniser_Activation_Delay_Detector != null)
+                                        {
+                                            if (((TimeSpan)(DateTime.Now - Online_Speech_Recogniser_Activation_Delay_Detector)).TotalSeconds > Online_Speech_Recogniser_Activation_Delay)
+                                            {
+                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                            }
+                                            else
+                                            {
+                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FFD67A71");
+                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF440505");
+                                            }
+                                        }
+
+                                        if (App.Application_Error_Shutdown)
                                         {
                                             try
                                             {
@@ -480,8 +492,6 @@ namespace Eva_5._0
                                                     target_value = 1000;
                                                     Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
                                                     Online_Speech_Recognition_Timer_Display.Text = String.Empty;
-                                                    OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FFACC6D6");
-                                                    OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
 
                                                     online_speech_recogniser_lock_state_time_elapsed.Stop();
                                                     online_speech_recogniser_lock_state_time_elapsed.Reset();

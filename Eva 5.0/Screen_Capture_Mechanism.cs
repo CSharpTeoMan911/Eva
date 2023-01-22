@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+
 
 namespace Eva_5._0
 {
@@ -51,7 +51,7 @@ namespace Eva_5._0
                 }
 
 
-                Rectangle bounds = Screen.GetBounds(Point.Empty);
+                Rectangle bounds = System.Windows.Forms.Screen.GetBounds(Point.Empty);
 
                 using (Bitmap bitmap = new Bitmap(bounds.Width, bounds.Height))
                 {
