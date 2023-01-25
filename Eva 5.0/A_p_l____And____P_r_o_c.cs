@@ -84,6 +84,15 @@ namespace Eva_5._0
                     A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("opera", "Opera.exe");
 
 
+                    A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("up the app", "Opera.exe");
+
+
+                    A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("up", "Opera.exe");
+
+
+                    A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("open app", "Opera.exe");
+
+
                     A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("calculator", "calc.exe");
 
 
@@ -102,6 +111,9 @@ namespace Eva_5._0
                     A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("notepad", "notepad.exe");
 
 
+                    A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("up pad", "notepad.exe");
+
+
                     A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("task manager", "Taskmgr.exe");
 
 
@@ -112,6 +124,12 @@ namespace Eva_5._0
 
 
                     A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("snip and sketch", "URI = ms-screensketch:");
+
+
+                    A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("snipping sketch", "URI = ms-screensketch:");
+
+
+                    A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("notepad sketch", "URI = ms-screensketch:");
 
 
                     A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("word", "https://www.office.com/launch/word");
@@ -141,6 +159,9 @@ namespace Eva_5._0
                     A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("windows 10", @"C:\Users\" + Environment.UserName + @"\AppData\Local\Microsoft\WindowsApps\wt.exe");
 
 
+                    A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("windows 10 mail", @"C:\Users\" + Environment.UserName + @"\AppData\Local\Microsoft\WindowsApps\wt.exe");
+
+
                     A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("terminal", @"C:\Users\" + Environment.UserName + @"\AppData\Local\Microsoft\WindowsApps\wt.exe");
 
 
@@ -166,6 +187,9 @@ namespace Eva_5._0
 
 
                     A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("recycle bin cleanup", "APP = recycle bin cleanup");
+
+
+                    A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("recycle bin cleaner", "APP = recycle bin cleanup");
 
 
 
@@ -490,6 +514,14 @@ namespace Eva_5._0
 
                     A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("opera", "Opera");
 
+                    A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("up app", "Opera");
+
+                    A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("open app", "Opera");
+
+                    A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("open", "Opera");
+
+                    A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("up", "Opera");
+
                     A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("calculator", "CalculatorApp");
 
                     A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("paint", "mspaint");
@@ -498,6 +530,8 @@ namespace Eva_5._0
 
                     A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("notepad", "Notepad");
 
+                    A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("up pad", "Notepad");
+
                     A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("task manager", "Taskmgr");
 
                     A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("calendar", "HxCalendarAppImm");
@@ -505,6 +539,10 @@ namespace Eva_5._0
                     A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("weather", "Microsoft.Msn.Weather");
 
                     A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("snip and sketch", "ScreenSketch");
+
+                    A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("snipping sketch", "ScreenSketch");
+
+                    A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("notepad sketch", "ScreenSketch");
 
                     A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("settings", "SystemSettings");
 
@@ -592,11 +630,17 @@ namespace Eva_5._0
 
                     A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryAdd("opera", "https://www.opera.com/gx");
 
+                    A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryAdd("up", "https://www.opera.com/gx");
+
+                    A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryAdd("open app", "https://www.opera.com/gx");
+
                     A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryAdd("calculator", "https://www.microsoft.com/en-gb/p/windows-calculator/9wzdncrfhvn5?SilentAuth=1&wa=wsignin1.0&activetab=pivot:overviewtab");
 
                     A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryAdd("skype", "https://www.skype.com/en/get-skype/");
 
                     A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryAdd("notepad", "https://apps.microsoft.com/store/detail/notepad-for-windows-10/9NBLGGH4W20K?hl=en-us&gl=US");
+
+                    A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryAdd("up pad", "https://apps.microsoft.com/store/detail/notepad-for-windows-10/9NBLGGH4W20K?hl=en-us&gl=US");
 
                     A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryAdd("calendar", "https://apps.microsoft.com/store/detail/mail-and-calendar/9WZDNCRFHVQM?hl=en-us&gl=US");
 

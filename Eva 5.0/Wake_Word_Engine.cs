@@ -100,13 +100,21 @@ namespace Eva_5._0
 
                         string wake_word_detected_decoded = Encoding.UTF8.GetString(wake_word_detected);
 
-                        if (wake_word_detected_decoded == "eva")
+
+                        lock(Online_Speech_Recogniser_Listening)
                         {
-                            lock (Wake_Word_Detected)
+                            if(Online_Speech_Recogniser_Listening == "false")
                             {
-                                Wake_Word_Detected = "true";
+                                lock (Wake_Word_Detected)
+                                {
+                                    if (wake_word_detected_decoded == "eva")
+                                    {
+                                        Wake_Word_Detected = "true";
+                                    }
+                                }
                             }
                         }
+
                     }
                     catch { }
                 }

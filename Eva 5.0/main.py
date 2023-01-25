@@ -30,7 +30,6 @@ def Wake_Word_Initiation():
         for phrase in speech:
             if speech is not None:
                 if phrase is not None:
-                    wake_word_operation_application_socket()
                     thread = threading.Thread(target=wake_word_operation_application_socket)
                     thread.start()
     except KeyboardInterrupt:
@@ -42,6 +41,3 @@ if __name__ == '__main__':
     Wake_Word_Initiation()
     del speech
     sys.exit(0)
-
-
-

@@ -22,7 +22,7 @@ namespace Eva_5._0
     /////////////////////////////////////////////////////////////////////////////
 
 
-    internal class Proc<Content>:A_p_l____And____P_r_o_c
+    internal class Proc:A_p_l____And____P_r_o_c
     {
 
 
@@ -75,9 +75,15 @@ namespace Eva_5._0
         private static System.Media.SoundPlayer AppTerminationSoundEffect = new System.Media.SoundPlayer("App closing.wav");
         private static System.Media.SoundPlayer ScreenshotExecutionSoundEffect = new System.Media.SoundPlayer("Screenshot_Sound_Effect.wav");
 
+
+
+        // COMPONENTS THAT INTERACT WITH SECURTY SENSITIVE FEATURES ARE CONTAINED INSIDE PRIVATE SEALED CLASSES FOR EXTRA PROTECTION
+        //
+        // [ BEGIN ]
+
         private sealed class Recycle_Bine_Cleanup_Implementor:Recycle_Bine_Cleanup
         {
-            public async static Task<bool> Empty_Recycle_Bin_Implementor()
+            internal static async Task<bool> Empty_Recycle_Bin_Implementor()
             {
                 return await Empty_Recycle_Bin();
             }
@@ -85,7 +91,7 @@ namespace Eva_5._0
 
         private sealed class Begin_Application_Execution_Animation:MainWindow
         {
-            public static Task<bool> Start_The_Application_Execution_Animation()
+            internal static Task<bool> Start_The_Application_Execution_Animation()
             {
                 lock(BeginExecutionAnimation)
                 {
@@ -96,8 +102,20 @@ namespace Eva_5._0
             }
         }
 
+        private sealed class Screen_Capture_Mechanism_Mitigator : Screen_Capture_Mechanism
+        {
+            internal static async Task<bool> Screen_Capture_Initiator()
+            {
+                return await Screen_Capture();
+            }
+        }
 
-        public static async Task<bool> ProcInitialisation(string process_type, string application, Content content)
+        // [ END ]
+
+
+
+
+        protected static async Task<bool> ProcInitialisation<Content>(string process_type, string application, Content content)
         {
 
             switch (process_type)
@@ -440,7 +458,7 @@ namespace Eva_5._0
 
             }
 
-            return await Screen_Capture_Mechanism.Screen_Capture_Initiator();
+            return await Screen_Capture_Mechanism_Mitigator.Screen_Capture_Initiator();
         }
 
 

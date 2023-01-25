@@ -29,12 +29,7 @@ namespace Eva_5._0
     {
         private static readonly Random random_number_generator = new Random();
 
-        public static async Task<bool> Screen_Capture_Initiator()
-        {
-            return await Screen_Capture();
-        }
-
-        private static Task<bool> Screen_Capture()
+        protected static Task<bool> Screen_Capture()
         {
             try
             {

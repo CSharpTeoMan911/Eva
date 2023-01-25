@@ -29,7 +29,7 @@ namespace Eva_5._0
     {
         private static RotateTransform Rotate = new RotateTransform();
 
-        private static System.Collections.Generic.List<string> Online_Speech_Recognition_Timeout_Timer_UI_Intervals = new System.Collections.Generic.List<string>() { "9", "8", "7", "6", "5", "4", "3", "2", "1", "0" };
+        private static System.Collections.Generic.List<string> Online_Speech_Recognition_Timeout_Timer_UI_Intervals = new System.Collections.Generic.List<string>() { "8", "7", "6", "5", "4", "3", "2", "1", "0" };
 
         private short Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index;
 
@@ -44,7 +44,7 @@ namespace Eva_5._0
 
         protected static DateTime? Online_Speech_Recogniser_Activation_Delay_Detector = null;
 
-        private static double Online_Speech_Recogniser_Activation_Delay = 3.6;
+        private static double Online_Speech_Recogniser_Activation_Delay = 3.75;
 
         // END
 
@@ -149,27 +149,6 @@ namespace Eva_5._0
         }
 
 
-        private sealed class Wake_Word_Engine_Mitigator : Wake_Word_Engine
-        {
-            public static async Task<bool> Wake_Word_Engine_Start()
-            {
-                return await Start_The_Wake_Word_Engine();
-            }
-
-            public static async Task<bool> Wake_Word_Engine_Stop()
-            {
-                return await Stop_The_Wake_Word_Engine();
-            }
-        }
-
-        private sealed class Microphone_Permissions_Mitigator : Check_Microphone_Permission
-        {
-            public static async Task<bool> Check_Microphone_Availability()
-            {
-                return await Check_If_Microphone_Available();
-            }
-        }
-
         protected enum Online_Speech_Recognition_Interface_Operation
         {
             Online_Speech_Recognition_Interface_Clear_Cache,
@@ -177,64 +156,48 @@ namespace Eva_5._0
         }
 
 
-        protected static Task<bool> OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation operation)
+        // COMPONENTS THAT INTERACT WITH SECURTY SENSITIVE FEATURES ARE CONTAINED INSIDE PRIVATE SEALED CLASSES FOR EXTRA PROTECTION
+        //
+        // [ BEGIN ]
+
+        private sealed class Wake_Word_Engine_Mitigator : Wake_Word_Engine
         {
-
-            try
+            internal static async Task<bool> Wake_Word_Engine_Start()
             {
-
-                switch (operation)
-                {
-                    case Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache:
-                        // REFRESH THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS
-                        //
-                        // BEGIN
-
-                        foreach (System.Diagnostics.Process online_speech_recognition_interface in System.Diagnostics.Process.GetProcessesByName("SpeechRuntime"))
-                        {
-                            if(online_speech_recognition_interface.HasExited == false)
-                            {
-                                online_speech_recognition_interface.Refresh();
-                            }
-                        }
-
-                        // END
-                        break;
-
-
-
-                    case Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown:
-                        // SHUT DOWN THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS
-                        //
-                        // BEGIN
-
-                    Online_Speech_Recognition_Interface_Shutdown:
-
-                        foreach (System.Diagnostics.Process online_speech_recognition_interface in System.Diagnostics.Process.GetProcessesByName("SpeechRuntime"))
-                        {
-                            if(online_speech_recognition_interface.HasExited == false)
-                            {
-                                online_speech_recognition_interface.Kill();
-
-                                if (System.Diagnostics.Process.GetProcessesByName("SpeechRuntime").Count() > 0)
-                                {
-                                    goto Online_Speech_Recognition_Interface_Shutdown;
-                                }
-                            }
-                        }
-
-                        // END
-                        break;
-                }
-
-            }
-            catch
-            {
-                return Task.FromResult(false);
+                return await Start_The_Wake_Word_Engine();
             }
 
-            return Task.FromResult(true);
+            internal static async Task<bool> Wake_Word_Engine_Stop()
+            {
+                return await Stop_The_Wake_Word_Engine();
+            }
         }
+
+        private sealed class Microphone_Permissions_Mitigator : Check_Microphone_Permission
+        {
+            internal static async Task<bool> Check_Microphone_Availability()
+            {
+                return await Check_If_Microphone_Available();
+            }
+        }
+
+        private sealed class Online_Speech_Recognition_Mitigator:Online_Speech_Recognition
+        {
+            internal static async Task<bool> Online_Speech_Recognition_Initiation()
+            {
+                return await Online_Speech_Recognition_Session_Creation_And_Initiation();
+            }
+
+            internal static async Task<bool> OS_Online_Speech_Recogniser_Operation(Online_Speech_Recognition_Interface_Operation operation)
+            {
+                return await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(operation);
+            }
+        }
+
+        // [ END ]
+
+
+
 
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
@@ -373,7 +336,7 @@ namespace Eva_5._0
                                                         {
                                                             if (await Online_Speech_Recogniser_Delay_Calculator() == true)
                                                             {
-                                                                await Online_Speech_Recognition.Online_Speech_Recognition_Session_Creation_And_Initiation();
+                                                                await Online_Speech_Recognition_Mitigator.Online_Speech_Recognition_Initiation();
                                                             }
                                                         });
                                                         ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
@@ -423,7 +386,7 @@ namespace Eva_5._0
                                                                     {
                                                                         Task.Run(async() =>
                                                                         {
-                                                                            await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
+                                                                            await Online_Speech_Recognition_Mitigator.OS_Online_Speech_Recogniser_Operation(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
                                                                             Online_Speech_Recogniser_Listening = "false";
                                                                         });
                                                                     }

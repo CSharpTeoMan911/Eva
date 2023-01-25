@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Eva_5._0
@@ -27,15 +28,23 @@ namespace Eva_5._0
         private static System.Threading.Thread ParallelProcessing;
 
 
-        private sealed class Wake_Word_Engine_Mitigator : Wake_Word_Engine
+        // COMPONENTS THAT INTERACT WITH SECURTY SENSITIVE FEATURES ARE CONTAINED INSIDE PRIVATE SEALED CLASSES FOR EXTRA PROTECTION
+        //
+        // [ BEGIN ]
+
+        private sealed class Natural_Language_Processing_Mitigator:Natural_Language_Processing
         {
-            public static async Task<bool> Wake_Word_Engine_Start()
+            internal static async Task<bool> PreProcessing_Initiation(string Sentence)
             {
-                return await Start_The_Wake_Word_Engine();
+                return await PreProcessing(Sentence);
             }
         }
 
-        public static Task<bool> Online_Speech_Recognition_Session_Creation_And_Initiation()
+        // [ END ]
+
+
+
+        protected static Task<bool> Online_Speech_Recognition_Session_Creation_And_Initiation()
         {
 
             // Initiate the online speech recognizer on another thread.
@@ -73,14 +82,6 @@ namespace Eva_5._0
 
             return Task.FromResult(true);
         }
-
-
-
-
-
-
-
-
 
 
         private static async Task<bool> Initiate_The_Online_Speech_Recognition_Engine()
@@ -140,9 +141,9 @@ namespace Eva_5._0
                                                 }
                                             }
 
-                                            await Natural_Language_Processing.PreProcessing(Result.Text);
+                                            await Natural_Language_Processing_Mitigator.PreProcessing_Initiation(Result.Text);
 
-                                        Function_Not_Initiated:;
+                                        Function_Not_Initiated:
                                             if (OnlineSpeechRecognition != null)
                                             {
                                                 await OnlineSpeechRecognition.StopRecognitionAsync();
@@ -193,13 +194,15 @@ namespace Eva_5._0
                 }
             }
 
-            lock(Online_Speech_Recogniser_Listening)
+            lock (Online_Speech_Recogniser_Listening)
             {
                 Online_Speech_Recogniser_Listening = "false";
+                Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.Now;
             }
 
             return true;
         }
+
 
         private static void OnlineSpeechRecognition_StateChanged(Windows.Media.SpeechRecognition.SpeechRecognizer sender, Windows.Media.SpeechRecognition.SpeechRecognizerStateChangedEventArgs args)
         {
@@ -219,6 +222,67 @@ namespace Eva_5._0
                 Online_Speech_Recogniser_State = sender.State.ToString();
             }
         }
+
+
+        protected static Task<bool> OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation operation)
+        {
+
+            try
+            {
+
+                switch (operation)
+                {
+                    case Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache:
+                        // REFRESH THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS
+                        //
+                        // BEGIN
+
+                        foreach (System.Diagnostics.Process online_speech_recognition_interface in System.Diagnostics.Process.GetProcessesByName("SpeechRuntime"))
+                        {
+                            if (online_speech_recognition_interface.HasExited == false)
+                            {
+                                online_speech_recognition_interface.Refresh();
+                            }
+                        }
+
+                        // END
+                        break;
+
+
+
+                    case Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown:
+                    // SHUT DOWN THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS
+                    //
+                    // BEGIN
+
+                    Online_Speech_Recognition_Interface_Shutdown:
+
+                        foreach (System.Diagnostics.Process online_speech_recognition_interface in System.Diagnostics.Process.GetProcessesByName("SpeechRuntime"))
+                        {
+                            if (online_speech_recognition_interface.HasExited == false)
+                            {
+                                online_speech_recognition_interface.Kill();
+
+                                if (System.Diagnostics.Process.GetProcessesByName("SpeechRuntime").Count() > 0)
+                                {
+                                    goto Online_Speech_Recognition_Interface_Shutdown;
+                                }
+                            }
+                        }
+
+                        // END
+                        break;
+                }
+
+            }
+            catch
+            {
+                return Task.FromResult(false);
+            }
+
+            return Task.FromResult(true);
+        }
+
 
         ~Online_Speech_Recognition()
         {
