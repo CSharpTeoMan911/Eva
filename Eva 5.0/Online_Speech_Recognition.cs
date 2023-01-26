@@ -180,7 +180,6 @@ namespace Eva_5._0
             }
             catch (Exception E)
             {
-                System.Diagnostics.Debug.WriteLine(E.Message);
                 if(E.HResult == -2147199735)
                 {
                     if (App.PermisissionWindowOpen == false)
@@ -281,13 +280,6 @@ namespace Eva_5._0
             }
 
             return Task.FromResult(true);
-        }
-
-
-        ~Online_Speech_Recognition()
-        {
-            System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-            GC.Collect(2, GCCollectionMode.Forced, true, true);
         }
     }
 }

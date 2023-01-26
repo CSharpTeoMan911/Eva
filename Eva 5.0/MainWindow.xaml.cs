@@ -29,7 +29,7 @@ namespace Eva_5._0
     {
         private static RotateTransform Rotate = new RotateTransform();
 
-        private static System.Collections.Generic.List<string> Online_Speech_Recognition_Timeout_Timer_UI_Intervals = new System.Collections.Generic.List<string>() { "8", "7", "6", "5", "4", "3", "2", "1", "0" };
+        private static System.Collections.Generic.List<string> Online_Speech_Recognition_Timeout_Timer_UI_Intervals = new System.Collections.Generic.List<string>() { "9", "8", "7", "6", "5", "4", "3", "2", "1", "0" };
 
         private short Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index;
 
@@ -44,7 +44,7 @@ namespace Eva_5._0
 
         protected static DateTime? Online_Speech_Recogniser_Activation_Delay_Detector = null;
 
-        private static double Online_Speech_Recogniser_Activation_Delay = 3.75;
+        private static double Online_Speech_Recogniser_Activation_Delay = 1.5;
 
         // END
 

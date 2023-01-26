@@ -32,7 +32,7 @@ namespace Eva_5._0
                 System.Diagnostics.Process wake_word_process = new System.Diagnostics.Process();
                 wake_word_process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                 wake_word_process.StartInfo.FileName = Environment.CurrentDirectory + "\\python.exe";
-                wake_word_process.StartInfo.CreateNoWindow = false;
+                wake_word_process.StartInfo.CreateNoWindow = true;
                 wake_word_process.StartInfo.Arguments = "main.py";
                 wake_word_process.Start();
 

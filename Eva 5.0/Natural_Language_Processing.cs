@@ -71,9 +71,6 @@ namespace Eva_5._0
 
         protected static async Task<bool> PreProcessing(string Result)
         {
-
-            System.Diagnostics.Debug.WriteLine("Result: " + Result);
-
             string Sentence = await Special_Character_Replacement_Implementor.Remove_Special_Characters_Procedure(Result);
 
             // THE FIRST TOKENIZATION IS INITIATED. THE FIRST TOKENIZATION IS RESPONSIBLE FOR PARAMETER ASSOCIATION WITH THEIR RESPECTIVE COMMAND FORMATS
