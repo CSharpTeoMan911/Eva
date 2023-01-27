@@ -32,6 +32,8 @@ def Wake_Word_Initiation():
                 if phrase is not None:
                     thread = threading.Thread(target=wake_word_operation_application_socket)
                     thread.start()
+                    del speech
+                    speech = LiveSpeech(lm=False, keyphrase='eva', kws_threshold=0.00000000003)
     except KeyboardInterrupt:
         del speech
         sys.exit(0)
@@ -41,3 +43,6 @@ if __name__ == '__main__':
     Wake_Word_Initiation()
     del speech
     sys.exit(0)
+
+
+
