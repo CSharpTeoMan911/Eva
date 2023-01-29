@@ -1,13 +1,19 @@
 from pocketsphinx import LiveSpeech
+import multiprocessing
+import sounddevice
 import threading
 import socket
+import time
 import sys
 
 
-speech = LiveSpeech(lm=False, keyphrase='eva', kws_threshold=0.00000000003)
+speech = LiveSpeech(lm=False, keyphrase='eva', kws_threshold=1e-9)
 
 
 def wake_word_operation_application_socket():
+    ################################################
+    # INTERPROCESS COMMUNICATION USING TCP SOCKETS #
+    ################################################
     try:
         try:
             host = "127.0.0.1"
@@ -25,24 +31,59 @@ def wake_word_operation_application_socket():
 
 
 def Wake_Word_Initiation():
+    ##############################
+    # WAKE WORD ENGINE OPERATION #
+    ##############################
     global speech
+    speech = LiveSpeech(lm=False, keyphrase='eva', kws_threshold=1e-9)
     try:
-        for phrase in speech:
-            if speech is not None:
-                if phrase is not None:
-                    thread = threading.Thread(target=wake_word_operation_application_socket)
-                    thread.start()
-                    del speech
-                    speech = LiveSpeech(lm=False, keyphrase='eva', kws_threshold=0.00000000003)
+        try:
+            for phrase in speech:
+                if speech is not None:
+                    if phrase is not None:
+                        thread = threading.Thread(target=wake_word_operation_application_socket)
+                        thread.start()
+        except sounddevice.PortAudioError:
+            pass
     except KeyboardInterrupt:
         del speech
         sys.exit(0)
 
 
 if __name__ == '__main__':
-    Wake_Word_Initiation()
-    del speech
-    sys.exit(0)
+    ###################################################
+    # THE WAKE WORD ENGINE IS STARTED AND STOPPED ON  #
+    # MULTIPLE THREADS TWO TIMES EVERY 3 SECONDS      #
+    #                                                 #
+    # THIS IS DONE TO ENSURE THAT THE WAKE WORD       #
+    # ENGINE DOES NOT LOCK. THE LOCK IS OCCURRING     #
+    # WHEN THE WAKE WORD ENGINE IS RECEIVING NON      #
+    # SPEECH INPUT FOR A PERIOD OF TIME.              #
+    #                                                 #
+    # A PROBABLE CAUSE IS CACHED DATA, WHICH IS       #
+    # FREED WHEN THE WAKE WORD ENGINE IS STOPPED.     #
+    ###################################################
+    while True:
+        process1 = multiprocessing.Process(target=Wake_Word_Initiation)
+        process2 = multiprocessing.Process(target=Wake_Word_Initiation)
+        try:
+            process1.start()
+            process2.start()
+            time.sleep(3)
+            process1.terminate()
+            time.sleep(3)
+            process2.terminate()
+            try:
+                del speech
+            except NameError:
+                pass
+        except KeyboardInterrupt:
+            try:
+                shutdown = True
+                del speech
+            except NameError:
+                pass
+            sys.exit(0)
 
 
 

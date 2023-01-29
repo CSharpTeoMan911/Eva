@@ -57,17 +57,52 @@ namespace Eva_5._0
                 System.Management.ManagementObjectSearcher sub_processes = new System.Management.ManagementObjectSearcher("SELECT * " + "FROM Win32_Process " + "WHERE ParentProcessId=" + System.Diagnostics.Process.GetCurrentProcess().Id);
                 System.Management.ManagementObjectCollection sub_processes_collection = sub_processes.Get();
 
+
+
                 if (sub_processes_collection.Count > 0)
                 {
                     foreach (System.Management.ManagementObject sub_process in sub_processes_collection)
                     {
                         uint sub_process_Id = (uint)sub_process["ProcessId"];
+
                         if ((int)sub_process_Id != System.Diagnostics.Process.GetCurrentProcess().Id)
                         {
                             if(System.Diagnostics.Process.GetProcessById((int)sub_process_Id, System.Diagnostics.Process.GetCurrentProcess().MachineName).ProcessName.Contains("python") == true)
                             {
+
                                 System.Diagnostics.Process childProcess = System.Diagnostics.Process.GetProcessById((int)sub_process_Id);
+
+
+
+
+
+                                System.Management.ManagementObjectSearcher python_sub_processes = new System.Management.ManagementObjectSearcher("SELECT * " + "FROM Win32_Process " + "WHERE ParentProcessId=" + childProcess.Id);
+                                System.Management.ManagementObjectCollection python_sub_processes_collection = python_sub_processes.Get();
+
+
+
+                                if(python_sub_processes_collection.Count > 0)
+                                {
+                                    foreach (System.Management.ManagementObject python_sub_process in python_sub_processes_collection)
+                                    {
+
+                                        uint python_sub_process_Id = (uint)python_sub_process["ProcessId"];
+
+                                        if ((int)python_sub_process_Id != System.Diagnostics.Process.GetCurrentProcess().Id)
+                                        {
+                                            if (System.Diagnostics.Process.GetProcessById((int)sub_process_Id, System.Diagnostics.Process.GetCurrentProcess().MachineName).ProcessName.Contains("python") == true)
+                                            {
+                                                System.Diagnostics.Process python_childProcess = System.Diagnostics.Process.GetProcessById((int)python_sub_process_Id);
+                                                python_childProcess.Kill();
+                                            }
+                                        }
+                                    }
+                                }
+
+
+
                                 childProcess.Kill();
+
                             }
                         }
                     }
