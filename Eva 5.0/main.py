@@ -23,7 +23,7 @@ def wake_word_operation_application_socket():
             application_socket.send("eva".encode())
             application_socket.close()
             application_socket.shutdown(socket.SHUT_RDWR)
-        except socket.error as e:
+        except socket.error:
             pass
     except KeyboardInterrupt:
         del speech
@@ -63,23 +63,31 @@ if __name__ == '__main__':
     # A PROBABLE CAUSE IS CACHED DATA, WHICH IS       #
     # FREED WHEN THE WAKE WORD ENGINE IS STOPPED.     #
     ###################################################
+
     while True:
         process1 = multiprocessing.Process(target=Wake_Word_Initiation)
         process2 = multiprocessing.Process(target=Wake_Word_Initiation)
+        process3 = multiprocessing.Process(target=Wake_Word_Initiation)
+        process4 = multiprocessing.Process(target=Wake_Word_Initiation)
         try:
             process1.start()
             process2.start()
+            process3.start()
+            process4.start()
             time.sleep(3)
             process1.terminate()
             time.sleep(3)
             process2.terminate()
+            time.sleep(3)
+            process3.terminate()
+            time.sleep(3)
+            process4.terminate()
             try:
                 del speech
             except NameError:
                 pass
         except KeyboardInterrupt:
             try:
-                shutdown = True
                 del speech
             except NameError:
                 pass
