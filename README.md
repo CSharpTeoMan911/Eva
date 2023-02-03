@@ -17,7 +17,7 @@ Changed the wake word engine from Windows Speech Recognition (SAPI) to PocketSph
 
 <br>
 
-Download Eva: https://drive.google.com/file/d/1U5ca9oIXqRqa9q-ecMhtX_y1qShAQejU/view?usp=sharing
+Download Eva: https://sourceforge.net/projects/eva-ai/
 
 <br>
 <br>
