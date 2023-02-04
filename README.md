@@ -60,7 +60,7 @@ _______________________________________
 
 <br>
 
-The PocketSphinx speech recogniser is listening permanently, if the listening function is activated. Once it recognises the word "Eva", the online speech recognition engine is activated. The online speech recognition engine has the role of extracting the commands and their content.
+The PocketSphinx speech recogniser is listening permanently, if the listening function is activated. Once it recognises the word "Eva listen now", the online speech recognition engine is activated. The online speech recognition engine has the role of extracting the commands and their content.
 
 <br>
 <br>
@@ -136,7 +136,7 @@ Go to the ***DOWNLOAD*** section within the Eva's README.md page and click on th
 
 <br>
 
-In order to give commands to Eva say the word "Eva wake up" followed by the desired command. For example, say "Eva wake up", then after Eva is activated, say "search robots are cool on Google". You can find detailed instructions about commands and the command paterns and troubleshooting within the instruction manual of Eva.
+In order to give commands to Eva say the word "Eva listen now" followed by the desired command. For example, say "Eva listen now", then after Eva is activated, say "search robots are cool on Google". You can find detailed instructions about commands and the command paterns and troubleshooting within the instruction manual of Eva.
 
 <br>
 
