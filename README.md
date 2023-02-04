@@ -55,7 +55,7 @@ _______________________________________
 <br>
 
 
-![Wake Word Mechanism](https://user-images.githubusercontent.com/87245086/213821144-680842ce-ad66-432f-ba6e-5595b2122650.png)
+![Wake Word Mechanism](https://user-images.githubusercontent.com/87245086/216778714-f543d39b-83b9-43f1-9170-f4fefa209794.png)
 
 
 <br>
