@@ -7,7 +7,7 @@ import time
 import sys
 
 
-speech = LiveSpeech(lm=False, keyphrase='eva wake up', kws_threshold=1e-32)
+speech = LiveSpeech(lm=False, keyphrase='eva wake up', kws_threshold=1e-48)
 
 
 def wake_word_operation_application_socket():
@@ -35,7 +35,7 @@ def Wake_Word_Initiation():
     # WAKE WORD ENGINE OPERATION #
     ##############################
     global speech
-    speech = LiveSpeech(lm=False, keyphrase='eva wake up', kws_threshold=1e-32)
+    speech = LiveSpeech(lm=False, keyphrase='eva wake up', kws_threshold=1e-48)
     try:
         try:
             for phrase in speech:
