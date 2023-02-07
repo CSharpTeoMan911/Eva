@@ -1,6 +1,7 @@
 from pocketsphinx import LiveSpeech
 import sounddevice
 import threading
+import multiprocessing
 import socket
 import sys
 import time
@@ -61,19 +62,59 @@ if __name__ == '__main__':
     # FREED WHEN THE WAKE WORD ENGINE IS STOPPED.     #
     ###################################################
 
-    speech_thread = threading.Thread(target=Wake_Word_Initiation)
-    speech_thread.start()
+    speech_thread1 = multiprocessing.Process(target=Wake_Word_Initiation)
+    speech_thread1.start()
+
+    speech_thread2 = multiprocessing.Process(target=Wake_Word_Initiation)
+    speech_thread2.start()
+
+    speech_thread3 = multiprocessing.Process(target=Wake_Word_Initiation)
+    speech_thread3.start()
+
+    speech_thread4 = multiprocessing.Process(target=Wake_Word_Initiation)
+    speech_thread4.start()
+
+    thread_count = 0
+
+    time.sleep(5)
 
     while True:
         try:
-            time.sleep(3)
+            time.sleep(5)
+
             del speech
             speech = LiveSpeech(lm=False, keyphrase=' wake eva ', kws_threshold=1e-30)
+
+            if thread_count < 4:
+                match thread_count:
+                    case 0:
+                        speech_thread1.terminate()
+                        del speech_thread1
+                        speech_thread1 = multiprocessing.Process(target=Wake_Word_Initiation)
+                        speech_thread1.start()
+                    case 1:
+                        speech_thread2.terminate()
+                        del speech_thread2
+                        speech_thread2 = multiprocessing.Process(target=Wake_Word_Initiation)
+                        speech_thread2.start()
+                    case 2:
+                        speech_thread3.terminate()
+                        del speech_thread3
+                        speech_thread3 = multiprocessing.Process(target=Wake_Word_Initiation)
+                        speech_thread3.start()
+                    case 3:
+                        speech_thread4.terminate()
+                        del speech_thread4
+                        speech_thread4 = multiprocessing.Process(target=Wake_Word_Initiation)
+                        speech_thread4.start()
+                thread_count += 1
+            else:
+                thread_count = 0
+
 
         except KeyboardInterrupt:
             del speech
             sys.exit(0)
-
 
 
 
