@@ -1,11 +1,9 @@
 from pocketsphinx import LiveSpeech
-import multiprocessing
 import sounddevice
 import threading
 import socket
-import time
 import sys
-
+import time
 
 speech = LiveSpeech(lm=False, keyphrase=' wake eva ', kws_threshold=1e-30)
 
@@ -35,14 +33,13 @@ def Wake_Word_Initiation():
     # WAKE WORD ENGINE OPERATION #
     ##############################
     global speech
-    speech = LiveSpeech(lm=False, keyphrase=' wake eva ', kws_threshold=1e-30)
     try:
         try:
             for phrase in speech:
                 if speech is not None:
                     if phrase is not None:
-                        thread = threading.Thread(target=wake_word_operation_application_socket)
-                        thread.start()
+                        inter_process_thread = threading.Thread(target=wake_word_operation_application_socket)
+                        inter_process_thread.start()
         except sounddevice.PortAudioError:
             pass
     except KeyboardInterrupt:
@@ -52,8 +49,8 @@ def Wake_Word_Initiation():
 
 if __name__ == '__main__':
     ###################################################
-    # THE WAKE WORD ENGINE IS STARTED AND STOPPED ON  #
-    # MULTIPLE THREADS TWO TIMES EVERY 3 SECONDS      #
+    # THE WAKE WORD ENGINE OBJECT IS RESET ONCE EVERY #
+    # 3 SECONDS.                                      #
     #                                                 #
     # THIS IS DONE TO ENSURE THAT THE WAKE WORD       #
     # ENGINE DOES NOT LOCK. THE LOCK IS OCCURRING     #
@@ -64,34 +61,19 @@ if __name__ == '__main__':
     # FREED WHEN THE WAKE WORD ENGINE IS STOPPED.     #
     ###################################################
 
+    speech_thread = threading.Thread(target=Wake_Word_Initiation)
+    speech_thread.start()
+
     while True:
-        process1 = multiprocessing.Process(target=Wake_Word_Initiation)
-        process2 = multiprocessing.Process(target=Wake_Word_Initiation)
-        process3 = multiprocessing.Process(target=Wake_Word_Initiation)
-        process4 = multiprocessing.Process(target=Wake_Word_Initiation)
         try:
-            process1.start()
-            process2.start()
-            process3.start()
-            process4.start()
             time.sleep(3)
-            process1.terminate()
-            time.sleep(3)
-            process2.terminate()
-            time.sleep(3)
-            process3.terminate()
-            time.sleep(3)
-            process4.terminate()
-            try:
-                del speech
-            except NameError:
-                pass
+            del speech
+            speech = LiveSpeech(lm=False, keyphrase=' wake eva ', kws_threshold=1e-30)
+
         except KeyboardInterrupt:
-            try:
-                del speech
-            except NameError:
-                pass
+            del speech
             sys.exit(0)
+
 
 
 
