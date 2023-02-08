@@ -91,7 +91,6 @@ namespace Eva_5._0
                 online_speech_recognition_timeout = DateTime.Now;
                 Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.Now;
 
-
                 using (Windows.Media.SpeechRecognition.SpeechRecognizer OnlineSpeechRecognition = new Windows.Media.SpeechRecognition.SpeechRecognizer())
                 {
                     Constraints.Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Max;
@@ -110,7 +109,7 @@ namespace Eva_5._0
 
 
                             Windows.Media.SpeechRecognition.SpeechRecognitionResult Result = await OnlineSpeechRecognition.RecognizeAsync();
-                            await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache);
+                            await OS_Online_Speech_Recognition_Interface_Cache_Cleanup();
 
 
                             switch (Result.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
@@ -223,55 +222,25 @@ namespace Eva_5._0
         }
 
 
-        protected static Task<bool> OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation operation)
+        protected static Task<bool> OS_Online_Speech_Recognition_Interface_Cache_Cleanup()
         {
 
             try
             {
 
-                switch (operation)
+                // REFRESH THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS
+                //
+                // BEGIN
+
+                foreach (System.Diagnostics.Process online_speech_recognition_interface in System.Diagnostics.Process.GetProcessesByName("SpeechRuntime"))
                 {
-                    case Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache:
-                        // REFRESH THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS
-                        //
-                        // BEGIN
-
-                        foreach (System.Diagnostics.Process online_speech_recognition_interface in System.Diagnostics.Process.GetProcessesByName("SpeechRuntime"))
-                        {
-                            if (online_speech_recognition_interface.HasExited == false)
-                            {
-                                online_speech_recognition_interface.Refresh();
-                            }
-                        }
-
-                        // END
-                        break;
-
-
-
-                    case Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown:
-                    // SHUT DOWN THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS
-                    //
-                    // BEGIN
-
-                    Online_Speech_Recognition_Interface_Shutdown:
-
-                        foreach (System.Diagnostics.Process online_speech_recognition_interface in System.Diagnostics.Process.GetProcessesByName("SpeechRuntime"))
-                        {
-                            if (online_speech_recognition_interface.HasExited == false)
-                            {
-                                online_speech_recognition_interface.Kill();
-
-                                if (System.Diagnostics.Process.GetProcessesByName("SpeechRuntime").Count() > 0)
-                                {
-                                    goto Online_Speech_Recognition_Interface_Shutdown;
-                                }
-                            }
-                        }
-
-                        // END
-                        break;
+                    if (online_speech_recognition_interface.HasExited == false)
+                    {
+                        online_speech_recognition_interface.Refresh();
+                    }
                 }
+
+                // END
 
             }
             catch

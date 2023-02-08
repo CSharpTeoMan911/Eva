@@ -44,7 +44,7 @@ namespace Eva_5._0
 
         protected static DateTime? Online_Speech_Recogniser_Activation_Delay_Detector = null;
 
-        private static double Online_Speech_Recogniser_Activation_Delay = 1.7;
+        private static double Online_Speech_Recogniser_Activation_Delay = 2;
 
         // END
 
@@ -149,13 +149,6 @@ namespace Eva_5._0
         }
 
 
-        protected enum Online_Speech_Recognition_Interface_Operation
-        {
-            Online_Speech_Recognition_Interface_Clear_Cache,
-            Online_Speech_Recognition_Interface_Shutdown
-        }
-
-
         // COMPONENTS THAT INTERACT WITH SECURTY SENSITIVE FEATURES ARE CONTAINED INSIDE PRIVATE SEALED CLASSES FOR EXTRA PROTECTION
         //
         // [ BEGIN ]
@@ -186,11 +179,6 @@ namespace Eva_5._0
             internal static async Task<bool> Online_Speech_Recognition_Initiation()
             {
                 return await Online_Speech_Recognition_Session_Creation_And_Initiation();
-            }
-
-            internal static async Task<bool> OS_Online_Speech_Recogniser_Operation(Online_Speech_Recognition_Interface_Operation operation)
-            {
-                return await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(operation);
             }
         }
 
@@ -384,11 +372,7 @@ namespace Eva_5._0
                                                                 {
                                                                     if(online_speech_recogniser_lock_state_time_elapsed.ElapsedMilliseconds > 4000)
                                                                     {
-                                                                        Task.Run(async() =>
-                                                                        {
-                                                                            await Online_Speech_Recognition_Mitigator.OS_Online_Speech_Recogniser_Operation(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
-                                                                            Online_Speech_Recogniser_Listening = "false";
-                                                                        });
+                                                                        Online_Speech_Recogniser_Listening = "false";
                                                                     }
                                                                 }
                                                                 break;
