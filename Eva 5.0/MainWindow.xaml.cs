@@ -388,6 +388,10 @@ namespace Eva_5._0
                                                                     if(online_speech_recogniser_lock_state_time_elapsed.ElapsedMilliseconds > 4000)
                                                                     {
                                                                         Online_Speech_Recogniser_Listening = "false";
+                                                                        Task.Run(async() =>
+                                                                        {
+                                                                            await Online_Speech_Recognition_Mitigator.OS_Online_Speech_Recogniser_Operation(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
+                                                                        });
                                                                     }
                                                                 }
                                                                 break;
@@ -449,27 +453,6 @@ namespace Eva_5._0
 
 
                                                 case "false":
-                                                    // VERFIES IF THE ONLINE SPEECH RECOGNITION INTERFACE IS OPENED AFTER THE OPERATION FINSHED
-                                                    // THIS IS DONE TO PREVENT THE LOCK OF THE ONLINE SPEECH RECOGNITION ENGINE
-                                                    //
-                                                    // THE PROBLEM IS THAT YOU CANNOT USE THE DICTATION DIALOG AT ALL WHILE EVA IS RUNNING ( WIN + H )
-                                                    //
-                                                    // [ BEGIN ]
-
-                                                    if(System.Diagnostics.Process.GetProcessesByName("SpeechRuntime").Count() > 0)
-                                                    {
-                                                        System.Threading.Thread Online_Speech_Recognition_Interface_Thread = new System.Threading.Thread(async () =>
-                                                        {
-                                                            await Online_Speech_Recognition_Mitigator.OS_Online_Speech_Recogniser_Operation(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
-                                                        });
-                                                        Online_Speech_Recognition_Interface_Thread.SetApartmentState(System.Threading.ApartmentState.STA);
-                                                        Online_Speech_Recognition_Interface_Thread.Priority = System.Threading.ThreadPriority.AboveNormal;
-                                                        Online_Speech_Recognition_Interface_Thread.IsBackground = true;
-                                                        Online_Speech_Recognition_Interface_Thread.Start();
-                                                    }
-                                                    
-                                                    // [ END ]
-
                                                     target_value = 1000;
                                                     Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
                                                     Online_Speech_Recognition_Timer_Display.Text = String.Empty;
