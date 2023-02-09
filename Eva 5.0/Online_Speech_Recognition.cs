@@ -109,7 +109,7 @@ namespace Eva_5._0
 
 
                             Windows.Media.SpeechRecognition.SpeechRecognitionResult Result = await OnlineSpeechRecognition.RecognizeAsync();
-                            await OS_Online_Speech_Recognition_Interface_Cache_Cleanup();
+                            await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache);
 
 
                             switch (Result.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
@@ -222,25 +222,46 @@ namespace Eva_5._0
         }
 
 
-        protected static Task<bool> OS_Online_Speech_Recognition_Interface_Cache_Cleanup()
+        protected static Task<bool> OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation operation)
         {
 
             try
             {
+                System.Diagnostics.Process[] online_speech_recognition_interface_instances = System.Diagnostics.Process.GetProcessesByName("SpeechRuntime");
 
-                // REFRESH THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS
-                //
-                // BEGIN
-
-                foreach (System.Diagnostics.Process online_speech_recognition_interface in System.Diagnostics.Process.GetProcessesByName("SpeechRuntime"))
+                if(online_speech_recognition_interface_instances.Count() > 0)
                 {
-                    if (online_speech_recognition_interface.HasExited == false)
+                    switch (operation)
                     {
-                        online_speech_recognition_interface.Refresh();
+                        case Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache:
+                            // REFRESH THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS
+                            //
+                            // BEGIN
+
+                            foreach (System.Diagnostics.Process online_speech_recognition_interface in online_speech_recognition_interface_instances)
+                            {
+                                online_speech_recognition_interface.Refresh();
+                            }
+
+                            // END
+                            break;
+
+
+
+                        case Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown:
+                            // SHUT DOWN THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS
+                            //
+                            // BEGIN
+
+                            foreach (System.Diagnostics.Process online_speech_recognition_interface in online_speech_recognition_interface_instances)
+                            {
+                                online_speech_recognition_interface.Kill();
+                            }
+
+                            // END
+                            break;
                     }
                 }
-
-                // END
 
             }
             catch
