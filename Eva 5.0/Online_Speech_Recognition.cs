@@ -47,7 +47,8 @@ namespace Eva_5._0
         protected static Task<bool> Online_Speech_Recognition_Session_Creation_And_Initiation()
         {
 
-            // Initiate the online speech recognizer on another thread.
+            // Initiate the online speech recognizer on another thread and lock multiple objects in memory
+            // in order to block other threads from modifying them
             //
             // [ BEGIN ]
             // 
@@ -234,7 +235,7 @@ namespace Eva_5._0
                     switch (operation)
                     {
                         case Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache:
-                            // REFRESH THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS
+                            // CLEAR THE CACHE OF THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS ("SpeechRuntime.exe")
                             //
                             // BEGIN
 
@@ -249,7 +250,7 @@ namespace Eva_5._0
 
 
                         case Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown:
-                            // SHUT DOWN THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS
+                            // SHUT DOWN THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS ("SpeechRuntime.exe")
                             //
                             // BEGIN
 

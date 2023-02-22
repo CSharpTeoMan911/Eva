@@ -25,11 +25,69 @@ namespace Eva_5._0
     internal class A_p_l____And____P_r_o_c
     {
 
+        // THIS IS THE CLASS RESPONSIBLE FOR STORING THE SYSTEM PROCESSES, WEB APPLICATIONS, AND OS URI LINKS IN KEY-VALUE
+        // PAIR FORMAT USIING "ConcurrentDictionary" CLASS OBJECTS, WHICH ARE THREAD SAFE DICTIONARIES ( HASHMAPS ). THIS
+        // IS DONE TO ENSURE A O(1) TIME COMPLEXITY FOR SEARCH AND COMPARISON OPERATIONS. 
+        //
+        //
+        //
+        //
+        //
+        // - "A_p_l_Name__And__A_p_l___E_x__Name" OBJECT STORES KEY-VALUE PAIRS OF EXECUTABLES AND OS URIs, AND THEIR 
+        //    RESPECTIVE KEY VALUES. THIS OBJECT STORES VALUES THAT ARE RELATED TO PROCESS EXECUTION.
+        //
+        //
+        //    * EXECUTABLES ARE STORED IN THE ( "APPLICATION IDENTIFIER", "EXECUTABLE.exe" ) KEY VALUE FORMAT
+        //
+        //
+        //    * URIs ARE STORED IN THE ( "URI INDENTIFIER", "URI = URI LINK" ) KEY VALUE FORMAT
+        //
+        //
+        //    * SHELL COMMANDS IN THE ( "COMMAND IDENTIFIER", "CMD = COMMAND") KEY VALUE FORMAT
+        //
+        //
+        //    * FUNCTIONS WITHIN CLASSES WITHIN THE EVA APP IN THE ("FUNCTION IDENTIFIER", "FUNCTION IDENTIFIER") KEY VALUE FORMAT
+        //
+        //
+        //
+        //
+        //
+        // - "W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name" OBJECT STORES KEY-VALUE PAIRS OF WEB-APPLICATION LINKS AND THEIR 
+        //    RESPECTIVE KEY VALUES. THIS OBJECT STORES VALUES THAT ARE RELATED TO WEB APPLICATION CONTENT SEARCH.
+        //
+        //
+        //    * WEB APPLICATION LINKS ARE STORED IN THE ( "WEB APPLICATION LINK IDENTIFIER", "www.WEB APPLICATION LINK.com" ) KEY VALUE FORMAT
+        //
+        //
+        //
+        //
+        //
+        //
+        // - "A_p_l_Name__And__A_p_l___P_r_o_c_Name" OBJECT STORES KEY-VALUE PAIRS OF THE NAMES OF THE PROCESSES' EXECUTABLES . THIS OBJECT
+        //    STORES VALUES THAT ARE RELATED TO THE EXECUTABLES IN ORDER TO BE SHUT DOWN
+        //
+        //
+        //    * PROCESS NAMES ARE STORED IN THE ( "PROCESS NAME IDENTIFIER", "PROCESS NAME" )
+        //
+        //
+        //
+        //
+        //
+        // - "A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k" OBJECT STORES KEY-VALUE PAIRS OF THE LINKS TO APPLICATIONS THAT ARE NOT FOUND.
+        //    THIS OBJECT STORES THE VALUES OF THE LINKS THAT MUST BE ACCESSED IN ORDER FOR THE USER TO DOWNLOAD THE APPLICATION THAT IS 
+        //    PRESENT IN THE "A_p_l_Name__And__A_p_l___E_x__Name" BUT THEY ARE NOT PRESENT ON THE USER'S OS.
+        //
+        //    * LINKS THAT MUST BE ACCESSED IN ORDER FOR THE USER TO DOWNLOAD THE APPLICATION ARE STORED IN ( "APPLICATION DOWNLOAD LINK", "www.APPLICATION DOWNLOAD LINK.com" ) KEY VALUE FORMAT
+
+
+
+
+
+
+
         protected readonly static System.Collections.Concurrent.ConcurrentDictionary<string, string> A_p_l_Name__And__A_p_l___E_x__Name = new System.Collections.Concurrent.ConcurrentDictionary<string, string>();
 
         protected readonly static System.Collections.Concurrent.ConcurrentDictionary<string, string> W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name = new System.Collections.Concurrent.ConcurrentDictionary<string, string>();
-
-        protected readonly static System.Collections.Concurrent.ConcurrentDictionary<int, string> W_e_b__A_p_l_Name__Tokens = new System.Collections.Concurrent.ConcurrentDictionary<int, string>();
 
         protected readonly static System.Collections.Concurrent.ConcurrentDictionary<string, string> A_p_l_Name__And__A_p_l___P_r_o_c_Name = new System.Collections.Concurrent.ConcurrentDictionary<string, string>();
 
@@ -47,7 +105,7 @@ namespace Eva_5._0
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
 
-        // Each time the method is called through its constructor, the integer pointer of the application's handle within the operating system is passed and set as the top window
+        // Each time the method is called, the integer pointer of the application's handle within the operating system is passed and set as the top window
         protected static Task<bool> SetForegroundWindowInitiator(IntPtr Process_Window_Handle)
         {
             return Task.FromResult(SetForegroundWindow(Process_Window_Handle));
@@ -71,6 +129,11 @@ namespace Eva_5._0
             {
                 ParallelProcessing = new System.Threading.Thread(() =>
                 {
+
+                    // ADD KEY-VALUE PAIRS IN THE SPECIFIED FORMAT FOR EACH DICTIONARY OBJECT RESPECTING THE SPECIFIED API FROMAT
+                    //
+                    // [ BEGIN ]
+
 
                     A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("chrome", "chrome.exe");
 
@@ -597,31 +660,6 @@ namespace Eva_5._0
 
 
 
-                    // WEB APPLICATIONS TOKENS
-                    //
-                    // BEGIN
-
-                    W_e_b__A_p_l_Name__Tokens.TryAdd(0, " google images ");
-
-                    W_e_b__A_p_l_Name__Tokens.TryAdd(1, " google news ");
-
-                    W_e_b__A_p_l_Name__Tokens.TryAdd(2, " google ");
-
-                    W_e_b__A_p_l_Name__Tokens.TryAdd(3, " wikipedia ");
-
-                    W_e_b__A_p_l_Name__Tokens.TryAdd(4, " ebay ");
-
-                    W_e_b__A_p_l_Name__Tokens.TryAdd(5, " netflix ");
-
-                    W_e_b__A_p_l_Name__Tokens.TryAdd(6, " youtube ");
-
-                    W_e_b__A_p_l_Name__Tokens.TryAdd(7, " amazon ");
-
-                    // END
-
-
-
-
                     A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryAdd("chrome", "https://www.google.co.uk/chrome/");
 
                     A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryAdd("firefox", "https://www.mozilla.org/en-GB/firefox/new/");
@@ -659,6 +697,9 @@ namespace Eva_5._0
                     A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryAdd("visual studio 2019", "https://visualstudio.microsoft.com/vs/older-downloads/");
 
                     A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryAdd("visual studio code", "https://code.visualstudio.com/download");
+
+
+                    // [ END ]
 
                 });
 

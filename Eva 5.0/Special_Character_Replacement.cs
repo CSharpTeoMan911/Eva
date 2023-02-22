@@ -10,14 +10,14 @@ namespace Eva_5._0
             //
             //            [ NOTE ] :
             //
-            //            THE INPUT COULD TAKE SOME WORDS OR SEQUENCES OF WORDS SUCH AS [ NEW LINE ] 
-            //            AND PARSE THEM INTO SPECIAL CHARACTERS, IN THIS EXAMPLE THIS SPECIAL CHARACTER WILL
+            //            THE INPUT COULD TAKE SOME WORDS OR SEQUENCES OF WORDS SUCH AS [ NEW LINE ] AND 
+            //            PARSE THEM INTO SPECIAL CHARACTERS, IN THIS EXAMPLE THIS SPECIAL CHARACTER WILL
             //            BE [ \n ], THUS TAKING THE INPUT WRONGLY. THE INPUT COULD ALSO HAVE SPECIAL
-            //            CHARACTERS THAT POSSES A RISK TO SECURITY BY ALLOWING ATTACKERS TO INJECT
+            //            CHARACTERS THAT POSE A RISK TO THE SECURITY BY ALLOWING ATTACKERS TO INJECT
             //            COMMANDS INTO THE SHELL OF THE OS WHEN A PROCESS IS EXECUTED.
 
 
-            if(Sentence != null)
+            if (Sentence != null)
             {
                 if (Sentence.Contains("\n") == true)
                 {

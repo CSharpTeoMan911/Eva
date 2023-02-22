@@ -74,6 +74,11 @@ namespace Eva_5._0
             string Sentence = await Special_Character_Replacement_Implementor.Remove_Special_Characters_Procedure(Result);
 
             // THE FIRST TOKENIZATION IS INITIATED. THE FIRST TOKENIZATION IS RESPONSIBLE FOR PARAMETER ASSOCIATION WITH THEIR RESPECTIVE COMMAND FORMATS
+            // FOR EXAMPLE IF YOU SAY "SEARCH ROBOTS ARE COOL ON YOUTUBE" THE FIRST TOKENIZATION WILL ASSOCIATE THE COMMAND WITH THE 
+            // "SEARCH [ CONTENT ] ON [ WEB APPLICATION ] COMMAND FORMAT BASED ON THE POSITION OF THE KEYWORD "SEARCH" WITHIN THE
+            // SENTENCE, AND IF SENTENCE CONTAINS THE KEYWORD "ON". IF THE TOKENIZATION SESSION WILL NOT FIND VALID COMMAND FORMATS
+            // THE TOKENIZATION SESSION WILL DROP THE COMMAND.
+            //
             // [ BEGIN ]
 
             switch (Sentence.IndexOf("please open ") == 0)
@@ -257,7 +262,12 @@ namespace Eva_5._0
 
 
 
-            // PROCESSES THAT DO NOT NEED NATURAL LANGUAGE TEXT PROCESSING REQUIRE PROCESSING AND THEY ONLY REQUIRE THE FIRST TOKENIZATION
+
+
+            // COMMANDS THAT DO NOT REQUIRE A SECOND TOKENIZATION. THESE COMMANDS ARE COMMANDS THAT DO NOT HAVE
+            // EXTRA VARIABLES THAT REQUIRE CONTENT PROCESSING AND THE MEANING AND CONTENTS OF THE COMMAND
+            // ARE EXPLICIT
+            //
             //[ BEGIN ]
 
 
@@ -323,7 +333,11 @@ namespace Eva_5._0
         {
             // THE SECOND TOKENIZATION IS INITIATED. HERE THE CONTEXTUAL NATURAL LANGUAGE PROCESSING TAKES PLACE. THE KEYWORDS RELATED TO THE COMMAND FORMATS DETECTED ARE TOKENIZED.
             // THE KEYWORDS FOR OPERATIONS, APPLICATIONS AND THE CONTENT FOR WEB SEARCH FUNCTIONS OR THE TIMER FUNCTION ARE EXTRACTED FROM THE SENTENCE.
-
+            // FOR EXAMPLE IF THE COMMAND FORMAT IS "SEARCH [ CONTENT ] ON [ WEB APPLICATION ]" THE CONTENT OF THE WEB APPLICATION WILL BE AFTER THE
+            // FIRST OCCURENCE OF THE KEYWORD "SEARCH" AND BEFORE THE LAST OCCURENCE OF THE KEYWORD "ON", AND THE WEB APPLICATION WILL BE AFTER THE 
+            // LAST OCCURENCE OF THE KEYWORD "ON". IF THE TOKENIZATION PROCEDURE DOES NOT FIND A CORRECT COMMAND FORMAT OR VALID COMMAD PARAMETERS,
+            // THE TOKENIZATION SESSION WILL DROP THE COMMAND.
+            //
             // [ BEGIN ]
 
             string Application = String.Empty;
@@ -518,6 +532,18 @@ namespace Eva_5._0
 
         private static Task<bool> Timer_Time_Selector(string Sentence, System.Collections.Concurrent.ConcurrentDictionary<string, int> time_interval, int start_index)
         {
+            // WHEN A TIMER IS SET THE TIME VARIABLES FROM THE SENTECE MUST BE EXTRACTED. THE SECOND TOKENIZATION WILL EXTRACTS WHERE
+            // THE POSITION OF THESE TIME VARIALBLES WILL BE WITHIN THE SENTENCE AND PASS THE SENTENCE AND INDEX WHERE THESE TIME
+            // VARIABLES ARE LOCATED WITHIN THE SENTENCE. IF THE COMMAND GIVEN IS "SET A ONE HOUR, 45 MINUTES, AND 10 SECONDS TIMER",
+            // THE LOCATION OF THE TIME VARIABLES STARTS AFTER THE "SET" AND "A" KEYWORDS. AFTERWARDS, IF A WORD THAT REPRESENTS A 
+            // NUMERICAL VALUE IS DETECTED ( e.g. "ONE" ) OR A NUMERICAL VALUE IS DETECTED, THEN THIS METHOD WILL EXTRACT THE TIME UNIT
+            // RELATED TO THIS NUMERICAL VALUE ( e.g. HOUR/HOURS, MINUTE/MINUTES, SECOND/SECONDS ) IS EXPECTED TO EXIST AFTER THE NUMERICAL
+            // VALUE EXTRACTED IN ORDER TO BE ASSOCIATED. IF NO ACCCEPTED TIME UNIT IS FOUND AFTER THE NUMERICAL VALUE, THIS TOKENIZATION
+            // SESSION WILL DROP THE COMMAND, OTHERWISE THE NUMERICAL VALUE IS SAVED WITHIN A THREAD SAFE DICTIONARY ( HASHMAP ) IN ORDER
+            // TO BE PROCESSED LATER. THIS TOKENIZATION PROCEDURE EXPECTS 1, 2, OR 3 DIFFERENT TIME UNITS WITH NUMERIACL VALUES ASSOCIATED
+            // WITH THEM. IF TIME UNITS REPEAT, THE TOKENIZATION SESSION WILL DROP THE COMMAND (e.g. "SET A 1 HOUR AND 2 HOURS TIMER" ).
+            //
+            // [ BEGIN ]
 
             bool Time_Unit_Received = false;
 
@@ -613,7 +639,7 @@ namespace Eva_5._0
                         {
                             // CHANGE NON NUMBERIC REPRESENTATIONS OF NUMBERS WITH NUMERIC REPRESENTATIONS
                             //
-                            // BEGIN
+                            // [ BEGIN ]
 
                             if (Time_Unit_Received == false)
                             {
@@ -676,7 +702,7 @@ namespace Eva_5._0
 
                             }
 
-                            // END
+                            // [ END ]
                         }
                     }
 
@@ -689,37 +715,44 @@ namespace Eva_5._0
                 }
             }
 
+            // [ END ]
+
             return Task.FromResult(true);
         }
 
         private static Task<string> Web_Application_Selector(int start_index, string Sentence)
         {
-            int web_app_key = 0;
-            int index = start_index;
+            // THE SECOND TOKENIZATION IDENTIFIES WHERE THE POSITION OF THE WEB APPLICATION KEYWORD IS WITHIN THE SENTENCE
+            // PASSES THE SENTENCE AND THE WEB APPLICATION'S DETECTED KEYWORD INDEX TO THIS METHOD. THIS METHOD WILL THEN 
+            // COMPARE THE DETECTED KEYWORD WITH THE KEYS VALUE WITHIN THE LIST OF KEYWORD-APPLICATION PAIRS STORED
+            // WITHIN A DICTIONARY ( HASHMAP ) WITHIN THE "A_p_l____And____P_r_o_c" CLASS.THIS IS DONE TO ENSURE A O(1)
+            // TIME COMPLEXITY FOR THE KEYWORD-APPLICATION SELECTION AND COMPARTION TIME. IF THE TOKENIZATION PROCEDURE
+            // DOES NOT FIND A VALID WEB APPLICATION KEYWORD, THE THE TOKENIZATION SESSION WILL DROP THE COMMAND.
+            //
+            // [ BEGIN ]
+
+            int index = start_index + 1;
             string web_app = String.Empty;
 
-            while(index < Sentence.Length)
+            while(index < Sentence.Length - 1)
             {
                 web_app += Sentence[index].ToString();
                 index++;
             }
 
-            while(web_app_key < 8)
+
+
+            string Token_Buffer = String.Empty;
+            W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryGetValue(web_app, out Token_Buffer);
+
+
+
+            if (Token_Buffer != String.Empty)
             {
-                string Token_Buffer = String.Empty;
-                W_e_b__A_p_l_Name__Tokens.TryGetValue(web_app_key, out Token_Buffer);
-
-                if (Token_Buffer == web_app)
-                {
-                    StringBuilder Token_Buffer_String_Builder = new StringBuilder(Token_Buffer);
-                    Token_Buffer_String_Builder.Remove(Token_Buffer_String_Builder.Length - 1, 1);
-                    Token_Buffer_String_Builder.Remove(0, 1);
-
-                    return Task.FromResult(Token_Buffer_String_Builder.ToString());
-                }
-
-                web_app_key++;
+                return Task.FromResult(web_app);
             }
+
+            // [ END ]
 
             return Task.FromResult(String.Empty);
         }
