@@ -656,6 +656,20 @@ namespace Eva_5._0
 
                     W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("amazon", "https://www.amazon.co.uk/s?k=");
 
+                    W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("reddit", "https://www.reddit.com/search/?q=");
+
+                    W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("facebook", "https://www.facebook.com/search/top?q=");
+
+                    W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("instagram", "https://www.instagram.com/");
+
+                    W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("gmail", "https://mail.google.com/mail/u/0/#search/");
+
+                    W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("twitter", "https://twitter.com/search?q=");
+
+                    W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("pinterest", "https://www.pinterest.co.uk/search/pins/?q=");
+
+                    W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("linkedin", "https://www.linkedin.com/search/results/all/?keywords=");
+
                     // END
 
 
