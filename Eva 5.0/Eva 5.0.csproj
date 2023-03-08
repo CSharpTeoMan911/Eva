@@ -130,6 +130,7 @@
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Special_Character_Replacement.cs" />
+    <Compile Include="Test.cs" />
     <Compile Include="Timer_Interval.cs" />
     <Compile Include="Timer_Window.xaml.cs">
       <DependentUpon>Timer_Window.xaml</DependentUpon>

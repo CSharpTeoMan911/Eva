@@ -113,6 +113,7 @@ namespace Eva_5._0
 
 
 
+
         public A_p_l____And____P_r_o_c()
         {
             new A_p_l____And____P_r_o_c(true);
@@ -650,6 +651,8 @@ namespace Eva_5._0
 
                     W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("google news", "https://www.google.com/search?tbm=nws&q=");
 
+                    W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("google scholar", "https://scholar.google.com/scholar?q=");
+
                     W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("ebay", "https://www.ebay.co.uk/sch/i.html?_nkw=");
 
                     W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("google images", "https://www.google.com/search?tbm=isch&q=");
@@ -669,6 +672,10 @@ namespace Eva_5._0
                     W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("pinterest", "https://www.pinterest.co.uk/search/pins/?q=");
 
                     W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("linkedin", "https://www.linkedin.com/search/results/all/?keywords=");
+
+                    W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("github", "https://github.com/search?q=");
+
+                    W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("unsplash", "https://unsplash.com/s/photos/");
 
                     // END
 
