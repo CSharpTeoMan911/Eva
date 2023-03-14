@@ -238,11 +238,12 @@ namespace Eva_5._0
 
                                             using (System.Diagnostics.Process Application_Process = new System.Diagnostics.Process())
                                             {
-                                                Application_Process.StartInfo.FileName = "cmd";
+                                                Application_Process.StartInfo.WorkingDirectory = @"C:\Users\" + Environment.UserName + @"\Desktop";
                                                 Application_Process.StartInfo.Arguments = "/k " + application_executable_name.Remove(0, 6);
                                                 Application_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                                                Application_Process.StartInfo.CreateNoWindow = true;
                                                 Application_Process.StartInfo.UseShellExecute = true;
+                                                Application_Process.StartInfo.CreateNoWindow = true;
+                                                Application_Process.StartInfo.FileName = "cmd";
                                                 Application_Process.Start();
                                             }
                                             break;
@@ -269,8 +270,9 @@ namespace Eva_5._0
                                                 case false:
                                                     using (System.Diagnostics.Process Application_Process = new System.Diagnostics.Process())
                                                     {
-                                                        Application_Process.StartInfo.FileName = application_executable_name;
+                                                        Application_Process.StartInfo.WorkingDirectory = @"C:\Users\" + Environment.UserName + @"\Desktop";
                                                         Application_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                                                        Application_Process.StartInfo.FileName = application_executable_name;
                                                         Application_Process.StartInfo.UseShellExecute = true;
                                                         Application_Process.Start();
 

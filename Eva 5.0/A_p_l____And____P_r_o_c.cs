@@ -677,6 +677,8 @@ namespace Eva_5._0
 
                     W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("unsplash", "https://unsplash.com/s/photos/");
 
+                    W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("stack overflow", "https://stackoverflow.com/search?q=");
+
                     // END
 
 
