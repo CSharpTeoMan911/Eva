@@ -7,6 +7,7 @@ import sys
 import time
 
 speech = LiveSpeech(lm=False, keyphrase=' wake eva ', kws_threshold=0.0000000000000000000000000000005)
+process_list = []
 
 
 def wake_word_operation_application_socket():
@@ -63,23 +64,42 @@ if __name__ == '__main__':
     ###################################################
 
     while True:
+        speech = LiveSpeech(lm=False, keyphrase=' wake eva ', kws_threshold=0.0000000000000000000000000000005)
+
         process1 = multiprocessing.Process(target=Wake_Word_Initiation)
         process2 = multiprocessing.Process(target=Wake_Word_Initiation)
         process3 = multiprocessing.Process(target=Wake_Word_Initiation)
         process4 = multiprocessing.Process(target=Wake_Word_Initiation)
+        process5 = multiprocessing.Process(target=Wake_Word_Initiation)
+        process6 = multiprocessing.Process(target=Wake_Word_Initiation)
+        process7 = multiprocessing.Process(target=Wake_Word_Initiation)
+        process8 = multiprocessing.Process(target=Wake_Word_Initiation)
+
         try:
             process1.start()
             process2.start()
             process3.start()
             process4.start()
-            time.sleep(5)
+            process5.start()
+            process6.start()
+            process7.start()
+            process8.start()
+            time.sleep(6)
             process1.terminate()
-            time.sleep(5)
+            time.sleep(6)
             process2.terminate()
-            time.sleep(5)
+            time.sleep(6)
             process3.terminate()
-            time.sleep(5)
+            time.sleep(6)
             process4.terminate()
+            time.sleep(6)
+            process5.terminate()
+            time.sleep(6)
+            process6.terminate()
+            time.sleep(6)
+            process7.terminate()
+            time.sleep(6)
+            process8.terminate()
             try:
                 del speech
             except NameError:
