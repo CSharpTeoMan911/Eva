@@ -14,6 +14,13 @@ def wake_word_operation_application_socket():
     ################################################
     # INTERPROCESS COMMUNICATION USING TCP SOCKETS #
     ################################################
+    # SOCKET CLIENT THAT IS SENDING A SIGNAL TO    #
+    # THE MAIN C# APPLICATION WHEN THE WAKE WORD   #
+    # 'wake eva' IS DETECTED IN ORDER FOR THE      #
+    # MAIN C# APPLICATION TO ACTIVATE THE ONLINE   #
+    # SPEECH RECOGNITION ENGINE                    #
+    ################################################
+
     try:
         try:
             host = "127.0.0.1"
@@ -49,7 +56,7 @@ def Wake_Word_Initiation():
         sys.exit(0)
 
 
-if __name__ == '__main__':
+def Wake_Word_Engine_Thread_Management():
     ###################################################
     # THE WAKE WORD ENGINE IS STARTED AND STOPPED ON  #
     # MULTIPLE THREADS TWO TIMES EVERY 3 SECONDS      #
@@ -63,43 +70,22 @@ if __name__ == '__main__':
     # FREED WHEN THE WAKE WORD ENGINE IS STOPPED.     #
     ###################################################
 
+    global speech
+    global process_list
+
     while True:
         speech = LiveSpeech(lm=False, keyphrase=' wake eva ', kws_threshold=0.0000000000000000000000000000005)
-
-        process1 = multiprocessing.Process(target=Wake_Word_Initiation)
-        process2 = multiprocessing.Process(target=Wake_Word_Initiation)
-        process3 = multiprocessing.Process(target=Wake_Word_Initiation)
-        process4 = multiprocessing.Process(target=Wake_Word_Initiation)
-        process5 = multiprocessing.Process(target=Wake_Word_Initiation)
-        process6 = multiprocessing.Process(target=Wake_Word_Initiation)
-        process7 = multiprocessing.Process(target=Wake_Word_Initiation)
-        process8 = multiprocessing.Process(target=Wake_Word_Initiation)
+        process = multiprocessing.Process(target=Wake_Word_Initiation)
 
         try:
-            process1.start()
-            process2.start()
-            process3.start()
-            process4.start()
-            process5.start()
-            process6.start()
-            process7.start()
-            process8.start()
-            time.sleep(6)
-            process1.terminate()
-            time.sleep(6)
-            process2.terminate()
-            time.sleep(6)
-            process3.terminate()
-            time.sleep(6)
-            process4.terminate()
-            time.sleep(6)
-            process5.terminate()
-            time.sleep(6)
-            process6.terminate()
-            time.sleep(6)
-            process7.terminate()
-            time.sleep(6)
-            process8.terminate()
+            process.start()
+            process_list.append(process)
+
+            if len(process_list) > 1:
+                process_list[0].terminate()
+                process_list.remove(process_list[0])
+
+            time.sleep(5)
             try:
                 del speech
             except NameError:
@@ -110,5 +96,11 @@ if __name__ == '__main__':
             except NameError:
                 pass
             sys.exit(0)
+
+
+if __name__ == '__main__':
+    Wake_Word_Engine_Thread_Management()
+
+
 
 
