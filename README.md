@@ -238,14 +238,6 @@ In order to give commands to Eva say the word "Wake Eva" followed by the desired
 
 <br>
 
-## It can search on Reddit
-
-<br>
-
-![Eva_Capture1857061334](https://user-images.githubusercontent.com/87245086/229218589-cbac7e37-3c14-4541-a6f5-660dc78e69ff.jpg)
-
-<br>
-
 ## It can search on Facebook
 
 <br>
