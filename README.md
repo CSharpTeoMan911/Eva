@@ -230,6 +230,86 @@ In order to give commands to Eva say the word "Wake Eva" followed by the desired
 
 <br>
 
+## It can search on Reddit
+
+<br>
+
+![Eva_Capture1857061334](https://user-images.githubusercontent.com/87245086/229218589-cbac7e37-3c14-4541-a6f5-660dc78e69ff.jpg)
+
+<br>
+
+## It can search on Facebook
+
+<br>
+
+![Eva_Capture719492630](https://user-images.githubusercontent.com/87245086/229218831-b215de4b-aa78-4b70-be10-d08f6ddba158.jpg)
+
+<br>
+
+## It can search on Instagram
+
+<br>
+
+![Eva_Capture934103573](https://user-images.githubusercontent.com/87245086/229219394-d3dc45a2-4da9-48a8-b609-87ed6c41cdfa.jpg)
+
+<br>
+
+## It can search on Gmail
+
+<br>
+
+![Eva_Capture2104650543](https://user-images.githubusercontent.com/87245086/229219627-59f734c2-4deb-44a7-8fc5-1d86eb4ef7db.jpg)
+
+<br>
+
+## It can search on Twitter
+
+<br>
+
+![Eva_Capture144044807](https://user-images.githubusercontent.com/87245086/229219803-dcf7c33c-5280-4fcb-aac9-9407d5b82be0.jpg)
+
+<br>
+
+## It can search on Pinterest
+
+<br>
+
+![Eva_Capture571896073](https://user-images.githubusercontent.com/87245086/229220011-8f3bf0f7-2832-44bc-99a2-870d770b01ef.jpg)
+
+<br>
+
+## It can search on LinkedIn
+
+<br>
+
+![Eva_Capture1342419452](https://user-images.githubusercontent.com/87245086/229220221-41099e9e-c27c-41d1-ba91-42376061a9c8.jpg)
+
+<br>
+
+## It can search on Github
+
+<br>
+
+![Eva_Capture1030181943](https://user-images.githubusercontent.com/87245086/229220365-81212deb-2b29-448a-a748-59dc7e7b6f27.jpg)
+
+<br>
+
+## It can search on Unsplash
+
+<br>
+
+![Eva_Capture1898758186](https://user-images.githubusercontent.com/87245086/229220460-a68e8f64-e6fa-4b87-be51-b0eef14efc01.jpg)
+
+<br>
+
+## It can search on Stackoverflow
+
+<br>
+
+![Eva_Capture1340621546](https://user-images.githubusercontent.com/87245086/229220632-ef4ddd23-b567-4179-96e6-ace092304d60.jpg)
+
+<br>
+
 ## It can open and close the operating system's settings
 
 <br>
