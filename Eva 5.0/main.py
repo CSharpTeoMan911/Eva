@@ -6,7 +6,7 @@ import socket
 import sys
 import time
 
-speech = LiveSpeech(lm=False, keyphrase=' wake eva ', kws_threshold=0.00000000000000000000000000000045)
+speech = LiveSpeech(lm=False, keyphrase=' wake eva ', kws_threshold=0.00000000000000000000000000000057)
 process_list = []
 
 
@@ -70,33 +70,21 @@ def Wake_Word_Engine_Thread_Management():
     # FREED WHEN THE WAKE WORD ENGINE IS STOPPED.     #
     ###################################################
 
-    global speech
     global process_list
 
-
-
     while True:
-        speech = LiveSpeech(lm=False, keyphrase=' wake eva ', kws_threshold=0.0000000000000000000000000000005)
         process = multiprocessing.Process(target=Wake_Word_Initiation)
 
         try:
             process.start()
             process_list.append(process)
 
-            if len(process_list) > 2:
+            if len(process_list) > 4:
                 process_list[0].terminate()
                 process_list.remove(process_list[0])
 
             time.sleep(5)
-            try:
-                del speech
-            except NameError:
-                pass
         except KeyboardInterrupt:
-            try:
-                del speech
-            except NameError:
-                pass
             sys.exit(0)
 
 
