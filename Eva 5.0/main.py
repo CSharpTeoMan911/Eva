@@ -6,7 +6,7 @@ import socket
 import sys
 import time
 
-speech = LiveSpeech(lm=False, keyphrase=' wake eva ', kws_threshold=0.0000000000000000000000000000005)
+speech = LiveSpeech(lm=False, keyphrase=' wake eva ', kws_threshold=0.00000000000000000000000000000048)
 process_list = []
 
 
@@ -79,7 +79,7 @@ def Wake_Word_Engine_Thread_Management():
             process.start()
             process_list.append(process)
 
-            if len(process_list) > 4:
+            if len(process_list) > 6:
                 process_list[0].terminate()
                 process_list.remove(process_list[0])
 
