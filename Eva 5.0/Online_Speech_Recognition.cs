@@ -141,7 +141,7 @@ namespace Eva_5._0
                                                 }
                                             }
 
-                                            await Natural_Language_Processing_Mitigator.PreProcessing_Initiation(Result.Text);
+                                            await Natural_Language_Processing_Mitigator.PreProcessing_Initiation(Result.Text.ToLower());
 
                                         Function_Not_Initiated:
                                             if (OnlineSpeechRecognition != null)
