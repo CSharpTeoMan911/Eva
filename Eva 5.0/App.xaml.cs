@@ -66,28 +66,33 @@ namespace Eva_5._0
         {
             base.OnExit(e);
 
+
+
+            // Dispose static resources
+            //
+            // [ BEGIN ]
+
             await Proc.Dispose_Sound_Effects();
             await ChatGPT_Response_Window.Dispose_Sound_Effects();
             await Timer_Window.Dispose_Sound_Effects();
+
+            // [ END ]
+
+
+
+
+
+            // ENSURE THAT ALL SUB-PROCESSES AND PROCESSES RELATED TO THIS APPLICATION ARE TERMINATED
+            //
+            // [ BEGIN ]
 
             foreach (System.Diagnostics.Process instance in System.Diagnostics.Process.GetProcessesByName(System.Diagnostics.Process.GetCurrentProcess().ProcessName))
             {
                 await Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
                 instance.Kill();
             }
+            // [ END ]
         }
 
-
-
-        ~App()
-        {
-            System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-            GC.Collect(2, GCCollectionMode.Forced, true, true);
-
-            Task.Run(async() =>
-            {
-                await Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
-            });
-        }
     }
 }
