@@ -114,8 +114,11 @@
                 </TextBlock.Foreground>
             </TextBlock>
         </StackPanel>
+        
+        
+        
 
-        <StackPanel Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,20,0,0" Grid.ColumnSpan="5" Grid.RowSpan="2" Orientation="Horizontal">
+        <StackPanel Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,20,0,0" Grid.ColumnSpan="5" Grid.RowSpan="2" Orientation="Horizontal">
 
             <TextBlock Margin="0,0,10,0" HorizontalAlignment="Center" FontSize="20" FontFamily="Corbel Light" Text="Sound">
                 <TextBlock.Foreground>
@@ -155,7 +158,25 @@
 
 
 
-        
+        <StackPanel Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,20,0,0" Grid.ColumnSpan="5" Grid.RowSpan="2" Orientation="Horizontal">
+            <TextBlock Margin="0,0,10,0" HorizontalAlignment="Center" FontSize="20" FontFamily="Corbel Light" Text="ChatGPT API key">
+                <TextBlock.Foreground>
+                    <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
+                        <GradientStop Color="#FF7BBFD8" x:Name="ChatGPTApiKeyOffset" Offset="1"/>
+                        <GradientStop Color="#FF1B70C3"/>
+                    </LinearGradientBrush>
+                </TextBlock.Foreground>
+            </TextBlock>
+
+            <Button FontFamily="Segoe MDL2 Assets" Click="Set_Chat_Gpt_Api_Key" Background="Black" FontSize="16" VerticalAlignment="Center" Content="&#xE15E;" Style="{StaticResource MyButtonStyle}">
+                <Button.Foreground>
+                    <LinearGradientBrush>
+                        <GradientStop Color="#FF7BBFD8" x:Name="SetChatGptApiButtonOffset" Offset="1"/>
+                        <GradientStop Color="#FF1B70C3"/>
+                    </LinearGradientBrush>
+                </Button.Foreground>
+            </Button>
+        </StackPanel>
 
 
 

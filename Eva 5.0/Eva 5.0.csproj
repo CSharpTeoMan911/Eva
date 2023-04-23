@@ -113,6 +113,13 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="A_p_l____And____P_r_o_c.cs" />
+    <Compile Include="ChatGPT_API.cs" />
+    <Compile Include="ChatGPT_Response_Window.xaml.cs">
+      <DependentUpon>ChatGPT_Response_Window.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Chat_GPT_API_Key_Settup_Window.xaml.cs">
+      <DependentUpon>Chat_GPT_API_Key_Settup_Window.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Check_Microphone_Permission.cs" />
     <Compile Include="Check_Role.cs" />
     <Compile Include="ErrorWindow.xaml.cs">
@@ -129,13 +136,21 @@
     <Compile Include="SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings_File.cs" />
     <Compile Include="Special_Character_Replacement.cs" />
-    <Compile Include="Test.cs" />
     <Compile Include="Timer_Interval.cs" />
     <Compile Include="Timer_Window.xaml.cs">
       <DependentUpon>Timer_Window.xaml</DependentUpon>
     </Compile>
     <Compile Include="Wake_Word_Engine.cs" />
+    <Page Include="ChatGPT_Response_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Chat_GPT_API_Key_Settup_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ErrorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -197,6 +212,12 @@
       <Version>10.0.22621.755</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.25267-preview" />
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="OpenAI">
+      <Version>1.7.2</Version>
+    </PackageReference>
     <PackageReference Include="System.Runtime.InteropServices.WindowsRuntime">
       <Version>4.3.0</Version>
     </PackageReference>
@@ -228,6 +249,7 @@
   <ItemGroup>
     <Content Include="App closing.wav" />
     <Content Include="App execution.wav" />
+    <Resource Include="Chat_Gpt_Logo.bmp" />
     <Content Include="main.py" />
     <Content Include="Privacy statement declined or mic not available.wav" />
   </ItemGroup>

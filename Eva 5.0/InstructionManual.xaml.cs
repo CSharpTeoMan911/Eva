@@ -73,13 +73,6 @@ namespace Eva_5._0
         private bool SwitchOffsetTroubleshootingContentTextBlockOffset1;
         private double GradientArithmeticTroubleshootingContentTextBlockOffset1;
 
-        private bool SwitchOffsetTroubleshootingContentTextBlockOffset2;
-        private double GradientArithmeticTroubleshootingContentTextBlockOffset2;
-
-
-        private bool SwitchOffsetTroubleshootingContentTextBlockOffset3;
-        private double GradientArithmeticTroubleshootingContentTextBlockOffset3;
-
 
         private bool SwitchOffsetExtraFeaturesTextBlockOffset;
         private double GradientArithmeticExtraFeaturesTextBlockOffset;

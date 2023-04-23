@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Eva_5._0
 {
@@ -70,6 +71,7 @@ namespace Eva_5._0
          * 
          */
 
+        private static ChatGPT_Response_Window chatGPT_Response_Window;
 
         private static System.Media.SoundPlayer AppExecutionSoundEffect = new System.Media.SoundPlayer("App execution.wav");
         private static System.Media.SoundPlayer AppTerminationSoundEffect = new System.Media.SoundPlayer("App closing.wav");
@@ -124,6 +126,10 @@ namespace Eva_5._0
                     await OnlineProcesses(application, content as string);
                     break;
 
+                case "ChatGPT Process":
+                    await ChatGPT_API_Interface(content as string);
+                    break;
+
                 case "System Process":
                     await SystemProcesses(application, content as string);
                     break;
@@ -148,7 +154,7 @@ namespace Eva_5._0
 
             try
             {
-                bool SoundOrOff = await Settings.Get_Settings();
+                bool SoundOrOff = await Settings.Get_Sound_Settings();
                 W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryGetValue(WebApplication, out Process);
 
 
@@ -189,7 +195,7 @@ namespace Eva_5._0
         private static async Task<bool> SystemProcesses(string Application, string Process)
         {
 
-            bool SoundOrOff = await Settings.Get_Settings();
+            bool SoundOrOff = await Settings.Get_Sound_Settings();
 
 
 
@@ -257,11 +263,11 @@ namespace Eva_5._0
                                             {
                                                 case true:
 
-                                                    switch(application_executable_name.Remove(0, 6))
+                                                    string application_name = application_executable_name.Remove(0, 6);
+
+                                                    if (application_name == "recycle bin cleanup")
                                                     {
-                                                        case "recycle bin cleanup":
-                                                            await Recycle_Bine_Cleanup_Implementor.Empty_Recycle_Bin_Implementor();
-                                                            break;
+                                                        await Recycle_Bine_Cleanup_Implementor.Empty_Recycle_Bin_Implementor();
                                                     }
                                                     break;
 
@@ -389,7 +395,7 @@ namespace Eva_5._0
             try
             {
 
-                bool SoundOrOff = await Settings.Get_Settings();
+                bool SoundOrOff = await Settings.Get_Sound_Settings();
 
                 int hours_interval = 0;
 
@@ -438,9 +444,35 @@ namespace Eva_5._0
         }
 
 
+        private static Task<bool> ChatGPT_API_Interface(string input)
+        {
+            
+            Application.Current.Dispatcher.Invoke(async() =>
+            {
+                try
+                {
+                    if (App.ChatGPTResponseWindowOpened == false)
+                    {
+                        chatGPT_Response_Window = new ChatGPT_Response_Window();
+                        chatGPT_Response_Window.Show();
+                    }
+
+                    await chatGPT_Response_Window.Update_Conversation(input);
+                }
+                catch(Exception E)
+                {
+                    System.Diagnostics.Debug.WriteLine(E.Message);
+                }
+            });
+            
+
+            return Task.FromResult(true);
+        }
+
+
         private static async Task<bool> Screen_Capture()
         {
-            bool SoundOrOff = await Settings.Get_Settings();
+            bool SoundOrOff = await Settings.Get_Sound_Settings();
 
             try
             {
@@ -463,7 +495,25 @@ namespace Eva_5._0
             return await Screen_Capture_Mechanism_Mitigator.Screen_Capture_Initiator();
         }
 
+        public static Task<bool> Dispose_Sound_Effects()
+        {
+            if(AppExecutionSoundEffect != null)
+            {
+                AppExecutionSoundEffect.Dispose();
+            }
 
+            if (AppTerminationSoundEffect != null)
+            {
+                AppTerminationSoundEffect.Dispose();
+            }
+
+            if (ScreenshotExecutionSoundEffect != null)
+            {
+                ScreenshotExecutionSoundEffect.Dispose();
+            }
+
+            return Task.FromResult(true);
+        }
 
         ~Proc()
         {

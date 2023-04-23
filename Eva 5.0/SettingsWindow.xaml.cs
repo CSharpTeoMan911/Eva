@@ -70,6 +70,8 @@ namespace Eva_5._0
         private bool SwitchInstructionManualTextBlockOffset;
         private double GradientArithmeticInstructionManualTextBlockOffset;
 
+        private bool SwitchChatGPTApiKeyOffset;
+        private double GradientArithmeticChatGPTApiKeyOffset;
 
 
 
@@ -163,7 +165,7 @@ namespace Eva_5._0
             this.Topmost = true;
 
 
-            bool SoundOrOff = await Settings.Get_Settings();
+            bool SoundOrOff = await Settings.Get_Sound_Settings();
 
             switch (SoundOrOff)
             {
@@ -585,7 +587,38 @@ namespace Eva_5._0
 
 
                                        
+                                        switch(SwitchChatGPTApiKeyOffset)
+                                        {
+                                            case false:
 
+                                                switch(GradientArithmeticChatGPTApiKeyOffset <= 65)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticChatGPTApiKeyOffset++;
+                                                        ChatGPTApiKeyOffset.Offset -= 0.01;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchChatGPTApiKeyOffset = true;
+                                                        break;
+                                                }
+                                                break;
+
+                                            case true:
+
+                                                switch (GradientArithmeticChatGPTApiKeyOffset > 0)
+                                                {
+                                                    case true:
+                                                        GradientArithmeticChatGPTApiKeyOffset--;
+                                                        ChatGPTApiKeyOffset.Offset += 0.01;
+                                                        break;
+
+                                                    case false:
+                                                        SwitchChatGPTApiKeyOffset = false;
+                                                        break;
+                                                }
+                                                break;
+                                        }
 
                                         break;
 
@@ -597,7 +630,7 @@ namespace Eva_5._0
             }
         }
 
-        private void SoundOn(object sender, RoutedEventArgs e)
+        private async void SoundOn(object sender, RoutedEventArgs e)
         {
             if (App.SettingsWindowOpen == true)
             {
@@ -608,7 +641,7 @@ namespace Eva_5._0
                     if (Application.Current.MainWindow != null)
                     {
 
-                        System.Threading.Tasks.Task.Run(() => { Settings.Set_Settings(true); });
+                        await Settings.Set_Sound_Settings(true);
 
                         SoundOnButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
                         SoundOffButton.Background = new SolidColorBrush(Colors.Transparent);
@@ -623,7 +656,7 @@ namespace Eva_5._0
             }
         }
 
-        private void SoundOff(object sender, RoutedEventArgs e)
+        private async void SoundOff(object sender, RoutedEventArgs e)
         {
             if (App.SettingsWindowOpen == true)
             {
@@ -634,7 +667,7 @@ namespace Eva_5._0
                     if (Application.Current.MainWindow != null)
                     {
 
-                        System.Threading.Tasks.Task.Run(() => { Settings.Set_Settings(false); });
+                        await Settings.Set_Sound_Settings(false);
 
                         SoundOffButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
                         SoundOnButton.Background = new SolidColorBrush(Colors.Transparent);
@@ -678,8 +711,36 @@ namespace Eva_5._0
 
         }
 
-        
-       
+
+        private void Set_Chat_Gpt_Api_Key(object sender, RoutedEventArgs e)
+        {
+            if (App.SettingsWindowOpen == true)
+            {
+
+                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                {
+
+                    if (Application.Current.MainWindow != null)
+                    {
+
+
+                        if (App.InstructionManualOpen != true)
+                        {
+
+                            Chat_GPT_API_Key_Settup_Window chat_GPT_API_Key_Settup_Window = new Chat_GPT_API_Key_Settup_Window();
+                            chat_GPT_API_Key_Settup_Window.ShowDialog();
+
+                        }
+
+                    }
+
+                }
+
+            }
+        }
+
+
+
 
         ~SettingsWindow()
         {
@@ -694,6 +755,5 @@ namespace Eva_5._0
             System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect(2, GCCollectionMode.Forced);
         }
-
     }
 }

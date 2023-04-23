@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json.Serialization;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace Eva_5._0
@@ -63,6 +65,24 @@ namespace Eva_5._0
                     });
 
                     break;
+
+                case "Invalid ChatGPT API key":
+
+                    Task.Run(async () =>
+                    {
+                        await InvalidChatGPTAPIKey();
+                    });
+
+                    break;
+
+                case "ChatGPT error":
+
+                    Task.Run(async () =>
+                    {
+                        await ChatGPTError();
+                    });
+
+                    break;
             }
         }
 
@@ -84,7 +104,7 @@ namespace Eva_5._0
             {
                 System.Media.SoundPlayer ErrorSoundEffect = new System.Media.SoundPlayer("Privacy statement declined or mic not available.wav");
 
-                if (await Settings.Get_Settings() == true)
+                if (await Settings.Get_Sound_Settings() == true)
                 {
 
                     if (System.IO.File.Exists(System.IO.Path.GetFullPath("Privacy statement declined or mic not available.wav")) == true)
@@ -120,7 +140,7 @@ namespace Eva_5._0
             {
                 System.Media.SoundPlayer ErrorSoundEffect = new System.Media.SoundPlayer("Privacy statement declined or mic not available.wav");
 
-                if (await Settings.Get_Settings() == true)
+                if (await Settings.Get_Sound_Settings() == true)
                 {
 
                     if (System.IO.File.Exists(System.IO.Path.GetFullPath("Privacy statement declined or mic not available.wav")) == true)
@@ -147,6 +167,137 @@ namespace Eva_5._0
 
             return false;
         }
+
+
+        private async Task<bool> InvalidChatGPTAPIKey()
+        {
+
+
+            try
+            {
+                System.Media.SoundPlayer ErrorSoundEffect = new System.Media.SoundPlayer("Privacy statement declined or mic not available.wav");
+
+                if (await Settings.Get_Sound_Settings() == true)
+                {
+
+                    if (System.IO.File.Exists(System.IO.Path.GetFullPath("Privacy statement declined or mic not available.wav")) == true)
+                    {
+
+                        ErrorSoundEffect.Play();
+
+                    }
+
+                }
+            }
+            catch { }
+
+            try
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    Run open_ai_link = new Run("https://openai.com");
+                    Run open_ai_api_link_1 = new Run("https://platform.openai.com/account/api-keys");
+                    Run open_ai_api_link_2 = new Run("https://platform.openai.com/account/api-keys");
+
+
+                    Hyperlink open_ai_link_hyperlink = new Hyperlink(open_ai_link)
+                    {
+                        NavigateUri = new Uri("https://openai.com")
+                    };
+                    open_ai_link_hyperlink.RequestNavigate += Hyperlink_RequestNavigate;
+
+
+                    Hyperlink open_ai_api_link_hyperlink_1 = new Hyperlink(open_ai_api_link_1)
+                    {
+                        NavigateUri = new Uri("https://platform.openai.com/account/api-keys")
+                    };
+                    open_ai_api_link_hyperlink_1.RequestNavigate += Hyperlink_RequestNavigate;
+
+
+                    Hyperlink open_ai_api_link_hyperlink_2 = new Hyperlink(open_ai_api_link_2)
+                    {
+                        NavigateUri = new Uri("https://platform.openai.com/account/api-keys")
+                    };
+                    open_ai_api_link_hyperlink_2.RequestNavigate += Hyperlink_RequestNavigate;
+
+
+                    ErrorContext.Text = String.Empty;
+
+                    ErrorContext.Inlines.Add("Go to ");
+                    ErrorContext.Inlines.Add(open_ai_link_hyperlink);
+                    ErrorContext.Inlines.Add(" and create an account, then");
+                    ErrorContext.Inlines.Add("\n");
+                    ErrorContext.Inlines.Add("go to ");
+                    ErrorContext.Inlines.Add(open_ai_api_link_hyperlink_1);
+                    ErrorContext.Inlines.Add(" to");
+                    ErrorContext.Inlines.Add("\n");
+                    ErrorContext.Inlines.Add("create an API key.");
+                    ErrorContext.Inlines.Add("\n\n");
+                    ErrorContext.Inlines.Add("If you already have an OpenAI account, go directly to");
+                    ErrorContext.Inlines.Add("\n");
+                    ErrorContext.Inlines.Add(open_ai_api_link_hyperlink_2);
+                    ErrorContext.Inlines.Add(" and");
+                    ErrorContext.Inlines.Add("\n");
+                    ErrorContext.Inlines.Add("generate an API key.");
+
+                });
+            }
+            catch { }
+
+            return false;
+        }
+
+
+        private async Task<bool> ChatGPTError()
+        {
+            try
+            {
+                System.Media.SoundPlayer ErrorSoundEffect = new System.Media.SoundPlayer("Privacy statement declined or mic not available.wav");
+
+                if (await Settings.Get_Sound_Settings() == true)
+                {
+
+                    if (System.IO.File.Exists(System.IO.Path.GetFullPath("Privacy statement declined or mic not available.wav")) == true)
+                    {
+
+                        ErrorSoundEffect.Play();
+
+                    }
+
+                }
+            }
+            catch { }
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Run open_ai_link = new Run("https://platform.openai.com/account/usage");
+
+                Hyperlink open_ai_link_hyperlink = new Hyperlink(open_ai_link)
+                {
+                    NavigateUri = new Uri("https://platform.openai.com/account/usage")
+                };
+                open_ai_link_hyperlink.RequestNavigate += Hyperlink_RequestNavigate;
+
+                ErrorContext.Inlines.Add("An error occured. ");
+                ErrorContext.Inlines.Add("Please check your available balance");
+                ErrorContext.Inlines.Add("\n");
+                ErrorContext.Inlines.Add("at ");
+                ErrorContext.Inlines.Add(open_ai_link_hyperlink);
+                ErrorContext.Inlines.Add("\n");
+                ErrorContext.Inlines.Add("or your internet connection.");
+            });
+
+            return false;
+        }
+
+
+        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            System.Diagnostics.Process navigation_process = new System.Diagnostics.Process();
+            navigation_process.StartInfo.FileName = ((Hyperlink)sender).NavigateUri.AbsoluteUri;
+            navigation_process.Start();
+        }
+
 
         private void MinimiseTheWindow(object sender, RoutedEventArgs e)
         {

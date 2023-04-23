@@ -81,6 +81,8 @@ namespace Eva_5._0
             //
             // [ BEGIN ]
 
+            System.Diagnostics.Debug.WriteLine("Result: " + Result);
+
             switch (Sentence.IndexOf("please open ") == 0)
             {
                 case true:
@@ -257,6 +259,15 @@ namespace Eva_5._0
                     break;
             }
 
+
+
+
+            if (Sentence.IndexOf("gpt") == 0)
+            {
+                await PostProcessing("chatgpt [ ChatGPT Query ]", Sentence);
+            }
+   
+
             // [ END ]
 
 
@@ -271,8 +282,8 @@ namespace Eva_5._0
             //[ BEGIN ]
 
 
-                    // SCREENSHOT PROCESS
-                    //[ BEGIN ]
+            // SCREENSHOT PROCESS
+            //[ BEGIN ]
 
             switch (Sentence.IndexOf("take screenshot") == 0)
             {
@@ -323,6 +334,7 @@ namespace Eva_5._0
 
 
             //[ END ]
+
 
             return true;
         }
@@ -499,6 +511,23 @@ namespace Eva_5._0
                     WebApplicationSearchContent = WebApplicationSearchContent.Trim();
 
                     await Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
+                    break;
+
+
+                case "chatgpt [ ChatGPT Query ]":
+                    try
+                    {
+                        for (int Index = "gpt".Length; Index < Sentence.Length; Index++)
+                        {
+                            WebApplicationSearchContent += Sentence[Index];
+                        }
+
+                        await Proc_Mitigator.Process_Initialisation<string>("ChatGPT Process", Application, WebApplicationSearchContent);
+                    }
+                    catch(Exception E)
+                    {
+                        System.Diagnostics.Debug.WriteLine(E.Message);
+                    }
                     break;
 
 

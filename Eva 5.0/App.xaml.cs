@@ -38,9 +38,9 @@ namespace Eva_5._0
 
         public static bool TimerWindowOpen;
 
+        public static bool ChatGPTResponseWindowOpened;
+
         public static bool Application_Error_Shutdown;
-
-
 
 
         private sealed class Wake_Word_Engine_Mitigator : Wake_Word_Engine
@@ -66,6 +66,9 @@ namespace Eva_5._0
         {
             base.OnExit(e);
             await Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
+            await Proc.Dispose_Sound_Effects();
+            await ChatGPT_Response_Window.Dispose_Sound_Effects();
+            await Timer_Window.Dispose_Sound_Effects();
         }
 
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Eva_5._0
@@ -27,6 +28,8 @@ namespace Eva_5._0
     internal class Screen_Capture_Mechanism
     {
         private static readonly Random random_number_generator = new Random();
+        private static StringBuilder file_name = new StringBuilder();
+        private static StringBuilder path_and_file_name = new StringBuilder();
 
         protected static Task<bool> Screen_Capture()
         {
@@ -44,21 +47,29 @@ namespace Eva_5._0
 
 
                 // FILE NAME GENERATION USING RANDOM NUMBERS
-                string file_name = "Eva_Capture" + random_number_generator.Next(int.MaxValue).ToString();
+                file_name.Clear();
+
+                file_name.Append("Eva_Capture");
+                file_name.Append(random_number_generator.Next(int.MaxValue).ToString());
 
 
 
 
 
                 // PATH GENERATION USING THE FILE NAME
-                string path_and_file_name = @"C:\Users\" + System.Environment.UserName + @"\Desktop\" + file_name + ".jpg";
-
+                path_and_file_name.Clear();
+                
+                path_and_file_name.Append(@"C:\Users\");
+                path_and_file_name.Append(System.Environment.UserName);
+                path_and_file_name.Append(@"\Desktop\");
+                path_and_file_name.Append(file_name.ToString());
+                path_and_file_name.Append(".jpg");
 
 
 
 
                 // IF THE FILE NAME WITHIN THE SELECTED PATH EXISTS, GO TO 'File_Name_Generation' LABEL AND RESTART THE PROCEDURE
-                if (System.IO.File.Exists(path_and_file_name))
+                if (System.IO.File.Exists(path_and_file_name.ToString()))
                 {
                     goto File_Name_Generation;
                 }
@@ -117,7 +128,7 @@ namespace Eva_5._0
 
 
                     // SAVE THE BITMAP CONTENTS AS AN IMAGE AT A SET PATH AND FILE NAME WITH A SET IMAGE FORMAT.
-                    bitmap.Save(path_and_file_name, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    bitmap.Save(path_and_file_name.ToString(), System.Drawing.Imaging.ImageFormat.Jpeg);
 
 
 
@@ -133,7 +144,7 @@ namespace Eva_5._0
                 // IF THE SCREENSHOT SCHEDULED TO BE SAVED AT THE SET PATH EXISTS, THE SCREENSHOT PROCEDURE
                 // FINISHED. IF THE SCREENSHOT PROCEDURE FINISHED, ON THE USER INTERFACE'S THREAD SET THE
                 // APPLICATION'S MAIN WINDOW STATE AS NORMAL.
-                if (System.IO.File.Exists(path_and_file_name))
+                if (System.IO.File.Exists(path_and_file_name.ToString()))
                 {
                     System.Windows.Application.Current.Dispatcher.Invoke(() =>
                     {
@@ -141,6 +152,10 @@ namespace Eva_5._0
                     });
                 }
 
+
+
+                file_name.Clear();
+                path_and_file_name.Clear();
 
                 return Task.FromResult(true);
             }

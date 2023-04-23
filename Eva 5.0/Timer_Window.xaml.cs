@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -33,7 +35,16 @@ namespace Eva_5._0
     {
         private System.Timers.Timer Animation_And_Functionality_Timer;
 
-        private System.Media.SoundPlayer Alarm_Sound_Effect;
+        private static System.Media.SoundPlayer Alarm_Sound_Effect = new System.Media.SoundPlayer("AlarmSound.wav");
+
+
+        private static StringBuilder total_time = new StringBuilder();
+
+        private static StringBuilder hours_interval = new StringBuilder();
+
+        private static StringBuilder minutes_interval = new StringBuilder();
+
+        private static StringBuilder seconds_interval = new StringBuilder();
 
 
 
@@ -459,40 +470,47 @@ namespace Eva_5._0
 
                                             Tuple<int, int, int> received_timer_interval = await Timer_Interval.Get_Time_Interval();
 
-                                            string hours_interval = String.Empty;
+                                            total_time.Clear();
 
-                                            string minutes_interval = String.Empty;
+                                            hours_interval.Clear();
 
-                                            string seconds_interval = String.Empty;
+                                            minutes_interval.Clear();
+
+                                            seconds_interval.Clear();
+
+
 
 
                                             if (received_timer_interval.Item1 < 10)
                                             {
-                                                hours_interval = "0" + received_timer_interval.Item1.ToString();
+                                                hours_interval.Append("0");
+                                                hours_interval.Append(received_timer_interval.Item1.ToString());
                                             }
                                             else
                                             {
-                                                hours_interval = received_timer_interval.Item1.ToString();
+                                                hours_interval.Append(received_timer_interval.Item1.ToString());
                                             }
 
 
                                             if (received_timer_interval.Item2 < 10)
                                             {
-                                                minutes_interval = "0" + received_timer_interval.Item2.ToString();
+                                                minutes_interval.Append("0");
+                                                minutes_interval.Append(received_timer_interval.Item2.ToString());
                                             }
                                             else
                                             {
-                                                minutes_interval = received_timer_interval.Item2.ToString();
+                                                minutes_interval.Append(received_timer_interval.Item2.ToString());
                                             }
 
 
                                             if (received_timer_interval.Item3 < 10)
                                             {
-                                                seconds_interval = "0" + received_timer_interval.Item3.ToString();
+                                                seconds_interval.Append("0");
+                                                seconds_interval.Append(received_timer_interval.Item3.ToString());
                                             }
                                             else
                                             {
-                                                seconds_interval = received_timer_interval.Item3.ToString();
+                                                seconds_interval.Append(received_timer_interval.Item3.ToString());
                                             }
 
 
@@ -517,7 +535,24 @@ namespace Eva_5._0
 
                                             Cancel_The_Timer_Button.Visibility = Visibility.Visible;
 
-                                            Timer_Time_Interval.Text = hours_interval + " : " + minutes_interval + " : " + seconds_interval;
+                                            total_time.Append(hours_interval.ToString());
+                                            total_time.Append(" : ");
+                                            total_time.Append(minutes_interval.ToString());
+                                            total_time.Append(" : ");
+                                            total_time.Append(seconds_interval.ToString());
+
+                                            Timer_Time_Interval.Text = total_time.ToString();
+
+
+
+
+                                            total_time.Clear();
+
+                                            hours_interval.Clear();
+
+                                            minutes_interval.Clear();
+
+                                            seconds_interval.Clear();
 
                                         }
                                         else
@@ -602,9 +637,7 @@ namespace Eva_5._0
                                             {
                                                 try
                                                 {
-                                                    bool SoundOrOff = await Settings.Get_Settings();
-
-                                                    Alarm_Sound_Effect = new System.Media.SoundPlayer("AlarmSound.wav");
+                                                    bool SoundOrOff = await Settings.Get_Sound_Settings();
 
 
 
@@ -705,6 +738,17 @@ namespace Eva_5._0
         }
 
 
+        public static Task<bool> Dispose_Sound_Effects()
+        {
+            if (Alarm_Sound_Effect != null)
+            {
+                Alarm_Sound_Effect.Dispose();
+            }
+
+            return Task.FromResult(true);
+        }
+
+
         ~Timer_Window()
         {
             if(Animation_And_Functionality_Timer != null)
@@ -712,16 +756,6 @@ namespace Eva_5._0
                 try
                 {
                     Animation_And_Functionality_Timer.Dispose();
-                }
-                catch { }
-            }
-
-
-            if(Alarm_Sound_Effect != null)
-            {
-                try
-                {
-                    Alarm_Sound_Effect.Dispose();
                 }
                 catch { }
             }

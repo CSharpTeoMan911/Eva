@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Eva_5._0
 {
@@ -22,40 +24,141 @@ namespace Eva_5._0
 
     internal class Settings
     {
+        private static readonly string settings_file_name = "application_settings.json";
 
 
-        private static bool Sound_Enabled = true;
-
-        public static Task<bool> Get_Settings()
+        private static void Ensure_Access_To_The_Settings_File()
         {
-            switch (Sound_Enabled)
+            if(System.IO.File.Exists(settings_file_name) == true)
             {
-                case true:
-                    return Task.FromResult(true);
+                System.Security.AccessControl.FileSecurity settings_file_security = System.IO.File.GetAccessControl(settings_file_name);
+                settings_file_security.AddAccessRule(new System.Security.AccessControl.FileSystemAccessRule(System.Security.Principal.WindowsIdentity.GetCurrent().Name, System.Security.AccessControl.FileSystemRights.Write, System.Security.AccessControl.AccessControlType.Allow));
+                settings_file_security.AddAccessRule(new System.Security.AccessControl.FileSystemAccessRule(System.Security.Principal.WindowsIdentity.GetCurrent().Name, System.Security.AccessControl.FileSystemRights.Read, System.Security.AccessControl.AccessControlType.Allow));
+                settings_file_security.AddAccessRule(new System.Security.AccessControl.FileSystemAccessRule(System.Security.Principal.WindowsIdentity.GetCurrent().Name, System.Security.AccessControl.FileSystemRights.Delete, System.Security.AccessControl.AccessControlType.Allow));
 
-                case false:
-                    return Task.FromResult(false);
+                System.IO.File.SetAccessControl(settings_file_name, settings_file_security);
             }
-
-            return Task.FromResult(true);
         }
 
 
-        public static Task<bool> Set_Settings(bool Option)
-        {
-            switch (Option)
-            {
-                case true:
-                    Sound_Enabled = true;
-                    break;
 
-                case false:
-                    Sound_Enabled = false;
-                    break;
+        private static async Task<Settings_File> Load_Settings_File()
+        {
+            Ensure_Access_To_The_Settings_File(); 
+
+            Settings_File settings_File = new Settings_File();
+            settings_File.Sound_On = true;
+            settings_File.Open_AI_Chat_GPT_Key = String.Empty;
+
+            if (System.IO.File.Exists(settings_file_name) == true)
+            {
+
+                System.IO.FileStream settings_file_stream = System.IO.File.OpenRead(settings_file_name);
+
+                try
+                {
+                    byte[] settings_file_binary = new byte[settings_file_stream.Length];
+                    await settings_file_stream.ReadAsync(settings_file_binary, 0, settings_file_binary.Length);
+
+                    settings_File = Newtonsoft.Json.JsonConvert.DeserializeObject<Settings_File>(Encoding.UTF8.GetString(settings_file_binary));
+                }
+                catch
+                {
+
+                }
+                finally
+                {
+                    if(settings_file_stream != null)
+                    {
+                        settings_file_stream.Close();
+                        settings_file_stream.Dispose();
+                    }
+                }
+            }
+            else
+            {
+                await Create_Settings_File(settings_File);
             }
 
-            return Task.FromResult(true);
+            return settings_File;
         }
+
+
+
+        private static async Task<bool> Update_Settings_File(Settings_File settings_File)
+        {
+            Ensure_Access_To_The_Settings_File();
+
+            if (System.IO.File.Exists(settings_file_name) == true)
+            {
+                System.IO.File.Delete(settings_file_name);
+            }
+
+            return await Create_Settings_File(settings_File);
+        }
+
+
+
+        private static async Task<bool> Create_Settings_File(Settings_File settings_File)
+        {
+            Ensure_Access_To_The_Settings_File();
+
+            byte[] settings_file_binary = Encoding.UTF8.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(settings_File));
+
+            System.IO.FileStream settings_file_stream = System.IO.File.Create(settings_file_name, settings_file_binary.Length, System.IO.FileOptions.Asynchronous);
+
+            try
+            {
+                await settings_file_stream.WriteAsync(settings_file_binary, 0, settings_file_binary.Length);
+                await settings_file_stream.FlushAsync();
+            }
+            catch
+            {
+
+            }
+            finally
+            {
+                if(settings_file_stream != null)
+                {
+                    settings_file_stream.Close();
+                    settings_file_stream.Dispose();
+                }
+            }
+
+            return true;
+        }
+
+
+
+        public static async Task<bool> Get_Sound_Settings()
+        {
+            return (await Load_Settings_File()).Sound_On;
+        }
+
+
+        public static async Task<bool> Set_Sound_Settings(bool Option)
+        {
+            Settings_File settings_File = await Load_Settings_File();
+            settings_File.Sound_On = Option;
+
+            return (await Update_Settings_File(settings_File));
+        }
+
+
+        public static async Task<string> Get_Chat_GPT_Api_Key()
+        {
+            return (await Load_Settings_File()).Open_AI_Chat_GPT_Key;
+        }
+
+
+        public static async Task<bool> Set_Chat_GPT_Api_Key(string api_key)
+        {
+            Settings_File settings_File = await Load_Settings_File();
+            settings_File.Open_AI_Chat_GPT_Key = api_key;
+
+            return (await Update_Settings_File(settings_File));
+        }
+
 
         ~Settings()
         { }

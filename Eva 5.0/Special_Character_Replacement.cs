@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace Eva_5._0
 {
@@ -71,7 +72,7 @@ namespace Eva_5._0
 
                 if (Sentence.Contains("'") == true)
                 {
-                    Sentence = Sentence.Replace("'", " quote ");
+                    Sentence = Sentence.Replace("'", String.Empty);
                 }
 
                 if (Sentence.Contains("\\") == true)
