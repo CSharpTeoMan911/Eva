@@ -65,10 +65,16 @@ namespace Eva_5._0
         protected override async void OnExit(ExitEventArgs e)
         {
             base.OnExit(e);
-            await Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
+
             await Proc.Dispose_Sound_Effects();
             await ChatGPT_Response_Window.Dispose_Sound_Effects();
             await Timer_Window.Dispose_Sound_Effects();
+
+            foreach (System.Diagnostics.Process instance in System.Diagnostics.Process.GetProcessesByName(System.Diagnostics.Process.GetCurrentProcess().ProcessName))
+            {
+                await Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
+                instance.Kill();
+            }
         }
 
 

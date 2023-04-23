@@ -81,13 +81,27 @@ namespace Eva_5._0
 
                     if (Application.Current.MainWindow != null)
                     {
-                        await Settings.Set_Chat_GPT_Api_Key(Chat_GPT_Api_Key_TextBox.Text);
+                        // RETRIEVE THE CHATGPT API KEY INSERTED BY THE USER AND INITIATE A DUMMY QUERY IN ORDER TO TEST 
+                        // THE VALIDITY OF THE API KEY.
+                        //
+                        // [ BEGIN ]
 
-                        Tuple<Type, string> initiation_result = await ChatGPT_API.Initiate_Chat_GPT(String.Empty);
+                        Tuple<Type, string> initiation_result = await ChatGPT_API.Initiate_Chat_GPT(Chat_GPT_Api_Key_TextBox.Text);
+
+                        // [ END ]
+
+
+
+
 
                         if(initiation_result.Item1 == typeof(Exception))
                         {
-                            if(App.PermisissionWindowOpen == false)
+                            // IF THE RETURN TYPE OF THE OPERATION IS AN EXCEPTION, THIS MEANS 
+                            // THAT THE API KEY IS NOT CORRECT OR THAT ANOTHER ERROR OCCURRED
+                            //
+                            // [ BEIGN ]
+
+                            if (App.PermisissionWindowOpen == false)
                             {
                                 if(initiation_result.Item2 == "API authentification error")
                                 {
@@ -100,9 +114,18 @@ namespace Eva_5._0
                                     errorWindow.Show();
                                 }
                             }
+
+                            // [ END ]
+
                         }
                         else
                         {
+                            // IF THE RETURN TYPE OF THE OPERATION IS NOT AN EXCEPTION
+                            // THIS MEANS THAT THE API KEY IS VALID, THE SETTINGS FILE
+                            // IS UPDATE TO CONTAIN THE NEW API KEY AND THE WIDOW IS
+                            // CLOSED 
+
+                            await Settings.Set_Chat_GPT_Api_Key(Chat_GPT_Api_Key_TextBox.Text);
                             this.Close();
                         }
                     }

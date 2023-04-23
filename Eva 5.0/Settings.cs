@@ -27,6 +27,13 @@ namespace Eva_5._0
         private static readonly string settings_file_name = "application_settings.json";
 
 
+
+
+        // THIS METHOD ENSURES THAT THE PERMISSIONS TO THE SETTINGS FILE FOR THE CURRENT
+        // USER INCLUDE READ, WRITE, AND DELETE FUNCTIONALITIES TO THE SETTINGS FILE.
+        // THE SETTINGS FILE MUST HAVE READ AND WRITE PERMISSIONS IN ORDER FOR THE 
+        // APPLICATION TO ACCESS THE CHATGPT API KEY AND THE SET VOLUME SETTINGS,
+        // OTHERWISE THE APPLICATION CAN CRASH.
         private static void Ensure_Access_To_The_Settings_File()
         {
             if(System.IO.File.Exists(settings_file_name) == true)
@@ -42,25 +49,71 @@ namespace Eva_5._0
 
 
 
+
+
+        
         private static async Task<Settings_File> Load_Settings_File()
         {
-            Ensure_Access_To_The_Settings_File(); 
+            // THE REQUIRED FILE ACCESS METHODS FOR THE SETTINGS FILE
+            // ARE ENSURED BEFORE ANY READ OPERATION IS PERFORMED
+            // ON THE SETTINGS FILE TO AVOID FATAL ERRORS AND ALSO 
+            // BE ABLE TO READ THE VALUES
+            //
+            // [ BEGIN ]
+
+            Ensure_Access_To_The_Settings_File();
+
+            // [ END ]
+
+
+
+
+
+
+            // A "Settings_File" CLASS OBJECT IS CREATED WITH SOME DEFAULT VALUES.
+            // IF THE SETTINGS FILE DOES NOT EXIST, A SETTINGS FILE WILL BE CRATED
+            // WITH THESE DEFAULT VALUES.
+            //
+            // [ BEGIN ]
 
             Settings_File settings_File = new Settings_File();
             settings_File.Sound_On = true;
             settings_File.Open_AI_Chat_GPT_Key = String.Empty;
 
+            // [ END ]
+
+
+            
+
+
+
+
             if (System.IO.File.Exists(settings_file_name) == true)
             {
+                // IF THE SETTINGS FILE EXISTS, A "FileStream" OBJECT IS CRATED
+                // IN ORDER TO OPEN THE FILE IN A BINARY DATA STREAM AND READ
+                // THE FILE'S BINARY CONTENTS
+                //
+                // [ BEGIN ]
+
 
                 System.IO.FileStream settings_file_stream = System.IO.File.OpenRead(settings_file_name);
 
                 try
                 {
+                    // THE BINARY INFORMATION OF THE SETTINGS FILE IS READ IN A BUFFER
+                    // AND THE BUFFER IS THEN CONVERTED IN A STRING IN ORDER TO BE 
+                    // DE-SERIALIZED FROM THE JSON FILE FORMAT IN THE "Settings_File"
+                    // FORMAT. 
+                    //
+                    // [ BEGIN ]
+
                     byte[] settings_file_binary = new byte[settings_file_stream.Length];
                     await settings_file_stream.ReadAsync(settings_file_binary, 0, settings_file_binary.Length);
 
                     settings_File = Newtonsoft.Json.JsonConvert.DeserializeObject<Settings_File>(Encoding.UTF8.GetString(settings_file_binary));
+
+                    // [ END ]
                 }
                 catch
                 {
@@ -74,10 +127,22 @@ namespace Eva_5._0
                         settings_file_stream.Dispose();
                     }
                 }
+
+                // [ END ]
             }
             else
             {
+                // IF THE SETTINGS FILE DOES NOT EXIST, PASS THE 
+                // "Settings_File" CLASS INSTANCE TO THIS 
+                // METHOD AND CREATE A SETTINGS FILE
+                // USING THE PRESET DEFAULT VALUES 
+                // OF THIS CLASS INSTANCE
+                //
+                // [ BEGIN ]
+
                 await Create_Settings_File(settings_File);
+
+                // [ END ]
             }
 
             return settings_File;
@@ -87,12 +152,31 @@ namespace Eva_5._0
 
         private static async Task<bool> Update_Settings_File(Settings_File settings_File)
         {
+            // THE REQUIRED FILE ACCESS METHODS FOR THE SETTINGS FILE
+            // ARE ENSURED BEFORE ANY DELETE OPERATION IS
+            // PERFORMED ON THE SETTINGS FILE TO AVOID FATAL
+            // ERRORS AND ALSO BE ABLE TO READ THE VALUES
+            //
+            // [ BEGIN ]
+
             Ensure_Access_To_The_Settings_File();
+
+            // [ END ]
+
+
+
+
+            // IF THE SETTINGS FILE EXIST, DELETE IT AND CREATE A
+            // NEW SETTINGS FILE WITH THE SET VALUES
+            //
+            // [ BEGIN ]
 
             if (System.IO.File.Exists(settings_file_name) == true)
             {
                 System.IO.File.Delete(settings_file_name);
             }
+
+            // [ END ]
 
             return await Create_Settings_File(settings_File);
         }
@@ -101,7 +185,13 @@ namespace Eva_5._0
 
         private static async Task<bool> Create_Settings_File(Settings_File settings_File)
         {
-            Ensure_Access_To_The_Settings_File();
+            // SERIALIZE THE "Settings_File" OBJECT IN A JSON FILE FORMAT
+            // AND CONVERT THE SERIALIZED INFORMATION IN A BINARY FORMAT.
+            // WRITE THE BINARY INFORMATION USING A "FileStream" OBJECT
+            // BY CREATING A SETTINGS FILE AND WRITING INTO IT USING 
+            // THE STREAM.
+            //
+            // [ BEGIN ]
 
             byte[] settings_file_binary = Encoding.UTF8.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(settings_File));
 
@@ -125,10 +215,39 @@ namespace Eva_5._0
                 }
             }
 
+            // [ END ]
+
+
+
+
+
+
+
+            // THE REQUIRED FILE ACCESS METHODS FOR THE SETTINGS FILE
+            // ARE ENSURED BEFORE ANY WRITE OPERATION IS
+            // PERFORMED ON THE SETTINGS FILE TO AVOID FATAL
+            // ERRORS AND ALSO BE ABLE TO READ THE VALUES
+            //
+            // [ BEGIN ]
+
+            Ensure_Access_To_The_Settings_File();
+
+            // [ END ]
+
+
+
             return true;
         }
 
 
+
+
+
+
+
+        // GETTER AND SETTER METHODS FOR THE APPLICATION'S SETTINGS FILE
+        //
+        // [ BEGIN ]
 
         public static async Task<bool> Get_Sound_Settings()
         {
@@ -158,6 +277,8 @@ namespace Eva_5._0
 
             return (await Update_Settings_File(settings_File));
         }
+
+        // [ END ]
 
 
         ~Settings()

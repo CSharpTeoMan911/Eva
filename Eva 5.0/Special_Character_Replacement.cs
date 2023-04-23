@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Eva_5._0
 {
     internal class Special_Character_Replacement
     {
-        protected static Task<string> Remove_Special_Characters(string Sentence)
+        private static StringBuilder SentenceStringBuilder = new StringBuilder();
+
+        protected static Task<StringBuilder> Remove_Special_Characters(string Sentence)
         {
             // [ BEGIN ] REMOVE SPECIAL CHARACTERS 
             //
@@ -17,79 +20,90 @@ namespace Eva_5._0
             //            CHARACTERS THAT POSE A RISK TO THE SECURITY BY ALLOWING ATTACKERS TO INJECT
             //            COMMANDS INTO THE SHELL OF THE OS WHEN A PROCESS IS EXECUTED.
 
+            SentenceStringBuilder.Clear();
+            SentenceStringBuilder.Append(Sentence);
 
-            if (Sentence != null)
+            try
             {
-                if (Sentence.Contains("\n") == true)
-                {
-                    Sentence = Sentence.Replace("\n", " new line ");
-                }
 
-                if (Sentence.Contains(".") == true)
+                if (Sentence != null)
                 {
-                    Sentence = Sentence.Replace(".", " dot ");
-                }
+                    if (Sentence.Contains("\n") == true)
+                    {
+                        SentenceStringBuilder.Replace("\n", " new line ");
+                    }
 
-                if (Sentence.Contains("#") == true)
-                {
-                    Sentence = Sentence.Replace("#", "%23");
-                }
+                    if (Sentence.Contains(".") == true)
+                    {
+                        SentenceStringBuilder.Replace(".", " dot ");
+                    }
 
-                if (Sentence.Contains("&") == true)
-                {
-                    Sentence = Sentence.Replace("&", " and ");
-                }
+                    if (Sentence.Contains("#") == true)
+                    {
+                        SentenceStringBuilder.Replace("#", "%23");
+                    }
 
-                if (Sentence.Contains("|") == true)
-                {
-                    Sentence = Sentence.Replace("|", " pipe ");
-                }
+                    if (Sentence.Contains("&") == true)
+                    {
+                        SentenceStringBuilder.Replace("&", " and ");
+                    }
 
-                if (Sentence.Contains(">") == true)
-                {
-                    Sentence = Sentence.Replace(">", " greater than ");
-                }
+                    if (Sentence.Contains("|") == true)
+                    {
+                        SentenceStringBuilder.Replace("|", " pipe ");
+                    }
 
-                if (Sentence.Contains("<") == true)
-                {
-                    Sentence = Sentence.Replace("<", " less than ");
-                }
+                    if (Sentence.Contains(">") == true)
+                    {
+                        SentenceStringBuilder.Replace(">", " greater than ");
+                    }
 
-                if (Sentence.Contains("^") == true)
-                {
-                    Sentence = Sentence.Replace("^", " raised to ");
-                }
+                    if (Sentence.Contains("<") == true)
+                    {
+                        SentenceStringBuilder.Replace("<", " less than ");
+                    }
 
-                if (Sentence.Contains(";") == true)
-                {
-                    Sentence = Sentence.Replace(";", " semicolon ");
-                }
+                    if (Sentence.Contains("^") == true)
+                    {
+                        SentenceStringBuilder.Replace("^", " raised to ");
+                    }
 
-                if (Sentence.Contains("\"") == true)
-                {
-                    Sentence = Sentence.Replace("\"", " double quote ");
-                }
+                    if (Sentence.Contains(";") == true)
+                    {
+                        SentenceStringBuilder.Replace(";", " semicolon ");
+                    }
 
-                if (Sentence.Contains("'") == true)
-                {
-                    Sentence = Sentence.Replace("'", String.Empty);
-                }
+                    if (Sentence.Contains("\"") == true)
+                    {
+                        SentenceStringBuilder.Replace("\"", " double quote ");
+                    }
 
-                if (Sentence.Contains("\\") == true)
-                {
-                    Sentence = Sentence.Replace("\\", " backslash ");
-                }
+                    if (Sentence.Contains("'") == true)
+                    {
+                        SentenceStringBuilder.Replace("'", String.Empty);
+                    }
 
-                if (Sentence.Contains("/") == true)
-                {
-                    Sentence = Sentence.Replace("/", " forwardslash ");
+                    if (Sentence.Contains("\\") == true)
+                    {
+                        SentenceStringBuilder.Replace("\\", " backslash ");
+                    }
+
+                    if (Sentence.Contains("/") == true)
+                    {
+                        SentenceStringBuilder.Replace("/", " forwardslash ");
+                    }
                 }
             }
+            catch(Exception E)
+            {
+                System.Diagnostics.Debug.WriteLine(E.Message);
+            }
+
 
             // [ END ] REMOVE SPECIAL CHARACTERS 
 
 
-            return Task.FromResult(Sentence);
+            return Task.FromResult(SentenceStringBuilder);
         }
     }
 }

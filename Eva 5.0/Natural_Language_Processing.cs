@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenAI_API.Moderation;
+using System;
 using System.CodeDom;
 using System.Text;
 using System.Threading.Tasks;
@@ -44,6 +45,14 @@ namespace Eva_5._0
 
     internal class Natural_Language_Processing:A_p_l____And____P_r_o_c
     {
+        private static StringBuilder Sentence_StringBuilder = new StringBuilder();
+        private static StringBuilder Application_StringBuilder = new StringBuilder();
+        private static StringBuilder WebApplication_StringBuilder = new StringBuilder();
+        private static StringBuilder WebApplicationSearchContent_StringBuilder = new StringBuilder();
+        private static StringBuilder WordBuffer_StringBuilder = new StringBuilder();
+
+
+
 
         // COMPONENTS THAT INTERACT WITH SECURTY SENSITIVE FEATURES ARE CONTAINED INSIDE PRIVATE SEALED CLASSES FOR EXTRA PROTECTION
         //
@@ -51,7 +60,7 @@ namespace Eva_5._0
 
         private sealed class Special_Character_Replacement_Implementor:Special_Character_Replacement
         {
-            internal async static Task<string> Remove_Special_Characters_Procedure(string Sentence)
+            internal async static Task<StringBuilder> Remove_Special_Characters_Procedure(string Sentence)
             {
                 return await Remove_Special_Characters(Sentence);
             }
@@ -71,7 +80,15 @@ namespace Eva_5._0
 
         protected static async Task<bool> PreProcessing(string Result)
         {
-            string Sentence = await Special_Character_Replacement_Implementor.Remove_Special_Characters_Procedure(Result);
+            Sentence_StringBuilder.Clear();
+            Application_StringBuilder.Clear();
+            WebApplication_StringBuilder.Clear();
+            WebApplicationSearchContent_StringBuilder.Clear();
+            WordBuffer_StringBuilder.Clear();
+
+            string Sentence = (await Special_Character_Replacement_Implementor.Remove_Special_Characters_Procedure(Result)).ToString();
+
+            Sentence_StringBuilder.Append(Sentence);
 
             // THE FIRST TOKENIZATION IS INITIATED. THE FIRST TOKENIZATION IS RESPONSIBLE FOR PARAMETER ASSOCIATION WITH THEIR RESPECTIVE COMMAND FORMATS
             // FOR EXAMPLE IF YOU SAY "SEARCH ROBOTS ARE COOL ON YOUTUBE" THE FIRST TOKENIZATION WILL ASSOCIATE THE COMMAND WITH THE 
@@ -81,8 +98,7 @@ namespace Eva_5._0
             //
             // [ BEGIN ]
 
-            System.Diagnostics.Debug.WriteLine("Result: " + Result);
-
+          
             switch (Sentence.IndexOf("please open ") == 0)
             {
                 case true:
@@ -282,8 +298,8 @@ namespace Eva_5._0
             //[ BEGIN ]
 
 
-            // SCREENSHOT PROCESS
-            //[ BEGIN ]
+                // SCREENSHOT PROCESS
+                //[ BEGIN ]
 
             switch (Sentence.IndexOf("take screenshot") == 0)
             {
@@ -330,11 +346,17 @@ namespace Eva_5._0
                     break;
             }
 
-                    //[ END ]
+                //[ END ]
 
 
             //[ END ]
 
+
+            Sentence_StringBuilder.Clear();
+            Application_StringBuilder.Clear();
+            WebApplication_StringBuilder.Clear();
+            WebApplicationSearchContent_StringBuilder.Clear();
+            WordBuffer_StringBuilder.Clear();
 
             return true;
         }
@@ -352,6 +374,10 @@ namespace Eva_5._0
             //
             // [ BEGIN ]
 
+            Application_StringBuilder.Clear();
+            WebApplicationSearchContent_StringBuilder.Clear();
+
+
             string Application = String.Empty;
             string WebApplicationSearchContent = String.Empty;
 
@@ -364,40 +390,44 @@ namespace Eva_5._0
 
                     for (int Index = "please open ".Length; Index <= Sentence.Length - 1; Index++)
                     {
-                        Application += Sentence[Index];
-
+                        Application_StringBuilder.Append(Sentence[Index]);
                     }
+                    Application = Application_StringBuilder.ToString();
                     await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
+                    Application_StringBuilder.Clear();
                     break;
 
                 case "open [Application] please":
 
                     for (int Index = "open ".Length; Index <= Sentence.LastIndexOf(" please") - 1; Index++)
                     {
-                        Application += Sentence[Index];
-
+                        Application_StringBuilder.Append(Sentence[Index]);
                     }
+                    Application = Application_StringBuilder.ToString();
                     await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
+                    Application_StringBuilder.Clear();
                     break;
 
                 case "open [Application] now":
 
                     for (int Index = "open ".Length; Index <= Sentence.LastIndexOf(" now") - 1; Index++)
                     {
-                        Application += Sentence[Index];
-
+                        Application_StringBuilder.Append(Sentence[Index]);
                     }
+                    Application = Application_StringBuilder.ToString();
                     await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
+                    Application_StringBuilder.Clear();
                     break;
 
                 case "open [Application]":
 
                     for (int Index = "open ".Length ; Index <= Sentence.Length - 1; Index++)
                     {
-                        Application += Sentence[Index];
-
+                        Application_StringBuilder.Append(Sentence[Index]);
                     }
+                    Application = Application_StringBuilder.ToString();
                     await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
+                    Application_StringBuilder.Clear();
                     break;
 
 
@@ -407,40 +437,44 @@ namespace Eva_5._0
 
                     for (int Index = "please close ".Length; Index <= Sentence.Length - 1; Index++)
                     {
-                        Application += Sentence[Index];
-
+                        Application_StringBuilder.Append(Sentence[Index]);
                     }
+                    Application = Application_StringBuilder.ToString();
                     await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
+                    Application_StringBuilder.Clear();
                     break;
 
                 case "close [Application] please":
 
                     for (int Index = "close ".Length; Index <= Sentence.LastIndexOf(" please") - 1; Index++)
                     {
-                        Application += Sentence[Index];
-
+                        Application_StringBuilder.Append(Sentence[Index]);
                     }
+                    Application = Application_StringBuilder.ToString();
                     await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
+                    Application_StringBuilder.Clear();
                     break;
 
                 case "close [Application] now":
 
                     for (int Index = "close ".Length; Index <= Sentence.LastIndexOf(" now") - 1; Index++)
                     {
-                        Application += Sentence[Index];
-
+                        Application_StringBuilder.Append(Sentence[Index]);
                     }
+                    Application = Application_StringBuilder.ToString();
                     await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
+                    Application_StringBuilder.Clear();
                     break;
 
                 case "close [Application]":
 
                     for (int Index = "close ".Length; Index <= Sentence.Length - 1; Index++)
                     {
-                        Application += Sentence[Index];
-
+                        Application_StringBuilder.Append(Sentence[Index]);
                     }
+                    Application = Application_StringBuilder.ToString();
                     await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
+                    Application_StringBuilder.Clear();
                     break;
 
 
@@ -448,14 +482,16 @@ namespace Eva_5._0
 
                 case "please search [Content] on [Web Application Keyword]":
 
-                    Sentence = Sentence + " ";
+                    Sentence_StringBuilder.Append(" ");
+                    Application = await Web_Application_Selector(Sentence.LastIndexOf(" on ") + " on ".Length - 1, Sentence_StringBuilder.ToString());
 
-                    Application = await Web_Application_Selector(Sentence.LastIndexOf(" on ") + " on ".Length - 1, Sentence);
 
                     for (int Index = "please search".Length; Index < Sentence.LastIndexOf(" on "); Index++)
                     {
-                        WebApplicationSearchContent += Sentence[Index].ToString();
+                        WebApplicationSearchContent_StringBuilder.Append(Sentence[Index]);
                     }
+
+                    WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString();
 
                     await Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
                     break;
@@ -465,14 +501,14 @@ namespace Eva_5._0
 
                 case "please search on [Web Application Keyword] [Content]":
 
-                    Application = await Web_Application_Selector("please search on ".Length - 1, Sentence);
+                    Application = await Web_Application_Selector(Sentence.LastIndexOf(" on ") + " on ".Length - 1, Sentence_StringBuilder.ToString());
 
                     for (int Index = "please search on ".Length + Application.Length; Index <= Sentence.Length - 1; Index++)
                     {
-                        WebApplicationSearchContent += Sentence[Index];
+                        WebApplicationSearchContent_StringBuilder.Append(Sentence[Index]);
                     }
 
-                    WebApplicationSearchContent = WebApplicationSearchContent.Trim();
+                    WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString().Trim();
 
                     await Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
                     break;
@@ -486,11 +522,10 @@ namespace Eva_5._0
 
                     for (int Index = "search on ".Length + Application.Length; Index <= Sentence.Length - 1; Index++)
                     {
-                        WebApplicationSearchContent += Sentence[Index];
-
+                        WebApplicationSearchContent_StringBuilder.Append(Sentence[Index]);
                     }
 
-                    WebApplicationSearchContent = WebApplicationSearchContent.Trim();
+                    WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString().Trim();
 
                     await Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
                     break;
@@ -500,34 +535,31 @@ namespace Eva_5._0
 
                 case "search [Content] on [Web Application Keyword]":
 
-                    Sentence = Sentence + " ";
+                    Sentence_StringBuilder.Append(" ");
+
+                    Application = await Web_Application_Selector(Sentence.LastIndexOf(" on ") + " on ".Length - 1, Sentence_StringBuilder.ToString());
+
 
                     for (int Index = 7; Index < Sentence.LastIndexOf(" on "); Index++)
                     {
-                        WebApplicationSearchContent += Sentence[Index].ToString();
+                        WebApplicationSearchContent_StringBuilder.Append(Sentence[Index]);
                     }
 
-                    Application = await Web_Application_Selector(Sentence.LastIndexOf(" on ") + " on ".Length - 1, Sentence);
-                    WebApplicationSearchContent = WebApplicationSearchContent.Trim();
+                    WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString().Trim();
 
                     await Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
                     break;
 
 
                 case "chatgpt [ ChatGPT Query ]":
-                    try
+                    for (int Index = "gpt".Length; Index < Sentence.Length; Index++)
                     {
-                        for (int Index = "gpt".Length; Index < Sentence.Length; Index++)
-                        {
-                            WebApplicationSearchContent += Sentence[Index];
-                        }
+                        WebApplicationSearchContent_StringBuilder.Append(Sentence[Index]);
+                    }
 
-                        await Proc_Mitigator.Process_Initialisation<string>("ChatGPT Process", Application, WebApplicationSearchContent);
-                    }
-                    catch(Exception E)
-                    {
-                        System.Diagnostics.Debug.WriteLine(E.Message);
-                    }
+                    WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString();
+
+                    await Proc_Mitigator.Process_Initialisation<string>("ChatGPT Process", Application, WebApplicationSearchContent);
                     break;
 
 
@@ -559,6 +591,9 @@ namespace Eva_5._0
             return true;
         }
 
+
+
+
         private static Task<bool> Timer_Time_Selector(string Sentence, System.Collections.Concurrent.ConcurrentDictionary<string, int> time_interval, int start_index)
         {
             // WHEN A TIMER IS SET THE TIME VARIABLES FROM THE SENTECE MUST BE EXTRACTED. THE SECOND TOKENIZATION WILL EXTRACTS WHERE
@@ -587,8 +622,10 @@ namespace Eva_5._0
             for (int Index = start_index; Index <= Sentence.Length - 6; Index++)
             {
 
-                if (Sentence[Index].ToString() == " ")
+                if (Sentence[Index] == ' ')
                 {
+                    Word_Buffer = WordBuffer_StringBuilder.ToString();
+                    WordBuffer_StringBuilder.Clear();
 
                     if (Time_Unit_Received == true)
                     {
@@ -736,11 +773,10 @@ namespace Eva_5._0
                     }
 
 
-                    Word_Buffer = String.Empty;
                 }
                 else
                 {
-                    Word_Buffer += Sentence[Index].ToString();
+                    WordBuffer_StringBuilder.Append(Sentence[Index]);
                 }
             }
 
@@ -761,29 +797,36 @@ namespace Eva_5._0
             // [ BEGIN ]
 
             int index = start_index + 1;
+
             string web_app = String.Empty;
+
+            string Token_Buffer = String.Empty;
+
+            WebApplicationSearchContent_StringBuilder.Clear();
 
             while(index < Sentence.Length - 1)
             {
-                web_app += Sentence[index].ToString();
+                WebApplication_StringBuilder.Append(Sentence[index]);
+
+                web_app = WebApplication_StringBuilder.ToString();
+                W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryGetValue(web_app, out Token_Buffer);
+
+
+                if(Token_Buffer != null)
+                {
+                    break;
+                }
+
                 index++;
             }
 
 
+            
 
-            string Token_Buffer = String.Empty;
-            W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryGetValue(web_app, out Token_Buffer);
-
-
-
-            if (Token_Buffer != String.Empty)
-            {
-                return Task.FromResult(web_app);
-            }
 
             // [ END ]
 
-            return Task.FromResult(String.Empty);
+            return Task.FromResult(web_app);
         }
 
         ~Natural_Language_Processing()
