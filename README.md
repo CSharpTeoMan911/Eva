@@ -160,6 +160,10 @@ In order to give commands to Eva say the word "Wake Eva" followed by the desired
 
 <br>
 
+![Eva_Capture859377083](https://user-images.githubusercontent.com/87245086/234132245-9aa81de9-5f31-47da-94e0-480917bf8995.jpg)
+
+![Eva_Capture1166755094](https://user-images.githubusercontent.com/87245086/234132257-9282765f-ff1a-4ae9-8ecc-edb0c9f14ccf.jpg)
+
 ![Eva_Capture443117994](https://user-images.githubusercontent.com/87245086/234130364-07979c73-ecd3-42a1-a69d-6a65591a4133.jpg)
 
 <br>
