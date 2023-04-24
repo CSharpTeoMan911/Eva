@@ -86,11 +86,8 @@ namespace Eva_5._0
             //
             // [ BEGIN ]
 
-            foreach (System.Diagnostics.Process instance in System.Diagnostics.Process.GetProcessesByName(System.Diagnostics.Process.GetCurrentProcess().ProcessName))
-            {
-                await Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
-                instance.Kill();
-            }
+            await Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
+
             // [ END ]
         }
 

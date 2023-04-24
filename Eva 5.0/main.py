@@ -6,7 +6,7 @@ import socket
 import sys
 import time
 
-speech = LiveSpeech(lm=False, keyphrase=' wake eva ', kws_threshold=0.00000000000000000000000000000035)
+speech = LiveSpeech(lm=False, keyphrase=' wake eva ', kws_threshold=1e-26)
 process_list = []
 
 

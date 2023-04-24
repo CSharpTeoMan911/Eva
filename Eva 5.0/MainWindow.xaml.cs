@@ -197,7 +197,6 @@ namespace Eva_5._0
 
         // [ END ]
 
-        // [ END ]
 
 
 
@@ -205,7 +204,6 @@ namespace Eva_5._0
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
-
             // Check the administartive rights with which the application session is running. If the application rights are the ones of administrator, the application will close.
             // This is done to prevent any security problems due to the fact that the application is operating at a low level within the operating system.
 
@@ -214,6 +212,10 @@ namespace Eva_5._0
             new Check_Role();
 
             // [ END ]
+
+
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
 
 
             InitialRotatorWidth = Rotator.ActualWidth;
@@ -225,6 +227,21 @@ namespace Eva_5._0
             AnimationAndFunctionalityTimer.Interval = 45;
             AnimationAndFunctionalityTimer.Start();
         }
+
+
+
+        private async void CurrentDomain_ProcessExit(object sender, EventArgs e)
+        {
+            await Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
+        }
+
+
+
+        private async void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            await Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
+        }
+
 
 
         private void AnimationAndFunctionalityTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -829,6 +846,7 @@ namespace Eva_5._0
             }
             catch { }
         }
+
 
         private void MoveTheWindow(object sender, MouseButtonEventArgs e)
         {

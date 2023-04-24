@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Primitives;
-using OpenAI_API.Moderation;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -71,7 +69,7 @@ namespace Eva_5._0
                                 Loading_TextBlock.Height = 60;
                                 Loading_TextBlock.Width = 60;
 
-                                RotationValue += 2;
+                                RotationValue += 4;
 
                                 if (RotationValue == 360)
                                 {
@@ -125,7 +123,6 @@ namespace Eva_5._0
                                             CloseButtonOffset.Offset -= 0.003;
                                             ResponseTextBoxOffset.Offset += 0.003;
                                             WindowOffset.Offset -= 0.003;
-
                                             break;
 
                                         case false:

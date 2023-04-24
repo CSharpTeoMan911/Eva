@@ -40,7 +40,7 @@ namespace Eva_5._0
 
                     if (Sentence.Contains("#") == true)
                     {
-                        SentenceStringBuilder.Replace("#", "%23");
+                        SentenceStringBuilder.Replace("#", " sharp ");
                     }
 
                     if (Sentence.Contains("&") == true)
@@ -75,7 +75,7 @@ namespace Eva_5._0
 
                     if (Sentence.Contains("\"") == true)
                     {
-                        SentenceStringBuilder.Replace("\"", " double quote ");
+                        SentenceStringBuilder.Replace("\"", String.Empty);
                     }
 
                     if (Sentence.Contains("'") == true)
