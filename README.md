@@ -156,6 +156,14 @@ In order to give commands to Eva say the word "Wake Eva" followed by the desired
 
 <br>
 
+## It can give commands to ChatGPT
+
+<br>
+
+![Eva_Capture443117994](https://user-images.githubusercontent.com/87245086/234130364-07979c73-ecd3-42a1-a69d-6a65591a4133.jpg)
+
+<br>
+
 ## It can set a timer
 
 <br>
