@@ -251,6 +251,7 @@
     <Content Include="App closing.wav" />
     <Content Include="App execution.wav" />
     <Resource Include="Chat_Gpt_Logo.bmp" />
+    <Content Include="Chat_GPT_Notification.wav" />
     <Content Include="main.py" />
     <Content Include="Privacy statement declined or mic not available.wav" />
   </ItemGroup>
