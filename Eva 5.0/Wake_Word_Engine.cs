@@ -47,6 +47,7 @@ namespace Eva_5._0
         //    COMMAND: /path/to/Eva 5.0.exe/python.exe -m pip install [ PACKAGE NAME ]
 
 
+        private static byte[] wake_word_data = Encoding.UTF8.GetBytes("listen");
 
         protected static Task<bool> Start_The_Wake_Word_Engine()
         {
@@ -333,7 +334,7 @@ namespace Eva_5._0
 
 
                         // BUFFER THAT STORES BINARY INFORMATION OF THE WAKE WORD DETECTED BY THE CLIENT ( WAKE WORD ENGINE ) AS BYTES
-                        byte[] wake_word_detected = new byte[(Encoding.UTF8.GetBytes("eva").Length)];
+                        byte[] wake_word_detected = new byte[wake_word_data.Length];
 
 
 
@@ -357,7 +358,7 @@ namespace Eva_5._0
                             {
                                 lock (Wake_Word_Detected)
                                 {
-                                    if (wake_word_detected_decoded == "eva")
+                                    if (wake_word_detected_decoded == "listen")
                                     {
                                         Wake_Word_Detected = "true";
                                     }

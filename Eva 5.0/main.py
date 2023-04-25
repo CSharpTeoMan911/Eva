@@ -1,13 +1,11 @@
-from pocketsphinx import LiveSpeech
-import sounddevice
+from vosk import Model, KaldiRecognizer
+import os
+import pyaudio
 import threading
-import multiprocessing
 import socket
 import sys
-import time
 
-speech = LiveSpeech(lm=False, keyphrase=' wake eva ', kws_threshold=1e-27)
-process_list = []
+
 
 
 def wake_word_operation_application_socket():
@@ -27,65 +25,65 @@ def wake_word_operation_application_socket():
             port = 1025
             application_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             application_socket.connect((host, port))
-            application_socket.send("eva".encode())
+            application_socket.send("listen".encode())
             application_socket.close()
             application_socket.shutdown(socket.SHUT_RDWR)
         except socket.error:
             pass
     except KeyboardInterrupt:
-        del speech
         sys.exit(0)
 
 
-def Wake_Word_Initiation():
-    ##############################
-    # WAKE WORD ENGINE OPERATION #
-    ##############################
-    global speech
-    try:
-        try:
-            for phrase in speech:
-                if speech is not None:
-                    if phrase is not None:
-                        inter_process_thread = threading.Thread(target=wake_word_operation_application_socket)
-                        inter_process_thread.start()
-        except sounddevice.PortAudioError:
-            pass
-    except KeyboardInterrupt:
-        del speech
-        sys.exit(0)
+
+
 
 
 def Wake_Word_Engine_Thread_Management():
-    ###################################################
-    # THE WAKE WORD ENGINE IS STARTED AND STOPPED ON  #
-    # MULTIPLE THREADS TWO TIMES EVERY 3 SECONDS      #
-    #                                                 #
-    # THIS IS DONE TO ENSURE THAT THE WAKE WORD       #
-    # ENGINE DOES NOT LOCK. THE LOCK IS OCCURRING     #
-    # WHEN THE WAKE WORD ENGINE IS RECEIVING NON      #
-    # SPEECH INPUT FOR A PERIOD OF TIME.              #
-    #                                                 #
-    # A PROBABLE CAUSE IS CACHED DATA, WHICH IS       #
-    # FREED WHEN THE WAKE WORD ENGINE IS STOPPED.     #
-    ###################################################
+    ##############################################
+    # VOSK SPEECH-TO-TEXT SPEECH LANGUAGE MODEL  #
+    # USING KALDI SPEECH-TO-TEXT ENGINE          #
+    ##############################################
 
-    global process_list
 
-    while True:
-        process = multiprocessing.Process(target=Wake_Word_Initiation)
+    # CREDIT TO https://buddhi-ashen-dev.vercel.app/posts/offline-speech-recognition
 
-        try:
-            process.start()
-            process_list.append(process)
+    try:
+        # LOAD THE VOSK SPEECH RECOGNITION MODEL FROM THE APPLICATION'S DIRECTORY
+        model = Model(os.getcwd() + "\\" + "vosk-model-small-en-us-0.15")
 
-            if len(process_list) > 6:
-                process_list[0].terminate()
-                process_list.remove(process_list[0])
 
-            time.sleep(5)
-        except KeyboardInterrupt:
-            sys.exit(0)
+        # INITIATE KALDI SPEECH RECOGNIZER INSTANCE USING THE VOSK MODEL AND A FREQUENCY OF 16000 HZ
+        recognizer = KaldiRecognizer(model, 16000)
+
+
+        # INITIATE PYAUDIO OBJECT, LISTEN TO THE DEFAULT MIC ON 1 CHANNEL, WITH A RATE OF 16000 HZ AND A BUFFER OF 300 FRAMES
+        mic = pyaudio.PyAudio()
+        stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=300)
+        stream.start_stream()
+
+
+        while True:
+            # READ FROM THE AUDIO DATA STREAM A 300 FRAMES PER CYCLE
+            data = stream.read(300)
+
+            # RETRIEVE THE AUDIO WAVEFORM DATA AND PERFORM SPEECH TO TEXT CONVERSION
+            if recognizer.AcceptWaveform(data):
+
+                # STRIP OUT THE RESULT'S JSON BODY EXCEPTING THE RECOGNIZED INPUT
+                result = recognizer.Result()[14:-3]
+
+
+
+                # IF THE WORD "listen" OR THE PHRASE "hey listen" IS RECOGNIZED, CALL THE WAKE WORD SOCKET ON A DIFFERENT
+                # THREAD IN ORDER NOT TO HINDER THE SPEED OF THE SPEECH RECOGNITION ENGINE AND ALSO FOR THE OPERATIONS
+                # TO EXECUTE IN PARALLEL
+                if result == "listen" or result == "hey listen":
+                    thread = threading.Thread(target=wake_word_operation_application_socket)
+                    thread.start()
+
+    except KeyboardInterrupt:
+        pass
+
 
 
 if __name__ == '__main__':
