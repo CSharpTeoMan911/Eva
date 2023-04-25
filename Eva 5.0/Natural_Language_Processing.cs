@@ -2,6 +2,7 @@
 using System.CodeDom;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 
 namespace Eva_5._0
 {
@@ -795,11 +796,15 @@ namespace Eva_5._0
             //
             // [ BEGIN ]
 
+
+            System.Collections.Generic.Stack<string> Token_Buffer_List = new System.Collections.Generic.Stack<string>();
+            string Token_Buffer;
+            string web_app = String.Empty;
             int index = start_index + 1;
 
-            string web_app = String.Empty;
 
-            string Token_Buffer = String.Empty;
+
+
 
             WebApplicationSearchContent_StringBuilder.Clear();
 
@@ -813,19 +818,20 @@ namespace Eva_5._0
 
                 if(Token_Buffer != null)
                 {
-                    break;
+                    Token_Buffer_List.Push(web_app);
+                    Token_Buffer = null;
                 }
 
                 index++;
             }
 
+            WebApplicationSearchContent_StringBuilder.Clear();
 
-            
 
 
             // [ END ]
 
-            return Task.FromResult(web_app);
+            return Task.FromResult(Token_Buffer_List.Pop());
         }
 
         ~Natural_Language_Processing()
