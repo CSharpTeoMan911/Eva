@@ -92,8 +92,7 @@ _____________________________________
 
 ![Content extraction extraction](https://user-images.githubusercontent.com/87245086/234721329-f863821e-46ba-428d-9a6c-4d4ec46b7c60.png)
 
-![Command processing](https://user-images.githubusercontent.com/87245086/234721190-5f0d2fe1-3079-4e8b-84cb-4e02a10e3cc2.png)
-
+![Command processing](https://user-images.githubusercontent.com/87245086/234723180-77112477-83cd-4c06-aa23-d9caa98cf52d.png)
 
 <br>
 
