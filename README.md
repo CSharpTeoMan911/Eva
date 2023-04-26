@@ -8,7 +8,8 @@
 
 <br>
 
-Changed the wake word engine from Windows Speech Recognition (SAPI) to PocketSphinx
+* Changed the wake word engine from PocketSphinx to Vosk
+* Added ChatGPT voice prompt query capacity
 
 <br>
 <br>
@@ -45,7 +46,7 @@ Eva is an A.I. assistant that has the purpose of helping users multi-task. It al
 
 <br>
 
-The Eva's core technologies are the PocketSphinx In-proc speech recognition engine, the Microsoft online speech recognition engine, the Dot NET framework, Windows Presentation Foundation ( WPF ), and the Universal Windows Platforms ( UWP ). 
+The Eva's core technologies are the Vosk In-proc speech recognition engine, the Microsoft online speech recognition engine, the Dot NET framework, Windows Presentation Foundation ( WPF ), and the Universal Windows Platforms ( UWP ). 
 
 <br>
 
@@ -55,35 +56,43 @@ _______________________________________
 <br>
 
 
-![Wake Word Mechanism](https://user-images.githubusercontent.com/87245086/216778714-f543d39b-83b9-43f1-9170-f4fefa209794.png)
+![Speech system flowchart](https://user-images.githubusercontent.com/87245086/234708319-0ad38208-afe3-460c-9066-224704151b20.png)
 
 
 <br>
 
-The PocketSphinx speech recogniser is listening permanently, if the listening function is activated. Once it recognises the word "Wake Eva", the online speech recognition engine is activated. The online speech recognition engine has the role of extracting the commands and their content.
+The Vosk speech recogniser is listening permanently, if the listening function is activated. Once it recognises the word "Listen" or "Hey listen", the online speech recognition engine is activated. The online speech recognition engine has the role of extracting commands and their content.
 
 <br>
 <br>
 
-### Natural Language Processing
+### Natural Language Understanding
 ____________________________________
 
 <br>
 
-Eva uses natural language processing in two ways, and these are speech recognition and contextual command and content extraction. Both the PocketSphinx and the Online Speech Recognition engines use natural language processing in order to extract the words from any audio medium, and these are built into both of the engines. 
+Eva uses natural language processing in two ways, and these are speech recognition and contextual command and content extraction. Both, Vosk and Windows Online Speech Recognition engines use natural language processing in order to extract the words from any audio medium, and these are built into both of the engines. 
 
 <br>
 
-The contextual command and content extraction natural language processing engine is built into the application in order for Eva to understand the commands given by the user and their content, and this command and content extraction natural language processing engine is built by me. The application's natural language processing engine is doing this by following some steps. First it is doing some tokenization in order to understand what process it has to execute and what extra parameters must be extracted from the input, in order to satify the process. This is done by analysing the input and by searching for some keywords that have to be at a certain index within the sentence. For example, if the command given is "open chrome", because the word open is the first word, the natural language processing engine categorised the command as a process in which a certain application is opened. If the command given is "search leopard 1 tank blueprint on google", because the first word is search, the tokenisation is pointing to the parameter related to web search. If the tokenization did not match the sentence with any parameter, than no process will be executed. 
+The contextual command and content extraction natural language understanding engine is built into the application in order for Eva to understand the commands given by the user and their content, and this command and content extraction natural language understanding engine is built by me. The application's natural language processing engine is doing this by following some steps. First it is doing some tokenization in order to understand what process it has to execute and what extra parameters must be extracted from the input, in order to satify the process. This is done by analysing the input and by searching for some keywords that have to be at a certain index within the sentence. For example, if the command given is "open chrome", because the word open is the first word, the natural language processing engine categorised the command as a process in which a certain application is opened. If the command given is "search leopard 1 tank blueprint on google", because the first word is search, the tokenisation is pointing to the parameter related to web search. If the tokenization did not match the sentence with any parameter, then no process will be executed. 
 
 <br>
 
-A second tokenisation is performed, after the process type had been identified. When the process type had been identified, accordingly with the process type patern, if any secondary parameters are required by the process type, these will be extracted accordingly. For example, if the command "search black shoes of amazon" had been entered, the patern of this command is "search [ CONTENT ] on [ WEB APPLICATION ]". This means that the natural language processing engine has to search for a web application and for the content to be searched on that web application. Then accordingly to the process patern, the natural language processing engine knows that the web application keyword is between the words "search" and "on", and it knows that the content to be searched on the web application is every word after the word "on".
+A second tokenisation is performed, after the process type had been identified. When the process type had been identified, accordingly with the process type patern, if any secondary parameters are required by the process type, these will be extracted accordingly. For example, if the command "search black shoes of amazon" had been entered, the patern of this command is "search [ CONTENT ] on [ WEB APPLICATION ]". This means that the natural language understanding engine has to search for a web application and for the content to be searched on that web application. Then accordingly to the process patern, the natural language understanding engine knows that the web application keyword is between the words "search" and "on", and it knows that the content to be searched on the web application is every word after the word "on".
 
 <br>
 
+#### Process extraction formulation
+_____________________________________
 
-![Eva current definitive NLP Model](https://user-images.githubusercontent.com/87245086/201433713-d06bc37a-69a2-4f7c-b8f6-838bd5bce1f0.png)
+<br>
+
+![Process type extraction](https://user-images.githubusercontent.com/87245086/234716272-3b7172fc-df39-4f1f-a98a-ac2807a5dccf.png)
+
+![Content extraction extraction](https://user-images.githubusercontent.com/87245086/234721329-f863821e-46ba-428d-9a6c-4d4ec46b7c60.png)
+
+![Command processing](https://user-images.githubusercontent.com/87245086/234721190-5f0d2fe1-3079-4e8b-84cb-4e02a10e3cc2.png)
 
 
 <br>
@@ -93,11 +102,11 @@ __________________________________________________________
 
 <br>
 
-![Natural Language Processing Time Complexities](https://user-images.githubusercontent.com/87245086/201435692-28cf26df-b884-42c2-9f88-e07ab35d011b.png)
+![TIME COMPLEXITY](https://user-images.githubusercontent.com/87245086/234722780-0bd7e598-ae70-4538-9ec3-ca18fd08f21b.png)
 
 <br>
 
-The time complexity of the natural language processing engine is in O(n) in the worst case scenario and O(n - ( n - ci )) in the best case scenario, where "ci" stands for current index where the engine could not match the input with any patern related to any process.
+The time complexity of the natural language processing engine is in O(n) in the worst case scenario and O(n - ( n - ci + 1 )) in the best case scenario, where "ci" stands for current index where the engine could not match the input with any patern related to any process.
 
 <br>
 <br>
@@ -342,7 +351,7 @@ In order to give commands to Eva say the word "Wake Eva" followed by the desired
 <br>
 <br>
 
-# Extra informations
+# Extra information
 
 <br>
 
