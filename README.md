@@ -88,16 +88,16 @@ A second tokenisation is performed, after the process type had been identified. 
 <br>
 
 
-#### Natural Language Processing Engine Time Complexities
+#### Natural Language Understanding Engine Time Complexities
 __________________________________________________________
 
 <br>
 
-![TIME COMPLEXITY](https://user-images.githubusercontent.com/87245086/234722780-0bd7e598-ae70-4538-9ec3-ca18fd08f21b.png)
+![TIME COMPLEXITY](https://user-images.githubusercontent.com/87245086/234992408-7ec94b0f-4b13-483a-8182-2a00b332d6af.png)
 
 <br>
 
-The time complexity of the natural language processing engine is in O(n) in the worst case scenario and O(n - ( n - ci + 1 )) in the best case scenario, where "ci" stands for current index where the engine could not match the input with any patern related to any process.
+The time complexity of the natural language understanding engine is in O(n) in the worst case scenario and O(n - ( n - (ci + 1) )) in the best case scenario, where "ci" stands for current index where the engine could not match the input with any patern related to any process.
 
 <br>
 <br>
