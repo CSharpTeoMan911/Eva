@@ -83,6 +83,9 @@ A second tokenisation is performed, after the process type had been identified. 
 
 <br>
 
+![Natural language understanding](https://user-images.githubusercontent.com/87245086/234970112-14eb4450-52e4-4a64-a5d4-a1046dffb294.png)
+
+<br>
 
 
 #### Natural Language Processing Engine Time Complexities
