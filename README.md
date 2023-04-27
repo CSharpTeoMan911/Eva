@@ -83,7 +83,7 @@ A second tokenisation is performed, after the process type had been identified. 
 
 <br>
 
-![Natural language understanding](https://user-images.githubusercontent.com/87245086/234970216-7c9ee912-b7fb-43ed-b97d-6a95a934ef03.png)
+![Natural language understanding](https://user-images.githubusercontent.com/87245086/234978531-1fc00a43-f412-4c52-ad31-aebc3c11fbe6.png)
 
 <br>
 
