@@ -83,18 +83,7 @@ A second tokenisation is performed, after the process type had been identified. 
 
 <br>
 
-#### Process extraction formulation
-_____________________________________
 
-<br>
-
-![Process type extraction](https://user-images.githubusercontent.com/87245086/234716272-3b7172fc-df39-4f1f-a98a-ac2807a5dccf.png)
-
-![Content extraction extraction](https://user-images.githubusercontent.com/87245086/234721329-f863821e-46ba-428d-9a6c-4d4ec46b7c60.png)
-
-![Command processing](https://user-images.githubusercontent.com/87245086/234723180-77112477-83cd-4c06-aa23-d9caa98cf52d.png)
-
-<br>
 
 #### Natural Language Processing Engine Time Complexities
 __________________________________________________________
