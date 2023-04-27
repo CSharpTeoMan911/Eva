@@ -106,7 +106,7 @@ The time complexity of the natural language processing engine is in O(n) in the 
 # Gradient fluctuation formula
 <br>
 
-![Gradient Fluctuation Formula For Animations](https://user-images.githubusercontent.com/87245086/205466011-f7030d0c-1ac5-4cce-b969-21ff8cd95c0c.png)
+![Gradient fluctuation](https://user-images.githubusercontent.com/87245086/234971684-804bca17-440c-44d4-84e2-dd3a73a240d8.png)
 
 <br>
 
