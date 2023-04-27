@@ -36,7 +36,7 @@ namespace Eva_5._0
     //                                                                                                  //
     //          WORST: O(N)                                                                             //
     //                                                                                                  //
-    //          BEST: O(N - ci)     ===>  "ci = current index of the sentence where                     //
+    //          BEST: O N - (N - (ci + 1))     ===>  "ci = current index of the sentence where          //
     //                                          did not match with any command patern"                  //
     //                                                                                                  //
     //                                                                                                  //

@@ -63,7 +63,7 @@ def Wake_Word_Engine_Thread_Management():
 
 
         while True:
-            # READ FROM THE AUDIO DATA STREAM A 300 FRAMES PER CYCLE
+            # READ FROM THE AUDIO DATA STREAM A 400 FRAMES PER CYCLE
             data = stream.read(400)
 
             # RETRIEVE THE AUDIO WAVEFORM DATA AND PERFORM SPEECH TO TEXT CONVERSION
@@ -77,9 +77,10 @@ def Wake_Word_Engine_Thread_Management():
                 # IF THE WORD "listen" OR THE PHRASE "hey listen" IS RECOGNIZED, CALL THE WAKE WORD SOCKET ON A DIFFERENT
                 # THREAD IN ORDER NOT TO HINDER THE SPEED OF THE SPEECH RECOGNITION ENGINE AND ALSO FOR THE OPERATIONS
                 # TO EXECUTE IN PARALLEL
-                if result == "listen" or result == "hey listen":
+                if "listen" in result:
                     thread = threading.Thread(target=wake_word_operation_application_socket)
                     thread.start()
+
 
     except KeyboardInterrupt:
         pass
