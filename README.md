@@ -50,6 +50,13 @@ The Eva's core technologies are the Vosk In-proc speech recognition engine, the 
 
 <br>
 
+Vosk: https://github.com/alphacep/vosk-api
+
+UWP Speech Recognition: https://learn.microsoft.com/en-us/uwp/api/windows.media.speechrecognition.speechrecognizer?view=winrt-22621
+
+<br>
+<br>
+
 ### Speech recognition infrastructure
 _______________________________________
 
