@@ -92,11 +92,20 @@ namespace Eva_5._0
                     {
                         SentenceStringBuilder.Replace("/", " forwardslash ");
                     }
+
+                    if (Sentence.Contains("c++") == true)
+                    {
+                        SentenceStringBuilder.Replace("c++", "cpp");
+                    }
+
+                    if (Sentence.Contains("+") == true)
+                    {
+                        SentenceStringBuilder.Replace("+", " plus ");
+                    }
                 }
             }
-            catch(Exception E)
+            catch
             {
-                System.Diagnostics.Debug.WriteLine(E.Message);
             }
 
 
