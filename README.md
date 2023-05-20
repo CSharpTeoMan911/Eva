@@ -143,7 +143,7 @@ Go to the ***DOWNLOAD*** section within the Eva's README.md page and click on th
 
 <br>
 
-In order to give commands to Eva say the word "Wake Eva" followed by the desired command. For example, say "Wake Eva", then after Eva is activated, say "search robots are cool on Google". You can find detailed instructions about commands and the command paterns and troubleshooting within the instruction manual of Eva.
+In order to give commands to Eva say the word "Listen" or "Hey listen" followed by the desired command. For example, say "Hey listen", then after Eva is activated, say "search robots are cool on Google". You can find detailed instructions about commands and the command paterns and troubleshooting within the instruction manual of Eva.
 
 <br>
 
