@@ -90,7 +90,7 @@ A second tokenisation is performed, after the process type had been identified. 
 
 <br>
 
-![Natural language understanding](https://user-images.githubusercontent.com/87245086/234978531-1fc00a43-f412-4c52-ad31-aebc3c11fbe6.png)
+![Natural language understanding](https://user-images.githubusercontent.com/87245086/236642357-631a217c-e49c-4fbe-9001-8998422a8295.png)
 
 <br>
 
@@ -143,7 +143,7 @@ Go to the ***DOWNLOAD*** section within the Eva's README.md page and click on th
 
 <br>
 
-In order to give commands to Eva say the word "Wake Eva" followed by the desired command. For example, say "Wake Eva", then after Eva is activated, say "search robots are cool on Google". You can find detailed instructions about commands and the command paterns and troubleshooting within the instruction manual of Eva.
+In order to give commands to Eva say the word "Listen" or "Hey listen" followed by the desired command. For example, say "Hey listen", then after Eva is activated, say "search robots are cool on Google". You can find detailed instructions about commands and the command paterns and troubleshooting within the instruction manual of Eva.
 
 <br>
 
