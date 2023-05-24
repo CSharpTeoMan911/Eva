@@ -31,7 +31,10 @@ namespace Eva_5._0
         private static StringBuilder file_name = new StringBuilder();
         private static StringBuilder path_and_file_name = new StringBuilder();
 
-        protected static Task<bool> Screen_Capture()
+
+
+
+        protected static async Task<bool> Screen_Capture()
         {
             try
             {
@@ -102,17 +105,18 @@ namespace Eva_5._0
                 // ALLOCATE IN MEMORY A BITMAP OBJECT WITH THE WIDTH AND HEIGHT PROPRIETIES OF THE SCREEN
                 // WITHIN A USING BLOCK. AFTER THE USING BLOCK FINISHED EXECUTING ITS CONTENTS, THE 
                 // BITMAP OBJECT IS DEALLOCATED FROM THE MEMORY AUTOMATICALLY
-                using (Bitmap bitmap = new Bitmap(bounds.Width, bounds.Height))
+                Bitmap bitmap = new Bitmap(bounds.Width, bounds.Height);
+
+                try
                 {
-
-
-
-
                     // ALLOCATE IN MEMORY A GRAPHICS OBJECT THAT IS USING AS A BUFFER THE BITMAP IMAGE.
                     // THE GRAPHICS OBJECT IS COPYING THE SCREEN AS AN IMAGE AND SAVES IT WITHIN THE 
                     // BITMAP OBJECT. AFTER THE USING BLOCK FINISHED EXECUTING ITS CONTENTS,THE 
                     // GRAPHICS OBJECT IS DEALLOCATED FROM THE MEMORY AUTOMATICALLY
-                    using (Graphics g = Graphics.FromImage(bitmap))
+
+                    Graphics g = Graphics.FromImage(bitmap);
+
+                    try
                     {
                         // COPY THE SCREEN AS AN IMAGE USING THE SIZE OF THE SCREEN AS A PARAMETER
                         g.CopyFromScreen(Point.Empty, Point.Empty, bounds.Size);
@@ -120,22 +124,85 @@ namespace Eva_5._0
 
 
 
-                        // DISPOSE THE GRAPHICS OBJECT MANUALLY IN ORDER TO ENSURE THAT IT WAS DISPOSED PROPERLY
-                        g.Dispose();
+                        System.IO.MemoryStream main_memory_stream = new System.IO.MemoryStream();
+
+                        try
+                        {
+                            // SAVE THE BITMAP CONTENTS AS AN IMAGE AT A SET PATH AND FILE NAME WITH A SET IMAGE FORMAT.
+                            bitmap.Save(main_memory_stream, System.Drawing.Imaging.ImageFormat.Jpeg);
+
+
+
+
+
+
+                            System.IO.FileStream picture_file_writer = System.IO.File.Create(path_and_file_name.ToString());
+
+                            try
+                            {
+                                byte[] picture_binary_data = main_memory_stream.ToArray();
+
+                                await picture_file_writer.WriteAsync(picture_binary_data, 0, picture_binary_data.Length);
+
+                                await picture_file_writer.FlushAsync();
+                            }
+                            catch
+                            {
+                                Normalize_The_Window();
+                            }
+                            finally
+                            {
+                                if(picture_file_writer != null)
+                                {
+                                    picture_file_writer.Dispose();
+                                }
+                            }
+
+
+                        }
+                        catch
+                        {
+                            Normalize_The_Window();
+                        }
+                        finally
+                        {
+                            if(main_memory_stream != null)
+                            {
+                                main_memory_stream.Dispose();
+                            }
+                        }
+
+
+                    }
+                    catch
+                    {
+                        Normalize_The_Window();
+                    }
+                    finally
+                    {
+                        if(g != null)
+                        {
+                            g.Dispose();
+                        }
                     }
 
 
-
-
-                    // SAVE THE BITMAP CONTENTS AS AN IMAGE AT A SET PATH AND FILE NAME WITH A SET IMAGE FORMAT.
-                    bitmap.Save(path_and_file_name.ToString(), System.Drawing.Imaging.ImageFormat.Jpeg);
-
-
-
-
-                    // DISPOSE THE BITMAP OBJECT MANUALLY IN ORDER TO ENSURE THAT IT WAS DISPOSED PROPERLY
-                    bitmap.Dispose();
                 }
+                catch
+                {
+                    Normalize_The_Window();
+                }
+                finally
+                {
+                    if(bitmap != null)
+                    {
+                        // DISPOSE THE BITMAP OBJECT MANUALLY IN ORDER TO ENSURE THAT IT WAS DISPOSED PROPERLY
+                        bitmap.Dispose();
+                    }
+                }
+                
+
+                
 
 
 
@@ -148,7 +215,7 @@ namespace Eva_5._0
                 {
                     System.Windows.Application.Current.Dispatcher.Invoke(() =>
                     {
-                        System.Windows.Application.Current.MainWindow.WindowState = System.Windows.WindowState.Normal;
+                        Normalize_The_Window();
                     });
                 }
 
@@ -157,12 +224,24 @@ namespace Eva_5._0
                 file_name.Clear();
                 path_and_file_name.Clear();
 
-                return Task.FromResult(true);
+                return true;
             }
             catch
             {
-                return Task.FromResult(false);
+                return false;
             }
+        }
+
+
+
+
+
+        private static void Normalize_The_Window()
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {
+                System.Windows.Application.Current.MainWindow.WindowState = System.Windows.WindowState.Normal;
+            });
         }
 
 

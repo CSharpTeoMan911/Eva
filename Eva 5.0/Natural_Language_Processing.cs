@@ -278,7 +278,7 @@ namespace Eva_5._0
 
 
 
-            if (Sentence.IndexOf("gpt") == 0)
+            if (Sentence.IndexOf("gpt") == 0 || Sentence.IndexOf("gbt") == 0 || Sentence.IndexOf("gtb") == 0 || Sentence.IndexOf("gtp") == 0)
             {
                 await PostProcessing("chatgpt [ ChatGPT Query ]", Sentence);
             }

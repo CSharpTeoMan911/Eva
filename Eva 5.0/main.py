@@ -6,30 +6,20 @@ import socket
 import sys
 
 
-def wake_word_operation_application_socket():
+def wake_word_operation_stdout_stream():
     ################################################
-    # INTERPROCESS COMMUNICATION USING TCP SOCKETS #
+    #   INTERPROCESS COMMUNICATION USING STDOUT    #
     ################################################
-    # SOCKET CLIENT THAT IS SENDING A SIGNAL TO    #
-    # THE MAIN C# APPLICATION WHEN THE WAKE WORD   #
-    # 'wake eva' IS DETECTED IN ORDER FOR THE      #
-    # MAIN C# APPLICATION TO ACTIVATE THE ONLINE   #
-    # SPEECH RECOGNITION ENGINE                    #
+    # WAKE WORD IS SENT THROUGH THE STDOUT STREAM  #
     ################################################
 
     try:
-        try:
-            host = "127.0.0.1"
-            port = 1025
-            application_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            application_socket.connect((host, port))
-            application_socket.send("listen".encode())
-            application_socket.close()
-            application_socket.shutdown(socket.SHUT_RDWR)
-        except socket.error:
-            pass
+        print("listen")
+        sys.stdout.flush()
     except KeyboardInterrupt:
         sys.exit(0)
+
+
 
 
 def Wake_Word_Engine_Thread_Management():
@@ -59,25 +49,21 @@ def Wake_Word_Engine_Thread_Management():
             # RETRIEVE THE AUDIO WAVEFORM DATA AND PERFORM SPEECH TO TEXT CONVERSION
             if recognizer.AcceptWaveform(data):
 
-                # IF THE RECOGNIZED PHRASE CONTAINS "listen", CALL THE WAKE WORD SOCKET ON A DIFFERENT
-                # THREAD IN ORDER NOT TO HINDER THE SPEED OF THE SPEECH RECOGNITION ENGINE
-                # AND ALSO FOR THE OPERATIONS TO BE EXECUTED IN PARALLEL ON THE CPU
+                # IF THE RECOGNIZED PHRASE CONTAINS "listen", THE WAKE WORD IS PASSED
+                # TO THE PARENT PROCESS ON A DIFFERENT THREAD 
                 if "listen" in recognizer.FinalResult():
-                    thread = threading.Thread(target=wake_word_operation_application_socket)
+                    thread = threading.Thread(target=wake_word_operation_stdout_stream)
                     thread.start()
                 elif "listen" in recognizer.Result():
-                    thread = threading.Thread(target=wake_word_operation_application_socket)
+                    thread = threading.Thread(target=wake_word_operation_stdout_stream)
                     thread.start()
             else:
                 if "listen" in recognizer.PartialResult():
-                    thread = threading.Thread(target=wake_word_operation_application_socket)
+                    thread = threading.Thread(target=wake_word_operation_stdout_stream)
                     thread.start()
 
-
-
-
     except KeyboardInterrupt:
-        pass
+        sys.exit(0)
 
 
 if __name__ == '__main__':

@@ -47,7 +47,7 @@ namespace Eva_5._0
         //    COMMAND: /path/to/Eva 5.0.exe/python.exe -m pip install [ PACKAGE NAME ]
 
 
-        private static byte[] wake_word_data = Encoding.UTF8.GetBytes("listen");
+        private static string wake_word = "listen";
 
         protected static Task<bool> Start_The_Wake_Word_Engine()
         {
@@ -63,19 +63,22 @@ namespace Eva_5._0
                 System.Diagnostics.Process wake_word_process = new System.Diagnostics.Process();
                 wake_word_process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                 wake_word_process.StartInfo.FileName = Environment.CurrentDirectory + "\\python.exe";
+                wake_word_process.StartInfo.RedirectStandardOutput = true;
+                wake_word_process.StartInfo.RedirectStandardError = true;
                 wake_word_process.StartInfo.CreateNoWindow = true;
+                wake_word_process.StartInfo.UseShellExecute = false;
                 wake_word_process.StartInfo.Arguments = "main.py";
                 wake_word_process.Start();
 
                 if (Wake_Word_Detection_Initiated == false)
                 {
                     Wake_Word_Detection_Initiated = true;
-                    Wake_Word_Detector();
+                    Wake_Word_Detector(wake_word_process);
                 }
 
                 return Task.FromResult(true);
             }
-            catch 
+            catch
             {
                 return Task.FromResult(false);
             }
@@ -299,95 +302,54 @@ namespace Eva_5._0
 
 
 
-        private static void Wake_Word_Detector()
+        private static async void Wake_Word_Detector(System.Diagnostics.Process python)
         {
-            // CREATE A TCP SOCKET OBJECT FOR INTER-PROCESS COMMUNICATION BETWEEN THE "Eva 5.0.exe" AND THE PYTHON WAKE WORD ENGINE
-            System.Net.Sockets.Socket wake_word_detection_socket = new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork, System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp);
-
-
-
 
             try
             {
-
-
-                // BIND THE OS's LOOPBACK ADDRESS AND THE 1025 PORT NUMBER TO THE TCP SOCKET 
-                wake_word_detection_socket.Bind(new System.Net.IPEndPoint(System.Net.IPAddress.Any, 1025));
-
-
-
-                // SET THE TCP SOCKET TO ACTIVELY LISTEN FOR 1 CLIENT
-                wake_word_detection_socket.Listen(1);
-
-
-
                 while (MainWindowIsClosing == false)
                 {
-                    try
+                    // READ THE DATA ON THE STOUT STREAM OF THE "Python" process
+                    char[] buffer = new char[wake_word.Length];
+                    await python.StandardOutput.ReadAsync(buffer, 0, buffer.Length);
+
+
+
+                    // CONVERT THE CHAR ARRAY TO A STRING IN A MEMORY EFFICIENT MANNER
+                    StringBuilder builder = new StringBuilder();
+                    builder.Append(buffer);
+
+
+
+                    // LOCK THE "Online_Speech_Recogniser_Listening" OBJECT ON THE STACK 
+                    // IN ORDER TO BLOCK OTHER THREADS FROM MODIFYING IT
+                    //
+                    // [ BEGIN ]
+
+                    lock (Online_Speech_Recogniser_Listening)
                     {
-
-
-                        // IF A CLIENT CONNECTS, SAVE THE CLIENT IN A SOCKET OBJECT
-                        System.Net.Sockets.Socket wake_word = wake_word_detection_socket.Accept();
-
-
-
-
-                        // BUFFER THAT STORES BINARY INFORMATION OF THE WAKE WORD DETECTED BY THE CLIENT ( WAKE WORD ENGINE ) AS BYTES
-                        byte[] wake_word_detected = new byte[wake_word_data.Length];
-
-
-
-                        // RECEIVE THE BINARY INFORMATION SENT BY THE CLIENT AND STORE IT INSIDE THE BUFFER
-                        wake_word.Receive(wake_word_detected, 0, wake_word_detected.Length, System.Net.Sockets.SocketFlags.None);
-
-
-
-                        // DECODE THE BINARY INFORMATION IN UTF-8 STRING CHARACTER SET FORMAT
-                        string wake_word_detected_decoded = Encoding.UTF8.GetString(wake_word_detected);
-
-
-                        // LOCK THE "Online_Speech_Recogniser_Listening" OBJECT ON THE STACK 
-                        // IN ORDER TO BLOCK OTHER THREADS FROM MODIFYING IT
-                        //
-                        // [ BEGIN ]
-
-                        lock (Online_Speech_Recogniser_Listening)
+                        if (Online_Speech_Recogniser_Listening == "false")
                         {
-                            if(Online_Speech_Recogniser_Listening == "false")
+                            lock (Wake_Word_Detected)
                             {
-                                lock (Wake_Word_Detected)
+                                if (builder.ToString() == wake_word)
                                 {
-                                    if (wake_word_detected_decoded == "listen")
-                                    {
-                                        Wake_Word_Detected = "true";
-                                    }
+                                    Wake_Word_Detected = "true";
                                 }
                             }
                         }
-
-                        // [ END ]
-
                     }
-                    catch { }
+
+                    builder.Clear();
+
+                    // [ END ]
                 }
 
-
-                // SHUTDOWN THE SOCKET CONNECTION ON BOTH ENDS
-                wake_word_detection_socket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
-
-
-                // CLOSE THE TCP SOCKET OBJECT'S OPERATION
-                wake_word_detection_socket.Close();
-
-
-                // DISPOSE THE TCP SOCKET OBJECT FROM THE MEMORY
-                wake_word_detection_socket.Dispose();
             }
             catch { }
         }
+
+
     }
-
-
 
 }
