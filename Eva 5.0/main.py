@@ -12,7 +12,6 @@ def wake_word_operation_stdout_stream():
     ################################################
     # WAKE WORD IS SENT THROUGH THE STDOUT STREAM  #
     ################################################
-
     try:
         print("listen")
         sys.stdout.flush()
@@ -50,17 +49,14 @@ def Wake_Word_Engine_Thread_Management():
             if recognizer.AcceptWaveform(data):
 
                 # IF THE RECOGNIZED PHRASE CONTAINS "listen", THE WAKE WORD IS PASSED
-                # TO THE PARENT PROCESS ON A DIFFERENT THREAD 
+                # TO THE PARENT PROCESS ON A DIFFERENT THREAD
                 if "listen" in recognizer.FinalResult():
-                    thread = threading.Thread(target=wake_word_operation_stdout_stream)
-                    thread.start()
+                    wake_word_operation_stdout_stream()
                 elif "listen" in recognizer.Result():
-                    thread = threading.Thread(target=wake_word_operation_stdout_stream)
-                    thread.start()
+                    wake_word_operation_stdout_stream()
             else:
                 if "listen" in recognizer.PartialResult():
-                    thread = threading.Thread(target=wake_word_operation_stdout_stream)
-                    thread.start()
+                    wake_word_operation_stdout_stream()
 
     except KeyboardInterrupt:
         sys.exit(0)

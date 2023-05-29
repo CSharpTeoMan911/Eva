@@ -315,12 +315,6 @@ namespace Eva_5._0
 
 
 
-                    // CONVERT THE CHAR ARRAY TO A STRING IN A MEMORY EFFICIENT MANNER
-                    StringBuilder builder = new StringBuilder();
-                    builder.Append(buffer);
-
-
-
                     // LOCK THE "Online_Speech_Recogniser_Listening" OBJECT ON THE STACK 
                     // IN ORDER TO BLOCK OTHER THREADS FROM MODIFYING IT
                     //
@@ -332,15 +326,13 @@ namespace Eva_5._0
                         {
                             lock (Wake_Word_Detected)
                             {
-                                if (builder.ToString() == wake_word)
+                                if (new string(buffer) == wake_word)
                                 {
                                     Wake_Word_Detected = "true";
                                 }
                             }
                         }
                     }
-
-                    builder.Clear();
 
                     // [ END ]
                 }
