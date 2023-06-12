@@ -48,6 +48,7 @@ namespace Eva_5._0
 
 
         private static string wake_word = "listen";
+        private static string cancel_wake_word = "stop listening";
 
         protected static Task<bool> Start_The_Wake_Word_Engine()
         {
@@ -310,7 +311,7 @@ namespace Eva_5._0
                 while (MainWindowIsClosing == false)
                 {
                     // READ THE DATA ON THE STOUT STREAM OF THE "Python" process
-                    char[] buffer = new char[wake_word.Length];
+                    char[] buffer = new char[14];
                     await python.StandardOutput.ReadAsync(buffer, 0, buffer.Length);
 
 
@@ -322,11 +323,18 @@ namespace Eva_5._0
 
                     lock (Online_Speech_Recogniser_Listening)
                     {
-                        if (Online_Speech_Recogniser_Listening == "false")
+                        lock (Wake_Word_Detected)
                         {
-                            lock (Wake_Word_Detected)
+                            if (new string(buffer).Contains(cancel_wake_word) == true)
                             {
-                                if (new string(buffer) == wake_word)
+                                if (Online_Speech_Recogniser_Listening == "true")
+                                {
+                                    Online_Speech_Recogniser_Listening = "false";
+                                }
+                            }
+                            else if (new string(buffer).Contains(wake_word) == true)
+                            {
+                                if(Online_Speech_Recogniser_Listening == "false")
                                 {
                                     Wake_Word_Detected = "true";
                                 }

@@ -225,25 +225,13 @@ namespace Eva_5._0
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (WindowIsClosing == false)
+
+            if (Animation_Timer != null)
             {
-
-                if (Application.Current.Dispatcher.HasShutdownStarted == false)
-                {
-
-                    if (Application.Current.MainWindow != null)
-                    {
-
-                        if(Animation_Timer != null)
-                        {
-                            Animation_Timer.Dispose();
-                        }
-
-                    }
-
-                }
-
+                Animation_Timer.Dispose();
             }
+
+            WindowIsClosing = true;
         }
     }
 }
