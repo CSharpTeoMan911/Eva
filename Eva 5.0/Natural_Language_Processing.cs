@@ -277,7 +277,7 @@ namespace Eva_5._0
 
 
 
-            if (Sentence.IndexOf("gpt") == 0 || Sentence.IndexOf("gbt") == 0 || Sentence.IndexOf("gtb") == 0 || Sentence.IndexOf("gtp") == 0 || Sentence.IndexOf("gpd") == 0 || Sentence.IndexOf("gpb") == 0)
+            if (Sentence.IndexOf("gpt") == 0 || Sentence.IndexOf("gbt") == 0 || Sentence.IndexOf("gtb") == 0 || Sentence.IndexOf("gtp") == 0 || Sentence.IndexOf("gpd") == 0 || Sentence.IndexOf("gpb") == 0 || Sentence.IndexOf("gdp") == 0 || Sentence.IndexOf("gp ") == 0 || Sentence.IndexOf("gt ") == 0 || Sentence.IndexOf("check gpt") == 0 || Sentence.IndexOf("chatgpt") == 0)
             {
                 await PostProcessing("chatgpt [ ChatGPT Query ]", Sentence);
             }

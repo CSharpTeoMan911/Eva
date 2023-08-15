@@ -253,6 +253,9 @@ namespace Eva_5._0
                     A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("recycle bin cleanup", "APP = recycle bin cleanup");
 
 
+                    A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("recycle bin clean up", "APP = recycle bin cleanup");
+
+
                     A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("recycle bin cleaner", "APP = recycle bin cleanup");
 
 

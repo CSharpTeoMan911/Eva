@@ -112,7 +112,7 @@ namespace Eva_5._0
                             Windows.Media.SpeechRecognition.SpeechRecognitionResult Result = await OnlineSpeechRecognition.RecognizeAsync();
                             await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache);
 
-
+                            System.Diagnostics.Debug.WriteLine("Result: " + Result.Text);
                             switch (Result.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
                             {
                                 case true:
