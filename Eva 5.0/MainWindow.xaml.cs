@@ -86,6 +86,8 @@ namespace Eva_5._0
 
         protected static string Wake_Word_Detected = "false";
 
+        protected static string Initiated = "false";
+
         // [ END ] STATIC OBJECTS OBJECTS THAT ARE ACCESSED IN A THREAD SAFE MANNER
 
 
@@ -187,6 +189,11 @@ namespace Eva_5._0
             internal static async Task<bool> Online_Speech_Recognition_Initiation()
             {
                 return await Online_Speech_Recognition_Session_Creation_And_Initiation();
+            }
+
+            internal static async Task<bool> Online_Speech_Recognition_Error()
+            {
+                return await Online_Speech_Recognition_Error_Management(Online_Speech_Recognition_Error_Type.Mircrophone_Access_Denied);
             }
 
             internal static async Task<bool> OS_Online_Speech_Recogniser_Operation(Online_Speech_Recognition_Interface_Operation operation)
@@ -470,6 +477,10 @@ namespace Eva_5._0
 
 
                                                 case "false":
+                                                    lock(Initiated)
+                                                    {
+                                                        Initiated = "true";
+                                                    }
                                                     target_value = 1000;
                                                     Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
                                                     Online_Speech_Recognition_Timer_Display.Text = String.Empty;
@@ -975,11 +986,7 @@ namespace Eva_5._0
                                     break;
 
                                 case false:
-                                    if(App.PermisissionWindowOpen == false)
-                                    {
-                                        ErrorWindow OpenPermissionDeclinedWindow = new ErrorWindow("Mircrophone Access Denied");
-                                        OpenPermissionDeclinedWindow.Show();
-                                    }
+                                    await Online_Speech_Recognition_Mitigator.Online_Speech_Recognition_Error();
                                     break;
                             }
 
