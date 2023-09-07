@@ -1098,7 +1098,13 @@ namespace Eva_5._0
             GC.Collect(2, GCCollectionMode.Forced);
         }
 
-
-
+        private void Open_ChatGPT_Query_Window(object sender, RoutedEventArgs e)
+        {
+            if (App.ChatGPTResponseWindowOpened == false)
+            {
+                App.chatGPT_Response_Window = new ChatGPT_Response_Window();
+                App.chatGPT_Response_Window.Show();
+            }
+        }
     }
 }

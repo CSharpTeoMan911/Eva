@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Eva_5._0"
         mc:Ignorable="d"
-        Title="ChatGPT_Response_Window" Topmost="True" Height="250" Width="450" WindowStyle="None" AllowsTransparency="True" ResizeMode="NoResize" Loaded="Window_Loaded" Closing="Window_Closing" Opacity="0.95">
+        Title="ChatGPT_Response_Window" Topmost="True" Height="350" Width="450" WindowStyle="None" AllowsTransparency="True" ResizeMode="NoResize" Loaded="Window_Loaded" Closing="Window_Closing" Opacity="0.95">
 
 
     <Window.Clip>
-        <RectangleGeometry Rect="0, 0, 450, 250" RadiusX="20" RadiusY="20"/>
+        <RectangleGeometry Rect="0, 0, 450, 350" RadiusX="20" RadiusY="20"/>
     </Window.Clip>
 
     <Window.Background>
@@ -45,7 +45,7 @@
         </Grid.ColumnDefinitions>
 
 
-        <Image Grid.RowSpan="4" Grid.ColumnSpan="9" Width="220" Height="150" VerticalAlignment="Center" HorizontalAlignment="Center" Source="Chat_Gpt_Logo.bmp"/>
+        <Image Grid.RowSpan="4" Grid.ColumnSpan="9" Width="200" Height="130" VerticalAlignment="Center" HorizontalAlignment="Center" Source="Chat_Gpt_Logo.bmp"/>
 
 
         <Rectangle Grid.RowSpan="2" Grid.ColumnSpan="9" Fill="Transparent" MouseDown="Move_The_Window"/>
@@ -82,16 +82,16 @@
             </Button>
         </StackPanel>
 
-        <TextBox x:Name="ResponseTextBox" IsReadOnly="True" Width="430" Height="146" TextWrapping="Wrap" Margin="10" FontSize="16" Grid.Row="3" Grid.RowSpan="8" Grid.ColumnSpan="9" VerticalScrollBarVisibility="Auto">
+        <TextBox x:Name="ResponseTextBox" IsReadOnly="True" Width="430" Height="166" TextWrapping="Wrap" Margin="10" FontSize="16" Grid.Row="1" Grid.RowSpan="8" Grid.ColumnSpan="9" VerticalScrollBarVisibility="Auto">
 
             <TextBox.Clip>
-                <RectangleGeometry Rect="0, 0, 430, 146" RadiusX="10" RadiusY="10"/>
+                <RectangleGeometry Rect="0, 0, 430, 166" RadiusX="10" RadiusY="10"/>
             </TextBox.Clip>
             
             <TextBox.Foreground>
                 <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                    <GradientStop Color="#FF7BBFD8" x:Name="ResponseTextBoxOffset" Offset="1"/>
-                    <GradientStop Color="#FF0A7AE6"/>
+                    <GradientStop Color="#FF0BD2A0" x:Name="ResponseTextBoxOffset" Offset="1"/>
+                    <GradientStop Color="#FF0AE6E1"/>
                 </LinearGradientBrush>
             </TextBox.Foreground>
 
@@ -103,13 +103,13 @@
             </TextBox.Background>
         </TextBox>
 
-        <Rectangle x:Name="Loading_Background" Height="100" Width="0" Margin="0"  Grid.Row="3" Grid.RowSpan="8" Grid.ColumnSpan="9" Fill="#FF0A0A0A" Opacity="0.7">
+        <Rectangle x:Name="Loading_Background" Height="166" Width="0" Margin="0" Grid.Row="1" Grid.RowSpan="8" Grid.ColumnSpan="9"  Fill="#FF0A0A0A" Opacity="0.7">
             <Rectangle.Clip>
-                <RectangleGeometry Rect="0, 0, 430, 146" RadiusX="10" RadiusY="10"/>
+                <RectangleGeometry Rect="0, 0, 430, 166" RadiusX="10" RadiusY="10"/>
             </Rectangle.Clip>
         </Rectangle>
 
-        <TextBlock x:Name="Loading_TextBlock" RenderTransformOrigin="0.5,0.5" Margin="10" Height="0" Width="0" Opacity="0.7" Grid.Row="2" Grid.RowSpan="8" Grid.ColumnSpan="9" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="60" FontFamily="Segoe MDL2 Assets" Text="&#xE117;">
+        <TextBlock x:Name="Loading_TextBlock" RenderTransformOrigin="0.5,0.5" Margin="10" Height="0" Width="0" Opacity="0.7" Grid.Row="1" Grid.RowSpan="8" Grid.ColumnSpan="9" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="60" FontFamily="Segoe MDL2 Assets" Text="&#xE117;">
             <TextBlock.Foreground>
                 <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                     <GradientStop Color="#FF054E3B" x:Name="Loading_TextBlockOffset" Offset="1"/>
@@ -117,6 +117,40 @@
                 </LinearGradientBrush>
             </TextBlock.Foreground>
         </TextBlock>
+
+        <StackPanel Grid.Row="7" Grid.RowSpan="2" Grid.ColumnSpan="9" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBox x:Name="InputTextBox" Width="370" Height="30" Margin="0,10,0,0" FontSize="16" >
+
+                <TextBox.Clip>
+                    <RectangleGeometry Rect="0, 0, 370, 30" RadiusX="5" RadiusY="5"/>
+                </TextBox.Clip>
+
+                <TextBox.Foreground>
+                    <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                        <GradientStop Color="#FF0BD2A0" Offset="1"/>
+                        <GradientStop Color="#FF0AE6E1"/>
+                    </LinearGradientBrush>
+                </TextBox.Foreground>
+
+                <TextBox.Background>
+                    <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                        <GradientStop Color="#FF173827" Offset="1"/>
+                        <GradientStop Color="#FF074C4E"/>
+                    </LinearGradientBrush>
+                </TextBox.Background>
+
+            </TextBox>
+
+            <Button Style="{StaticResource SendGptQueryButtonStyle}" HorizontalAlignment="Center" FontSize="30" FontFamily="Segoe MDL2 Assets" Content="&#xE725;" VerticalAlignment="Center" Margin="10,10,0,0" Click="Send_Manual_GPT_Query">
+                <Button.Foreground>
+                    <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                        <GradientStop Color="#FF097D5E" Offset="1"/>
+                        <GradientStop Color="#FF0FFDCC"/>
+                    </LinearGradientBrush>
+                </Button.Foreground>
+            </Button>
+            
+        </StackPanel>
 
     </Grid>
 </Window>

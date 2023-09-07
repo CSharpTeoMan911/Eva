@@ -42,6 +42,8 @@ namespace Eva_5._0
 
         public static bool Application_Error_Shutdown;
 
+        public static ChatGPT_Response_Window chatGPT_Response_Window;
+
 
         private sealed class Wake_Word_Engine_Mitigator : Wake_Word_Engine
         {

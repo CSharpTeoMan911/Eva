@@ -71,8 +71,6 @@ namespace Eva_5._0
          * 
          */
 
-        private static ChatGPT_Response_Window chatGPT_Response_Window;
-
         private static System.Media.SoundPlayer AppExecutionSoundEffect = new System.Media.SoundPlayer("App execution.wav");
         private static System.Media.SoundPlayer AppTerminationSoundEffect = new System.Media.SoundPlayer("App closing.wav");
         private static System.Media.SoundPlayer ScreenshotExecutionSoundEffect = new System.Media.SoundPlayer("Screenshot_Sound_Effect.wav");
@@ -453,11 +451,11 @@ namespace Eva_5._0
                 {
                     if (App.ChatGPTResponseWindowOpened == false)
                     {
-                        chatGPT_Response_Window = new ChatGPT_Response_Window();
-                        chatGPT_Response_Window.Show();
+                        App.chatGPT_Response_Window = new ChatGPT_Response_Window();
+                        App.chatGPT_Response_Window.Show();
                     }
 
-                    await chatGPT_Response_Window.Update_Conversation(input);
+                    await App.chatGPT_Response_Window.Update_Conversation(input);
                 }
                 catch(Exception E)
                 {

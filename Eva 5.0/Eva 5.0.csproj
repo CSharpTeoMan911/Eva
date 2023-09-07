@@ -95,6 +95,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Speech" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -248,6 +249,7 @@
     <Content Include="App closing.wav" />
     <Content Include="App execution.wav" />
     <Resource Include="Chat_Gpt_Logo.bmp" />
+    <Resource Include="Chatgpt-logo.png" />
     <Content Include="Chat_GPT_Notification.wav" />
     <Content Include="main.py" />
     <Content Include="Privacy statement declined or mic not available.wav" />

@@ -215,8 +215,14 @@
         </StackPanel>
 
 
+        <Button Focusable="False" x:Name="OpenGptQueryWindowButton" Width="{Binding ElementName=OpenTimerMenuButton, Path=ActualWidth}" Height="{Binding ElementName=OpenTimerMenuButton, Path=ActualHeight}" BorderBrush="Transparent" Background="Transparent" Margin="5,0,0,5" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1" FontSize="18" Style="{StaticResource MyButtonStyle}" Click="Open_ChatGPT_Query_Window">
+            <Button.Content>
+                <Image Source="chatgpt-logo.png" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Button.Content>
+        </Button>
 
-        <Button Focusable="False" x:Name="OpenSettingsMenuButton" Click="OpenSettingsWindow" BorderBrush="Transparent" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,0,0,0" Grid.Row="1" FontFamily="Segoe MDL2 Assets" FontSize="18" Content="&#xE115;" Style="{StaticResource MyButtonStyle}">
+
+        <Button Focusable="False" x:Name="OpenSettingsMenuButton" Click="OpenSettingsWindow" BorderBrush="Transparent" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,0,0,0" Grid.Row="2" FontFamily="Segoe MDL2 Assets" FontSize="18" Content="&#xE115;" Style="{StaticResource MyButtonStyle}">
             <Button.Foreground>
                 <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                     <GradientStop Color="#FF7BBFD8" x:Name="OpenSettingsMenuButtonOffset" Offset="1"/>
@@ -226,7 +232,7 @@
         </Button>
 
 
-        <Button Focusable="False" x:Name="OpenTimerMenuButton" Click="OpenTimerWindow" BorderBrush="Transparent" Background="Transparent" Margin="5,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="2" FontFamily="Segoe MDL2 Assets" FontSize="18" Content="&#xED5A;" Style="{StaticResource MyButtonStyle}">
+        <Button Focusable="False" x:Name="OpenTimerMenuButton" Click="OpenTimerWindow" BorderBrush="Transparent" Background="Transparent" Margin="5,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="3" FontFamily="Segoe MDL2 Assets" FontSize="18" Content="&#xED5A;" Style="{StaticResource MyButtonStyle}">
             <Button.Foreground>
                 <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                     <GradientStop Color="#FFD67A71" x:Name="OpenTimerMenuButtonOffset" Offset="1"/>
@@ -234,6 +240,7 @@
                 </LinearGradientBrush>
             </Button.Foreground>
         </Button>
+
 
 
         <Button Focusable="False" x:Name="SpeechRecognitionButton" Click="StartOrStopSpeechRecognition" Grid.Column="2" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center" BorderBrush="Transparent" Background="Transparent" FontFamily="Segoe MDL2 Assets" FontSize="22" Content="&#xF781;" Style="{StaticResource MyButtonStyle}">

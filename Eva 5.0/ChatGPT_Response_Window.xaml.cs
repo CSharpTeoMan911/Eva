@@ -190,39 +190,42 @@ namespace Eva_5._0
 
                         Application.Current.Dispatcher.Invoke(() =>
                         {
-                            if (result.Item1 == typeof(string))
+                            if(WindowIsClosing == false)
                             {
-                                user_input.Clear();
-                                chat_gpt_input.Clear();
-
-                                user_input.Append("User: ");
-                                user_input.Append(input);
-                                user_input.Append("\n\n");
-
-
-                                chat_gpt_input.Append("ChatGPT: ");
-                                chat_gpt_input.Append(result.Item2);
-                                chat_gpt_input.Append("\n\n");
-
-                                ResponseTextBox.Text += user_input.ToString();
-                                ResponseTextBox.Text += chat_gpt_input.ToString();
-
-                                user_input.Clear();
-                                chat_gpt_input.Clear();
-                            }
-                            else
-                            {
-                                if (App.PermisissionWindowOpen == false)
+                                if (result.Item1 == typeof(string))
                                 {
-                                    if (result.Item2 == "API authentification error")
+                                    user_input.Clear();
+                                    chat_gpt_input.Clear();
+
+                                    user_input.Append("User: ");
+                                    user_input.Append(input);
+                                    user_input.Append("\n\n");
+
+
+                                    chat_gpt_input.Append("ChatGPT: ");
+                                    chat_gpt_input.Append(result.Item2);
+                                    chat_gpt_input.Append("\n\n");
+
+                                    ResponseTextBox.Text += user_input.ToString();
+                                    ResponseTextBox.Text += chat_gpt_input.ToString();
+
+                                    user_input.Clear();
+                                    chat_gpt_input.Clear();
+                                }
+                                else
+                                {
+                                    if (App.PermisissionWindowOpen == false)
                                     {
-                                        ErrorWindow errorWindow = new ErrorWindow("Invalid ChatGPT API key");
-                                        errorWindow.Show();
-                                    }
-                                    else
-                                    {
-                                        ErrorWindow errorWindow = new ErrorWindow("ChatGPT error");
-                                        errorWindow.Show();
+                                        if (result.Item2 == "API authentification error")
+                                        {
+                                            ErrorWindow errorWindow = new ErrorWindow("Invalid ChatGPT API key");
+                                            errorWindow.Show();
+                                        }
+                                        else
+                                        {
+                                            ErrorWindow errorWindow = new ErrorWindow("ChatGPT error");
+                                            errorWindow.Show();
+                                        }
                                     }
                                 }
                             }
@@ -232,7 +235,10 @@ namespace Eva_5._0
                         {
                             if (System.IO.File.Exists(@"Chat_GPT_Notification.wav"))
                             {
-                                ChatGPTNotificationSoundEffect.Play();
+                                if(WindowIsClosing == false)
+                                {
+                                    ChatGPTNotificationSoundEffect.Play();
+                                }
                             }
                         }
 
@@ -308,6 +314,24 @@ namespace Eva_5._0
             }
 
             return Task.FromResult(true);
+        }
+
+
+        private sealed class Gpt_Query_Mitigator:Proc
+        {
+            public static async Task<bool> Initiate_Gpt_Proc(string query)
+            {
+                bool result = false;
+                result = await ProcInitialisation<string>("ChatGPT Process", String.Empty, query);
+                return result;
+            }
+        }
+
+
+        private async void Send_Manual_GPT_Query(object sender, RoutedEventArgs e)
+        {
+            await Gpt_Query_Mitigator.Initiate_Gpt_Proc(InputTextBox.Text);
+            InputTextBox.Text = String.Empty;
         }
     }
 }
