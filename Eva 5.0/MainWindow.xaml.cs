@@ -29,7 +29,7 @@ namespace Eva_5._0
     {
         private static RotateTransform Rotate = new RotateTransform();
 
-        private static System.Collections.Generic.List<string> Online_Speech_Recognition_Timeout_Timer_UI_Intervals = new System.Collections.Generic.List<string>() { "10", "9", "8", "7", "6", "5", "4", "3", "2", "1", "0" };
+        private static System.Collections.Generic.List<string> Online_Speech_Recognition_Timeout_Timer_UI_Intervals = new System.Collections.Generic.List<string>() { "20", "19", "18", "17", "16", "15", "14", "13", "12", "11", "10", "9", "8", "7", "6", "5", "4", "3", "2", "1", "0" };
 
         private short Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index;
 
@@ -44,7 +44,7 @@ namespace Eva_5._0
 
         protected static DateTime? Online_Speech_Recogniser_Activation_Delay_Detector = null;
 
-        private static double Online_Speech_Recogniser_Activation_Delay = 2.3;
+        private static double Online_Speech_Recogniser_Activation_Delay = 2.5;
 
         // END
 
@@ -424,7 +424,7 @@ namespace Eva_5._0
 
                                                     if(online_speech_recognition_timeout != null)
                                                     {
-                                                        switch (((TimeSpan)(DateTime.Now - online_speech_recognition_timeout)).TotalMilliseconds >= 9000)
+                                                        switch (((TimeSpan)(DateTime.Now - online_speech_recognition_timeout)).TotalMilliseconds >= 20000)
                                                         {
                                                             case true:
                                                                 Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
@@ -448,7 +448,7 @@ namespace Eva_5._0
 
                                                                 if (((TimeSpan)(DateTime.Now - online_speech_recognition_timeout)).TotalMilliseconds >= target_value - 300)
                                                                 {
-                                                                    if (target_value <= 10000)
+                                                                    if (target_value <= 20000)
                                                                     {
                                                                         target_value += 1000;
                                                                         Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index++;
