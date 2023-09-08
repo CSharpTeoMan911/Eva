@@ -325,8 +325,9 @@ namespace Eva_5._0
 
         private async void Send_Manual_GPT_Query(object sender, RoutedEventArgs e)
         {
-            await Update_Conversation(InputTextBox.Text);
+            string input = InputTextBox.Text;
             InputTextBox.Text = String.Empty;
+            await Update_Conversation(input);
         }
     }
 }

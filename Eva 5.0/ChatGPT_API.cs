@@ -19,7 +19,6 @@ namespace Eva_5._0
             public string model;
             public messages[] messages;
             public double temperature = 0.5;
-            public int max_tokens = 700;
         }
 
 
@@ -71,7 +70,6 @@ namespace Eva_5._0
                 request.model = "gpt-3.5-turbo";
                 request.messages = new[] { messages };
                 request.temperature = 0.5;
-                request.max_tokens = 700;
 
 
 
