@@ -310,39 +310,45 @@ namespace Eva_5._0
             {
                 while (MainWindowIsClosing == false)
                 {
-                    // READ THE DATA ON THE STOUT STREAM OF THE "Python" process
-                    char[] buffer = new char[14];
-                    await python.StandardOutput.ReadAsync(buffer, 0, buffer.Length);
-
-
-
-                    // LOCK THE "Online_Speech_Recogniser_Listening" OBJECT ON THE STACK 
-                    // IN ORDER TO BLOCK OTHER THREADS FROM MODIFYING IT
-                    //
-                    // [ BEGIN ]
-
-                    lock (Online_Speech_Recogniser_Listening)
+                    if (App.Application_Error_Shutdown == false)
                     {
-                        lock (Wake_Word_Detected)
+
+                        if(python.HasExited == false)
                         {
-                            if (new string(buffer).Contains(cancel_wake_word) == true)
+                            // READ THE DATA ON THE STOUT STREAM OF THE "Python" process
+                            char[] buffer = new char[14];
+                            await python.StandardOutput.ReadAsync(buffer, 0, buffer.Length);
+
+
+                            // LOCK THE "Online_Speech_Recogniser_Listening" OBJECT ON THE STACK 
+                            // IN ORDER TO BLOCK OTHER THREADS FROM MODIFYING IT
+                            //
+                            // [ BEGIN ]
+
+                            lock (Online_Speech_Recogniser_Listening)
                             {
-                                if (Online_Speech_Recogniser_Listening == "true")
+                                lock (Wake_Word_Detected)
                                 {
-                                    Online_Speech_Recogniser_Listening = "false";
+                                    if (new string(buffer).Contains(cancel_wake_word) == true)
+                                    {
+                                        if (Online_Speech_Recogniser_Listening == "true")
+                                        {
+                                            Online_Speech_Recogniser_Listening = "false";
+                                        }
+                                    }
+                                    else if (new string(buffer).Contains(wake_word) == true)
+                                    {
+                                        if (Online_Speech_Recogniser_Listening == "false")
+                                        {
+                                            Wake_Word_Detected = "true";
+                                        }
+                                    }
                                 }
                             }
-                            else if (new string(buffer).Contains(wake_word) == true)
-                            {
-                                if(Online_Speech_Recogniser_Listening == "false")
-                                {
-                                    Wake_Word_Detected = "true";
-                                }
-                            }
+
+                            // [ END ]
                         }
                     }
-
-                    // [ END ]
                 }
 
             }

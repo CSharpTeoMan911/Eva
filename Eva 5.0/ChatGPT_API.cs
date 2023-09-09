@@ -40,7 +40,7 @@ namespace Eva_5._0
             string result = null;
             Type return_type = null;
 
-
+            // 'HttpClient' OBJECT NEEDED TO SEND HTTP REQUESTS TO THE OPENAI SERVER.
             System.Net.Http.HttpClient api_client = new System.Net.Http.HttpClient();
 
             try
