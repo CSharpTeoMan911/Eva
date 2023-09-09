@@ -151,7 +151,7 @@ namespace Eva_5._0
         }
 
 
-       
+
         protected enum Online_Speech_Recognition_Interface_Operation
         {
             Online_Speech_Recognition_Interface_Clear_Cache,
@@ -186,14 +186,14 @@ namespace Eva_5._0
 
         private sealed class Online_Speech_Recognition_Mitigator : Online_Speech_Recognition
         {
-            internal static void Online_Speech_Recognition_Initiation()
+            internal static async Task<bool> Online_Speech_Recognition_Initiation()
             {
-                Online_Speech_Recognition_Session_Creation_And_Initiation();
+                return await Online_Speech_Recognition_Session_Creation_And_Initiation();
             }
 
-            internal static void Microphone_Access_Error()
+            internal static async Task<bool> Online_Speech_Recognition_Error()
             {
-                Online_Speech_Recognition_Error_Management(Online_Speech_Recognition_Error_Type.Mircrophone_Access_Denied);
+                return await Online_Speech_Recognition_Error_Management(Online_Speech_Recognition_Error_Type.Mircrophone_Access_Denied);
             }
 
             internal static async Task<bool> OS_Online_Speech_Recogniser_Operation(Online_Speech_Recognition_Interface_Operation operation)
@@ -287,7 +287,7 @@ namespace Eva_5._0
 
 
                             // COMPONENT THAT MANIPULATES THE SPEECH RECOGNITION ENABLE/DISABLE BUTTON'S TIMEOUT
-                            if(Button_Timeout > 0)
+                            if (Button_Timeout > 0)
                             {
                                 Button_Timeout -= 10;
                             }
@@ -296,7 +296,7 @@ namespace Eva_5._0
 
                             // METHODS AND PARAMETERS THAT MUST BE EXECUTED AND/OR MANIPULATED ON THE UI THREAD,
                             // ARE MOVED ON THE UI THREAD VIA THE "Application.Current.Dispatcher.Invoke()" METHOD
-                            Application.Current.Dispatcher.Invoke(async() =>
+                            Application.Current.Dispatcher.Invoke(async () =>
                             {
                                 switch (Application.Current.MainWindow == null)
                                 {
@@ -350,7 +350,7 @@ namespace Eva_5._0
                                         {
                                             try
                                             {
-                                                if(AnimationAndFunctionalityTimer != null)
+                                                if (AnimationAndFunctionalityTimer != null)
                                                 {
                                                     AnimationAndFunctionalityTimer.Stop();
                                                     this.Hide();
@@ -361,9 +361,9 @@ namespace Eva_5._0
 
                                         // IF THE APPLICATION'S WINDOW IS IN A NORMAL STATE, SET THE VARIABLE THAT DISPLAYS
                                         // IF THE WINDOW STATE STATUS IS MINIMISED AS "false"
-                                        if(Application.Current.MainWindow.WindowState == WindowState.Normal)
+                                        if (Application.Current.MainWindow.WindowState == WindowState.Normal)
                                         {
-                                            lock(Window_Minimised)
+                                            lock (Window_Minimised)
                                             {
                                                 Window_Minimised = "false";
                                             }
@@ -377,17 +377,24 @@ namespace Eva_5._0
                                                 lock (Online_Speech_Recogniser_Disabled)
                                                 {
                                                     // IF THE ONLINE SPEECH RECOGNITION ENGINE IS NOT DISABLED
-                                                    if(Online_Speech_Recogniser_Disabled == "false")
+                                                    if (Online_Speech_Recogniser_Disabled == "false")
                                                     {
-                                                        async void Online_Speech_Recognition_Initiator()
+                                                        // INITIATE ON A DIFFERENT CPU THREAD THE SET OF TASKS. THE TASKS WILL BE SYNCHRONISED ON THIS THREAD,
+                                                        // MENING THAT THE 'await' KEYWORD WILL CONTROL THE 'ParallelProcessing' THREAD, AND NOT THREADS
+                                                        // WITHIN THE THREADPOOL. 
+                                                        System.Threading.Thread ParallelProcessing = new System.Threading.Thread(async () =>
                                                         {
-                                                            // INITIATE THE ONLINE SPEECH RECOGNITION ENGINE
+                                                            // CALCULATE THE ACTIVATION DELAY TO BE SET FOR THE ONLINE SPEECH RECOGNITION ENGINE
+                                                            // AND INITIATE THE ONLINE SPEECH RECOGNITION ENGINE.
                                                             if (await Online_Speech_Recogniser_Delay_Calculator() == true)
                                                             {
-                                                                Online_Speech_Recognition_Mitigator.Online_Speech_Recognition_Initiation();
+                                                                await Online_Speech_Recognition_Mitigator.Online_Speech_Recognition_Initiation();
                                                             }
-                                                        }
-                                                        Online_Speech_Recognition_Initiator();
+                                                        });
+                                                        ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
+                                                        ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
+                                                        ParallelProcessing.IsBackground = false;
+                                                        ParallelProcessing.Start();
                                                     }
                                                 }
                                             }
@@ -397,7 +404,7 @@ namespace Eva_5._0
                                         }
 
 
-                                        lock(Online_Speech_Recogniser_Listening)
+                                        lock (Online_Speech_Recogniser_Listening)
                                         {
 
                                             switch (Online_Speech_Recogniser_Listening)
@@ -406,7 +413,7 @@ namespace Eva_5._0
                                                 case "true":
 
 
-                                                    lock(Online_Speech_Recogniser_Disabled)
+                                                    lock (Online_Speech_Recogniser_Disabled)
                                                     {
                                                         // IF THE ONLINE SPEECH RECOGNITION ENGINE IS DISABLED OR THE WINDOW IS MINIMISED,
                                                         // MAKE THE ONLINE SPEECH RECOGNITION ENGINE STOP TAKING INPUT
@@ -439,10 +446,10 @@ namespace Eva_5._0
                                                                     // IF THE TIME IN WHICH THE ONLINE SPEECH RECOGNITION ENGINE WAS LOCKED IS GREATER
                                                                     // THAN 4 SECONDS, STOP THE ONLINE SPEECH RECOGNITION ENGINE FROM TAKING INPUT
                                                                     // AND STOP THE ONLINE SPEECH RECOGNITION ENGINE WINDOWS PROCESS
-                                                                    if(online_speech_recogniser_lock_state_time_elapsed.ElapsedMilliseconds > 4000)
+                                                                    if (online_speech_recogniser_lock_state_time_elapsed.ElapsedMilliseconds > 4000)
                                                                     {
                                                                         Online_Speech_Recogniser_Listening = "false";
-                                                                        Task.Run(async() =>
+                                                                        Task.Run(async () =>
                                                                         {
                                                                             await Online_Speech_Recognition_Mitigator.OS_Online_Speech_Recogniser_Operation(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
                                                                         });
@@ -461,7 +468,7 @@ namespace Eva_5._0
                                                     }
 
                                                     // IF THE TIMEOUT FOR THE ONLINE SPEECH RECOGNITION ENGINE SPEECH TO TEXT OPERATION IS NOT NULL
-                                                    if(online_speech_recognition_timeout != null)
+                                                    if (online_speech_recognition_timeout != null)
                                                     {
                                                         switch (((TimeSpan)(DateTime.Now - online_speech_recognition_timeout)).TotalMilliseconds >= 20000)
                                                         {
@@ -525,7 +532,7 @@ namespace Eva_5._0
                                                 // RESET THE GUI TIMEOUT INDICATOR, LOCK STATE TIMERS, AND TARGET
                                                 // VALUE TO THEIR DEFAULT VALUES.
                                                 case "false":
-                                                    lock(Initiated)
+                                                    lock (Initiated)
                                                     {
                                                         Initiated = "true";
                                                     }
@@ -604,7 +611,7 @@ namespace Eva_5._0
                                                 break;
                                         }
 
-                                        lock(BeginExecutionAnimation)
+                                        lock (BeginExecutionAnimation)
                                         {
                                             switch (BeginExecutionAnimation == "true")
                                             {
@@ -916,8 +923,6 @@ namespace Eva_5._0
             }
         }
 
-        // WHEN THE MAIN WINDOW IS CLOSING,THE FUNCTIONALITY TIMER AND WAKE WORD ENGINE RELATED
-        // RESOURCES ARE FREED FROM THE APPLICATION'S MEMORY
         private async void MainWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             MainWindowIsClosing = true;
@@ -946,8 +951,6 @@ namespace Eva_5._0
         }
 
 
-        // METHOD THAT MOVES THE APPLICATION'S WINDOW AT THE CURRENT CURSOR LOCATION
-        // WHEN THE MOUSE LEFT BUTTON IS PRESSED AND THE WINDOW'S HANDLE IS DRAGGED
         private void MoveTheWindow(object sender, MouseButtonEventArgs e)
         {
             if (MainWindowIsClosing == false)
@@ -968,7 +971,6 @@ namespace Eva_5._0
             }
         }
 
-        // METHOD THAT MINIMSES THE CURRENT WINDOW 
         private void MinimiseTheMainWindow(object sender, RoutedEventArgs e)
         {
             if (MainWindowIsClosing == false)
@@ -982,7 +984,7 @@ namespace Eva_5._0
 
                         Application.Current.MainWindow.WindowState = WindowState.Minimized;
 
-                        lock(Window_Minimised)
+                        lock (Window_Minimised)
                         {
                             Window_Minimised = "true";
                         }
@@ -994,7 +996,6 @@ namespace Eva_5._0
             }
         }
 
-        // METHOD THAT CLOSES THE APPLICATION WINDOW 
         private async void CloseTheApplication(object sender, RoutedEventArgs e)
         {
             if (MainWindowIsClosing == false)
@@ -1010,46 +1011,35 @@ namespace Eva_5._0
             }
         }
 
-
-        // METHOD THAT STOPS OR STARTS THE WAKE WORD ENGINE
         private async void StartOrStopSpeechRecognition(object sender, RoutedEventArgs e)
         {
-            // IF THE BUTTON TIMEOUT IS ZERO
+
             if (Button_Timeout == 0)
             {
                 Button_Timeout = 400;
 
-                // IF THE MAIN WINDOW IS OPENED
                 if (MainWindowIsClosing == false)
                 {
-                    // IF THE SHUTDOWN OF THE APPLICATION'S GUI THREAD DISPATCHER IS INITIATED
+
                     if (Application.Current.Dispatcher.HasShutdownStarted == false)
                     {
 
-                        // IF THE MAIN WINDOW IS NOT NULL
                         if (Application.Current.MainWindow != null)
                         {
-                            // CHECK IF THE APPLICATION CAN ACCESS THE MICROPHONE
                             bool Microphone_Available = await Microphone_Permissions_Mitigator.Check_Microphone_Availability();
 
                             switch (Microphone_Available)
                             {
-
-                                // IF THE APPLICATION CAN ACCESS THE MICROPHONE, START OR STOP THE WAKE WORD ENGINE
                                 case true:
                                     OnOff++;
 
-                                    // INITIATE THE PROCESS ON A SEPARATE CPU THREAD
                                     ParallelProcessing = new System.Threading.Thread(async () =>
                                     {
                                         switch (OnOff)
                                         {
-                                            // IF THE WAKE WORD ENGINE IS SET TO BE STARTED,
-                                            // CHANGE THE IMAGE OF THE MICROPHONE BUTTON
-                                            // AND START THE WAKE WORD ENGINE
                                             case 1:
 
-                                                lock(Online_Speech_Recogniser_Disabled)
+                                                lock (Online_Speech_Recogniser_Disabled)
                                                 {
                                                     Online_Speech_Recogniser_Disabled = "false";
                                                 }
@@ -1063,9 +1053,7 @@ namespace Eva_5._0
                                                 break;
 
 
-                                            // IF THE WAKE WORD ENGINE IS SET TO BE STOPPED,
-                                            // CHANGE THE IMAGE OF THE MICROPHONE BUTTON
-                                            // AND STOP THE WAKE WORD ENGINE
+
                                             case 2:
 
                                                 lock (Online_Speech_Recogniser_Disabled)
@@ -1089,13 +1077,8 @@ namespace Eva_5._0
                                     ParallelProcessing.Start();
                                     break;
 
-
-                                // IF THE MICROPHONE IS NOT AVAILABLE, THIS MEANS THAT EITHER THE
-                                // DEVICE DOES NOT HAVE A MICROPHONE, THE MICROPHONE IS NOT
-                                // AVAILABLE DUE TO SOME DRIVER ISSUES, OR THE APPLICATION
-                                // DOES NOT HAVE ACCESS TO ACCESS THE MIROPHONE.
                                 case false:
-                                    Online_Speech_Recognition_Mitigator.Microphone_Access_Error();
+                                    await Online_Speech_Recognition_Mitigator.Online_Speech_Recognition_Error();
                                     break;
                             }
 
@@ -1110,7 +1093,7 @@ namespace Eva_5._0
         }
 
 
-        // METHOD THAT OPENS THE SETTINGS WINDOW
+
         private void OpenSettingsWindow(object sender, RoutedEventArgs e)
         {
             if (MainWindowIsClosing == false)
@@ -1138,7 +1121,7 @@ namespace Eva_5._0
         }
 
 
-        // METHOD THAT OPENS THE TIMER WINDOW
+
         private void OpenTimerWindow(object sender, RoutedEventArgs e)
         {
             if (MainWindowIsClosing == false)
@@ -1167,16 +1150,6 @@ namespace Eva_5._0
 
         }
 
-        // METHOD THAT OPENS THE CHATGPT APPLET WINDOW
-        private void Open_ChatGPT_Query_Window(object sender, RoutedEventArgs e)
-        {
-            if (App.ChatGPTResponseWindowOpened == false)
-            {
-                App.chatGPT_Response_Window = new ChatGPT_Response_Window();
-                App.chatGPT_Response_Window.Show();
-            }
-        }
-
 
         protected static Task<bool> Online_Speech_Recogniser_Delay_Calculator()
         {
@@ -1184,7 +1157,7 @@ namespace Eva_5._0
             // SERVERS ARE THROWING DROPPING REQUESTS THAT ARE MADE IF
             // THE NUMBER OF REQUESTS MADE EXCEEDS A CERTAIN LIMIT.
             //
-            // THIS DISCOVERY WAS MADE BY OBSERVING A GEOMETRICAL PATTERN
+            // THIS DISCOVERY WAS MADE BY OBSERVING A GEOMETRICAL
             // RELATED TO THE FACT THAT, IF REQUESTS ARE MADE ONE
             // AFTER ANOTHER, THE 5th REQUEST IS THE ONE THAT WILL
             // FAIL, AND AFTERWARDS IF CONTINOUS REQUESTS ARE MADE
@@ -1194,7 +1167,7 @@ namespace Eva_5._0
             // THIS BEHAVIOUR IS NORMAL IN ALL ONLINE SPEECH RECOGNITION
             // ENGINES BECAUSE ALL OF THEM HAVE A REQUEST LIMIT THAT IS
             // SET.
-            
+
 
             if (Online_Speech_Recogniser_Activation_Delay_Detector == null)
             {
@@ -1216,7 +1189,7 @@ namespace Eva_5._0
         {
             System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
 
-            Task.Run(async() =>
+            Task.Run(async () =>
             {
                 await Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
             });
@@ -1224,5 +1197,13 @@ namespace Eva_5._0
             GC.Collect(2, GCCollectionMode.Forced);
         }
 
+        private void Open_ChatGPT_Query_Window(object sender, RoutedEventArgs e)
+        {
+            if (App.ChatGPTResponseWindowOpened == false)
+            {
+                App.chatGPT_Response_Window = new ChatGPT_Response_Window();
+                App.chatGPT_Response_Window.Show();
+            }
+        }
     }
 }
