@@ -128,8 +128,6 @@ namespace Eva_5._0
         ///  Gradient Arithmetic For Neon Glow Chromatic Effect
         /// </summary>
 
-        protected static bool Wake_Word_Detection_Initiated;
-
         protected static bool MainWindowIsClosing;
 
         private bool Colour_Switch;
@@ -186,14 +184,14 @@ namespace Eva_5._0
 
         private sealed class Online_Speech_Recognition_Mitigator : Online_Speech_Recognition
         {
-            internal static async Task<bool> Online_Speech_Recognition_Initiation()
+            internal static void Online_Speech_Recognition_Initiation()
             {
-                return await Online_Speech_Recognition_Session_Creation_And_Initiation();
+                Online_Speech_Recognition_Session_Creation_And_Initiation();
             }
 
-            internal static async Task<bool> Online_Speech_Recognition_Error()
+            internal static void Online_Speech_Recognition_Error()
             {
-                return await Online_Speech_Recognition_Error_Management(Online_Speech_Recognition_Error_Type.Mircrophone_Access_Denied);
+                Online_Speech_Recognition_Error_Management(Online_Speech_Recognition_Error_Type.Mircrophone_Access_Denied);
             }
 
             internal static async Task<bool> OS_Online_Speech_Recogniser_Operation(Online_Speech_Recognition_Interface_Operation operation)
@@ -388,7 +386,7 @@ namespace Eva_5._0
                                                             // AND INITIATE THE ONLINE SPEECH RECOGNITION ENGINE.
                                                             if (await Online_Speech_Recogniser_Delay_Calculator() == true)
                                                             {
-                                                                await Online_Speech_Recognition_Mitigator.Online_Speech_Recognition_Initiation();
+                                                                Online_Speech_Recognition_Mitigator.Online_Speech_Recognition_Initiation();
                                                             }
                                                         });
                                                         ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
@@ -449,10 +447,11 @@ namespace Eva_5._0
                                                                     if (online_speech_recogniser_lock_state_time_elapsed.ElapsedMilliseconds > 4000)
                                                                     {
                                                                         Online_Speech_Recogniser_Listening = "false";
-                                                                        Task.Run(async () =>
+                                                                        async void Shutdown()
                                                                         {
                                                                             await Online_Speech_Recognition_Mitigator.OS_Online_Speech_Recogniser_Operation(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
-                                                                        });
+                                                                        }
+                                                                        Shutdown();
                                                                     }
                                                                 }
                                                                 break;
@@ -1078,7 +1077,7 @@ namespace Eva_5._0
                                     break;
 
                                 case false:
-                                    await Online_Speech_Recognition_Mitigator.Online_Speech_Recognition_Error();
+                                    Online_Speech_Recognition_Mitigator.Online_Speech_Recognition_Error();
                                     break;
                             }
 

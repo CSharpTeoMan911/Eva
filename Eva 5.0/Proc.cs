@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -147,7 +148,6 @@ namespace Eva_5._0
 
         private static async Task<bool> OnlineProcesses(string WebApplication, string SearchContent)
         {
-            
             string Process = String.Empty;
 
             try
@@ -155,17 +155,22 @@ namespace Eva_5._0
                 bool SoundOrOff = await Settings.Get_Sound_Settings();
                 W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryGetValue(WebApplication, out Process);
 
+                StringBuilder Process_Builder = new StringBuilder(Process);
+                Process_Builder.Append(SearchContent);
+                string formated_process = Process_Builder.ToString();
+                Process_Builder.Clear();
+
 
                 await Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
 
                 using (System.Diagnostics.Process Online_Process = new System.Diagnostics.Process())
                 {
-                    Online_Process.StartInfo.FileName = Process + SearchContent;
+                    Online_Process.StartInfo.FileName = formated_process;
                     Online_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
                     Online_Process.StartInfo.UseShellExecute = true;
                     Online_Process.Start();
 
-                    await SetForegroundWindowInitiator(Online_Process.MainWindowHandle);
+                    SetForegroundWindowInitiator(Online_Process.MainWindowHandle);
                 }
 
                 try
@@ -195,8 +200,6 @@ namespace Eva_5._0
 
             bool SoundOrOff = await Settings.Get_Sound_Settings();
 
-
-
             string application_executable_name = String.Empty;
 
             bool Application_Executable_Name_Retrieval_Result = A_p_l____And____P_r_o_c.A_p_l_Name__And__A_p_l___E_x__Name.TryGetValue(Application, out application_executable_name);
@@ -215,6 +218,12 @@ namespace Eva_5._0
 
 
 
+            StringBuilder formated_application_executable_name = new StringBuilder(application_executable_name);
+            formated_application_executable_name.Remove(0, 6);
+
+            string formated_application_executable_name_string = formated_application_executable_name.ToString();
+            formated_application_executable_name.Clear();
+
 
             switch (Process)
             {
@@ -224,18 +233,18 @@ namespace Eva_5._0
 
                         if (Application_Executable_Name_Retrieval_Result == true)
                         {
-                            switch (application_executable_name[0].ToString() + application_executable_name[1].ToString() + application_executable_name[2].ToString() == "URI")
+                            switch (application_executable_name[0] == 'U' && application_executable_name[1] == 'R' && application_executable_name[2] == 'I')
                             {
                                 case true:
                                     await Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
 
-                                    await Windows.System.Launcher.LaunchUriAsync(new Uri(application_executable_name.Remove(0, 6)));
+                                    await Windows.System.Launcher.LaunchUriAsync(new Uri(formated_application_executable_name_string));
                                     break;
 
 
 
                                 case false:
-                                    switch(application_executable_name[0].ToString() + application_executable_name[1].ToString() + application_executable_name[2].ToString() == "CMD")
+                                    switch(application_executable_name[0] == 'C' && application_executable_name[1] == 'M' && application_executable_name[2] == 'D')
                                     {
                                         case true:
                                             await Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
@@ -243,7 +252,7 @@ namespace Eva_5._0
                                             using (System.Diagnostics.Process Application_Process = new System.Diagnostics.Process())
                                             {
                                                 Application_Process.StartInfo.WorkingDirectory = @"C:\Users\" + Environment.UserName + @"\Desktop";
-                                                Application_Process.StartInfo.Arguments = "/k " + application_executable_name.Remove(0, 6);
+                                                Application_Process.StartInfo.Arguments = "/k " + formated_application_executable_name_string;
                                                 Application_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                                                 Application_Process.StartInfo.UseShellExecute = true;
                                                 Application_Process.StartInfo.CreateNoWindow = true;
@@ -257,11 +266,11 @@ namespace Eva_5._0
                                         case false:
                                             await Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
 
-                                            switch (application_executable_name[0].ToString() + application_executable_name[1].ToString() + application_executable_name[2].ToString() == "APP")
+                                            switch (application_executable_name[0] == 'A' && application_executable_name[1] == 'P' && application_executable_name[2] == 'P')
                                             {
                                                 case true:
 
-                                                    string application_name = application_executable_name.Remove(0, 6);
+                                                    string application_name = formated_application_executable_name_string;
 
                                                     if (application_name == "recycle bin cleanup")
                                                     {
@@ -280,7 +289,7 @@ namespace Eva_5._0
                                                         Application_Process.StartInfo.UseShellExecute = true;
                                                         Application_Process.Start();
 
-                                                        await SetForegroundWindowInitiator(Application_Process.MainWindowHandle);
+                                                        SetForegroundWindowInitiator(Application_Process.MainWindowHandle);
                                                     }
                                                     break;
                                             }
@@ -318,7 +327,7 @@ namespace Eva_5._0
                                     Application_Not_Found_Downdload_Link_Process.StartInfo.UseShellExecute = true;
                                     Application_Not_Found_Downdload_Link_Process.Start();
 
-                                   await SetForegroundWindowInitiator(Application_Not_Found_Downdload_Link_Process.MainWindowHandle);
+                                    SetForegroundWindowInitiator(Application_Not_Found_Downdload_Link_Process.MainWindowHandle);
                                 }
 
 

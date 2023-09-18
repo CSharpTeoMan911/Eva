@@ -69,9 +69,9 @@ namespace Eva_5._0
 
         private sealed class Wake_Word_Engine_Mitigator : Wake_Word_Engine
         {
-            public static async Task<bool> Wake_Word_Engine_Stop()
+            public static void Wake_Word_Engine_Stop()
             {
-                return await Stop_The_Wake_Word_Engine();
+                Stop_The_Wake_Word_Engine();
             }
         }
 
@@ -110,7 +110,7 @@ namespace Eva_5._0
             catch { }
         }
 
-        private async Task<bool> OnlineSpeechRecognitionAccessDenied()
+        private async void OnlineSpeechRecognitionAccessDenied()
         {
             
 
@@ -142,8 +142,6 @@ namespace Eva_5._0
                 });
             }
             catch { }
-
-            return false;
         }
 
 
@@ -717,13 +715,13 @@ namespace Eva_5._0
             TimerDisposed = true;
         }
 
-        private async void ErrorWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void ErrorWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             App.PermisissionWindowOpen = false;
 
             if(App.Application_Error_Shutdown == true)
             {
-                await Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
+                Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
                 Environment.Exit(0);
             }
         }

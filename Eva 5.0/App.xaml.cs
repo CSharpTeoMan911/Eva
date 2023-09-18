@@ -47,9 +47,9 @@ namespace Eva_5._0
 
         private sealed class Wake_Word_Engine_Mitigator : Wake_Word_Engine
         {
-            public static async Task<bool> Wake_Word_Engine_Stop()
+            public static void Wake_Word_Engine_Stop()
             {
-                return await Stop_The_Wake_Word_Engine();
+                Stop_The_Wake_Word_Engine();
             }
         }
 
@@ -88,7 +88,7 @@ namespace Eva_5._0
             //
             // [ BEGIN ]
 
-            await Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
+            Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
 
             // [ END ]
         }

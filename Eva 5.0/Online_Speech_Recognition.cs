@@ -52,7 +52,7 @@ namespace Eva_5._0
 
 
 
-        protected static Task<bool> Online_Speech_Recognition_Session_Creation_And_Initiation()
+        protected static void Online_Speech_Recognition_Session_Creation_And_Initiation()
         {
 
             // Initiate the online speech recognizer on another thread and lock multiple objects in memory
@@ -73,9 +73,9 @@ namespace Eva_5._0
                             {
                                 Online_Speech_Recogniser_Listening = "true";
 
-                                ParallelProcessing = new System.Threading.Thread(async () =>
+                                ParallelProcessing = new System.Threading.Thread(() =>
                                 {
-                                    bool Online_Speech_Recognition_Engine_Initiation_Successful = await Initiate_The_Online_Speech_Recognition_Engine();
+                                    Initiate_The_Online_Speech_Recognition_Engine();
                                 });
                                 ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.MTA);
                                 ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
@@ -88,12 +88,10 @@ namespace Eva_5._0
             }
 
             // [ END ]
-
-            return Task.FromResult(true);
         }
 
 
-        private static async Task<bool> Initiate_The_Online_Speech_Recognition_Engine()
+        private static async void Initiate_The_Online_Speech_Recognition_Engine()
         {
             try
             {
@@ -124,7 +122,7 @@ namespace Eva_5._0
                         break;
 
                     case false:
-                        await Close_Speech_Recognition_Interface();
+                        Close_Speech_Recognition_Interface();
                         break;
 
                 }
@@ -136,12 +134,10 @@ namespace Eva_5._0
             {
                 if (E.HResult == -2147199735)
                 {
-                    await Close_Speech_Recognition_Interface();
-                    await Online_Speech_Recognition_Error_Management(Online_Speech_Recognition_Error_Type.Online_Speech_Recognition_Access_Denied);
+                    Close_Speech_Recognition_Interface();
+                    Online_Speech_Recognition_Error_Management(Online_Speech_Recognition_Error_Type.Online_Speech_Recognition_Access_Denied);
                 }
             }
-
-            return true;
         }
 
         private static async void ContinuousRecognitionSession_ResultGenerated(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionSession sender, Windows.Media.SpeechRecognition.SpeechContinuousRecognitionResultGeneratedEventArgs args)
@@ -155,7 +151,7 @@ namespace Eva_5._0
                         switch ((args.Result.Text == String.Empty) || (args.Result == null))
                         {
                             case true:
-                                await Close_Speech_Recognition_Interface();
+                                Close_Speech_Recognition_Interface();
                                 break;
 
 
@@ -176,7 +172,7 @@ namespace Eva_5._0
                                 await Natural_Language_Processing_Mitigator.PreProcessing_Initiation(args.Result.Text.ToLower());
 
                             Function_Not_Initiated:
-                                await Close_Speech_Recognition_Interface();
+                                Close_Speech_Recognition_Interface();
                                 break;
                         }
                         break;
@@ -184,7 +180,7 @@ namespace Eva_5._0
 
 
                     case false:
-                        await Close_Speech_Recognition_Interface();
+                        Close_Speech_Recognition_Interface();
                         break;
 
                 }
@@ -193,8 +189,8 @@ namespace Eva_5._0
             {
                 if (E.HResult == -2147199735)
                 {
-                    await Close_Speech_Recognition_Interface();
-                    await Online_Speech_Recognition_Error_Management(Online_Speech_Recognition_Error_Type.Online_Speech_Recognition_Access_Denied);
+                    Close_Speech_Recognition_Interface();
+                    Online_Speech_Recognition_Error_Management(Online_Speech_Recognition_Error_Type.Online_Speech_Recognition_Access_Denied);
                 }
             }
 
@@ -207,7 +203,7 @@ namespace Eva_5._0
 
         }
 
-        private static async void ContinuousRecognitionSession_Completed(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionSession sender, Windows.Media.SpeechRecognition.SpeechContinuousRecognitionCompletedEventArgs args)
+        private static void ContinuousRecognitionSession_Completed(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionSession sender, Windows.Media.SpeechRecognition.SpeechContinuousRecognitionCompletedEventArgs args)
         {
             lock (Online_Speech_Recogniser_Listening)
             {
@@ -215,7 +211,7 @@ namespace Eva_5._0
                 Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.Now;
             }
 
-            await Close_Speech_Recognition_Interface();
+            Close_Speech_Recognition_Interface();
         }
 
         private static void OnlineSpeechRecognition_StateChanged(Windows.Media.SpeechRecognition.SpeechRecognizer sender, Windows.Media.SpeechRecognition.SpeechRecognizerStateChangedEventArgs args)
@@ -249,10 +245,8 @@ namespace Eva_5._0
         }
 
 
-        protected static async Task<bool> Online_Speech_Recognition_Error_Management(Online_Speech_Recognition_Error_Type error)
+        protected static void Online_Speech_Recognition_Error_Management(Online_Speech_Recognition_Error_Type error)
         {
-            bool result = false;
-
             switch (error)
             {
                 case Online_Speech_Recognition_Error_Type.Online_Speech_Recognition_Access_Denied:
@@ -273,14 +267,11 @@ namespace Eva_5._0
                     }
                     break;
             }
-
-            return result;
         }
 
 
-        private static async Task<bool> Close_Speech_Recognition_Interface()
+        private static async void Close_Speech_Recognition_Interface()
         {
-            bool result = false;
 
             if (OnlineSpeechRecognition != null)
             {
@@ -292,7 +283,6 @@ namespace Eva_5._0
                 catch { }
             }
 
-            return result;
         }
 
 

@@ -60,9 +60,9 @@ namespace Eva_5._0
 
         private sealed class Special_Character_Replacement_Implementor:Special_Character_Replacement
         {
-            internal async static Task<StringBuilder> Remove_Special_Characters_Procedure(string Sentence)
+            internal static string Remove_Special_Characters_Procedure(string Sentence)
             {
-                return await Remove_Special_Characters(Sentence);
+                return Remove_Special_Characters(Sentence);
             }
         }
 
@@ -86,7 +86,7 @@ namespace Eva_5._0
             WebApplicationSearchContent_StringBuilder.Clear();
             WordBuffer_StringBuilder.Clear();
 
-            string Sentence = (await Special_Character_Replacement_Implementor.Remove_Special_Characters_Procedure(Result)).ToString();
+            string Sentence = Special_Character_Replacement_Implementor.Remove_Special_Characters_Procedure(Result);
 
             Sentence_StringBuilder.Append(Sentence);
 

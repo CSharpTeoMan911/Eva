@@ -84,7 +84,7 @@ namespace Eva_5._0
                     {
                         JObject json_response = Newtonsoft.Json.JsonConvert.DeserializeObject<JObject>(await response.Content.ReadAsStringAsync());
 
-                        Tuple<Type, string> payload_processing_result = await API_Payload_Processing(json_response);
+                        Tuple<Type, string> payload_processing_result = API_Payload_Processing(json_response);
 
                         return_type = payload_processing_result.Item1;
                         result = payload_processing_result.Item2;
@@ -157,7 +157,7 @@ namespace Eva_5._0
 
 
 
-        private static Task<Tuple<Type, string>> API_Payload_Processing(JObject json_response)
+        private static Tuple<Type, string> API_Payload_Processing(JObject json_response)
         {
 
             // DECONSTRUCT THE JSON PAYLOAD INTO ELEMENTS.
@@ -185,21 +185,21 @@ namespace Eva_5._0
 
                     if (error_message.Contains("You didn't provide an API key") == true)
                     {
-                        return Task.FromResult(new Tuple<Type, string>(typeof(Exception), "API authentification error"));
+                        return new Tuple<Type, string>(typeof(Exception), "API authentification error");
                     }
                     else if (error_message.Contains("Incorrect API key provided") == true)
                     {
-                        return Task.FromResult(new Tuple<Type, string>(typeof(Exception), "API authentification error"));
+                        return new Tuple<Type, string>(typeof(Exception), "API authentification error");
                     }
                     else
                     {
-                        return Task.FromResult(new Tuple<Type, string>(typeof(Exception), "An error occured"));
+                        return new Tuple<Type, string>(typeof(Exception), "An error occured");
                     }
 
                 }
                 else
                 {
-                    return Task.FromResult(new Tuple<Type, string>(typeof(Exception), "An error occured"));
+                    return new Tuple<Type, string>(typeof(Exception), "An error occured");
                 }
             }
             else
@@ -216,21 +216,21 @@ namespace Eva_5._0
 
                         if (content != null)
                         {
-                            return Task.FromResult(new Tuple<Type, string>(typeof(string), content.ToString()));
+                            return new Tuple<Type, string>(typeof(string), content.ToString());
                         }
                         else
                         {
-                            return Task.FromResult(new Tuple<Type, string>(typeof(Exception), "An error occured"));
+                            return new Tuple<Type, string>(typeof(Exception), "An error occured");
                         }
                     }
                     else
                     {
-                        return Task.FromResult(new Tuple<Type, string>(typeof(Exception), "An error occured"));
+                        return new Tuple<Type, string>(typeof(Exception), "An error occured");
                     }
                 }
                 else
                 {
-                    return Task.FromResult(new Tuple<Type, string>(typeof(Exception), "An error occured"));
+                    return new Tuple<Type, string>(typeof(Exception), "An error occured");
                 }
             }
 

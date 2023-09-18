@@ -106,9 +106,9 @@ namespace Eva_5._0
 
 
         // Each time the method is called, the integer pointer of the application's handle within the operating system is passed and set as the top window
-        protected static Task<bool> SetForegroundWindowInitiator(IntPtr Process_Window_Handle)
+        protected static void SetForegroundWindowInitiator(IntPtr Process_Window_Handle)
         {
-            return Task.FromResult(SetForegroundWindow(Process_Window_Handle));
+            SetForegroundWindow(Process_Window_Handle);
         }
 
 
