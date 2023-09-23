@@ -168,7 +168,7 @@ namespace Eva_5._0
                                     }
                                 }
 
-                                System.Diagnostics.Debug.WriteLine("Result: " + args.Result.Text);
+                                //System.Diagnostics.Debug.WriteLine("Result: " + args.Result.Text);
                                 await Natural_Language_Processing_Mitigator.PreProcessing_Initiation(args.Result.Text.ToLower());
 
                             Function_Not_Initiated:

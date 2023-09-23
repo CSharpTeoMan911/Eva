@@ -197,7 +197,6 @@ namespace Eva_5._0
 
         private static async Task<bool> SystemProcesses(string Application, string Process)
         {
-
             bool SoundOrOff = await Settings.Get_Sound_Settings();
 
             string application_executable_name = String.Empty;
@@ -219,7 +218,10 @@ namespace Eva_5._0
 
 
             StringBuilder formated_application_executable_name = new StringBuilder(application_executable_name);
-            formated_application_executable_name.Remove(0, 6);
+            if(formated_application_executable_name.Length > 6)
+            {
+                formated_application_executable_name.Remove(0, 6);
+            }
 
             string formated_application_executable_name_string = formated_application_executable_name.ToString();
             formated_application_executable_name.Clear();
@@ -244,7 +246,7 @@ namespace Eva_5._0
 
 
                                 case false:
-                                    switch(application_executable_name[0] == 'C' && application_executable_name[1] == 'M' && application_executable_name[2] == 'D')
+                                    switch (application_executable_name[0] == 'C' && application_executable_name[1] == 'M' && application_executable_name[2] == 'D')
                                     {
                                         case true:
                                             await Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
@@ -355,6 +357,7 @@ namespace Eva_5._0
 
 
                 case "close":
+
                     if (Application_Process_Name_Retrieval_Result == true)
                     {
                         try
@@ -389,8 +392,6 @@ namespace Eva_5._0
                     }
                     break;
             }
-
-
 
             return true;
         }
@@ -466,10 +467,7 @@ namespace Eva_5._0
 
                     await App.chatGPT_Response_Window.Update_Conversation(input);
                 }
-                catch(Exception E)
-                {
-                    System.Diagnostics.Debug.WriteLine(E.Message);
-                }
+                catch { }
             });
             
 
