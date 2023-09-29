@@ -285,6 +285,7 @@ namespace Eva_5._0
 
                     if (Application.Current.MainWindow != null)
                     {
+                        ChatGPT_API.Clear_Conversation_Cache();
                         this.Close();
                     }
 

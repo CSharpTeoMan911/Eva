@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls.Maps;
 
 namespace Eva_5._0
 {
@@ -24,6 +25,8 @@ namespace Eva_5._0
 
     internal class Online_Speech_Recognition : MainWindow
     {
+        private static System.Media.SoundPlayer player = new System.Media.SoundPlayer("Listen.wav");
+
         private static Windows.Media.SpeechRecognition.SpeechRecognizer OnlineSpeechRecognition;
         private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Constraints = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.FormFilling, "form-filling", "form");
         private static System.Threading.Thread ParallelProcessing;
@@ -73,8 +76,16 @@ namespace Eva_5._0
                             {
                                 Online_Speech_Recogniser_Listening = "true";
 
-                                ParallelProcessing = new System.Threading.Thread(() =>
+                                ParallelProcessing = new System.Threading.Thread(async() =>
                                 {
+                                    if(await Settings.Get_Sound_Settings() == true)
+                                    {
+                                        if(System.IO.File.Exists(@"App execution.wav"))
+                                        {
+                                            player.Play();
+                                        }
+                                    }
+
                                     Initiate_The_Online_Speech_Recognition_Engine();
                                 });
                                 ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.MTA);
@@ -334,6 +345,18 @@ namespace Eva_5._0
             }
 
             return Task.FromResult(true);
+        }
+
+        public static void Dispose_Sound()
+        {
+            if(player != null)
+            {
+                try
+                {
+                    player.Dispose();
+                }
+                catch { }
+            }
         }
     }
 }

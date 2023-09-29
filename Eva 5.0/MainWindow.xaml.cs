@@ -938,6 +938,8 @@ namespace Eva_5._0
                     catch { }
                 }
 
+                Online_Speech_Recognition.Dispose_Sound();
+
                 BeginExecutionAnimation = null;
 
                 ParallelProcessing = null;

@@ -10,7 +10,7 @@ namespace Eva_5._0
 {
     internal class ChatGPT_API
     {
-
+        private static List<messages> cached_conversation = new List<messages>();
 
         // CLASS THAT IS SERIALIZED IN A JSON FILE FORMAT
         // TO SEND REQUEST TO CHATGPT OVER THE API
@@ -32,7 +32,10 @@ namespace Eva_5._0
         }
 
 
-
+        public static void Clear_Conversation_Cache()
+        {
+            cached_conversation.Clear();
+        }
 
 
         public static async Task<Tuple<Type, string>> Initiate_Chat_GPT(string input)
@@ -64,11 +67,11 @@ namespace Eva_5._0
                 messages.role = "user";
                 messages.content = input;
 
-                
+                cached_conversation.Add(messages);
 
                 request request = new request();
                 request.model = "gpt-3.5-turbo";
-                request.messages = new[] { messages };
+                request.messages = cached_conversation.ToArray();
                 request.temperature = 0.5;
 
 
@@ -79,6 +82,8 @@ namespace Eva_5._0
                 try
                 {
                     System.Net.Http.HttpResponseMessage response = await api_client.PostAsync("https://api.openai.com/v1/chat/completions", message_content);
+
+                    System.Diagnostics.Debug.WriteLine(await response.Content.ReadAsStringAsync());
 
                     try
                     {
@@ -216,7 +221,15 @@ namespace Eva_5._0
 
                         if (content != null)
                         {
-                            return new Tuple<Type, string>(typeof(string), content.ToString());
+                            string content_message = content.ToString();
+
+                            messages messages = new messages();
+                            messages.role = "assistant";
+                            messages.content = content_message;
+
+                            cached_conversation.Add(messages);
+
+                            return new Tuple<Type, string>(typeof(string), content_message);
                         }
                         else
                         {
