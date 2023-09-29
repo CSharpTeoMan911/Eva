@@ -29,8 +29,6 @@ namespace Eva_5._0
 
         private static Windows.Media.SpeechRecognition.SpeechRecognizer OnlineSpeechRecognition;
         private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Constraints = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.FormFilling, "form-filling", "form");
-        private static System.Threading.Thread ParallelProcessing;
-
 
         public enum Online_Speech_Recognition_Error_Type
         {
@@ -76,7 +74,7 @@ namespace Eva_5._0
                             {
                                 Online_Speech_Recogniser_Listening = "true";
 
-                                ParallelProcessing = new System.Threading.Thread(async() =>
+                                System.Threading.Thread ParallelProcessing = new System.Threading.Thread(async() =>
                                 {
                                     if(await Settings.Get_Sound_Settings() == true)
                                     {
@@ -88,7 +86,7 @@ namespace Eva_5._0
 
                                     Initiate_The_Online_Speech_Recognition_Engine();
                                 });
-                                ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.MTA);
+                                ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
                                 ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
                                 ParallelProcessing.IsBackground = false;
                                 ParallelProcessing.Start();
@@ -116,17 +114,13 @@ namespace Eva_5._0
 
                 Windows.Media.SpeechRecognition.SpeechRecognitionCompilationResult ConstratintsCompilation = await OnlineSpeechRecognition.CompileConstraintsAsync();
 
-
                 switch (ConstratintsCompilation.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
                 {
                     case true:
                         OnlineSpeechRecognition.StateChanged += OnlineSpeechRecognition_StateChanged;
-                        OnlineSpeechRecognition.Timeouts.BabbleTimeout = TimeSpan.FromSeconds(9);
-                        OnlineSpeechRecognition.Timeouts.EndSilenceTimeout = TimeSpan.FromSeconds(9);
-                        OnlineSpeechRecognition.Timeouts.InitialSilenceTimeout = TimeSpan.FromSeconds(9);
+                        OnlineSpeechRecognition.ContinuousRecognitionSession.AutoStopSilenceTimeout = TimeSpan.FromSeconds(9);
                         OnlineSpeechRecognition.ContinuousRecognitionSession.Completed += ContinuousRecognitionSession_Completed;
                         OnlineSpeechRecognition.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
-
 
                         await OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync();
                         await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache);
@@ -179,7 +173,6 @@ namespace Eva_5._0
                                     }
                                 }
 
-                                //System.Diagnostics.Debug.WriteLine("Result: " + args.Result.Text);
                                 await Natural_Language_Processing_Mitigator.PreProcessing_Initiation(args.Result.Text.ToLower());
 
                             Function_Not_Initiated:
