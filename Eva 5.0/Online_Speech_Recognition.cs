@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls.Maps;
 
 namespace Eva_5._0
 {
@@ -22,17 +23,25 @@ namespace Eva_5._0
     /////////////////////////////////////////////////////////////////////////////
 
 
-    internal class Online_Speech_Recognition:MainWindow
+    internal class Online_Speech_Recognition : MainWindow
     {
-        private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Constraints = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.FormFilling, "web-search", "web");
-        private static System.Threading.Thread ParallelProcessing;
+        private static System.Media.SoundPlayer player = new System.Media.SoundPlayer("Listen.wav");
+
+        private static Windows.Media.SpeechRecognition.SpeechRecognizer OnlineSpeechRecognition;
+        private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Constraints = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.FormFilling, "form-filling", "form");
+
+        public enum Online_Speech_Recognition_Error_Type
+        {
+            Online_Speech_Recognition_Access_Denied,
+            Mircrophone_Access_Denied
+        }
 
 
         // COMPONENTS THAT INTERACT WITH SECURTY SENSITIVE FEATURES ARE CONTAINED INSIDE PRIVATE SEALED CLASSES FOR EXTRA PROTECTION
         //
         // [ BEGIN ]
 
-        private sealed class Natural_Language_Processing_Mitigator:Natural_Language_Processing
+        private sealed class Natural_Language_Processing_Mitigator : Natural_Language_Processing
         {
             internal static async Task<bool> PreProcessing_Initiation(string Sentence)
             {
@@ -44,7 +53,7 @@ namespace Eva_5._0
 
 
 
-        protected static Task<bool> Online_Speech_Recognition_Session_Creation_And_Initiation()
+        protected static void Online_Speech_Recognition_Session_Creation_And_Initiation()
         {
 
             // Initiate the online speech recognizer on another thread and lock multiple objects in memory
@@ -65,11 +74,19 @@ namespace Eva_5._0
                             {
                                 Online_Speech_Recogniser_Listening = "true";
 
-                                ParallelProcessing = new System.Threading.Thread(async () =>
+                                System.Threading.Thread ParallelProcessing = new System.Threading.Thread(async() =>
                                 {
-                                    bool Online_Speech_Recognition_Engine_Initiation_Successful = await Initiate_The_Online_Speech_Recognition_Engine();
+                                    if(await Settings.Get_Sound_Settings() == true)
+                                    {
+                                        if(System.IO.File.Exists(@"App execution.wav"))
+                                        {
+                                            player.Play();
+                                        }
+                                    }
+
+                                    Initiate_The_Online_Speech_Recognition_Engine();
                                 });
-                                ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.MTA);
+                                ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
                                 ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
                                 ParallelProcessing.IsBackground = false;
                                 ParallelProcessing.Start();
@@ -80,108 +97,163 @@ namespace Eva_5._0
             }
 
             // [ END ]
-
-            return Task.FromResult(true);
         }
 
 
-        private static async Task<bool> Initiate_The_Online_Speech_Recognition_Engine()
+        private static async void Initiate_The_Online_Speech_Recognition_Engine()
         {
             try
             {
                 online_speech_recognition_timeout = DateTime.Now;
                 Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.Now;
+                OnlineSpeechRecognition = new Windows.Media.SpeechRecognition.SpeechRecognizer();
 
-                using (Windows.Media.SpeechRecognition.SpeechRecognizer OnlineSpeechRecognition = new Windows.Media.SpeechRecognition.SpeechRecognizer())
+
+                Constraints.Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Max;
+                OnlineSpeechRecognition.Constraints.Add(Constraints);
+
+                Windows.Media.SpeechRecognition.SpeechRecognitionCompilationResult ConstratintsCompilation = await OnlineSpeechRecognition.CompileConstraintsAsync();
+
+                switch (ConstratintsCompilation.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
                 {
-                    Constraints.Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Max;
-                    OnlineSpeechRecognition.Constraints.Add(Constraints);
+                    case true:
+                        OnlineSpeechRecognition.StateChanged += OnlineSpeechRecognition_StateChanged;
+                        OnlineSpeechRecognition.ContinuousRecognitionSession.AutoStopSilenceTimeout = TimeSpan.FromSeconds(9);
+                        OnlineSpeechRecognition.ContinuousRecognitionSession.Completed += ContinuousRecognitionSession_Completed;
+                        OnlineSpeechRecognition.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
 
-                    Windows.Media.SpeechRecognition.SpeechRecognitionCompilationResult ConstratintsCompilation = await OnlineSpeechRecognition.CompileConstraintsAsync();
+                        await OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync();
+                        await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache);
+                        break;
 
-
-                    switch (ConstratintsCompilation.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
-                    {
-                        case true:
-                            OnlineSpeechRecognition.StateChanged += OnlineSpeechRecognition_StateChanged;
-                            OnlineSpeechRecognition.Timeouts.BabbleTimeout = TimeSpan.FromSeconds(9);
-                            OnlineSpeechRecognition.Timeouts.EndSilenceTimeout = TimeSpan.FromSeconds(9);
-                            OnlineSpeechRecognition.Timeouts.InitialSilenceTimeout = TimeSpan.FromSeconds(9);
-
-
-                            Windows.Media.SpeechRecognition.SpeechRecognitionResult Result = await OnlineSpeechRecognition.RecognizeAsync();
-                            await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache);
-
-                            System.Diagnostics.Debug.WriteLine("Result: " + Result.Text);
-                            switch (Result.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
-                            {
-                                case true:
-                                   
-                                    switch ((Result.Text == String.Empty) || (Result == null))
-                                    {
-                                        case true:
-                                            if (OnlineSpeechRecognition != null)
-                                            {
-                                                await OnlineSpeechRecognition.StopRecognitionAsync();
-                                                OnlineSpeechRecognition.Dispose();
-                                            }
-                                            break;
-
-
-                                        case false:
-
-                                            lock (Online_Speech_Recogniser_Disabled)
-                                            {
-                                                lock (Window_Minimised)
-                                                {
-                                                    if (Window_Minimised == "true" || Online_Speech_Recogniser_Disabled == "true")
-                                                    {
-                                                        goto Function_Not_Initiated;
-                                                    }
-                                                }
-                                            }
-
-                                            await Natural_Language_Processing_Mitigator.PreProcessing_Initiation(Result.Text.ToLower());
-
-                                        Function_Not_Initiated:
-                                            if (OnlineSpeechRecognition != null)
-                                            {
-                                                await OnlineSpeechRecognition.StopRecognitionAsync();
-                                                OnlineSpeechRecognition.Dispose();
-                                            }
-                                            break;
-                                    }
-                                    break;
-
-
-
-                                case false:
-                                    if(OnlineSpeechRecognition != null)
-                                    {
-                                        await OnlineSpeechRecognition.StopRecognitionAsync();
-                                        OnlineSpeechRecognition.Dispose();
-                                    }
-                                    break;
-                            }
-                            break;
-
-                        case false:
-                            if (OnlineSpeechRecognition != null)
-                            {
-                                await OnlineSpeechRecognition.StopRecognitionAsync();
-                                OnlineSpeechRecognition.Dispose();
-                            }
-                            break;
-
-                    }
+                    case false:
+                        Close_Speech_Recognition_Interface();
+                        break;
 
                 }
+
+
 
             }
             catch (Exception E)
             {
-                if(E.HResult == -2147199735)
+                if (E.HResult == -2147199735)
                 {
+                    Close_Speech_Recognition_Interface();
+                    Online_Speech_Recognition_Error_Management(Online_Speech_Recognition_Error_Type.Online_Speech_Recognition_Access_Denied);
+                }
+            }
+        }
+
+        private static async void ContinuousRecognitionSession_ResultGenerated(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionSession sender, Windows.Media.SpeechRecognition.SpeechContinuousRecognitionResultGeneratedEventArgs args)
+        {
+            try
+            {
+                switch (args.Result.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
+                {
+                    case true:
+
+                        switch ((args.Result.Text == String.Empty) || (args.Result == null))
+                        {
+                            case true:
+                                Close_Speech_Recognition_Interface();
+                                break;
+
+
+                            case false:
+
+                                lock (Online_Speech_Recogniser_Disabled)
+                                {
+                                    lock (Window_Minimised)
+                                    {
+                                        if (Window_Minimised == "true" || Online_Speech_Recogniser_Disabled == "true")
+                                        {
+                                            goto Function_Not_Initiated;
+                                        }
+                                    }
+                                }
+
+                                await Natural_Language_Processing_Mitigator.PreProcessing_Initiation(args.Result.Text.ToLower());
+
+                            Function_Not_Initiated:
+                                Close_Speech_Recognition_Interface();
+                                break;
+                        }
+                        break;
+
+
+
+                    case false:
+                        Close_Speech_Recognition_Interface();
+                        break;
+
+                }
+            }
+            catch (Exception E)
+            {
+                if (E.HResult == -2147199735)
+                {
+                    Close_Speech_Recognition_Interface();
+                    Online_Speech_Recognition_Error_Management(Online_Speech_Recognition_Error_Type.Online_Speech_Recognition_Access_Denied);
+                }
+            }
+
+
+            lock (Online_Speech_Recogniser_Listening)
+            {
+                Online_Speech_Recogniser_Listening = "false";
+                Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.Now;
+            }
+
+        }
+
+        private static void ContinuousRecognitionSession_Completed(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionSession sender, Windows.Media.SpeechRecognition.SpeechContinuousRecognitionCompletedEventArgs args)
+        {
+            lock (Online_Speech_Recogniser_Listening)
+            {
+                Online_Speech_Recogniser_Listening = "false";
+                Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.Now;
+            }
+
+            Close_Speech_Recognition_Interface();
+        }
+
+        private static void OnlineSpeechRecognition_StateChanged(Windows.Media.SpeechRecognition.SpeechRecognizer sender, Windows.Media.SpeechRecognition.SpeechRecognizerStateChangedEventArgs args)
+        {
+
+            if (sender.State == Windows.Media.SpeechRecognition.SpeechRecognizerState.SpeechDetected)
+            {
+                lock (Speech_Detected)
+                {
+                    if (Speech_Detected == "false")
+                    {
+                        Speech_Detected = "true";
+                        Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.Now;
+
+                        lock (Initiated)
+                        {
+                            if (Initiated == "false")
+                            {
+                                online_speech_recognition_timeout = DateTime.Now;
+                                Initiated = "true";
+                            }
+                        }
+                    }
+                }
+            }
+
+            lock (Online_Speech_Recogniser_State)
+            {
+                Online_Speech_Recogniser_State = sender.State.ToString();
+            }
+        }
+
+
+        protected static void Online_Speech_Recognition_Error_Management(Online_Speech_Recognition_Error_Type error)
+        {
+            switch (error)
+            {
+                case Online_Speech_Recognition_Error_Type.Online_Speech_Recognition_Access_Denied:
                     if (App.PermisissionWindowOpen == false)
                     {
                         System.Windows.Application.Current.Dispatcher.Invoke(() =>
@@ -190,36 +262,31 @@ namespace Eva_5._0
                             OpenPermissionDeclinedWindow.Show();
                         });
                     }
-                }
+                    break;
+                case Online_Speech_Recognition_Error_Type.Mircrophone_Access_Denied:
+                    if (App.PermisissionWindowOpen == false)
+                    {
+                        ErrorWindow OpenPermissionDeclinedWindow = new ErrorWindow("Mircrophone Access Denied");
+                        OpenPermissionDeclinedWindow.Show();
+                    }
+                    break;
             }
-
-            lock (Online_Speech_Recogniser_Listening)
-            {
-                Online_Speech_Recogniser_Listening = "false";
-                Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.Now;
-            }
-
-            return true;
         }
 
 
-        private static void OnlineSpeechRecognition_StateChanged(Windows.Media.SpeechRecognition.SpeechRecognizer sender, Windows.Media.SpeechRecognition.SpeechRecognizerStateChangedEventArgs args)
+        private static async void Close_Speech_Recognition_Interface()
         {
-            if(sender.State == Windows.Media.SpeechRecognition.SpeechRecognizerState.SpeechDetected)
+
+            if (OnlineSpeechRecognition != null)
             {
-                lock(Speech_Detected)
+                try
                 {
-                    Speech_Detected = "true";
+                    await OnlineSpeechRecognition.ContinuousRecognitionSession.StopAsync();
+                    OnlineSpeechRecognition.Dispose();
                 }
-
-                Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.Now;
-                online_speech_recognition_timeout = DateTime.Now;
+                catch { }
             }
 
-            lock(Online_Speech_Recogniser_State)
-            {
-                Online_Speech_Recogniser_State = sender.State.ToString();
-            }
         }
 
 
@@ -230,7 +297,7 @@ namespace Eva_5._0
             {
                 System.Diagnostics.Process[] online_speech_recognition_interface_instances = System.Diagnostics.Process.GetProcessesByName("SpeechRuntime");
 
-                if(online_speech_recognition_interface_instances.Count() > 0)
+                if (online_speech_recognition_interface_instances.Count() > 0)
                 {
                     switch (operation)
                     {
@@ -271,6 +338,18 @@ namespace Eva_5._0
             }
 
             return Task.FromResult(true);
+        }
+
+        public static void Dispose_Sound()
+        {
+            if(player != null)
+            {
+                try
+                {
+                    player.Dispose();
+                }
+                catch { }
+            }
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Eva_5._0
     {
         private static RotateTransform Rotate = new RotateTransform();
 
-        private static System.Collections.Generic.List<string> Online_Speech_Recognition_Timeout_Timer_UI_Intervals = new System.Collections.Generic.List<string>() { "10", "9", "8", "7", "6", "5", "4", "3", "2", "1", "0" };
+        private static System.Collections.Generic.List<string> Online_Speech_Recognition_Timeout_Timer_UI_Intervals = new System.Collections.Generic.List<string>() { "20", "19", "18", "17", "16", "15", "14", "13", "12", "11", "10", "9", "8", "7", "6", "5", "4", "3", "2", "1", "0" };
 
         private short Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index;
 
@@ -44,7 +44,7 @@ namespace Eva_5._0
 
         protected static DateTime? Online_Speech_Recogniser_Activation_Delay_Detector = null;
 
-        private static double Online_Speech_Recogniser_Activation_Delay = 2.3;
+        private static double Online_Speech_Recogniser_Activation_Delay = 2.5;
 
         // END
 
@@ -86,6 +86,8 @@ namespace Eva_5._0
 
         protected static string Wake_Word_Detected = "false";
 
+        protected static string Initiated = "false";
+
         // [ END ] STATIC OBJECTS OBJECTS THAT ARE ACCESSED IN A THREAD SAFE MANNER
 
 
@@ -126,8 +128,6 @@ namespace Eva_5._0
         ///  Gradient Arithmetic For Neon Glow Chromatic Effect
         /// </summary>
 
-        protected static bool Wake_Word_Detection_Initiated;
-
         protected static bool MainWindowIsClosing;
 
         private bool Colour_Switch;
@@ -149,7 +149,7 @@ namespace Eva_5._0
         }
 
 
-       
+
         protected enum Online_Speech_Recognition_Interface_Operation
         {
             Online_Speech_Recognition_Interface_Clear_Cache,
@@ -184,9 +184,14 @@ namespace Eva_5._0
 
         private sealed class Online_Speech_Recognition_Mitigator : Online_Speech_Recognition
         {
-            internal static async Task<bool> Online_Speech_Recognition_Initiation()
+            internal static void Online_Speech_Recognition_Initiation()
             {
-                return await Online_Speech_Recognition_Session_Creation_And_Initiation();
+                Online_Speech_Recognition_Session_Creation_And_Initiation();
+            }
+
+            internal static void Online_Speech_Recognition_Error()
+            {
+                Online_Speech_Recognition_Error_Management(Online_Speech_Recognition_Error_Type.Mircrophone_Access_Denied);
             }
 
             internal static async Task<bool> OS_Online_Speech_Recogniser_Operation(Online_Speech_Recognition_Interface_Operation operation)
@@ -246,8 +251,11 @@ namespace Eva_5._0
 
         private void AnimationAndFunctionalityTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
+
+            // VERIFY IF MAIN WINDOW IS CLOSING
             switch (MainWindowIsClosing)
             {
+                // IF MAIN WINDOW IS CLOSING STOP THE TIMER
                 case true:
                     try
                     {
@@ -256,8 +264,11 @@ namespace Eva_5._0
                     catch { }
                     break;
 
+                // ELSE, CONTINUE EXECUTING THE TIMER'S CURRENT ITERATION
                 case false:
 
+
+                    // IF THE APPLICATION'S UI THREAD DISPATCHER ( THE COMPONENT THAT EXECUTES ACTIONS ON THE UI THREAD ) STOPS, STOP THE TIMER
                     switch (Application.Current.Dispatcher.HasShutdownStarted)
                     {
                         case true:
@@ -268,27 +279,27 @@ namespace Eva_5._0
                             catch { }
                             break;
 
+
+                        // ELSE, CONTINUE EXECUTING THE TIMER'S CURRENT ITERATION
                         case false:
 
 
-
-
-
-                            if(Button_Timeout > 0)
+                            // COMPONENT THAT MANIPULATES THE SPEECH RECOGNITION ENABLE/DISABLE BUTTON'S TIMEOUT
+                            if (Button_Timeout > 0)
                             {
                                 Button_Timeout -= 10;
                             }
 
-                            
 
 
-                            Application.Current.Dispatcher.Invoke(async() =>
+                            // METHODS AND PARAMETERS THAT MUST BE EXECUTED AND/OR MANIPULATED ON THE UI THREAD,
+                            // ARE MOVED ON THE UI THREAD VIA THE "Application.Current.Dispatcher.Invoke()" METHOD
+                            Application.Current.Dispatcher.Invoke(async () =>
                             {
-
                                 switch (Application.Current.MainWindow == null)
                                 {
 
-
+                                    // IF THE APPLICATION'S MAIN WINDOW IS NULL STOP THE TIMER
                                     case true:
 
                                         try
@@ -303,18 +314,27 @@ namespace Eva_5._0
 
 
 
-
+                                    // ELSE, CONTINUE EXECUTING THE TIMER'S CURRENT ITERATION
                                     case false:
 
+
+                                        // KEEP THE MAIN WINDOW AS TOPMOST WINDOW (THE ONLINE SPEECH RECOGNITION ENGINE WORKS ONLY IF THE APPLICATION'S WINDOW IS ACTIVE)
                                         Application.Current.MainWindow.Topmost = true;
 
+
+                                        // IF THE CALCULATED ONLINE SPEECH RECOGNITION ACTIVATION DELAY INTERVAL IS NOT NULL
                                         if (Online_Speech_Recogniser_Activation_Delay_Detector != null)
                                         {
+
+                                            // IF THE INTERVAL OF TIME BETWEEN THE CURRENT TIME AND THE TIME WHEN THE ONLINE SPEECH RECOGNITION ENGINE EXCEEDS THE 
+                                            // AMOUNT OF SECONDS SET FOR THE SET ONLINE SPEECH RECOGNITION DELAY, MAKE THE APPLICATION MAIN WINDOW'S
+                                            // CIRCULAR STATUS INDICATOR BLUE
                                             if (((TimeSpan)(DateTime.Now - Online_Speech_Recogniser_Activation_Delay_Detector)).TotalSeconds > Online_Speech_Recogniser_Activation_Delay)
                                             {
                                                 OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
                                                 OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
                                             }
+                                            // ELSE MAKE THE CIRCULAR STATUS INDICATOR RED
                                             else
                                             {
                                                 OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FFD67A71");
@@ -322,11 +342,13 @@ namespace Eva_5._0
                                             }
                                         }
 
+                                        // IF THE APPLICATION HAS AN ERROR THAT REQUIRES THE APPLICATION TO SHUT DOWN,
+                                        // STOP THE TIMER AND HIDE THE WINDOW
                                         if (App.Application_Error_Shutdown)
                                         {
                                             try
                                             {
-                                                if(AnimationAndFunctionalityTimer != null)
+                                                if (AnimationAndFunctionalityTimer != null)
                                                 {
                                                     AnimationAndFunctionalityTimer.Stop();
                                                     this.Hide();
@@ -335,28 +357,36 @@ namespace Eva_5._0
                                             catch { }
                                         }
 
-                                        if(Application.Current.MainWindow.WindowState == WindowState.Normal)
+                                        // IF THE APPLICATION'S WINDOW IS IN A NORMAL STATE, SET THE VARIABLE THAT DISPLAYS
+                                        // IF THE WINDOW STATE STATUS IS MINIMISED AS "false"
+                                        if (Application.Current.MainWindow.WindowState == WindowState.Normal)
                                         {
-                                            lock(Window_Minimised)
+                                            lock (Window_Minimised)
                                             {
                                                 Window_Minimised = "false";
                                             }
                                         }
 
-                                        
+                                        // IF THE WAKE WORD ENGINE DETECTED A KEYWORD
                                         if (Wake_Word_Detected == "true")
                                         {
                                             lock (Wake_Word_Detected)
                                             {
                                                 lock (Online_Speech_Recogniser_Disabled)
                                                 {
-                                                    if(Online_Speech_Recogniser_Disabled == "false")
+                                                    // IF THE ONLINE SPEECH RECOGNITION ENGINE IS NOT DISABLED
+                                                    if (Online_Speech_Recogniser_Disabled == "false")
                                                     {
+                                                        // INITIATE ON A DIFFERENT CPU THREAD THE SET OF TASKS. THE TASKS WILL BE SYNCHRONISED ON THIS THREAD,
+                                                        // MENING THAT THE 'await' KEYWORD WILL CONTROL THE 'ParallelProcessing' THREAD, AND NOT THREADS
+                                                        // WITHIN THE THREADPOOL. 
                                                         System.Threading.Thread ParallelProcessing = new System.Threading.Thread(async () =>
                                                         {
+                                                            // CALCULATE THE ACTIVATION DELAY TO BE SET FOR THE ONLINE SPEECH RECOGNITION ENGINE
+                                                            // AND INITIATE THE ONLINE SPEECH RECOGNITION ENGINE.
                                                             if (await Online_Speech_Recogniser_Delay_Calculator() == true)
                                                             {
-                                                                await Online_Speech_Recognition_Mitigator.Online_Speech_Recognition_Initiation();
+                                                                Online_Speech_Recognition_Mitigator.Online_Speech_Recognition_Initiation();
                                                             }
                                                         });
                                                         ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
@@ -367,20 +397,24 @@ namespace Eva_5._0
                                                 }
                                             }
 
+                                            // AFTER THE WAKE WORD DETECTION PROCEDURE IS FINISHED, RESET THE INICATOR TO ITS DEFAULT VALUE
                                             Wake_Word_Detected = "false";
                                         }
 
 
-                                        lock(Online_Speech_Recogniser_Listening)
+                                        lock (Online_Speech_Recogniser_Listening)
                                         {
 
                                             switch (Online_Speech_Recogniser_Listening)
                                             {
+                                                // IF THE ONLINE SPEECH RECOGNITION ENGINE IS LISTENING
                                                 case "true":
 
 
-                                                    lock(Online_Speech_Recogniser_Disabled)
+                                                    lock (Online_Speech_Recogniser_Disabled)
                                                     {
+                                                        // IF THE ONLINE SPEECH RECOGNITION ENGINE IS DISABLED OR THE WINDOW IS MINIMISED,
+                                                        // MAKE THE ONLINE SPEECH RECOGNITION ENGINE STOP TAKING INPUT
                                                         if (Window_Minimised == "true" || Online_Speech_Recogniser_Disabled == "true")
                                                         {
                                                             Online_Speech_Recogniser_Listening = "false";
@@ -392,27 +426,38 @@ namespace Eva_5._0
                                                     {
                                                         switch (Online_Speech_Recogniser_State == "Idle" || Online_Speech_Recogniser_State == "Paused")
                                                         {
+                                                            // IF THE ONLINE SPEECH RECOGNITION ENGINE IS IN THE 'Idle' OR 'Paused' STATES
                                                             case true:
-                                                                
-                                                                if(online_speech_recogniser_lock_state_time_elapsed_is_enabled == false)
+
+                                                                // IF THE ONLINE SPEECH RECOGNITION ENGINE IS NOT ALREADY IN THE LOCK STATE,
+                                                                // START THE LOCK STATE TIMER AND MARK THE ONLINE SPEECH RECOGNITION ENGINE'S
+                                                                // OPERATIONAL STATE AS 'LOCKED'
+                                                                if (online_speech_recogniser_lock_state_time_elapsed_is_enabled == false)
                                                                 {
                                                                     online_speech_recogniser_lock_state_time_elapsed.Start();
                                                                     online_speech_recogniser_lock_state_time_elapsed_is_enabled = true;
                                                                 }
 
+                                                                // IF THE ONLINE SPEECH RECOGNITION ENGINE IS ALREADY IN THE LOCK STATE
                                                                 if (online_speech_recogniser_lock_state_time_elapsed_is_enabled == true)
                                                                 {
-                                                                    if(online_speech_recogniser_lock_state_time_elapsed.ElapsedMilliseconds > 4000)
+                                                                    // IF THE TIME IN WHICH THE ONLINE SPEECH RECOGNITION ENGINE WAS LOCKED IS GREATER
+                                                                    // THAN 4 SECONDS, STOP THE ONLINE SPEECH RECOGNITION ENGINE FROM TAKING INPUT
+                                                                    // AND STOP THE ONLINE SPEECH RECOGNITION ENGINE WINDOWS PROCESS
+                                                                    if (online_speech_recogniser_lock_state_time_elapsed.ElapsedMilliseconds > 4000)
                                                                     {
                                                                         Online_Speech_Recogniser_Listening = "false";
-                                                                        Task.Run(async() =>
+                                                                        async void Shutdown()
                                                                         {
                                                                             await Online_Speech_Recognition_Mitigator.OS_Online_Speech_Recogniser_Operation(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
-                                                                        });
+                                                                        }
+                                                                        Shutdown();
                                                                     }
                                                                 }
                                                                 break;
 
+                                                            // ELSE, IT MEANS THAT THE ONLINE SPEECH RECOGNITION ENGINE RESUMED ITS OPERATION AND
+                                                            // THE LOCK STATE TIMER IS STOPPED AND RESET
                                                             case false:
                                                                 online_speech_recogniser_lock_state_time_elapsed.Stop();
                                                                 online_speech_recogniser_lock_state_time_elapsed.Reset();
@@ -421,11 +466,15 @@ namespace Eva_5._0
                                                         }
                                                     }
 
-
-                                                    if(online_speech_recognition_timeout != null)
+                                                    // IF THE TIMEOUT FOR THE ONLINE SPEECH RECOGNITION ENGINE SPEECH TO TEXT OPERATION IS NOT NULL
+                                                    if (online_speech_recognition_timeout != null)
                                                     {
-                                                        switch (((TimeSpan)(DateTime.Now - online_speech_recognition_timeout)).TotalMilliseconds >= 9000)
+                                                        switch (((TimeSpan)(DateTime.Now - online_speech_recognition_timeout)).TotalMilliseconds >= 20000)
                                                         {
+                                                            // IF THE DIFFERENCE BETWEEN THE CURRENT TIME AND THE TIME WHEN THE ONLINE SPEECH RECOGNITION ENGINE
+                                                            // BEGAN THE SPEECH TO TEXT OPERATION IS GREATER THAN 20 SECONDS ADUJUST THE GUI TO DISPLAY THAT
+                                                            // THE ONLINE SPEECH RECOGNITION ENGINE DOES NOT TAKE INPUT AND STOP THE ONLINE SPEECH
+                                                            // RECOGNITION ENGINE SPEECH FROM TAKING INPUT
                                                             case true:
                                                                 Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
                                                                 Online_Speech_Recognition_Timer_Display.Text = String.Empty;
@@ -433,10 +482,13 @@ namespace Eva_5._0
                                                                 break;
 
 
-
+                                                            // ELSE IF THE DIFFERENCE BETWEEN THE CURRENT TIME AND THE TIME WHEN THE ONLINE SPEECH RECOGNITION ENGINE
+                                                            // BEGAN THE SPEECH TO TEXT OPERATION IS LESS THAN 20 SECONDS
                                                             case false:
                                                                 lock (Speech_Detected)
                                                                 {
+                                                                    // IF THE ONLINE SPEECH RECOGNITION ENGINE DETECTED SPEECH, RESET THE GUI COUNTER
+                                                                    // REGARDING THE ONLINE SPEECH RECOGNITION ENGINE TIMEOUT
                                                                     if (Speech_Detected == "true")
                                                                     {
                                                                         Speech_Detected = "false";
@@ -446,9 +498,15 @@ namespace Eva_5._0
                                                                     }
                                                                 }
 
+                                                                // IF THE DIFFERENCE BETWEEN THE CURRENT TIME AND THE TIME WHEN THE ONLINE SPEECH RECOGNITION ENGINE STARTED
+                                                                // ITS OPERATION IS GREATER OR EQUAL THAN THE CURRENT TARGET VALUE
                                                                 if (((TimeSpan)(DateTime.Now - online_speech_recognition_timeout)).TotalMilliseconds >= target_value - 300)
                                                                 {
-                                                                    if (target_value <= 10000)
+                                                                    // IF THE TARGET VALUE IS SMALLER OR EQUAL THAN 20 SECONDS
+                                                                    // DECREMENT THE GUI INPUT INTERVAL COUNTDOWN TIMER VALUE
+                                                                    // BY ONE SECOND AND INCREMENT THE CURRENT TARGET VALUE
+                                                                    // BY ONE SECOND
+                                                                    if (target_value <= 20000)
                                                                     {
                                                                         target_value += 1000;
                                                                         Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index++;
@@ -457,7 +515,8 @@ namespace Eva_5._0
 
                                                                 Online_Speech_Recognition_Timer_Display.Text = Online_Speech_Recognition_Timeout_Timer_UI_Intervals[Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index];
 
-
+                                                                // WHILE THE ONLINE SPEECH RECOGNITION ENGINE IS OPERATING SET THE CIRCULAR STATUS INDICATOR
+                                                                // COLOR AS BRIGHT BLUE
                                                                 OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF91E1FF");
                                                                 OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF3099FF");
                                                                 break;
@@ -468,8 +527,14 @@ namespace Eva_5._0
 
 
 
-
+                                                // ELSE IF THE ONLINE SPEECH RECOGNITION ENGINE IS NOT LISTENING
+                                                // RESET THE GUI TIMEOUT INDICATOR, LOCK STATE TIMERS, AND TARGET
+                                                // VALUE TO THEIR DEFAULT VALUES.
                                                 case "false":
+                                                    lock (Initiated)
+                                                    {
+                                                        Initiated = "true";
+                                                    }
                                                     target_value = 1000;
                                                     Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
                                                     Online_Speech_Recognition_Timer_Display.Text = String.Empty;
@@ -482,25 +547,32 @@ namespace Eva_5._0
                                         }
 
 
-
                                         switch (Timer_Interval._isTimer)
                                         {
+                                            // IF THE APPLICATION'S TIMER WAS SET, CHANGE THE COLOR OF THE TIMER BUTTON
+                                            // TO BLUE AND PERIODICALLY CALCULATE THE TIMER'S INTERVAL TO DETERMINE
+                                            // IF THE TIMER REACHED ITS TERMINAL VALUE
                                             case true:
                                                 OpenTimerMenuButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
                                                 OpenTimerMenuButtonNotOffset.Color = (Color)ColorConverter.ConvertFromString("#FF11497F");
 
                                                 bool Time_Interval_Elapsed = await Timer_Interval.Calculate_Time_Interval_Left();
 
+
+                                                // IF THE TIMER REACHED ITS TERMINAL VALUE
                                                 if (Time_Interval_Elapsed == true)
                                                 {
+
                                                     switch (App.TimerWindowOpen)
                                                     {
+                                                        // IF THE TIMER WINDOW IS ALREADY OPENED RING THE TIMER
                                                         case true:
                                                             Timer_Window.Ring_Timer = true;
                                                             break;
 
 
-
+                                                        // IF THE TIMER WINDOW IS NOT OPENED, OPEN THE TIMER WINDOW
+                                                        // AND RING THE TIMER
                                                         case false:
                                                             Timer_Window.Ring_Timer = true;
                                                             Timer_Window timer = new Timer_Window();
@@ -510,6 +582,7 @@ namespace Eva_5._0
                                                 }
                                                 break;
 
+                                            // IF THE APPLICATION'S TIMER IS NOT SET, CHANGE THE TIMER BUTTON COLOR TO RED
                                             case false:
                                                 OpenTimerMenuButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FFD67A71");
                                                 OpenTimerMenuButtonNotOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7F1111");
@@ -519,30 +592,39 @@ namespace Eva_5._0
 
 
 
-                                       
-                                      
+
                                         switch (RotationValue == 360)
                                         {
+                                            // IF THE RECTANGLE WITHIN THE CIRCULAR STATUS INDICATOR 
+                                            // MADE  A 360 DEGREES ROTATION, RESET THE RECTANGLE TO 
+                                            // ITS ORIGINAL POSITION
                                             case true:
                                                 RotationValue = 0;
                                                 break;
 
+                                            // IF THE RECTANGLE WITHIN THE CIRCULAR STATUS INDICATOR 
+                                            // DID NOT MAKE A 360 DEGREES ROTATION, INCREMENT ITS 
+                                            // CURRENT ROTATIONAL ANGLE BY 7.5 DEGREES
                                             case false:
                                                 RotationValue += 7.5;
                                                 break;
                                         }
 
-
-                                        lock(BeginExecutionAnimation)
+                                        lock (BeginExecutionAnimation)
                                         {
                                             switch (BeginExecutionAnimation == "true")
                                             {
-
+                                                // IF A PROCESS WAS EXECUTED, BEGIN THE PROCESS EXECUTION ANIMATION
+                                                // BY MAKING THE RECTANGLE WITHIN THE CIRCULAR STATUS INDICATOR
+                                                // HAVE 0 WIDTH
                                                 case true:
                                                     Rotator.Width = 0;
 
                                                     switch (ExecutionAnimationArithmetic == 40)
                                                     {
+                                                        // IF THE 'ExecutionAnimationArithmetic' VARIABLE EQUALS WITH 40
+                                                        // SET THE COLOR CIRCULAR STATUS INDICATOR TO RED AND SET THE
+                                                        // 'ExecutionAnimationArithmetic' TO 0
                                                         case true:
                                                             OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
                                                             OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
@@ -550,11 +632,16 @@ namespace Eva_5._0
                                                             BeginExecutionAnimation = "false";
                                                             break;
 
+                                                        // IF THE 'ExecutionAnimationArithmetic' VARIABLE IS LESS THAN 40,
+                                                        // INCREMENT THE 'ExecutionAnimationArithmetic' BY 4 EACH ITERATION
                                                         case false:
                                                             ExecutionAnimationArithmetic += 4;
 
+                                                            // IF THE 'ExecutionAnimationArithmetic' VALUE IS GREATER THAN 4 AND
+                                                            // A MULTIPLE OF 4
                                                             if (ExecutionAnimationArithmetic >= 4 && ExecutionAnimationArithmetic % 4 == 0)
                                                             {
+                                                                // MAKE THE COLORS ALTERNATE BETWEEN PALE BLUE AND WHITE EVERY ITERATION
                                                                 switch (Colour_Switch)
                                                                 {
                                                                     case true:
@@ -574,6 +661,8 @@ namespace Eva_5._0
                                                     }
                                                     break;
 
+                                                // IF NO PROCESS WAS EXECUTED, RESET THE RECTANGLE WITHIN THE CIRCULAR STATUS INDICATOR
+                                                // TO ITS ORIGINAL WIDTH
                                                 case false:
                                                     Rotator.Width = InitialRotatorWidth;
                                                     break;
@@ -582,10 +671,21 @@ namespace Eva_5._0
                                         }
 
 
+                                        // SET THE CURRENT ROTATIONAL ANGLE OF THE RECTANGLE WITHIN THE CIRCULAR STATUS INDICATOR
                                         Rotate.Angle = RotationValue;
                                         Rotator.RenderTransform = Rotate;
 
 
+
+                                        // GRADIENT FLUCTUATION ANIMATIONS OF ALL ELEMENTS WITHIN THE MAIN WINDOW.
+                                        // THE GRADIENT FLUCTUATION ANIMATIONS ARE A PRODUCT OF THE LINEAR FUNCTIONS
+                                        // 'y = x + u' AND 'y = x - u', WHERE THE GRADIENT ('y') IS THE PRODUCT OF
+                                        // THE ELEMENT OFFSET ('x') INCREMENTED OR DECREMENTED WITH A CERTAIN UNIT
+                                        // VALUE ('u'). THE ALTERNATION BETWEEN THE 'y = x + u' AND 'y = x - u' 
+                                        // FUNCTIONS IS GIVEN WHEN SOME CERTAIN LIMIT VALUES ARE REACHED, FOR
+                                        // EACH FUNCTION RESPECTIVELY
+                                        //
+                                        // [ BEGIN ]
 
                                         switch (SwitchMinimiseTheWindowOffset)
                                         {
@@ -808,10 +908,12 @@ namespace Eva_5._0
                                                 break;
                                         }
 
+                                        // [ END ]
 
                                         break;
                                 }
                             });
+
 
                             break;
                     }
@@ -835,6 +937,8 @@ namespace Eva_5._0
                     }
                     catch { }
                 }
+
+                Online_Speech_Recognition.Dispose_Sound();
 
                 BeginExecutionAnimation = null;
 
@@ -881,7 +985,7 @@ namespace Eva_5._0
 
                         Application.Current.MainWindow.WindowState = WindowState.Minimized;
 
-                        lock(Window_Minimised)
+                        lock (Window_Minimised)
                         {
                             Window_Minimised = "true";
                         }
@@ -936,7 +1040,7 @@ namespace Eva_5._0
                                         {
                                             case 1:
 
-                                                lock(Online_Speech_Recogniser_Disabled)
+                                                lock (Online_Speech_Recogniser_Disabled)
                                                 {
                                                     Online_Speech_Recogniser_Disabled = "false";
                                                 }
@@ -975,11 +1079,7 @@ namespace Eva_5._0
                                     break;
 
                                 case false:
-                                    if(App.PermisissionWindowOpen == false)
-                                    {
-                                        ErrorWindow OpenPermissionDeclinedWindow = new ErrorWindow("Mircrophone Access Denied");
-                                        OpenPermissionDeclinedWindow.Show();
-                                    }
+                                    Online_Speech_Recognition_Mitigator.Online_Speech_Recognition_Error();
                                     break;
                             }
 
@@ -1021,7 +1121,7 @@ namespace Eva_5._0
 
         }
 
-        
+
 
         private void OpenTimerWindow(object sender, RoutedEventArgs e)
         {
@@ -1068,7 +1168,7 @@ namespace Eva_5._0
             // THIS BEHAVIOUR IS NORMAL IN ALL ONLINE SPEECH RECOGNITION
             // ENGINES BECAUSE ALL OF THEM HAVE A REQUEST LIMIT THAT IS
             // SET.
-            
+
 
             if (Online_Speech_Recogniser_Activation_Delay_Detector == null)
             {
@@ -1090,7 +1190,7 @@ namespace Eva_5._0
         {
             System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
 
-            Task.Run(async() =>
+            Task.Run(async () =>
             {
                 await Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
             });

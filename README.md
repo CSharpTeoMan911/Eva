@@ -18,7 +18,8 @@
 
 <br>
 
-Download Eva: https://sourceforge.net/projects/eva-ai/
+Download Eva from SourceForge: https://sourceforge.net/projects/eva-ai/
+Download Eva from Github: 
 
 <br>
 <br>

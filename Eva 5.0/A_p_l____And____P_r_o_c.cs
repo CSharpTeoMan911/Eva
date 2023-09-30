@@ -64,7 +64,7 @@ namespace Eva_5._0
         //
         //
         // - "A_p_l_Name__And__A_p_l___P_r_o_c_Name" OBJECT STORES KEY-VALUE PAIRS OF THE NAMES OF THE PROCESSES' EXECUTABLES . THIS OBJECT
-        //    STORES VALUES THAT ARE RELATED TO THE EXECUTABLES IN ORDER TO BE SHUT DOWN
+        //    STORES VALUES THAT ARE RELATED TO THE PROCESSES TO BE SHUT DOWN
         //
         //
         //    * PROCESS NAMES ARE STORED IN THE ( "PROCESS NAME IDENTIFIER", "PROCESS NAME" )
@@ -106,9 +106,9 @@ namespace Eva_5._0
 
 
         // Each time the method is called, the integer pointer of the application's handle within the operating system is passed and set as the top window
-        protected static Task<bool> SetForegroundWindowInitiator(IntPtr Process_Window_Handle)
+        protected static void SetForegroundWindowInitiator(IntPtr Process_Window_Handle)
         {
-            return Task.FromResult(SetForegroundWindow(Process_Window_Handle));
+            SetForegroundWindow(Process_Window_Handle);
         }
 
 

@@ -10,7 +10,7 @@ namespace Eva_5._0
 {
     internal class ChatGPT_API
     {
-
+        private static List<messages> cached_conversation = new List<messages>();
 
         // CLASS THAT IS SERIALIZED IN A JSON FILE FORMAT
         // TO SEND REQUEST TO CHATGPT OVER THE API
@@ -19,7 +19,6 @@ namespace Eva_5._0
             public string model;
             public messages[] messages;
             public double temperature = 0.5;
-            public int max_tokens = 700;
         }
 
 
@@ -33,7 +32,10 @@ namespace Eva_5._0
         }
 
 
-
+        public static void Clear_Conversation_Cache()
+        {
+            cached_conversation.Clear();
+        }
 
 
         public static async Task<Tuple<Type, string>> Initiate_Chat_GPT(string input)
@@ -41,7 +43,7 @@ namespace Eva_5._0
             string result = null;
             Type return_type = null;
 
-
+            // 'HttpClient' OBJECT NEEDED TO SEND HTTP REQUESTS TO THE OPENAI SERVER.
             System.Net.Http.HttpClient api_client = new System.Net.Http.HttpClient();
 
             try
@@ -65,13 +67,12 @@ namespace Eva_5._0
                 messages.role = "user";
                 messages.content = input;
 
-                
+                cached_conversation.Add(messages);
 
                 request request = new request();
                 request.model = "gpt-3.5-turbo";
-                request.messages = new[] { messages };
+                request.messages = cached_conversation.ToArray();
                 request.temperature = 0.5;
-                request.max_tokens = 700;
 
 
 
@@ -82,11 +83,13 @@ namespace Eva_5._0
                 {
                     System.Net.Http.HttpResponseMessage response = await api_client.PostAsync("https://api.openai.com/v1/chat/completions", message_content);
 
+                    System.Diagnostics.Debug.WriteLine(await response.Content.ReadAsStringAsync());
+
                     try
                     {
                         JObject json_response = Newtonsoft.Json.JsonConvert.DeserializeObject<JObject>(await response.Content.ReadAsStringAsync());
 
-                        Tuple<Type, string> payload_processing_result = await API_Payload_Processing(json_response);
+                        Tuple<Type, string> payload_processing_result = API_Payload_Processing(json_response);
 
                         return_type = payload_processing_result.Item1;
                         result = payload_processing_result.Item2;
@@ -159,7 +162,7 @@ namespace Eva_5._0
 
 
 
-        private static Task<Tuple<Type, string>> API_Payload_Processing(JObject json_response)
+        private static Tuple<Type, string> API_Payload_Processing(JObject json_response)
         {
 
             // DECONSTRUCT THE JSON PAYLOAD INTO ELEMENTS.
@@ -187,21 +190,21 @@ namespace Eva_5._0
 
                     if (error_message.Contains("You didn't provide an API key") == true)
                     {
-                        return Task.FromResult(new Tuple<Type, string>(typeof(Exception), "API authentification error"));
+                        return new Tuple<Type, string>(typeof(Exception), "API authentification error");
                     }
                     else if (error_message.Contains("Incorrect API key provided") == true)
                     {
-                        return Task.FromResult(new Tuple<Type, string>(typeof(Exception), "API authentification error"));
+                        return new Tuple<Type, string>(typeof(Exception), "API authentification error");
                     }
                     else
                     {
-                        return Task.FromResult(new Tuple<Type, string>(typeof(Exception), "An error occured"));
+                        return new Tuple<Type, string>(typeof(Exception), "An error occured");
                     }
 
                 }
                 else
                 {
-                    return Task.FromResult(new Tuple<Type, string>(typeof(Exception), "An error occured"));
+                    return new Tuple<Type, string>(typeof(Exception), "An error occured");
                 }
             }
             else
@@ -218,21 +221,29 @@ namespace Eva_5._0
 
                         if (content != null)
                         {
-                            return Task.FromResult(new Tuple<Type, string>(typeof(string), content.ToString()));
+                            string content_message = content.ToString();
+
+                            messages messages = new messages();
+                            messages.role = "assistant";
+                            messages.content = content_message;
+
+                            cached_conversation.Add(messages);
+
+                            return new Tuple<Type, string>(typeof(string), content_message);
                         }
                         else
                         {
-                            return Task.FromResult(new Tuple<Type, string>(typeof(Exception), "An error occured"));
+                            return new Tuple<Type, string>(typeof(Exception), "An error occured");
                         }
                     }
                     else
                     {
-                        return Task.FromResult(new Tuple<Type, string>(typeof(Exception), "An error occured"));
+                        return new Tuple<Type, string>(typeof(Exception), "An error occured");
                     }
                 }
                 else
                 {
-                    return Task.FromResult(new Tuple<Type, string>(typeof(Exception), "An error occured"));
+                    return new Tuple<Type, string>(typeof(Exception), "An error occured");
                 }
             }
 

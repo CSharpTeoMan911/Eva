@@ -31,6 +31,8 @@ namespace Eva_5._0
             InitializeComponent();
         }
 
+        // METHOD THAT MOVES THE APPLICATION'S WINDOW AT THE CURRENT CURSOR LOCATION
+        // WHEN THE MOUSE LEFT BUTTON IS PRESSED AND THE WINDOW'S HANDLE IS DRAGGED
         private void MoveTheWindow(object sender, MouseButtonEventArgs e)
         {
             if (WindowIsClosing == false)
@@ -51,6 +53,7 @@ namespace Eva_5._0
             }
         }
 
+        // METHOD THAT CLOSES THE APPLICATION'S WINDOW 
         private void CloseTheWindow(object sender, RoutedEventArgs e)
         {
             if (WindowIsClosing == false)
@@ -71,16 +74,25 @@ namespace Eva_5._0
             }
         }
 
+        // METHOD THAT SETS AND CACHES THE CHATGPT API KEY, IF THE KEY IS VALID
         private async void Set_Chat_Gpt_Api_Key(object sender, RoutedEventArgs e)
         {
+            // IF THE WINDOW IS NOT CLOSING
             if (WindowIsClosing == false)
             {
-
+                //IF THE SHUTDOWN OF THE UI THREAD DISPATHER HAS NOT STARTED
                 if (Application.Current.Dispatcher.HasShutdownStarted == false)
                 {
-
+                    // IF THE MAIN WINDOW IS NOT NULL
                     if (Application.Current.MainWindow != null)
                     {
+
+
+                        await Application.Current.Dispatcher.InvokeAsync(() =>
+                        {
+                            Loading_Stackpanel.Height = 180;
+                        });
+
 
                         await Settings.Set_Chat_GPT_Api_Key(Chat_GPT_Api_Key_TextBox.Text);
 
@@ -93,11 +105,14 @@ namespace Eva_5._0
 
                         // [ END ]
 
+                        await Application.Current.Dispatcher.InvokeAsync(() =>
+                        {
+                            Loading_Stackpanel.Height = 0;
+                        });
 
 
 
-
-                        if(initiation_result.Item1 == typeof(Exception))
+                        if (initiation_result.Item1 == typeof(Exception))
                         {
                             // IF THE RETURN TYPE OF THE OPERATION IS AN EXCEPTION, THIS MEANS 
                             // THAT THE API KEY IS NOT CORRECT OR THAT ANOTHER ERROR OCCURRED
@@ -136,6 +151,7 @@ namespace Eva_5._0
             }
         }
 
+        // METHOD THAT IS CALLED WHEN THE CURRENT WINDOW LOADED
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             if (WindowIsClosing == false)
@@ -159,6 +175,8 @@ namespace Eva_5._0
             }
         }
 
+
+        // ANIMATION TIMER
         private void Animation_Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             if (WindowIsClosing == false)
@@ -223,6 +241,9 @@ namespace Eva_5._0
             }
         }
 
+        // METHOD CALLED WHEN THE WINDOW IS CLOSING.
+        // WHEN THE WINDOW IS CLOSING, THE ANIMATION
+        // TIMER IS DISPOSED.
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
 

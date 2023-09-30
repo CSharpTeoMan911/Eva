@@ -49,39 +49,19 @@ namespace Eva_5._0
             switch (ErrorType)
             {
                 case "Mircrophone Access Denied":
-
-                    Task.Run(async () =>
-                    {
-                        await MicrophoneAccessDenied();
-                    });
-
+                    MicrophoneAccessDenied();
                     break;
 
                 case "Online Speech Recognition Access Denied":
-
-                    Task.Run(async () =>
-                    {
-                        await OnlineSpeechRecognitionAccessDenied();
-                    });
-
+                    OnlineSpeechRecognitionAccessDenied();
                     break;
 
                 case "Invalid ChatGPT API key":
-
-                    Task.Run(async () =>
-                    {
-                        await InvalidChatGPTAPIKey();
-                    });
-
+                    InvalidChatGPTAPIKey();
                     break;
 
                 case "ChatGPT error":
-
-                    Task.Run(async () =>
-                    {
-                        await ChatGPTError();
-                    });
-
+                    ChatGPTError();
                     break;
             }
         }
@@ -89,14 +69,14 @@ namespace Eva_5._0
 
         private sealed class Wake_Word_Engine_Mitigator : Wake_Word_Engine
         {
-            public static async Task<bool> Wake_Word_Engine_Stop()
+            public static void Wake_Word_Engine_Stop()
             {
-                return await Stop_The_Wake_Word_Engine();
+                Stop_The_Wake_Word_Engine();
             }
         }
 
 
-        private async Task<bool> MicrophoneAccessDenied()
+        private async void MicrophoneAccessDenied()
         {
             App.Application_Error_Shutdown = true;
 
@@ -122,17 +102,15 @@ namespace Eva_5._0
             {
                 await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:privacy-microphone"));
 
-                Application.Current.Dispatcher.Invoke(() =>
+                await Application.Current.Dispatcher.InvokeAsync(() =>
                 {
                     ErrorContext.Text = "Go to Settings  ->  Privacy  ->  Microphone.\n\n\nUnder the  [Allow apps to access your microphone]\nsection, press the button associated with it, in order\nto enable it.";
                 });
             }
             catch { }
-
-            return false;
         }
 
-        private async Task<bool> OnlineSpeechRecognitionAccessDenied()
+        private async void OnlineSpeechRecognitionAccessDenied()
         {
             
 
@@ -164,12 +142,10 @@ namespace Eva_5._0
                 });
             }
             catch { }
-
-            return false;
         }
 
 
-        private async Task<bool> InvalidChatGPTAPIKey()
+        private async void InvalidChatGPTAPIKey()
         {
 
 
@@ -193,7 +169,7 @@ namespace Eva_5._0
 
             try
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                await Application.Current.Dispatcher.InvokeAsync(() =>
                 {
                     Run open_ai_link = new Run("https://openai.com");
                     Run open_ai_api_link_1 = new Run("https://platform.openai.com/account/api-keys");
@@ -243,12 +219,10 @@ namespace Eva_5._0
                 });
             }
             catch { }
-
-            return false;
         }
 
 
-        private async Task<bool> ChatGPTError()
+        private async void ChatGPTError()
         {
             try
             {
@@ -268,7 +242,7 @@ namespace Eva_5._0
             }
             catch { }
 
-            Application.Current.Dispatcher.Invoke(() =>
+            await Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 Run open_ai_link = new Run("https://platform.openai.com/account/usage");
 
@@ -286,8 +260,6 @@ namespace Eva_5._0
                 ErrorContext.Inlines.Add("\n");
                 ErrorContext.Inlines.Add("or your internet connection.");
             });
-
-            return false;
         }
 
 
@@ -743,13 +715,13 @@ namespace Eva_5._0
             TimerDisposed = true;
         }
 
-        private async void ErrorWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void ErrorWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             App.PermisissionWindowOpen = false;
 
             if(App.Application_Error_Shutdown == true)
             {
-                await Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
+                Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
                 Environment.Exit(0);
             }
         }

@@ -45,7 +45,7 @@
         </Grid.ColumnDefinitions>
 
 
-        <Image Grid.RowSpan="4" Grid.ColumnSpan="9" Width="200" Height="130" VerticalAlignment="Center" HorizontalAlignment="Center" Source="Chat_Gpt_Logo.bmp"/>
+        <Image Grid.RowSpan="4" Grid.ColumnSpan="9" Width="160" Height="110" VerticalAlignment="Center" HorizontalAlignment="Center" Source="Chat_Gpt_Logo.bmp"/>
 
 
         <Rectangle Grid.RowSpan="2" Grid.ColumnSpan="9" Fill="Transparent" MouseDown="Move_The_Window"/>
@@ -82,12 +82,13 @@
             </Button>
         </StackPanel>
 
-        <TextBox x:Name="ResponseTextBox" IsReadOnly="True" Width="430" Height="166" TextWrapping="Wrap" Margin="10" FontSize="16" Grid.Row="1" Grid.RowSpan="8" Grid.ColumnSpan="9" VerticalScrollBarVisibility="Auto">
+        <TextBox x:Name="ResponseTextBox" IsReadOnly="True" Width="430" Height="166" TextWrapping="Wrap" Margin="10" FontSize="16" Grid.Row="1" Grid.RowSpan="8" Grid.ColumnSpan="9" BorderBrush="Transparent" VerticalScrollBarVisibility="Auto">
+
 
             <TextBox.Clip>
                 <RectangleGeometry Rect="0, 0, 430, 166" RadiusX="10" RadiusY="10"/>
             </TextBox.Clip>
-            
+
             <TextBox.Foreground>
                 <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                     <GradientStop Color="#FF0BD2A0" x:Name="ResponseTextBoxOffset" Offset="1"/>
@@ -119,10 +120,10 @@
         </TextBlock>
 
         <StackPanel Grid.Row="7" Grid.RowSpan="2" Grid.ColumnSpan="9" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBox x:Name="InputTextBox" Width="370" Height="30" Margin="0,10,0,0" FontSize="16" >
+            <TextBox x:Name="InputTextBox" Width="370" Height="30" Margin="0,10,0,0" FontSize="16" CaretBrush="#FF14EFD6" BorderBrush="Transparent">
 
                 <TextBox.Clip>
-                    <RectangleGeometry Rect="0, 0, 370, 30" RadiusX="5" RadiusY="5"/>
+                    <RectangleGeometry Rect="0, 0, 370, 30" RadiusX="10" RadiusY="10"/>
                 </TextBox.Clip>
 
                 <TextBox.Foreground>

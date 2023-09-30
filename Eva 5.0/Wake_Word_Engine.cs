@@ -25,7 +25,7 @@ namespace Eva_5._0
     internal class Wake_Word_Engine:MainWindow
     {
 
-        // THE WAKE WORD ENGINE IS THE "POCKETSPHINX" WAKE WORD ENGINE AND IS AVAILABLE ONLY IN PYTHON.
+        // THE WAKE WORD ENGINE IS THE "VOSK" WAKE WORD ENGINE AND IS AVAILABLE ONLY IN PYTHON.
         // THE WAKE WORD ENGINE IS IMPLEMENTED IN THE "main.py" FILE. IN ORDER FOR THE WAKE WORD ENGINE
         // TO BE ACTIVE AND FOR THE WAKE WORD ENGINE TO RUN, 2 PROCEDURES MUST BE IMPLEMENTED:
         //
@@ -43,12 +43,13 @@ namespace Eva_5._0
         //
         //
         // 
-        // 2) INSTALL THE PIP PACKAGES: "pocketsphinx", "PyAudio", AND "sounddevice" USING THE 
+        // 2) INSTALL THE PIP PACKAGES: "Vosk", "PyAudio", AND "sounddevice" USING THE 
         //    COMMAND: /path/to/Eva 5.0.exe/python.exe -m pip install [ PACKAGE NAME ]
 
 
         private static string wake_word = "listen";
         private static string cancel_wake_word = "stop listening";
+        private static bool Wake_Word_Started = false;
 
         protected static Task<bool> Start_The_Wake_Word_Engine()
         {
@@ -71,11 +72,8 @@ namespace Eva_5._0
                 wake_word_process.StartInfo.Arguments = "main.py";
                 wake_word_process.Start();
 
-                if (Wake_Word_Detection_Initiated == false)
-                {
-                    Wake_Word_Detection_Initiated = true;
-                    Wake_Word_Detector(wake_word_process);
-                }
+                Wake_Word_Started = true;
+                Wake_Word_Detector(wake_word_process);
 
                 return Task.FromResult(true);
             }
@@ -97,7 +95,7 @@ namespace Eva_5._0
             //
             // [ BEGIN ]
 
-
+            Wake_Word_Started = false;
 
 
 
@@ -306,47 +304,62 @@ namespace Eva_5._0
         private static async void Wake_Word_Detector(System.Diagnostics.Process python)
         {
 
-            try
+            while (Wake_Word_Started == true)
             {
-                while (MainWindowIsClosing == false)
+                if(MainWindowIsClosing == false)
                 {
-                    // READ THE DATA ON THE STOUT STREAM OF THE "Python" process
-                    char[] buffer = new char[14];
-                    await python.StandardOutput.ReadAsync(buffer, 0, buffer.Length);
-
-
-
-                    // LOCK THE "Online_Speech_Recogniser_Listening" OBJECT ON THE STACK 
-                    // IN ORDER TO BLOCK OTHER THREADS FROM MODIFYING IT
-                    //
-                    // [ BEGIN ]
-
-                    lock (Online_Speech_Recogniser_Listening)
+                    if (App.Application_Error_Shutdown == false)
                     {
-                        lock (Wake_Word_Detected)
+                        try
                         {
-                            if (new string(buffer).Contains(cancel_wake_word) == true)
+                            if (python.HasExited == false)
                             {
-                                if (Online_Speech_Recogniser_Listening == "true")
+                                // READ THE DATA ON THE STOUT STREAM OF THE "Python" process
+                                char[] buffer = new char[14];
+                                await python.StandardOutput.ReadAsync(buffer, 0, buffer.Length);
+
+
+                                // LOCK THE "Online_Speech_Recogniser_Listening" OBJECT ON THE STACK 
+                                // IN ORDER TO BLOCK OTHER THREADS FROM MODIFYING IT
+                                //
+                                // [ BEGIN ]
+
+                                lock (Online_Speech_Recogniser_Listening)
                                 {
-                                    Online_Speech_Recogniser_Listening = "false";
+                                    lock (Wake_Word_Detected)
+                                    {
+                                        if (new string(buffer).Contains(cancel_wake_word) == true)
+                                        {
+                                            if (Online_Speech_Recogniser_Listening == "true")
+                                            {
+                                                Online_Speech_Recogniser_Listening = "false";
+                                            }
+                                        }
+                                        else if (new string(buffer).Contains(wake_word) == true)
+                                        {
+                                            if (Online_Speech_Recogniser_Listening == "false")
+                                            {
+                                                Wake_Word_Detected = "true";
+                                            }
+                                        }
+                                    }
                                 }
-                            }
-                            else if (new string(buffer).Contains(wake_word) == true)
-                            {
-                                if(Online_Speech_Recogniser_Listening == "false")
-                                {
-                                    Wake_Word_Detected = "true";
-                                }
+
+                                // [ END ]
                             }
                         }
+                        catch { }
                     }
-
-                    // [ END ]
+                    else
+                    {
+                        break;
+                    }
                 }
-
+                else
+                {
+                    break;
+                }
             }
-            catch { }
         }
 
 

@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
         xmlns:local="clr-namespace:Eva_5._0"
         mc:Ignorable="d"
         Title="Chat_GPT_API_Key_Settup_Window" Height="180" Width="330" AllowsTransparency="True" WindowStyle="None" Topmost="True" Opacity="0.95" Loaded="Window_Loaded" Closing="Window_Closing">
@@ -90,6 +91,37 @@
                     </LinearGradientBrush>
                 </Button.Foreground>
             </Button>
+        </StackPanel>
+
+        <StackPanel x:Name="Loading_Stackpanel" Opacity="0.95" Height="0" Width="330" Grid.RowSpan="9" Grid.ColumnSpan="9" HorizontalAlignment="Center" Orientation="Vertical">
+            <StackPanel.Clip>
+                <RectangleGeometry Rect="0,0,330,180" RadiusX="10" RadiusY="10"/>
+            </StackPanel.Clip>
+
+            <StackPanel.Background>
+                <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                    <GradientStop Color="Black" Offset="1"/>
+                    <GradientStop Color="#FF012A4A"/>
+                </LinearGradientBrush>
+            </StackPanel.Background>
+
+            
+            <!--Credit to teej14 for the animated gif.  
+            GIF reference: https://tenor.com/view/loading-gif-hr-gif-23067502 -->
+
+            <!--Credit to Thomas Levesque for the GIF rendering library.
+            GIF library reference: https://github.com/XamlAnimatedGif/XamlAnimatedGif -->
+            <Image Margin="0,30,0,0" Width="65" Height="65" HorizontalAlignment="Center" gif:AnimationBehavior.SourceUri="loading-gif.gif"/>
+
+            <TextBlock Margin="0,20,0,0" HorizontalAlignment="Center" FontSize="35" FontFamily="Corbel Light" Text="Processing">
+                <TextBlock.Foreground>
+                    <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                        <GradientStop Color="#FFA0A0A0" Offset="1"/>
+                        <GradientStop Color="#FFA7A7A7"/>
+                    </LinearGradientBrush>
+                </TextBlock.Foreground>
+            </TextBlock>
+
         </StackPanel>
 
     </Grid>

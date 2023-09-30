@@ -223,8 +223,11 @@ namespace Eva_5._0
                                         }
                                         else
                                         {
-                                            ErrorWindow errorWindow = new ErrorWindow("ChatGPT error");
-                                            errorWindow.Show();
+                                            if(result.Item2 != "Task cancelled")
+                                            {
+                                                ErrorWindow errorWindow = new ErrorWindow("ChatGPT error");
+                                                errorWindow.Show();
+                                            }
                                         }
                                     }
                                 }
@@ -251,6 +254,8 @@ namespace Eva_5._0
 
             return true;
         }
+
+
 
         private void MinimiseTheWindow(object sender, RoutedEventArgs e)
         {
@@ -280,6 +285,7 @@ namespace Eva_5._0
 
                     if (Application.Current.MainWindow != null)
                     {
+                        ChatGPT_API.Clear_Conversation_Cache();
                         this.Close();
                     }
 
@@ -317,21 +323,12 @@ namespace Eva_5._0
         }
 
 
-        private sealed class Gpt_Query_Mitigator:Proc
-        {
-            public static async Task<bool> Initiate_Gpt_Proc(string query)
-            {
-                bool result = false;
-                result = await ProcInitialisation<string>("ChatGPT Process", String.Empty, query);
-                return result;
-            }
-        }
-
 
         private async void Send_Manual_GPT_Query(object sender, RoutedEventArgs e)
         {
-            await Gpt_Query_Mitigator.Initiate_Gpt_Proc(InputTextBox.Text);
+            string input = InputTextBox.Text;
             InputTextBox.Text = String.Empty;
+            await Update_Conversation(input);
         }
     }
 }

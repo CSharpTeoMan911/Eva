@@ -60,9 +60,9 @@ namespace Eva_5._0
 
         private sealed class Special_Character_Replacement_Implementor:Special_Character_Replacement
         {
-            internal async static Task<StringBuilder> Remove_Special_Characters_Procedure(string Sentence)
+            internal static string Remove_Special_Characters_Procedure(string Sentence)
             {
-                return await Remove_Special_Characters(Sentence);
+                return Remove_Special_Characters(Sentence);
             }
         }
 
@@ -86,7 +86,7 @@ namespace Eva_5._0
             WebApplicationSearchContent_StringBuilder.Clear();
             WordBuffer_StringBuilder.Clear();
 
-            string Sentence = (await Special_Character_Replacement_Implementor.Remove_Special_Characters_Procedure(Result)).ToString();
+            string Sentence = Special_Character_Replacement_Implementor.Remove_Special_Characters_Procedure(Result);
 
             Sentence_StringBuilder.Append(Sentence);
 
@@ -277,7 +277,7 @@ namespace Eva_5._0
 
 
 
-            if (Sentence.IndexOf("gpt") == 0 || Sentence.IndexOf("gbt") == 0 || Sentence.IndexOf("gtb") == 0 || Sentence.IndexOf("gtp") == 0 || Sentence.IndexOf("gpd") == 0 || Sentence.IndexOf("gpb") == 0 || Sentence.IndexOf("gdp") == 0 || Sentence.IndexOf("gp ") == 0 || Sentence.IndexOf("gt ") == 0 || Sentence.IndexOf("check gpt") == 0 || Sentence.IndexOf("chatgpt") == 0)
+            if (Sentence.IndexOf("gpt") == 0 || Sentence.IndexOf("gbt") == 0 || Sentence.IndexOf("gtb") == 0 || Sentence.IndexOf("gtp") == 0 || Sentence.IndexOf("gpd") == 0 || Sentence.IndexOf("gpb") == 0 || Sentence.IndexOf("gdp") == 0 || Sentence.IndexOf("cpd") == 0 || Sentence.IndexOf("cp ") == 0)
             {
                 await PostProcessing("chatgpt [ ChatGPT Query ]", Sentence);
             }

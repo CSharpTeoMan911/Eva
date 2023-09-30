@@ -8,7 +8,7 @@ namespace Eva_5._0
     {
         private static StringBuilder SentenceStringBuilder = new StringBuilder();
 
-        protected static Task<StringBuilder> Remove_Special_Characters(string Sentence)
+        protected static string Remove_Special_Characters(string Sentence)
         {
             // [ BEGIN ] REMOVE SPECIAL CHARACTERS 
             //
@@ -112,7 +112,10 @@ namespace Eva_5._0
             // [ END ] REMOVE SPECIAL CHARACTERS 
 
 
-            return Task.FromResult(SentenceStringBuilder);
+            string result = SentenceStringBuilder.ToString();
+            SentenceStringBuilder.Clear();
+
+            return result;
         }
     }
 }
