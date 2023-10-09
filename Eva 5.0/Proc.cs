@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Eva_5._0.Properties;
+using System;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -71,12 +72,6 @@ namespace Eva_5._0
          * 
          * 
          */
-
-        private static System.Media.SoundPlayer AppExecutionSoundEffect = new System.Media.SoundPlayer("App execution.wav");
-        private static System.Media.SoundPlayer AppTerminationSoundEffect = new System.Media.SoundPlayer("App closing.wav");
-        private static System.Media.SoundPlayer ScreenshotExecutionSoundEffect = new System.Media.SoundPlayer("Screenshot_Sound_Effect.wav");
-
-
 
         // COMPONENTS THAT INTERACT WITH SECURTY SENSITIVE FEATURES ARE CONTAINED INSIDE PRIVATE SEALED CLASSES FOR EXTRA PROTECTION
         //
@@ -152,7 +147,6 @@ namespace Eva_5._0
 
             try
             {
-                bool SoundOrOff = await Settings.Get_Sound_Settings();
                 W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryGetValue(WebApplication, out Process);
 
                 StringBuilder Process_Builder = new StringBuilder(Process);
@@ -173,19 +167,7 @@ namespace Eva_5._0
                     SetForegroundWindowInitiator(Online_Process.MainWindowHandle);
                 }
 
-                try
-                {
-
-                    if (SoundOrOff == true)
-                    {
-                        if (System.IO.File.Exists(@"App execution.wav"))
-                        {
-                            AppExecutionSoundEffect.Play();
-                        }
-                    }
-
-                }
-                catch { }
+                await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppExecutionSoundEffect);
 
             }
             catch { }
@@ -197,8 +179,6 @@ namespace Eva_5._0
 
         private static async Task<bool> SystemProcesses(string Application, string Process)
         {
-            bool SoundOrOff = await Settings.Get_Sound_Settings();
-
             string application_executable_name = String.Empty;
 
             bool Application_Executable_Name_Retrieval_Result = A_p_l____And____P_r_o_c.A_p_l_Name__And__A_p_l___E_x__Name.TryGetValue(Application, out application_executable_name);
@@ -301,17 +281,7 @@ namespace Eva_5._0
                             }
 
 
-                            try
-                            {
-                                if (SoundOrOff == true)
-                                {
-                                    if (System.IO.File.Exists(@"App execution.wav"))
-                                    {
-                                        AppExecutionSoundEffect.Play();
-                                    }
-                                }
-                            }
-                            catch { }
+                            await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppExecutionSoundEffect);
                         }
                     }
                     catch
@@ -333,19 +303,7 @@ namespace Eva_5._0
                                 }
 
 
-                                try
-                                {
-
-                                    if (SoundOrOff == true)
-                                    {
-                                        if (System.IO.File.Exists(@"App execution.wav"))
-                                        {
-                                            AppExecutionSoundEffect.Play();
-                                        }
-                                    }
-
-                                }
-                                catch { }
+                                await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppExecutionSoundEffect);
 
                             }
                         }
@@ -376,17 +334,7 @@ namespace Eva_5._0
                                 await Timer_Interval.Cancel_Time_Interval();
                             }
 
-                            try
-                            {
-                                if (SoundOrOff == true)
-                                {
-                                    if (System.IO.File.Exists(@"App closing.wav"))
-                                    {
-                                        AppTerminationSoundEffect.Play();
-                                    }
-                                }
-                            }
-                            catch { }
+                            await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppTerminationSoundEffect);
                         }
                         catch { }
                     }
@@ -402,9 +350,6 @@ namespace Eva_5._0
         {
             try
             {
-
-                bool SoundOrOff = await Settings.Get_Sound_Settings();
-
                 int hours_interval = 0;
 
                 Timer_Time_Intervals.TryGetValue("hours", out hours_interval);
@@ -428,19 +373,7 @@ namespace Eva_5._0
 
                 await Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
 
-                try
-                {
-
-                    if (SoundOrOff == true)
-                    {
-                        if (System.IO.File.Exists(@"App execution.wav"))
-                        {
-                            AppExecutionSoundEffect.Play();
-                        }
-                    }
-
-                }
-                catch { }
+                await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppExecutionSoundEffect);
 
             }
             catch { }
@@ -477,20 +410,10 @@ namespace Eva_5._0
 
         private static async Task<bool> Screen_Capture()
         {
-            bool SoundOrOff = await Settings.Get_Sound_Settings();
-
             try
             {
                 await Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
-
-                if (SoundOrOff == true)
-                {
-                    if (System.IO.File.Exists(@"Screenshot_Sound_Effect.wav"))
-                    {
-                        ScreenshotExecutionSoundEffect.Play();
-                    }
-                }
-
+                await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.ScreenshotExecutionSoundEffect);
             }
             catch
             {
@@ -498,26 +421,6 @@ namespace Eva_5._0
             }
 
             return await Screen_Capture_Mechanism_Mitigator.Screen_Capture_Initiator();
-        }
-
-        public static Task<bool> Dispose_Sound_Effects()
-        {
-            if(AppExecutionSoundEffect != null)
-            {
-                AppExecutionSoundEffect.Dispose();
-            }
-
-            if (AppTerminationSoundEffect != null)
-            {
-                AppTerminationSoundEffect.Dispose();
-            }
-
-            if (ScreenshotExecutionSoundEffect != null)
-            {
-                ScreenshotExecutionSoundEffect.Dispose();
-            }
-
-            return Task.FromResult(true);
         }
 
         ~Proc()

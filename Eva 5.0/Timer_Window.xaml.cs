@@ -159,11 +159,7 @@ namespace Eva_5._0
 
                                 if (Alarm_Started == true)
                                 {
-                                    try
-                                    {
-                                        Alarm_Sound_Effect.Stop();
-                                    }
-                                    catch { }
+                                    A_p_l____And____P_r_o_c.sound_player.Stop_Alarm();
                                 }
                             }
 
@@ -635,26 +631,8 @@ namespace Eva_5._0
 
                                             if (Alarm_Started == false)
                                             {
-                                                try
-                                                {
-                                                    bool SoundOrOff = await Settings.Get_Sound_Settings();
-
-
-
-                                                    switch (SoundOrOff == true)
-                                                    {
-                                                        case true:
-                                                            switch (System.IO.File.Exists(@"AlarmSound.wav"))
-                                                            {
-                                                                case true:
-                                                                    Alarm_Sound_Effect.PlayLooping();
-                                                                    Alarm_Started = true;
-                                                                    break;
-                                                            }
-                                                            break;
-                                                    }
-                                                }
-                                                catch { }
+                                                await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Properties.Sound_Player.Sounds.Alarm_Sound_Effect);
+                                                Alarm_Started = true;
                                             }
                                             
                                         }
@@ -693,11 +671,7 @@ namespace Eva_5._0
 
                                     if (Alarm_Started == true)
                                     {
-                                        try
-                                        {
-                                            Alarm_Sound_Effect.Stop();
-                                        }
-                                        catch { }
+                                        await A_p_l____And____P_r_o_c.sound_player.Stop_Alarm();
                                     }
 
                                     this.Close();
@@ -721,7 +695,7 @@ namespace Eva_5._0
         }
 
 
-        private void Timer_Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private async void Timer_Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             App.TimerWindowOpen = false;
             WindowClosing = true;
@@ -729,25 +703,9 @@ namespace Eva_5._0
 
             if (Alarm_Started == true)
             {
-                try
-                {
-                    Alarm_Sound_Effect.Stop();
-                }
-                catch { }
+                await A_p_l____And____P_r_o_c.sound_player.Stop_Alarm();
             }
         }
-
-
-        public static Task<bool> Dispose_Sound_Effects()
-        {
-            if (Alarm_Sound_Effect != null)
-            {
-                Alarm_Sound_Effect.Dispose();
-            }
-
-            return Task.FromResult(true);
-        }
-
 
         ~Timer_Window()
         {

@@ -77,7 +77,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>EVA.ico</ApplicationIcon>
+    <ApplicationIcon>Images\EVA.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
@@ -132,6 +132,7 @@
     </Compile>
     <Compile Include="Natural_Language_Processing.cs" />
     <Compile Include="Online_Speech_Recognition.cs" />
+    <Compile Include="Sound_Player.cs" />
     <Compile Include="Recycle_Bine_Cleanup.cs" />
     <Compile Include="Screen_Capture_Mechanism.cs" />
     <Compile Include="Settings.cs" />
@@ -231,10 +232,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Eva icon.png" />
+    <Resource Include="Images\Eva icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="EVA.ico" />
+    <Resource Include="Images\EVA.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.8">
@@ -249,17 +250,20 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App closing.wav" />
-    <Content Include="App execution.wav" />
-    <Resource Include="Chat_Gpt_Logo.bmp" />
-    <Resource Include="Chatgpt-logo.png" />
-    <Content Include="Chat_GPT_Notification.wav" />
-    <Resource Include="loading-gif.gif" />
+    <Content Include="Sounds\App closing.wav" />
+    <Content Include="Sounds\App execution.wav" />
+    <Content Include="Sounds\Screenshot_Sound_Effect.wav" />
+    <Resource Include="Images\Chat_Gpt_Logo.bmp" />
+    <Resource Include="Images\Chatgpt-logo.png" />
+    <Content Include="Sounds\Chat_GPT_Notification.wav" />
+    <Resource Include="Images\loading-gif.gif" />
     <Content Include="main.py" />
-    <Content Include="Privacy statement declined or mic not available.wav" />
+    <Content Include="Sounds\Listen.wav" />
+    <Content Include="Sounds\Privacy statement declined or mic not available.wav" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

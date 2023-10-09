@@ -74,9 +74,7 @@ namespace Eva_5._0
             //
             // [ BEGIN ]
 
-            await Proc.Dispose_Sound_Effects();
-            await ChatGPT_Response_Window.Dispose_Sound_Effects();
-            await Timer_Window.Dispose_Sound_Effects();
+            await A_p_l____And____P_r_o_c.sound_player.Dispose_Sound_Effects();
 
             // [ END ]
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Eva_5._0.Properties;
+using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
@@ -93,10 +94,9 @@ namespace Eva_5._0
 
         protected readonly static System.Collections.Concurrent.ConcurrentDictionary<string, string> A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k = new System.Collections.Concurrent.ConcurrentDictionary<string, string>();
 
-
-
-
         private readonly System.Threading.Thread ParallelProcessing;
+
+        public readonly static Sound_Player sound_player = new Sound_Player();
 
 
 

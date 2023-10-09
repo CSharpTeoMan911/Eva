@@ -111,7 +111,7 @@
 
             <!--Credit to Thomas Levesque for the GIF rendering library.
             GIF library reference: https://github.com/XamlAnimatedGif/XamlAnimatedGif -->
-            <Image Margin="0,30,0,0" Width="65" Height="65" HorizontalAlignment="Center" gif:AnimationBehavior.SourceUri="loading-gif.gif"/>
+            <Image Margin="0,30,0,0" Width="65" Height="65" HorizontalAlignment="Center" gif:AnimationBehavior.SourceUri="Images/loading-gif.gif"/>
 
             <TextBlock Margin="0,20,0,0" HorizontalAlignment="Center" FontSize="35" FontFamily="Corbel Light" Text="Processing">
                 <TextBlock.Foreground>

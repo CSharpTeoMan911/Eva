@@ -83,8 +83,6 @@ namespace Eva_5._0
                 {
                     System.Net.Http.HttpResponseMessage response = await api_client.PostAsync("https://api.openai.com/v1/chat/completions", message_content);
 
-                    System.Diagnostics.Debug.WriteLine(await response.Content.ReadAsStringAsync());
-
                     try
                     {
                         JObject json_response = Newtonsoft.Json.JsonConvert.DeserializeObject<JObject>(await response.Content.ReadAsStringAsync());

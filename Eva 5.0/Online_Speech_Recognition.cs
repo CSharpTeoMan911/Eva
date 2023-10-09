@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Eva_5._0.Properties;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls.Maps;
@@ -76,14 +77,7 @@ namespace Eva_5._0
 
                                 System.Threading.Thread ParallelProcessing = new System.Threading.Thread(async() =>
                                 {
-                                    if(await Settings.Get_Sound_Settings() == true)
-                                    {
-                                        if(System.IO.File.Exists(@"App execution.wav"))
-                                        {
-                                            player.Play();
-                                        }
-                                    }
-
+                                    await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppActivationSoundEffect);
                                     Initiate_The_Online_Speech_Recognition_Engine();
                                 });
                                 ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);

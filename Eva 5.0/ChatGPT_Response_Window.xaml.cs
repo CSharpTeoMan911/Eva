@@ -19,7 +19,6 @@ namespace Eva_5._0
     /// </summary>
     public partial class ChatGPT_Response_Window : Window
     {
-        private static System.Media.SoundPlayer ChatGPTNotificationSoundEffect = new System.Media.SoundPlayer("Chat_GPT_Notification.wav");
         private static RotateTransform Rotate = new RotateTransform();
         private System.Timers.Timer Animation_Timer;
 
@@ -234,17 +233,7 @@ namespace Eva_5._0
                             }
                         });
 
-                        if (await Settings.Get_Sound_Settings() == true)
-                        {
-                            if (System.IO.File.Exists(@"Chat_GPT_Notification.wav"))
-                            {
-                                if(WindowIsClosing == false)
-                                {
-                                    ChatGPTNotificationSoundEffect.Play();
-                                }
-                            }
-                        }
-
+                        await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTNotificationSoundEffect);
                         Response_Loading = false;
                     }
 
@@ -311,17 +300,6 @@ namespace Eva_5._0
 
             }
         }
-
-        public static Task<bool> Dispose_Sound_Effects()
-        {
-            if(ChatGPTNotificationSoundEffect != null)
-            {
-                ChatGPTNotificationSoundEffect.Dispose();
-            }
-
-            return Task.FromResult(true);
-        }
-
 
 
         private async void Send_Manual_GPT_Query(object sender, RoutedEventArgs e)
