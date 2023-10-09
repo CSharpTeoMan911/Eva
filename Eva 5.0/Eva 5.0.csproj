@@ -250,6 +250,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Sounds\AlarmSound.wav" />
     <Content Include="Sounds\App closing.wav" />
     <Content Include="Sounds\App execution.wav" />
     <Content Include="Sounds\Screenshot_Sound_Effect.wav" />
