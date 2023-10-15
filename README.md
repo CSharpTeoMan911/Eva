@@ -110,7 +110,7 @@ __________________________________________________________
 
 <br>
 
-The time complexity of the natural language understanding engine is in O(n) in the worst case scenario and O(n - ( n - (ci + 1) )) in the best case scenario, where "ci" stands for current index where the engine could not match the input with any patern related to any process. Because the natural language understanding engine has 3 stages of tokenisation that are verifying if certain criterias are met within the given sentence, the natural language understanding engine will stop processing the information at the index where the sentence did not fulfil the specified criterias, depending at which tokenisation stage the natural language understanding engine the criterias are not satisfied, and thus the ***RAM*** memory resources and the ***CPU*** processing power are not wasted unnecessary.
+The time complexity of the natural language understanding engine is in ***O(n)*** in the worst case and average case scenarios, and the time complexity ***O(n - ( n - (ci + 1) ))*** is in the best case scenario, where "ci" stands for current index where the engine could not match the input with any patern related to any process. Because the natural language understanding engine has 3 stages of tokenisation that are verifying if certain criterias are met within the given sentence, the natural language understanding engine will stop processing the information at the index where the sentence did not fulfil the specified criterias, depending at which tokenisation stage the natural language understanding engine the criterias are not satisfied, and thus the ***RAM*** memory resources and the ***CPU*** processing power are not wasted unnecessary.
 
 <br>
 <br>
