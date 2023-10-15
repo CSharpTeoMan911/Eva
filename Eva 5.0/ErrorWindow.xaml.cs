@@ -1,5 +1,7 @@
-﻿using Newtonsoft.Json.Serialization;
+﻿using Eva_5._0.Properties;
+using Newtonsoft.Json.Serialization;
 using System;
+using System.Media;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
@@ -12,6 +14,7 @@ namespace Eva_5._0
     /// </summary>
     public partial class ErrorWindow : Window
     {
+        private Sound_Player player = new Sound_Player();
         private System.Timers.Timer AnimationTimer;
 
         private bool SwitchWindowOffset;
@@ -79,24 +82,7 @@ namespace Eva_5._0
         private async void MicrophoneAccessDenied()
         {
             App.Application_Error_Shutdown = true;
-
-            try
-            {
-                System.Media.SoundPlayer ErrorSoundEffect = new System.Media.SoundPlayer("Privacy statement declined or mic not available.wav");
-
-                if (await Settings.Get_Sound_Settings() == true)
-                {
-
-                    if (System.IO.File.Exists(System.IO.Path.GetFullPath("Privacy statement declined or mic not available.wav")) == true)
-                    {
-
-                        ErrorSoundEffect.Play();
-
-                    }
-
-                }
-            }
-            catch { }
+            await player.Play_Sound(Sound_Player.Sounds.ErrorSoundEffect);
 
             try
             {
@@ -112,25 +98,7 @@ namespace Eva_5._0
 
         private async void OnlineSpeechRecognitionAccessDenied()
         {
-            
-
-            try
-            {
-                System.Media.SoundPlayer ErrorSoundEffect = new System.Media.SoundPlayer("Privacy statement declined or mic not available.wav");
-
-                if (await Settings.Get_Sound_Settings() == true)
-                {
-
-                    if (System.IO.File.Exists(System.IO.Path.GetFullPath("Privacy statement declined or mic not available.wav")) == true)
-                    {
-
-                        ErrorSoundEffect.Play();
-
-                    }
-
-                }
-            }
-            catch { }
+            await player.Play_Sound(Sound_Player.Sounds.ErrorSoundEffect);
 
             try
             {
@@ -147,25 +115,7 @@ namespace Eva_5._0
 
         private async void InvalidChatGPTAPIKey()
         {
-
-
-            try
-            {
-                System.Media.SoundPlayer ErrorSoundEffect = new System.Media.SoundPlayer("Privacy statement declined or mic not available.wav");
-
-                if (await Settings.Get_Sound_Settings() == true)
-                {
-
-                    if (System.IO.File.Exists(System.IO.Path.GetFullPath("Privacy statement declined or mic not available.wav")) == true)
-                    {
-
-                        ErrorSoundEffect.Play();
-
-                    }
-
-                }
-            }
-            catch { }
+            await player.Play_Sound(Sound_Player.Sounds.ErrorSoundEffect);
 
             try
             {
@@ -224,23 +174,7 @@ namespace Eva_5._0
 
         private async void ChatGPTError()
         {
-            try
-            {
-                System.Media.SoundPlayer ErrorSoundEffect = new System.Media.SoundPlayer("Privacy statement declined or mic not available.wav");
-
-                if (await Settings.Get_Sound_Settings() == true)
-                {
-
-                    if (System.IO.File.Exists(System.IO.Path.GetFullPath("Privacy statement declined or mic not available.wav")) == true)
-                    {
-
-                        ErrorSoundEffect.Play();
-
-                    }
-
-                }
-            }
-            catch { }
+            await player.Play_Sound(Sound_Player.Sounds.ErrorSoundEffect);
 
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
