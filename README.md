@@ -48,7 +48,7 @@ Eva is an A.I. assistant that has the purpose of helping users multi-task. It al
 
 <br>
 
-The Eva's core technologies are the Vosk In-proc speech recognition engine, the Microsoft online speech recognition engine, the Dot NET framework, Windows Presentation Foundation ( WPF ), and the Universal Windows Platforms ( UWP ). 
+The Eva's core technologies are the Vosk In-proc speech recognition engine, the Microsoft online speech recognition engine, the .NET framework, Windows Presentation Foundation ( WPF ), and the Universal Windows Platforms ( UWP ). 
 
 <br>
 
@@ -80,15 +80,19 @@ ____________________________________
 
 <br>
 
-Eva uses natural language processing in two ways, and these are speech recognition and contextual command and content extraction. Both, Vosk and Windows Online Speech Recognition engines use natural language processing in order to extract the words from any audio medium, and these are built into both of the engines. 
+Eva uses natural language processing in two ways, and these are speech recognition and contextual command and content extraction. Both, Vosk and Windows Online Speech Recognition engines use natural language processing in order to extract the words from any audio medium, and these features are built into both of the engines. 
 
 <br>
 
-The contextual command and content extraction natural language understanding engine is built into the application in order for Eva to understand the commands given by the user and their content, and this command and content extraction natural language understanding engine is built by me. The application's natural language processing engine is doing this by following some steps. First it is doing some tokenization in order to understand what process it has to execute and what extra parameters must be extracted from the input, in order to satify the process. This is done by analysing the input and by searching for some keywords that have to be at a certain index within the sentence. For example, if the command given is "open chrome", because the word open is the first word, the natural language processing engine categorised the command as a process in which a certain application is opened. If the command given is "search leopard 1 tank blueprint on google", because the first word is search, the tokenisation is pointing to the parameter related to web search. If the tokenization did not match the sentence with any parameter, then no process will be executed. 
+The contextual command and content extraction natural language understanding engine is built into the application in order for Eva to understand the commands given by the user and their content, and this command and content extraction natural language understanding engine is built by me. The application's natural language understanding engine is doing this by following a set of procedures. Firstly, it is doing some tokenization in order to understand what process it has to execute and what extra parameters must be extracted from the input, in order to execute the command. This is done by analysing the input and by searching for some keywords that have to be at a certain index within the sentence. For example, if the command given is "open chrome", because the word ***open*** is the first word, the natural language understanding engine categorised the command as a process in which a certain application is opened. If the command given is "search leopard 1 tank blueprint on google", because the first word is search, the tokenisation is pointing to the parameter related to web search command. If the tokenization did not match the sentence with any parameter, then no process will be executed. 
 
 <br>
 
-A second tokenisation is performed, after the process type had been identified. When the process type had been identified, accordingly with the process type patern, if any secondary parameters are required by the process type, these will be extracted accordingly. For example, if the command "search black shoes of amazon" had been entered, the patern of this command is "search [ CONTENT ] on [ WEB APPLICATION ]". This means that the natural language understanding engine has to search for a web application and for the content to be searched on that web application. Then accordingly to the process patern, the natural language understanding engine knows that the web application keyword is between the words "search" and "on", and it knows that the content to be searched on the web application is every word after the word "on".
+A second tokenisation is performed, after the process type had been identified. When the process type had been identified, accordingly with the process type patern, if any secondary parameters are required by the process type, these will be extracted accordingly. For example, if the command "search black shoes of amazon" had been entered, the patern of this command is "search [ CONTENT ] on [ WEB APPLICATION ]". This means that the natural language understanding engine has to search for a web application and for the content to be searched on that web application. Then accordingly to the process patern, the natural language understanding engine knows that the content to be searched on the web application is between the words "search" and "on", and it knows that the web application keyword is every word after the word "on". If the second tokenization did not detect the correct variables format, then no process will be executed. 
+
+<br>
+
+A third tokenisation is performed in order to extract the variables content. This tokenisation is using the indexes of the variables detected in the second tokenisation, extracts the variables, and verifies the extracted variables against a list of valid variables. Once the variables are validated, the processes associated with the variables are extracted and set to be executed accordingly. If the third tokenization did not detect any valid values for the detected variables, then no process will be executed. 
 
 <br>
 
@@ -106,7 +110,7 @@ __________________________________________________________
 
 <br>
 
-The time complexity of the natural language understanding engine is in O(n) in the worst case scenario and O(n - ( n - (ci + 1) )) in the best case scenario, where "ci" stands for current index where the engine could not match the input with any patern related to any process.
+The time complexity of the natural language understanding engine is in O(n) in the worst case scenario and O(n - ( n - (ci + 1) )) in the best case scenario, where "ci" stands for current index where the engine could not match the input with any patern related to any process. Because the natural language understanding engine has 3 stages of tokenisation that are verifying if certain criterias are met within the given sentence, the natural language understanding engine will stop processing the information at the index where the sentence did not fulfil the specified criterias, depending at which tokenisation stage the natural language understanding engine the criterias are not satisfied, and thus the ***RAM*** memory resources and the ***CPU*** processing power are not wasted unnecessary.
 
 <br>
 <br>
