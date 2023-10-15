@@ -123,6 +123,12 @@ The time complexity of the natural language understanding engine is in O(n) in t
 
 <br>
 
+<br>
+
+![Linear representation of the gradient fluctuation](https://github.com/CSharpTeoMan911/Eva/assets/87245086/fb8a6531-acd1-42b9-a165-c51513c9a87f)
+
+<br>
+
 Eva uses an algorithm developed by me in order for the application to have those beautiful graphical user interface effects. This algorithm functions by increasing the offset of the gradient by using a sumation that is incrementing the value of the gradient until it reaches a threshold value. When the threshold value is reached, a sumation is used to decrement the value of the gradient until it reaches its original value. This gradient fluctuation formula can also be interpreted as two linear functions that are instantiated when each function's threshold value has to be reached. The aforementioned functions are y = x + v and y = x - v respectively, where y is the resulting gradient value, x is the current gradient value, and v is the value to be added or substracted from the current gradient value, and where x, y, and v
 are greater than zero.
 <br>
