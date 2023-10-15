@@ -29,7 +29,7 @@ Download Eva from Github: https://github.com/CSharpTeoMan911/Eva/releases/tag/Re
 
 <br>
 
-Click this link to see how to set up the environment for developent: https://github.com/CSharpTeoMan911/Eva/wiki/Visual-Studio-configuration-and-operational-prerequisites
+For instructions about how to set up the environment for developent, how to add the resources needed by the application, and how to add the necessary libraries and SDK's : https://github.com/CSharpTeoMan911/Eva/wiki/Visual-Studio-configuration-and-operational-prerequisites
 
 <br>
 <br>
