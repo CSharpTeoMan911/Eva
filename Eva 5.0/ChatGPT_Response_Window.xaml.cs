@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Windows.UI.Xaml.Controls;
 
 namespace Eva_5._0
 {
@@ -134,7 +136,7 @@ namespace Eva_5._0
                         }
                         else
                         {
-                            if(Animation_Timer != null)
+                            if (Animation_Timer != null)
                             {
                                 Animation_Timer.Stop();
                             }
@@ -189,7 +191,7 @@ namespace Eva_5._0
 
                         Application.Current.Dispatcher.Invoke(() =>
                         {
-                            if(WindowIsClosing == false)
+                            if (WindowIsClosing == false)
                             {
                                 if (result.Item1 == typeof(string))
                                 {
@@ -222,7 +224,7 @@ namespace Eva_5._0
                                         }
                                         else
                                         {
-                                            if(result.Item2 != "Task cancelled")
+                                            if (result.Item2 != "Task cancelled")
                                             {
                                                 ErrorWindow errorWindow = new ErrorWindow("ChatGPT error");
                                                 errorWindow.Show();
@@ -302,11 +304,58 @@ namespace Eva_5._0
         }
 
 
-        private async void Send_Manual_GPT_Query(object sender, RoutedEventArgs e)
+        private void Send_Manual_GPT_Query(object sender, RoutedEventArgs e)
+        {
+            Update_Conversation_And_UI();
+        }
+
+        private void Detect_Enter(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                Update_Conversation_And_UI();
+            }
+        }
+
+        private async void Update_Conversation_And_UI()
         {
             string input = InputTextBox.Text;
             InputTextBox.Text = String.Empty;
             await Update_Conversation(input);
+            while (InputTextBox.Undo() == true) { }
+        }
+
+        private void Text_Changed(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            #pragma warning disable CS0618 // Type or member is obsolete
+            FormattedText formattedText = new FormattedText(InputTextBox.Text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface("Consolas"), 16,Brushes.Black);
+            #pragma warning restore CS0618 // Type or member is obsolete
+
+            switch (formattedText.Width > InputTextBox.Width)
+            {
+                case true:
+                    this.Height = 500;
+                    Window_Geometry.Rect = new Rect(0, 0, 450, 500);
+                    System.Windows.Controls.Grid.SetRow(Input_Stackpanel, 6);
+
+                    InputTextBox.Height = 120;
+                    InputTextBox.Margin = new Thickness(0, 30, 0, 0);
+                    InputTextBox_Geometry.Rect = new Rect(0, 0, 370, 120);
+
+                    Input_Button.Margin = new Thickness(0, 30, 0, 0);
+                    break;
+                case false:
+                    this.Height = 350;
+                    Window_Geometry.Rect = new Rect(0, 0, 450, 350);
+                    System.Windows.Controls.Grid.SetRow(Input_Stackpanel, 7);
+
+                    InputTextBox.Height = 30;
+                    InputTextBox.Margin = new Thickness(0, 10, 0, 0);
+                    InputTextBox_Geometry.Rect = new Rect(0, 0, 370, 30);
+
+                    Input_Button.Margin = new Thickness(10, 10, 0, 0);
+                    break;
+            }
         }
     }
 }

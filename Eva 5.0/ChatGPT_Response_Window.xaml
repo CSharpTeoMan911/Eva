@@ -9,7 +9,7 @@
 
 
     <Window.Clip>
-        <RectangleGeometry Rect="0, 0, 450, 350" RadiusX="20" RadiusY="20"/>
+        <RectangleGeometry x:Name="Window_Geometry" Rect="0, 0, 450, 350" RadiusX="20" RadiusY="20"/>
     </Window.Clip>
 
     <Window.Background>
@@ -45,7 +45,7 @@
         </Grid.ColumnDefinitions>
 
 
-        <Image Grid.RowSpan="4" Grid.ColumnSpan="9" Width="160" Height="110" VerticalAlignment="Center" HorizontalAlignment="Center" Source="/Images/Chat_Gpt_Logo.bmp"/>
+        <Image Grid.RowSpan="4" Grid.ColumnSpan="9" Width="160" Height="110" VerticalAlignment="Center" HorizontalAlignment="Center" RenderOptions.EdgeMode="Aliased" RenderOptions.BitmapScalingMode="HighQuality" Source="/Images/Chat_Gpt_Logo.bmp"/>
 
 
         <Rectangle Grid.RowSpan="2" Grid.ColumnSpan="9" Fill="Transparent" MouseDown="Move_The_Window"/>
@@ -119,11 +119,11 @@
             </TextBlock.Foreground>
         </TextBlock>
 
-        <StackPanel Grid.Row="7" Grid.RowSpan="2" Grid.ColumnSpan="9" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBox x:Name="InputTextBox" Width="370" Height="30" Margin="0,10,0,0" FontSize="16" CaretBrush="#FF14EFD6" BorderBrush="Transparent">
+        <StackPanel x:Name="Input_Stackpanel" Grid.Row="7" Grid.RowSpan="4" Grid.ColumnSpan="9" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBox x:Name="InputTextBox" Width="370" Height="30" Margin="0,10,0,0" FontFamily="Consolas" FontSize="16" CaretBrush="#FF14EFD6" BorderBrush="Transparent" TextWrapping="WrapWithOverflow" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" PreviewKeyDown="Detect_Enter" TextChanged="Text_Changed">
 
                 <TextBox.Clip>
-                    <RectangleGeometry Rect="0, 0, 370, 30" RadiusX="10" RadiusY="10"/>
+                    <RectangleGeometry x:Name="InputTextBox_Geometry" Rect="0, 0, 370, 30" RadiusX="10" RadiusY="10"/>
                 </TextBox.Clip>
 
                 <TextBox.Foreground>
@@ -142,7 +142,7 @@
 
             </TextBox>
 
-            <Button Style="{StaticResource SendGptQueryButtonStyle}" HorizontalAlignment="Center" FontSize="30" FontFamily="Segoe MDL2 Assets" Content="&#xE725;" VerticalAlignment="Center" Margin="10,10,0,0" Click="Send_Manual_GPT_Query">
+            <Button x:Name="Input_Button" Style="{StaticResource SendGptQueryButtonStyle}" HorizontalAlignment="Center" FontSize="30" FontFamily="Segoe MDL2 Assets" Content="&#xE725;" VerticalAlignment="Center" Margin="10,10,0,0" Click="Send_Manual_GPT_Query">
                 <Button.Foreground>
                     <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                         <GradientStop Color="#FF097D5E" Offset="1"/>
