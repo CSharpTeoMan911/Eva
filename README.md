@@ -125,7 +125,7 @@ The time complexity of the natural language understanding engine is in O(n) in t
 
 <br>
 
-![Linear representation of the gradient fluctuation](https://github.com/CSharpTeoMan911/Eva/assets/87245086/fb8a6531-acd1-42b9-a165-c51513c9a87f)
+![Linear representation of the gradient fluctuation](https://github.com/CSharpTeoMan911/Eva/assets/87245086/43afcab7-190b-4737-b99d-e1e2a9b78544)
 
 <br>
 
