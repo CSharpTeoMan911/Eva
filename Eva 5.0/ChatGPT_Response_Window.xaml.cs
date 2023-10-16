@@ -331,7 +331,7 @@ namespace Eva_5._0
             FormattedText formattedText = new FormattedText(InputTextBox.Text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface("Consolas"), 16,Brushes.Black);
             #pragma warning restore CS0618 // Type or member is obsolete
 
-            switch (formattedText.Width > InputTextBox.Width)
+            switch (formattedText.Width > InputTextBox.Width - 3)
             {
                 case true:
                     this.Height = 500;

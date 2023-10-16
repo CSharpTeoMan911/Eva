@@ -120,10 +120,10 @@
         </TextBlock>
 
         <StackPanel x:Name="Input_Stackpanel" Grid.Row="7" Grid.RowSpan="4" Grid.ColumnSpan="9" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBox x:Name="InputTextBox" Width="370" Height="30" Margin="0,10,0,0" FontFamily="Consolas" FontSize="16" CaretBrush="#FF14EFD6" BorderBrush="Transparent" TextWrapping="WrapWithOverflow" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" PreviewKeyDown="Detect_Enter" TextChanged="Text_Changed">
+            <TextBox x:Name="InputTextBox" Width="370" Height="30" Margin="0,10,0,0" FontFamily="Consolas" FontSize="16" CaretBrush="#FF14EFD6" BorderBrush="Transparent" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" PreviewKeyDown="Detect_Enter" TextChanged="Text_Changed">
 
                 <TextBox.Clip>
-                    <RectangleGeometry x:Name="InputTextBox_Geometry" Rect="0, 0, 370, 30" RadiusX="10" RadiusY="10"/>
+                    <RectangleGeometry x:Name="InputTextBox_Geometry" Rect="0, 0, 370, 30" RadiusX="5" RadiusY="5"/>
                 </TextBox.Clip>
 
                 <TextBox.Foreground>

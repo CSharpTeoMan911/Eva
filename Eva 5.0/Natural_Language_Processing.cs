@@ -261,11 +261,9 @@ namespace Eva_5._0
 
 
                 case false:
-
                     switch (Sentence.IndexOf("please set a ") == 0)
                     {
                         case true:
-
                             if (Sentence.IndexOf(" timer") == Sentence.Length - 6)
                             {
                                 await PostProcessing("please set a [Timer Interval] timer", Sentence);
@@ -277,9 +275,35 @@ namespace Eva_5._0
 
 
 
-            if (Sentence.IndexOf("gpt") == 0 || Sentence.IndexOf("gbt") == 0 || Sentence.IndexOf("gtb") == 0 || Sentence.IndexOf("gtp") == 0 || Sentence.IndexOf("gpd") == 0 || Sentence.IndexOf("gpb") == 0 || Sentence.IndexOf("gdp") == 0 || Sentence.IndexOf("cpd") == 0 || Sentence.IndexOf("cp ") == 0)
+
+
+
+            if (Sentence.IndexOf(' ') == 3)
             {
-                await PostProcessing("chatgpt [ ChatGPT Query ]", Sentence);
+                switch(Sentence.IndexOf('g') == 0)
+                {
+                    case true:
+                        await PostProcessing("chatgpt [ ChatGPT Query ]", Sentence);
+                        break;
+
+
+                    case false:
+                        switch (Sentence.IndexOf('p') == 1)
+                        {
+                            case true:
+                                await PostProcessing("chatgpt [ ChatGPT Query ]", Sentence);
+                                break;
+
+
+                            case false:
+                                if (Sentence.IndexOf('t') == 2)
+                                {
+                                    await PostProcessing("chatgpt [ ChatGPT Query ]", Sentence);
+                                }
+                                break;
+                        }
+                        break;
+                }
             }
    
 
@@ -379,6 +403,7 @@ namespace Eva_5._0
 
             string Application = String.Empty;
             string WebApplicationSearchContent = String.Empty;
+            bool timer_set = false;
 
             System.Collections.Concurrent.ConcurrentDictionary<string, int> time_interval = new System.Collections.Concurrent.ConcurrentDictionary<string, int>();
 
@@ -386,46 +411,38 @@ namespace Eva_5._0
             switch (Param)
             {
                 case "please open [Application]":
-
-                    for (int Index = "please open ".Length; Index <= Sentence.Length - 1; Index++)
+                    Application = await System_Application_Selector("please open ".Length - 1, Sentence_StringBuilder.ToString());
+                    if(Application != String.Empty)
                     {
-                        Application_StringBuilder.Append(Sentence[Index]);
+                        await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
                     }
-                    Application = Application_StringBuilder.ToString();
-                    await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
                     Application_StringBuilder.Clear();
                     break;
 
                 case "open [Application] please":
-
-                    for (int Index = "open ".Length; Index <= Sentence.LastIndexOf(" please") - 1; Index++)
+                    Application = await System_Application_Selector("open ".Length - 1, Sentence_StringBuilder.ToString());
+                    if(Application != String.Empty)
                     {
-                        Application_StringBuilder.Append(Sentence[Index]);
+                        await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
                     }
-                    Application = Application_StringBuilder.ToString();
-                    await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
                     Application_StringBuilder.Clear();
                     break;
 
                 case "open [Application] now":
-
-                    for (int Index = "open ".Length; Index <= Sentence.LastIndexOf(" now") - 1; Index++)
+                    Application = await System_Application_Selector("open ".Length - 1, Sentence_StringBuilder.ToString());
+                    if (Application != String.Empty)
                     {
-                        Application_StringBuilder.Append(Sentence[Index]);
+                        await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
                     }
-                    Application = Application_StringBuilder.ToString();
-                    await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
                     Application_StringBuilder.Clear();
                     break;
 
                 case "open [Application]":
-
-                    for (int Index = "open ".Length ; Index <= Sentence.Length - 1; Index++)
+                    Application = await System_Application_Selector("open ".Length - 1, Sentence_StringBuilder.ToString());
+                    if (Application != String.Empty)
                     {
-                        Application_StringBuilder.Append(Sentence[Index]);
+                        await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
                     }
-                    Application = Application_StringBuilder.ToString();
-                    await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
                     Application_StringBuilder.Clear();
                     break;
 
@@ -433,46 +450,45 @@ namespace Eva_5._0
 
 
                 case "please close [Application]":
+                    Application = await System_Process_Selector("please close ".Length - 1, Sentence_StringBuilder.ToString());
 
-                    for (int Index = "please close ".Length; Index <= Sentence.Length - 1; Index++)
+                    if(Application != String.Empty)
                     {
-                        Application_StringBuilder.Append(Sentence[Index]);
+                        await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
                     }
-                    Application = Application_StringBuilder.ToString();
-                    await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
                     Application_StringBuilder.Clear();
                     break;
 
                 case "close [Application] please":
 
-                    for (int Index = "close ".Length; Index <= Sentence.LastIndexOf(" please") - 1; Index++)
+                    Application = await System_Process_Selector("close ".Length - 1, Sentence_StringBuilder.ToString());
+
+                    if (Application != String.Empty)
                     {
-                        Application_StringBuilder.Append(Sentence[Index]);
+                        await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
                     }
-                    Application = Application_StringBuilder.ToString();
-                    await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
                     Application_StringBuilder.Clear();
                     break;
 
                 case "close [Application] now":
 
-                    for (int Index = "close ".Length; Index <= Sentence.LastIndexOf(" now") - 1; Index++)
+                    Application = await System_Process_Selector("close ".Length - 1, Sentence_StringBuilder.ToString());
+
+                    if (Application != String.Empty)
                     {
-                        Application_StringBuilder.Append(Sentence[Index]);
+                        await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
                     }
-                    Application = Application_StringBuilder.ToString();
-                    await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
                     Application_StringBuilder.Clear();
                     break;
 
                 case "close [Application]":
 
-                    for (int Index = "close ".Length; Index <= Sentence.Length - 1; Index++)
+                    Application = await System_Process_Selector("close ".Length - 1, Sentence_StringBuilder.ToString());
+
+                    if (Application != String.Empty)
                     {
-                        Application_StringBuilder.Append(Sentence[Index]);
+                        await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
                     }
-                    Application = Application_StringBuilder.ToString();
-                    await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
                     Application_StringBuilder.Clear();
                     break;
 
@@ -481,74 +497,70 @@ namespace Eva_5._0
 
                 case "please search [Content] on [Web Application Keyword]":
 
-                    Sentence_StringBuilder.Append(" ");
                     Application = await Web_Application_Selector(Sentence.LastIndexOf(" on ") + " on ".Length - 1, Sentence_StringBuilder.ToString());
 
-
-                    for (int Index = "please search".Length; Index < Sentence.LastIndexOf(" on "); Index++)
+                    if(Application != String.Empty)
                     {
-                        WebApplicationSearchContent_StringBuilder.Append(Sentence[Index]);
+                        for (int Index = "please search".Length; Index < Sentence.LastIndexOf(" on "); Index++)
+                        {
+                            WebApplicationSearchContent_StringBuilder.Append(Sentence[Index]);
+                        }
+
+                        WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString();
+                        await Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
                     }
-
-                    WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString();
-
-                    await Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
                     break;
-
-
-                    
 
                 case "please search on [Web Application Keyword] [Content]":
 
                     Application = await Web_Application_Selector(Sentence.LastIndexOf(" on ") + " on ".Length - 1, Sentence_StringBuilder.ToString());
 
-                    for (int Index = "please search on ".Length + Application.Length; Index <= Sentence.Length - 1; Index++)
+                    if(Application != String.Empty)
                     {
-                        WebApplicationSearchContent_StringBuilder.Append(Sentence[Index]);
+                        for (int Index = "please search on ".Length + Application.Length; Index <= Sentence.Length - 1; Index++)
+                        {
+                            WebApplicationSearchContent_StringBuilder.Append(Sentence[Index]);
+                        }
+
+                        WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString().Trim();
+
+                        await Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
                     }
-
-                    WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString().Trim();
-
-                    await Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
                     break;
-
-
-
 
                 case "search on [Web Application Keyword] [Content]":
 
                     Application = await Web_Application_Selector("search on ".Length - 1, Sentence);
 
-                    for (int Index = "search on ".Length + Application.Length; Index <= Sentence.Length - 1; Index++)
+                    if(Application != String.Empty)
                     {
-                        WebApplicationSearchContent_StringBuilder.Append(Sentence[Index]);
+                        for (int Index = "search on ".Length + Application.Length; Index <= Sentence.Length - 1; Index++)
+                        {
+                            WebApplicationSearchContent_StringBuilder.Append(Sentence[Index]);
+                        }
+
+                        WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString().Trim();
+
+                        await Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
                     }
-
-                    WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString().Trim();
-
-                    await Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
                     break;
-
-
-
 
                 case "search [Content] on [Web Application Keyword]":
 
-                    Sentence_StringBuilder.Append(" ");
-
                     Application = await Web_Application_Selector(Sentence.LastIndexOf(" on ") + " on ".Length - 1, Sentence_StringBuilder.ToString());
 
-
-                    for (int Index = 7; Index < Sentence.LastIndexOf(" on "); Index++)
+                    if(Application != String.Empty)
                     {
-                        WebApplicationSearchContent_StringBuilder.Append(Sentence[Index]);
+                        for (int Index = 7; Index < Sentence.LastIndexOf(" on "); Index++)
+                        {
+                            WebApplicationSearchContent_StringBuilder.Append(Sentence[Index]);
+                        }
+
+                        WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString().Trim();
+
+                        await Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
                     }
-
-                    WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString().Trim();
-
-                    await Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
                     break;
-
 
                 case "chatgpt [ ChatGPT Query ]":
                     for (int Index = "gpt".Length; Index < Sentence.Length; Index++)
@@ -561,27 +573,32 @@ namespace Eva_5._0
                     await Proc_Mitigator.Process_Initialisation<string>("ChatGPT Process", Application, WebApplicationSearchContent);
                     break;
 
-
-
                 case "set a [Timer Interval] timer":
-                    await Timer_Time_Selector(Sentence, time_interval, "set a ".Length - 1);
+                    timer_set = await Timer_Time_Selector(Sentence, time_interval, "set a ".Length - 1);
 
-                    await Proc_Mitigator.Process_Initialisation<System.Collections.Concurrent.ConcurrentDictionary<string, int>>("Timer Process", null, time_interval);
+                    if(timer_set == true)
+                    {
+                        await Proc_Mitigator.Process_Initialisation<System.Collections.Concurrent.ConcurrentDictionary<string, int>>("Timer Process", null, time_interval);
+                    }
                     break;
 
 
                 case "set a [Timer Interval] timer please":
-                    await Timer_Time_Selector(Sentence, time_interval, "set a ".Length - 1);
+                    timer_set = await Timer_Time_Selector(Sentence, time_interval, "set a ".Length - 1);
 
-                    await Proc_Mitigator.Process_Initialisation<System.Collections.Concurrent.ConcurrentDictionary<string, int>>("Timer Process", null, time_interval);
+                    if (timer_set == true)
+                    {
+                        await Proc_Mitigator.Process_Initialisation<System.Collections.Concurrent.ConcurrentDictionary<string, int>>("Timer Process", null, time_interval);
+                    }
                     break;
 
-
-
                 case "please set a [Timer Interval] timer":
-                    await Timer_Time_Selector(Sentence, time_interval, "please set a ".Length - 1);
+                    timer_set = await Timer_Time_Selector(Sentence, time_interval, "please set a ".Length - 1);
 
-                    await Proc_Mitigator.Process_Initialisation<System.Collections.Concurrent.ConcurrentDictionary<string, int>>("Timer Process", null, time_interval);
+                    if (timer_set == true)
+                    {
+                        await Proc_Mitigator.Process_Initialisation<System.Collections.Concurrent.ConcurrentDictionary<string, int>>("Timer Process", null, time_interval);
+                    }
                     break;
             }
 
@@ -784,6 +801,82 @@ namespace Eva_5._0
             return Task.FromResult(true);
         }
 
+        private static Task<string> System_Application_Selector(int start_index, string Sentence)
+        {
+            System.Collections.Generic.Stack<string> Token_Buffer_List = new System.Collections.Generic.Stack<string>();
+            string Token_Buffer;
+            string app = String.Empty;
+            int index = start_index + 1;
+
+
+            Application_StringBuilder.Clear();
+
+            while (index < Sentence.Length)
+            {
+                Application_StringBuilder.Append(Sentence[index]);
+
+                app = Application_StringBuilder.ToString();
+                A_p_l_Name__And__A_p_l___E_x__Name.TryGetValue(app, out Token_Buffer);
+
+
+                if (Token_Buffer != null)
+                {
+                    Token_Buffer_List.Push(app);
+                    Token_Buffer = null;
+                }
+
+                index++;
+            }
+            Application_StringBuilder.Clear();
+
+            if(Token_Buffer_List.Count > 0)
+            {
+                return Task.FromResult(Token_Buffer_List.Pop());
+            }
+            else
+            {
+                return Task.FromResult(String.Empty);
+            }
+        }
+
+        private static Task<string> System_Process_Selector(int start_index, string Sentence)
+        {
+            System.Collections.Generic.Stack<string> Token_Buffer_List = new System.Collections.Generic.Stack<string>();
+            string Token_Buffer;
+            string process = String.Empty;
+            int index = start_index + 1;
+
+
+            Application_StringBuilder.Clear();
+
+            while (index < Sentence.Length)
+            {
+                Application_StringBuilder.Append(Sentence[index]);
+
+                process = Application_StringBuilder.ToString();
+                A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryGetValue(process, out Token_Buffer);
+
+
+                if (Token_Buffer != null)
+                {
+                    Token_Buffer_List.Push(process);
+                    Token_Buffer = null;
+                }
+
+                index++;
+            }
+            Application_StringBuilder.Clear();
+
+            if (Token_Buffer_List.Count > 0)
+            {
+                return Task.FromResult(Token_Buffer_List.Pop());
+            }
+            else
+            {
+                return Task.FromResult(String.Empty);
+            }
+        }
+
         private static Task<string> Web_Application_Selector(int start_index, string Sentence)
         {
             // THE SECOND TOKENIZATION IDENTIFIES WHERE THE POSITION OF THE WEB APPLICATION KEYWORD IS WITHIN THE SENTENCE
@@ -807,7 +900,7 @@ namespace Eva_5._0
 
             WebApplicationSearchContent_StringBuilder.Clear();
 
-            while(index < Sentence.Length - 1)
+            while(index < Sentence.Length)
             {
                 WebApplication_StringBuilder.Append(Sentence[index]);
 
@@ -830,7 +923,14 @@ namespace Eva_5._0
 
             // [ END ]
 
-            return Task.FromResult(Token_Buffer_List.Pop());
+            if (Token_Buffer_List.Count > 0)
+            {
+                return Task.FromResult(Token_Buffer_List.Pop());
+            }
+            else
+            {
+                return Task.FromResult(String.Empty);
+            }
         }
 
         ~Natural_Language_Processing()
