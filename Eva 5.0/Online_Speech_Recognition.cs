@@ -73,11 +73,15 @@ namespace Eva_5._0
                         {
                             if (Window_Minimised == "false")
                             {
-                                Online_Speech_Recogniser_Listening = "true";
-
-                                System.Threading.Thread ParallelProcessing = new System.Threading.Thread(async() =>
+                                async void Execute()
                                 {
                                     await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppActivationSoundEffect);
+                                    Online_Speech_Recogniser_Listening = "true";
+                                }
+                                Execute();
+
+                                System.Threading.Thread ParallelProcessing = new System.Threading.Thread(() =>
+                                {
                                     Initiate_The_Online_Speech_Recognition_Engine();
                                 });
                                 ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
@@ -98,6 +102,9 @@ namespace Eva_5._0
         {
             try
             {
+                // ENSURE THAT THE ONLINE SPEECH RECOGNITION INTERFACE IS CLOSED BEFORE STARTING IT
+                await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
+
                 online_speech_recognition_timeout = DateTime.Now;
                 Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.Now;
                 OnlineSpeechRecognition = new Windows.Media.SpeechRecognition.SpeechRecognizer();
@@ -117,6 +124,8 @@ namespace Eva_5._0
                         OnlineSpeechRecognition.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
 
                         await OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync();
+
+                        // CLEAR THE CACHE OF THE ONLINE SPEECH RECOGNITION INTERFACE
                         await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache);
                         break;
 
