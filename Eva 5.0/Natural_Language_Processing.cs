@@ -98,7 +98,7 @@ namespace Eva_5._0
             //
             // [ BEGIN ]
 
-          
+
             switch (Sentence.IndexOf("please open ") == 0)
             {
                 case true:
@@ -278,31 +278,37 @@ namespace Eva_5._0
 
 
 
-            if (Sentence.IndexOf(' ') == 3)
+
+
+
+            if (Sentence.IndexOf("set ") != 0)
             {
-                switch(Sentence.IndexOf('g') == 0)
+                if (Sentence.IndexOf(' ') == 3)
                 {
-                    case true:
-                        await PostProcessing("chatgpt [ ChatGPT Query ]", Sentence);
-                        break;
+                    switch (Sentence.IndexOf('g') == 0)
+                    {
+                        case true:
+                            await PostProcessing("chatgpt [ ChatGPT Query ]", Sentence);
+                            break;
 
 
-                    case false:
-                        switch (Sentence.IndexOf('p') == 1)
-                        {
-                            case true:
-                                await PostProcessing("chatgpt [ ChatGPT Query ]", Sentence);
-                                break;
-
-
-                            case false:
-                                if (Sentence.IndexOf('t') == 2)
-                                {
+                        case false:
+                            switch (Sentence.IndexOf('p') == 1)
+                            {
+                                case true:
                                     await PostProcessing("chatgpt [ ChatGPT Query ]", Sentence);
-                                }
-                                break;
-                        }
-                        break;
+                                    break;
+
+
+                                case false:
+                                    if (Sentence.IndexOf('t') == 2)
+                                    {
+                                        await PostProcessing("chatgpt [ ChatGPT Query ]", Sentence);
+                                    }
+                                    break;
+                            }
+                            break;
+                    }
                 }
             }
    
