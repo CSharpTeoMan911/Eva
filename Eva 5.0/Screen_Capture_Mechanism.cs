@@ -47,7 +47,7 @@ namespace Eva_5._0
             File_Name_Generation:
 
 
-
+                string user_desktop_directory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
 
                 // FILE NAME GENERATION USING RANDOM NUMBERS
                 file_name.Clear();
@@ -61,10 +61,8 @@ namespace Eva_5._0
 
                 // PATH GENERATION USING THE FILE NAME
                 path_and_file_name.Clear();
-                
-                path_and_file_name.Append(@"C:\Users\");
-                path_and_file_name.Append(System.Environment.UserName);
-                path_and_file_name.Append(@"\Desktop\");
+                path_and_file_name.Append(user_desktop_directory);
+                path_and_file_name.Append("\\");
                 path_and_file_name.Append(file_name.ToString());
                 path_and_file_name.Append(".jpg");
 

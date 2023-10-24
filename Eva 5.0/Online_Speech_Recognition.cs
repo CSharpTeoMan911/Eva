@@ -26,8 +26,6 @@ namespace Eva_5._0
 
     internal class Online_Speech_Recognition : MainWindow
     {
-        private static System.Media.SoundPlayer player = new System.Media.SoundPlayer("Listen.wav");
-
         private static Windows.Media.SpeechRecognition.SpeechRecognizer OnlineSpeechRecognition;
         private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Constraints = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.FormFilling, "form-filling", "form");
 
@@ -341,18 +339,6 @@ namespace Eva_5._0
             }
 
             return Task.FromResult(true);
-        }
-
-        public static void Dispose_Sound()
-        {
-            if(player != null)
-            {
-                try
-                {
-                    player.Dispose();
-                }
-                catch { }
-            }
         }
     }
 }
