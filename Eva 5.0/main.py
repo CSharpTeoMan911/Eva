@@ -40,14 +40,14 @@ def Wake_Word_Engine_Thread_Management():
         # INITIATE KALDI SPEECH RECOGNIZER INSTANCE USING THE VOSK MODEL AND A FREQUENCY OF 16000 HZ
         recognizer = KaldiRecognizer(model, 16000)
 
-        # INITIATE PYAUDIO OBJECT, LISTEN TO THE DEFAULT MIC ON 1 CHANNEL, WITH A RATE OF 16000 HZ AND A BUFFER OF 800 FRAMES
+        # INITIATE PYAUDIO OBJECT, LISTEN TO THE DEFAULT MIC ON 1 CHANNEL, WITH A RATE OF 16000 HZ AND A BUFFER OF 400 FRAMES
         mic = pyaudio.PyAudio()
-        stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=800)
+        stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=400)
         stream.start_stream()
 
         while True:
             # READ FROM THE AUDIO DATA STREAM A 800 FRAMES PER CYCLE
-            data = stream.read(800)
+            data = stream.read(400)
 
             # RETRIEVE THE AUDIO WAVEFORM DATA AND PERFORM SPEECH TO TEXT CONVERSION
             if recognizer.AcceptWaveform(data):
