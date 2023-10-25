@@ -250,6 +250,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="main.py" />
     <Content Include="Sounds\AlarmSound.wav" />
     <Content Include="Sounds\App closing.wav" />
     <Content Include="Sounds\App execution.wav" />
@@ -258,7 +259,6 @@
     <Resource Include="Images\Chatgpt-logo.png" />
     <Content Include="Sounds\Chat_GPT_Notification.wav" />
     <Resource Include="Images\loading-gif.gif" />
-    <Content Include="main.py" />
     <Content Include="Sounds\Listen.wav" />
     <Content Include="Sounds\Privacy statement declined or mic not available.wav" />
   </ItemGroup>

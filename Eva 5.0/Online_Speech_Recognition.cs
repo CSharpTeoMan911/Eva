@@ -100,9 +100,6 @@ namespace Eva_5._0
         {
             try
             {
-                // ENSURE THAT THE ONLINE SPEECH RECOGNITION INTERFACE IS CLOSED BEFORE STARTING IT
-                await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
-
                 online_speech_recognition_timeout = DateTime.Now;
                 Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.Now;
                 OnlineSpeechRecognition = new Windows.Media.SpeechRecognition.SpeechRecognizer();
