@@ -233,26 +233,116 @@
                 </TextBlock>
 
 
+                <TextBlock x:Name="TroubleshootingContents0_1" Margin="0,30,0,0" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;If Eva cannot understand you is because you do not use English &#x0a;as the selected language for speech recognition.&#x0a;To select English as the speech recognition language,&#x0a;open the Settings page and go to the settings section&#x0a;">
+                    
+                    <Hyperlink
+                        NavigateUri=""
+                        RequestNavigate="Open_Settings_At_Language">
+                        <StackPanel>
+                            <TextBlock Text="Time and Language -> Language -> Preffered language.&#x0a;Under the Preffered language section, press the '+' &#x0a;button, select the 'English (United States)' language&#x0a;package, follow the instructions to install the language,&#x0a;and restart the computer afterwards."/>
+                        </StackPanel>
+                    </Hyperlink>
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush>
+                            <GradientStop Color="#FF7BBFD8" x:Name="TroubleshootingContentTextBlockOffset0_1" Offset="1"/>
+                            <GradientStop Color="#FF1B70C3"/>
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+                </TextBlock>
+                <TextBlock x:Name="TroubleshootingContents0_2" Margin="0,0,0,30" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;After the language pack is installed and the computer restarted&#x0a;open the Settings page and go to the settings section&#x0a;">
+                    
+                    <Hyperlink
+                        NavigateUri=""
+                        RequestNavigate="Open_Settings_At_Speech_Recognition">
+                        <StackPanel>
+                            <TextBlock Text="Time and Language -> Speech -> Speech language.&#x0a;Under the Speech language section, select the&#x0a;'English (United States)' language."/>
+                        </StackPanel>
+                    </Hyperlink>
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush>
+                            <GradientStop Color="#FF7BBFD8" x:Name="TroubleshootingContentTextBlockOffset0_2" Offset="1"/>
+                            <GradientStop Color="#FF1B70C3"/>
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+                </TextBlock>
 
-                <TextBlock x:Name="TroubleshootingContents1" Margin="0,30,0,0" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;If Eva cannot hear you open the Settings page and go to&#x0a;">
+
+                <TextBlock x:Name="TroubleshootingContents1" Margin="0,30,0,30" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;If Eva cannot hear you, open the Settings page and go to&#x0a;">
                     
                     <Hyperlink
                         NavigateUri=""
                         RequestNavigate="Open_Settings_At_Speech_Recognition">
                         <StackPanel>
                             <TextBlock Text="Time and Language -> Speech -> Microphone. Under the
-                        &#x0a;Microphone section, press the Get Stared button and 
-                        &#x0a;follow the instructions.&#x0a;&#x0a;&#x0a;"/>
+                        &#x0a;Microphone section, press the 'Get Stared' button and 
+                        &#x0a;follow the instructions"/>
                         </StackPanel>
                     </Hyperlink>
-
-
-                    
-                    
-
                     <TextBlock.Foreground>
                         <LinearGradientBrush>
                             <GradientStop Color="#FF7BBFD8" x:Name="TroubleshootingContentTextBlockOffset1" Offset="1"/>
+                            <GradientStop Color="#FF1B70C3"/>
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+                </TextBlock>
+
+                <TextBlock x:Name="TroubleshootingContents2" Margin="0,30,0,30" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;If Eva has accuracy problems, open the Settings page and go to&#x0a;">
+                    
+                    <Hyperlink
+                        NavigateUri=""
+                        RequestNavigate="Open_Settings_At_Speech_Recognition">
+                        <StackPanel>
+                            <TextBlock Text="Time and Language -> Speech -> Speech language. Under the&#x0a;Microphone section, check the 'Recognise non-native accents',&#x0a;checkmark."/>
+                        </StackPanel>
+                    </Hyperlink>
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush>
+                            <GradientStop Color="#FF7BBFD8" x:Name="TroubleshootingContentTextBlockOffset2" Offset="1"/>
+                            <GradientStop Color="#FF1B70C3"/>
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+                </TextBlock>
+
+                <TextBlock x:Name="TroubleshootingContents3" Margin="0,30,0,0" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;&#x0a;If Eva still cannot hear you or do you have accuracy and/or&#x0a;behaviour related problems open the Command Prompt as&#x0a;Administrator and type the commands:">
+
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush>
+                            <GradientStop Color="#FF7BBFD8" x:Name="TroubleshootingContentTextBlockOffset3" Offset="1"/>
+                            <GradientStop Color="#FF1B70C3"/>
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+
+                </TextBlock>
+
+                <TextBox x:Name="CommandsTextBox" IsReadOnly="True" TextWrapping="Wrap" Margin="0,30,0,30" Width="600px" Height="130px" FontSize="16" BorderBrush="Transparent" HorizontalAlignment="Left" VerticalScrollBarVisibility="Auto" Text="Dism /Online /Cleanup-Image /ScanHealth&#x0a;&#x0a;Dism /Online /Cleanup-Image /CheckHealth&#x0a;&#x0a;sfc/scannow">
+
+
+
+                    <TextBox.Clip>
+                        <RectangleGeometry Rect="0, 0, 600, 130" RadiusX="10" RadiusY="10"/>
+                    </TextBox.Clip>
+
+                    <TextBox.Foreground>
+                        <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                            <GradientStop Color="#FF0BD2A0" x:Name="CommandsTextBoxOffset" Offset="1"/>
+                            <GradientStop Color="#FF0AE6E1"/>
+                        </LinearGradientBrush>
+                    </TextBox.Foreground>
+
+                    <TextBox.Background>
+                        <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                            <GradientStop Color="#FF08090A" x:Name="CommandsTextBoxBackgroundOffset" Offset="1"/>
+                            <GradientStop Color="#FF021325"/>
+                        </LinearGradientBrush>
+                    </TextBox.Background>
+                </TextBox>
+
+
+                <TextBlock x:Name="TroubleshootingContents4" Margin="0,0,0,0" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="These commands must be entered in order to fix corrupt system&#x0a;files. Eva is dependant on the Windows OS and as a result,&#x0a;corrupt system files may cause serious behavioural and&#x0a;functional issues.&#x0a;&#x0a;&#x0a;">
+
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush>
+                            <GradientStop Color="#FF7BBFD8" x:Name="TroubleshootingContentTextBlockOffset4" Offset="1"/>
                             <GradientStop Color="#FF1B70C3"/>
                         </LinearGradientBrush>
                     </TextBlock.Foreground>
@@ -261,10 +351,7 @@
 
 
 
-               
 
-
-                
             </StackPanel>
 
         </ScrollViewer>

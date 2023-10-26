@@ -147,44 +147,30 @@ namespace Eva_5._0
         {
             try
             {
-                switch (args.Result.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
+                switch ((args.Result.Text == String.Empty) || (args.Result == null))
                 {
                     case true:
-
-                        switch ((args.Result.Text == String.Empty) || (args.Result == null))
-                        {
-                            case true:
-                                Close_Speech_Recognition_Interface();
-                                break;
-
-
-                            case false:
-
-                                lock (Online_Speech_Recogniser_Disabled)
-                                {
-                                    lock (Window_Minimised)
-                                    {
-                                        if (Window_Minimised == "true" || Online_Speech_Recogniser_Disabled == "true")
-                                        {
-                                            goto Function_Not_Initiated;
-                                        }
-                                    }
-                                }
-
-                                await Natural_Language_Processing_Mitigator.PreProcessing_Initiation(args.Result.Text.ToLower());
-
-                            Function_Not_Initiated:
-                                Close_Speech_Recognition_Interface();
-                                break;
-                        }
-                        break;
-
-
-
-                    case false:
                         Close_Speech_Recognition_Interface();
                         break;
 
+
+                    case false:
+                        lock (Online_Speech_Recogniser_Disabled)
+                        {
+                            lock (Window_Minimised)
+                            {
+                                if (Window_Minimised == "true" || Online_Speech_Recogniser_Disabled == "true")
+                                {
+                                    goto Function_Not_Initiated;
+                                }
+                            }
+                        }
+
+                        await Natural_Language_Processing_Mitigator.PreProcessing_Initiation(args.Result.Text.ToLower());
+
+                    Function_Not_Initiated:
+                        Close_Speech_Recognition_Interface();
+                        break;
                 }
             }
             catch (Exception E)
@@ -202,7 +188,6 @@ namespace Eva_5._0
                 Online_Speech_Recogniser_Listening = "false";
                 Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.Now;
             }
-
         }
 
         private static void ContinuousRecognitionSession_Completed(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionSession sender, Windows.Media.SpeechRecognition.SpeechContinuousRecognitionCompletedEventArgs args)
