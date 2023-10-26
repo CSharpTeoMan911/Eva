@@ -100,6 +100,9 @@ namespace Eva_5._0
         {
             try
             {
+                // ENSURE THE ONLINE SPEECH RECOGNITION INTERFACE IS CLOSED
+                await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
+
                 online_speech_recognition_timeout = DateTime.Now;
                 Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.Now;
                 OnlineSpeechRecognition = new Windows.Media.SpeechRecognition.SpeechRecognizer();
@@ -127,7 +130,6 @@ namespace Eva_5._0
                     case false:
                         Close_Speech_Recognition_Interface();
                         break;
-
                 }
 
 
@@ -291,7 +293,8 @@ namespace Eva_5._0
 
                             foreach (System.Diagnostics.Process online_speech_recognition_interface in online_speech_recognition_interface_instances)
                             {
-                                online_speech_recognition_interface.Refresh();
+                                if (online_speech_recognition_interface != null)
+                                    online_speech_recognition_interface.Refresh();
                             }
 
                             // END
@@ -306,14 +309,14 @@ namespace Eva_5._0
 
                             foreach (System.Diagnostics.Process online_speech_recognition_interface in online_speech_recognition_interface_instances)
                             {
-                                online_speech_recognition_interface.Kill();
+                                if(online_speech_recognition_interface != null)
+                                    online_speech_recognition_interface.Dispose();
                             }
 
                             // END
                             break;
                     }
                 }
-
             }
             catch
             {
