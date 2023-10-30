@@ -35,19 +35,19 @@ def Wake_Word_Engine_Thread_Management():
 
     try:
         # LOAD THE VOSK SPEECH RECOGNITION MODEL FROM THE APPLICATION'S DIRECTORY
-        model = Model(os.getcwd() + "\\" + "vosk-model-small-en-us-0.15")
+        model = Model(model_path= os.getcwd() + "\\" + "vosk-model-small-en-us-zamia-0.5", model_name="tedlium")
 
         # INITIATE KALDI SPEECH RECOGNIZER INSTANCE USING THE VOSK MODEL AND A FREQUENCY OF 16000 HZ
         recognizer = KaldiRecognizer(model, 16000)
 
-        # INITIATE PYAUDIO OBJECT, LISTEN TO THE DEFAULT MIC ON 1 CHANNEL, WITH A RATE OF 16000 HZ AND A BUFFER OF 400 FRAMES
+        # INITIATE PYAUDIO OBJECT, LISTEN TO THE DEFAULT MIC ON 1 CHANNEL, WITH A RATE OF 16000 HZ AND A BUFFER OF 800 FRAMES
         mic = pyaudio.PyAudio()
-        stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=400)
+        stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=800)
         stream.start_stream()
 
         while True:
-            # READ FROM THE AUDIO DATA STREAM A 400 FRAMES PER CYCLE
-            data = stream.read(400)
+            # READ FROM THE AUDIO DATA STREAM A 800 FRAMES PER CYCLE
+            data = stream.read(800)
 
             # RETRIEVE THE AUDIO WAVEFORM DATA AND PERFORM SPEECH TO TEXT CONVERSION
             if recognizer.AcceptWaveform(data):
@@ -56,19 +56,24 @@ def Wake_Word_Engine_Thread_Management():
                 # TO THE PARENT PROCESS ON A DIFFERENT THREAD
                 if "stop listening" in recognizer.FinalResult():
                     wake_word_operation_stdout_stream(False)
+                    recognizer.Reset()
                 elif "stop listening" in recognizer.Result():
                     wake_word_operation_stdout_stream(False)
+                    recognizer.Reset()
                 else:
                     if "listen" in recognizer.FinalResult():
                         wake_word_operation_stdout_stream(True)
+                        recognizer.Reset()
                     elif "listen" in recognizer.Result():
                         wake_word_operation_stdout_stream(True)
+                        recognizer.Reset()
             else:
                 if "stop listening" in recognizer.PartialResult():
                     wake_word_operation_stdout_stream(False)
+                    recognizer.Reset()
                 elif "listen" in recognizer.PartialResult():
                     wake_word_operation_stdout_stream(True)
-
+                    recognizer.Reset()
 
     except KeyboardInterrupt:
         sys.exit(0)
