@@ -39,6 +39,7 @@ def Wake_Word_Engine_Thread_Management():
 
         # INITIATE KALDI SPEECH RECOGNIZER INSTANCE USING THE VOSK MODEL AND A FREQUENCY OF 16000 HZ
         recognizer = KaldiRecognizer(model, 16000)
+        recognizer.SetWords(['hey', 'listen', 'stop', 'listening'])
 
         # INITIATE PYAUDIO OBJECT, LISTEN TO THE DEFAULT MIC ON 1 CHANNEL, WITH A RATE OF 16000 HZ AND A BUFFER OF 800 FRAMES
         mic = pyaudio.PyAudio()
@@ -66,10 +67,8 @@ def Wake_Word_Engine_Thread_Management():
             else:
                 if "stop listening" in recognizer.PartialResult():
                     wake_word_operation_stdout_stream(False)
-                    recognizer.Reset()
                 elif "listen" in recognizer.PartialResult():
                     wake_word_operation_stdout_stream(True)
-                    recognizer.Reset()
 
     except KeyboardInterrupt:
         sys.exit(0)
