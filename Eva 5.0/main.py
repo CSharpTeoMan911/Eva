@@ -56,17 +56,13 @@ def Wake_Word_Engine_Thread_Management():
                 # TO THE PARENT PROCESS ON A DIFFERENT THREAD
                 if "stop listening" in recognizer.FinalResult():
                     wake_word_operation_stdout_stream(False)
-                    recognizer.Reset()
                 elif "stop listening" in recognizer.Result():
                     wake_word_operation_stdout_stream(False)
-                    recognizer.Reset()
                 else:
                     if "listen" in recognizer.FinalResult():
                         wake_word_operation_stdout_stream(True)
-                        recognizer.Reset()
                     elif "listen" in recognizer.Result():
                         wake_word_operation_stdout_stream(True)
-                        recognizer.Reset()
             else:
                 if "stop listening" in recognizer.PartialResult():
                     wake_word_operation_stdout_stream(False)
