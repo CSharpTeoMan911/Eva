@@ -19,6 +19,7 @@ namespace Eva_5._0
             public string model;
             public messages[] messages;
             public double temperature = 0.5;
+            public int max_tokens = 1000;
         }
 
 
@@ -42,6 +43,8 @@ namespace Eva_5._0
         {
             string result = null;
             Type return_type = null;
+
+            Remove_Superflous_Tokens(input.Length);
 
             // 'HttpClient' OBJECT NEEDED TO SEND HTTP REQUESTS TO THE OPENAI SERVER.
             System.Net.Http.HttpClient api_client = new System.Net.Http.HttpClient();
@@ -157,9 +160,6 @@ namespace Eva_5._0
 
 
 
-
-
-
         private static Tuple<Type, string> API_Payload_Processing(JObject json_response)
         {
 
@@ -246,6 +246,62 @@ namespace Eva_5._0
             }
 
             // [ END ]
+        }
+
+
+
+
+        /// <summary>
+        /// 
+        /// METHOD THAT REMOVES THE NUMBER OF TOKENS ABOVE THE ACCEPTED LIMIT BY OPENAI'S CHATGPT API.
+        /// THE ALGORITHM HAS AN O(N) TIME COMPLEXITY AND A O(1) SPACE COMPLEXITY
+        /// 
+        /// </summary>
+        private static void Remove_Superflous_Tokens(int input_length)
+        {
+            if (cached_conversation.Count > 0)
+            {
+                // VARIABLE THAT HOLDS THE TOTAL DETECTED TOKENS IN THE CACHED CONVERSATION
+                int total_tokens = 0;
+
+                // VARIABLE THAT HOLDS THE MAXIMUM LIMIT OF TOKENS THAT CAN BE USED IN A CONVERSATION
+                int limit = 2148;
+
+                // CONVERSATION MESSAGE OBJECT THAT HOLDS THE MAXIMUM NUMBER OF STIPULATED TOKENS OF THE CURRENT UNFULFILLED CHATGPT REQUEST
+                messages messages = new messages();
+                messages.role = "User";
+                messages.content = new string('*', (input_length + 1000));
+
+                // DEEP COPY (NOT A REFERENCE) OF THE CHACHED CONVERSATION OBJECT
+                List<messages> cached_conversation_deep_copy = new List<messages>(cached_conversation);
+
+                // INSERT THE MAXIMUM NUMBER OF STIPULATED TOKENS OF THE CURRENT UNFULFILLED CHATGPT REQUEST
+                cached_conversation_deep_copy.Add(messages);
+
+                // GET THE NUMBER OF TOKENS IN THE CHACHED CONVERSATION OBJECT
+                for (int i = 0; i < cached_conversation_deep_copy.Count; i++)
+                {
+                    total_tokens += cached_conversation_deep_copy[i].content.Length / 4;
+                }
+
+                // IF THE CURRENT NUMBER OF TOKENS EXCEEDS THE TOKEN LIMIT REMOVE MESSAGES FROM THE CONVERSATION TO SATISFY THE LIMIT REQUIREMENT
+                if (total_tokens >= limit)
+                {
+                    for (int i = 0; i < cached_conversation.Count - 3; i++)
+                    {
+                        string item = cached_conversation[i].content;
+                        int item_tokens = item.Length / 4;
+
+                        cached_conversation.RemoveAt(i);
+                        total_tokens -= item_tokens;
+
+                        if (total_tokens < limit)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
     }

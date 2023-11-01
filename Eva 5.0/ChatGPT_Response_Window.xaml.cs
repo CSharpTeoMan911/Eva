@@ -212,6 +212,8 @@ namespace Eva_5._0
 
                                     user_input.Clear();
                                     chat_gpt_input.Clear();
+
+                                    Get_Last_Response_Line();
                                 }
                                 else
                                 {
@@ -356,6 +358,20 @@ namespace Eva_5._0
                     Input_Button.Margin = new Thickness(10, 10, 0, 0);
                     break;
             }
+        }
+
+        private void Get_Last_Response_Line()
+        {
+            int detected_index = 0;
+            for(int i = 0; i < ResponseTextBox.LineCount; i++)
+            {
+                if (ResponseTextBox.GetLineText(i).Contains("ChatGPT: "))
+                {
+                    detected_index = i;
+                }
+            }
+
+            ResponseTextBox.ScrollToLine(detected_index);
         }
     }
 }
