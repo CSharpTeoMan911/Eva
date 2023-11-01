@@ -47,7 +47,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -254,6 +254,8 @@
     <Content Include="Sounds\AlarmSound.wav" />
     <Content Include="Sounds\App closing.wav" />
     <Content Include="Sounds\App execution.wav" />
+    <Content Include="Sounds\ChatGpt Activated.wav" />
+    <Content Include="Sounds\ChatGpt Deactivation.wav" />
     <Content Include="Sounds\Screenshot_Sound_Effect.wav" />
     <Resource Include="Images\Chat_Gpt_Logo.bmp" />
     <Resource Include="Images\Chatgpt-logo.png" />

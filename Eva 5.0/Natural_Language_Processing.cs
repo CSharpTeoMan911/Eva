@@ -52,8 +52,6 @@ namespace Eva_5._0
         private static StringBuilder WordBuffer_StringBuilder = new StringBuilder();
 
 
-
-
         // COMPONENTS THAT INTERACT WITH SECURTY SENSITIVE FEATURES ARE CONTAINED INSIDE PRIVATE SEALED CLASSES FOR EXTRA PROTECTION
         //
         // [ BEGIN ]
@@ -98,273 +96,145 @@ namespace Eva_5._0
             //
             // [ BEGIN ]
 
+            if (Sentence.IndexOf("activate c") == 0 && Sentence.IndexOf(" mode") == Sentence.Length - " mode".Length)
+            {
+                MainWindow.chatgpt_mode_enabled = true;
+                await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTActivationSoundEffect);
+                goto ChatGptMode;
+            }
+            else if(Sentence.IndexOf("deactivate c") == 0 && Sentence.IndexOf(" mode") == Sentence.Length - " mode".Length)
+            {
+                MainWindow.chatgpt_mode_enabled = false;
+                await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTDeactivationSoundEffect);
+                goto ChatGptMode;
+            }
 
-            switch (Sentence.IndexOf("please open ") == 0)
+            switch(MainWindow.chatgpt_mode_enabled)
             {
                 case true:
-
-                    await PostProcessing("please open [Application]", Sentence);
+                    await PostProcessing("chatgpt [ ChatGPT Query ]", Sentence);
                     break;
 
                 case false:
-
-                    switch (Sentence.IndexOf("open ") == 0)
+                    switch (Sentence.IndexOf("please open ") == 0)
                     {
                         case true:
 
-                            switch (Sentence.LastIndexOf(" please") + " please".Length - 1 == Sentence.Length - 1)
+                            await PostProcessing("please open [Application]", Sentence);
+                            break;
+
+                        case false:
+
+                            switch (Sentence.IndexOf("open ") == 0)
                             {
                                 case true:
 
-                                    await PostProcessing("open [Application] please", Sentence);
-                                    break;
-
-                                case false:
-
-                                    switch (Sentence.LastIndexOf(" now") + " now".Length - 1 == Sentence.Length - 1)
+                                    switch (Sentence.LastIndexOf(" please") + " please".Length - 1 == Sentence.Length - 1)
                                     {
                                         case true:
 
-                                            await PostProcessing("open [Application] now", Sentence);
+                                            await PostProcessing("open [Application] please", Sentence);
                                             break;
 
                                         case false:
 
-                                            await PostProcessing("open [Application]", Sentence);
-                                            break;
-                                    }
-
-                                    break;
-                            }
-                            break;
-                    }
-                    break;
-            }
-
-
-
-            switch (Sentence.IndexOf("please close ") == 0)
-            {
-                case true:
-
-                    await PostProcessing("please close [Application]", Sentence);
-                    break;
-
-                case false:
-
-                    switch (Sentence.IndexOf("close ") == 0)
-                    {
-                        case true:
-
-                            switch (Sentence.LastIndexOf(" please") + " please".Length - 1 == Sentence.Length - 1)
-                            {
-                                case true:
-
-                                    await PostProcessing("close [Application] please", Sentence);
-                                    break;
-
-                                case false:
-
-                                    switch (Sentence.LastIndexOf(" now") + " now".Length - 1 == Sentence.Length - 1)
-                                    {
-                                        case true:
-
-                                            await PostProcessing("close [Application] now", Sentence);
-                                            break;
-
-                                        case false:
-
-                                            await PostProcessing("close [Application]", Sentence);
-                                            break;
-                                    }
-
-                                    break;
-                            }
-                            break;
-                    }
-                    break;
-            }
-
-
-
-
-            switch (Sentence.IndexOf("please search on ") == 0)
-            {
-                case true:
-
-                    await PostProcessing("please search on [Web Application Keyword] [Content]", Sentence);
-                    break;
-
-                case false:
-
-                    switch ((Sentence.IndexOf("please search ") == 0) && (Sentence.Contains(" on ") == true))
-                    {
-                        case true:
-
-                            await PostProcessing("please search [Content] on [Web Application Keyword]", Sentence);
-                            break;
-
-                        case false:
-
-                            switch (Sentence.IndexOf("search on ") == 0)
-                            {
-                                case true:
-
-                                    await PostProcessing("search on [Web Application Keyword] [Content]", Sentence);
-                                    break;
-
-                                case false:
-
-                                    if ((Sentence.IndexOf("search ") == 0) && (Sentence.Contains(" on ") == true))
-                                    {
-                                        await PostProcessing("search [Content] on [Web Application Keyword]", Sentence);
-                                    }
-                                    break;
-                            }
-                            break;
-                    }
-                    break;
-            }
-
-
-
-
-
-            switch (Sentence.IndexOf("set a ") == 0)
-            {
-                case true:
-
-                    switch (Sentence.IndexOf(" timer") == Sentence.Length - 6)
-                    {
-                        case true:
-
-                            await PostProcessing("set a [Timer Interval] timer", Sentence);
-                            break;
-
-
-                        case false:
-
-                            switch (Sentence.IndexOf(" please") == Sentence.Length - 7)
-                            {
-                                case true:
-
-                                    if (Sentence.IndexOf(" timer ") == Sentence.Length - 13)
-                                    {
-                                        await PostProcessing("set a [Timer Interval] timer please", Sentence);
-                                    }
-                                    break;
-                            }
-                            break;
-                    }
-                    break;
-
-
-
-                case false:
-                    switch (Sentence.IndexOf("please set a ") == 0)
-                    {
-                        case true:
-                            if (Sentence.IndexOf(" timer") == Sentence.Length - 6)
-                            {
-                                await PostProcessing("please set a [Timer Interval] timer", Sentence);
-                            }
-                            break;
-                    }
-                    break;
-            }
-
-
-
-
-
-
-
-
-
-            if (Sentence.IndexOf("set ") != 0)
-            {
-                if (Sentence.IndexOf(' ') == 3)
-                {
-                    switch (Sentence.IndexOf('g') == 0)
-                    {
-                        case true:
-                            await PostProcessing("chatgpt [ ChatGPT Query ]", Sentence);
-                            break;
-
-
-                        case false:
-                            switch (Sentence.IndexOf('p') == 1)
-                            {
-                                case true:
-                                    await PostProcessing("chatgpt [ ChatGPT Query ]", Sentence);
-                                    break;
-
-
-                                case false:
-                                    if (Sentence.IndexOf('t') == 2)
-                                    {
-                                        await PostProcessing("chatgpt [ ChatGPT Query ]", Sentence);
-                                    }
-                                    break;
-                            }
-                            break;
-                    }
-                }
-            }
-   
-
-            // [ END ]
-
-
-
-
-
-
-            // COMMANDS THAT DO NOT REQUIRE A SECOND TOKENIZATION. THESE COMMANDS ARE COMMANDS THAT DO NOT HAVE
-            // EXTRA VARIABLES THAT REQUIRE CONTENT PROCESSING AND THE MEANING AND CONTENTS OF THE COMMAND
-            // ARE EXPLICIT
-            //
-            //[ BEGIN ]
-
-
-                // SCREENSHOT PROCESS
-                //[ BEGIN ]
-
-            switch (Sentence.IndexOf("take screenshot") == 0)
-            {
-                case true:
-                    await Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
-                    break;
-
-                case false:
-
-                    switch (Sentence.IndexOf("take a screenshot") == 0)
-                    {
-                        case true:
-                            await Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
-                            break;
-
-                        case false:
-
-                            switch (Sentence.IndexOf("take a screenshot please") == 0)
-                            {
-                                case true:
-                                    await Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
-                                    break;
-
-                                case false:
-
-                                    switch (Sentence.IndexOf("please take a screenshot") == 0)
-                                    {
-                                        case true:
-                                            await Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
-                                            break;
-
-                                        case false:
-
-                                            if (Sentence.IndexOf("screenshot") == 0)
+                                            switch (Sentence.LastIndexOf(" now") + " now".Length - 1 == Sentence.Length - 1)
                                             {
-                                                await Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                                                case true:
+
+                                                    await PostProcessing("open [Application] now", Sentence);
+                                                    break;
+
+                                                case false:
+
+                                                    await PostProcessing("open [Application]", Sentence);
+                                                    break;
+                                            }
+
+                                            break;
+                                    }
+                                    break;
+                            }
+                            break;
+                    }
+
+
+
+                    switch (Sentence.IndexOf("please close ") == 0)
+                    {
+                        case true:
+
+                            await PostProcessing("please close [Application]", Sentence);
+                            break;
+
+                        case false:
+
+                            switch (Sentence.IndexOf("close ") == 0)
+                            {
+                                case true:
+
+                                    switch (Sentence.LastIndexOf(" please") + " please".Length - 1 == Sentence.Length - 1)
+                                    {
+                                        case true:
+
+                                            await PostProcessing("close [Application] please", Sentence);
+                                            break;
+
+                                        case false:
+
+                                            switch (Sentence.LastIndexOf(" now") + " now".Length - 1 == Sentence.Length - 1)
+                                            {
+                                                case true:
+
+                                                    await PostProcessing("close [Application] now", Sentence);
+                                                    break;
+
+                                                case false:
+
+                                                    await PostProcessing("close [Application]", Sentence);
+                                                    break;
+                                            }
+
+                                            break;
+                                    }
+                                    break;
+                            }
+                            break;
+                    }
+
+
+
+
+                    switch (Sentence.IndexOf("please search on ") == 0)
+                    {
+                        case true:
+
+                            await PostProcessing("please search on [Web Application Keyword] [Content]", Sentence);
+                            break;
+
+                        case false:
+
+                            switch ((Sentence.IndexOf("please search ") == 0) && (Sentence.Contains(" on ") == true))
+                            {
+                                case true:
+
+                                    await PostProcessing("please search [Content] on [Web Application Keyword]", Sentence);
+                                    break;
+
+                                case false:
+
+                                    switch (Sentence.IndexOf("search on ") == 0)
+                                    {
+                                        case true:
+
+                                            await PostProcessing("search on [Web Application Keyword] [Content]", Sentence);
+                                            break;
+
+                                        case false:
+
+                                            if ((Sentence.IndexOf("search ") == 0) && (Sentence.Contains(" on ") == true))
+                                            {
+                                                await PostProcessing("search [Content] on [Web Application Keyword]", Sentence);
                                             }
                                             break;
                                     }
@@ -372,15 +242,160 @@ namespace Eva_5._0
                             }
                             break;
                     }
+
+
+
+
+
+                    switch (Sentence.IndexOf("set a ") == 0)
+                    {
+                        case true:
+
+                            switch (Sentence.IndexOf(" timer") == Sentence.Length - 6)
+                            {
+                                case true:
+
+                                    await PostProcessing("set a [Timer Interval] timer", Sentence);
+                                    break;
+
+
+                                case false:
+
+                                    switch (Sentence.IndexOf(" please") == Sentence.Length - 7)
+                                    {
+                                        case true:
+
+                                            if (Sentence.IndexOf(" timer ") == Sentence.Length - 13)
+                                            {
+                                                await PostProcessing("set a [Timer Interval] timer please", Sentence);
+                                            }
+                                            break;
+                                    }
+                                    break;
+                            }
+                            break;
+
+
+
+                        case false:
+                            switch (Sentence.IndexOf("please set a ") == 0)
+                            {
+                                case true:
+                                    if (Sentence.IndexOf(" timer") == Sentence.Length - 6)
+                                    {
+                                        await PostProcessing("please set a [Timer Interval] timer", Sentence);
+                                    }
+                                    break;
+                            }
+                            break;
+                    }
+
+
+
+                    if (Sentence.IndexOf("set ") != 0)
+                    {
+                        if (Sentence.IndexOf(' ') == 3)
+                        {
+                            switch (Sentence.IndexOf('g') == 0)
+                            {
+                                case true:
+                                    await PostProcessing("chatgpt [ ChatGPT Query ]", Sentence);
+                                    break;
+
+
+                                case false:
+                                    switch (Sentence.IndexOf('p') == 1)
+                                    {
+                                        case true:
+                                            await PostProcessing("chatgpt [ ChatGPT Query ]", Sentence);
+                                            break;
+
+
+                                        case false:
+                                            if (Sentence.IndexOf('t') == 2)
+                                            {
+                                                await PostProcessing("chatgpt [ ChatGPT Query ]", Sentence);
+                                            }
+                                            break;
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+
+
+                    // [ END ]
+
+
+
+
+
+
+                    // COMMANDS THAT DO NOT REQUIRE A SECOND TOKENIZATION. THESE COMMANDS ARE COMMANDS THAT DO NOT HAVE
+                    // EXTRA VARIABLES THAT REQUIRE CONTENT PROCESSING AND THE MEANING AND CONTENTS OF THE COMMAND
+                    // ARE EXPLICIT
+                    //
+                    //[ BEGIN ]
+
+
+                    // SCREENSHOT PROCESS
+                    //[ BEGIN ]
+
+                    switch (Sentence.IndexOf("take screenshot") == 0)
+                    {
+                        case true:
+                            await Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                            break;
+
+                        case false:
+
+                            switch (Sentence.IndexOf("take a screenshot") == 0)
+                            {
+                                case true:
+                                    await Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                                    break;
+
+                                case false:
+
+                                    switch (Sentence.IndexOf("take a screenshot please") == 0)
+                                    {
+                                        case true:
+                                            await Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                                            break;
+
+                                        case false:
+
+                                            switch (Sentence.IndexOf("please take a screenshot") == 0)
+                                            {
+                                                case true:
+                                                    await Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                                                    break;
+
+                                                case false:
+
+                                                    if (Sentence.IndexOf("screenshot") == 0)
+                                                    {
+                                                        await Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                                                    }
+                                                    break;
+                                            }
+                                            break;
+                                    }
+                                    break;
+                            }
+                            break;
+                    }
+
+                        //[ END ]
+
+
+                    //[ END ]
                     break;
             }
 
-                //[ END ]
+ 
 
-
-            //[ END ]
-
-
+        ChatGptMode:
             Sentence_StringBuilder.Clear();
             Application_StringBuilder.Clear();
             WebApplication_StringBuilder.Clear();
@@ -569,13 +584,21 @@ namespace Eva_5._0
                     break;
 
                 case "chatgpt [ ChatGPT Query ]":
-                    for (int Index = "gpt".Length; Index < Sentence.Length; Index++)
+
+                    switch(MainWindow.chatgpt_mode_enabled)
                     {
-                        WebApplicationSearchContent_StringBuilder.Append(Sentence[Index]);
+                        case true:
+                            WebApplicationSearchContent = Sentence;
+                            break;
+                        case false:
+                            for (int Index = "gpt".Length; Index < Sentence.Length; Index++)
+                            {
+                                WebApplicationSearchContent_StringBuilder.Append(Sentence[Index]);
+                            }
+
+                            WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString();
+                            break;
                     }
-
-                    WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString();
-
                     await Proc_Mitigator.Process_Initialisation<string>("ChatGPT Process", Application, WebApplicationSearchContent);
                     break;
 

@@ -15,6 +15,8 @@ namespace Eva_5._0.Properties
         private System.Media.SoundPlayer ErrorSoundEffect = new System.Media.SoundPlayer("Sounds/Privacy statement declined or mic not available.wav");
         private System.Media.SoundPlayer AppActivationSoundEffect = new System.Media.SoundPlayer("Sounds/Listen.wav");
         private System.Media.SoundPlayer ChatGPTNotificationSoundEffect = new System.Media.SoundPlayer("Sounds/Chat_GPT_Notification.wav");
+        private System.Media.SoundPlayer ChatGPTActivationSoundEffect = new System.Media.SoundPlayer("Sounds/ChatGpt Activated.wav");
+        private System.Media.SoundPlayer ChatGPTDeactivationSoundEffect = new System.Media.SoundPlayer("Sounds/ChatGpt Deactivation.wav");
 
         public enum Sounds
         {
@@ -24,7 +26,9 @@ namespace Eva_5._0.Properties
             Alarm_Sound_Effect,
             ErrorSoundEffect,
             AppActivationSoundEffect,
-            ChatGPTNotificationSoundEffect
+            ChatGPTNotificationSoundEffect,
+            ChatGPTActivationSoundEffect,
+            ChatGPTDeactivationSoundEffect
         }
 
         public async Task<bool> Play_Sound(Sounds sound)
@@ -75,6 +79,18 @@ namespace Eva_5._0.Properties
                         if (System.IO.File.Exists(@"Sounds/Chat_GPT_Notification.wav"))
                         {
                             ChatGPTNotificationSoundEffect.Play();
+                        }
+                        break;
+                    case Sounds.ChatGPTActivationSoundEffect:
+                        if (System.IO.File.Exists(@"Sounds/ChatGpt Activated.wav"))
+                        {
+                            ChatGPTActivationSoundEffect.Play();
+                        }
+                        break;
+                    case Sounds.ChatGPTDeactivationSoundEffect:
+                        if (System.IO.File.Exists(@"Sounds/ChatGpt Deactivation.wav"))
+                        {
+                            ChatGPTDeactivationSoundEffect.Play();
                         }
                         break;
                 }

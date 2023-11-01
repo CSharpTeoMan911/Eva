@@ -37,6 +37,26 @@ namespace Eva_5._0
 
 
 
+        // COLORS FOR THE CIRCULAR INDICATOR FOR EACH OPERATIONAL MODE (CHATBOT MODE AND NORMAL MODE)
+        //
+        // BEGIN
+
+        private string normal_mode_outer_elipse_offset_color = "#FF7BBFD8";
+        private string normal_mode_outer_elipse_gradient_color = "#FF052544";
+
+        private string normal_mode_activated_outer_elipse_offset_color = "#FF91E1FF";
+        private string normal_mode_activated_outer_elipse_gradient_color = "#FF3099FF";
+
+        private string chatbot_mode_outer_elipse_offset_color = "#FF7BD889";
+        private string chatbot_mode_outer_elipse_gradient_color = "#FF054406";
+
+        private string chatbot_mode_activated_outer_elipse_offset_color = "#FF00FF1B";
+        private string chatbot_mode_activated_outer_elipse_gradient_color = "#FF34F19F";
+
+        // END
+
+
+
 
         // ONLINE SPEECH RECOGNITION ACTIVATION DELAY MACHANISM VARIABLES 
         //
@@ -61,7 +81,7 @@ namespace Eva_5._0
 
         private static bool online_speech_recogniser_lock_state_time_elapsed_is_enabled;
 
-
+        public static bool chatgpt_mode_enabled = false;
 
 
         /// <summary>
@@ -331,8 +351,17 @@ namespace Eva_5._0
                                             // CIRCULAR STATUS INDICATOR BLUE
                                             if (((TimeSpan)(DateTime.Now - Online_Speech_Recogniser_Activation_Delay_Detector)).TotalSeconds > Online_Speech_Recogniser_Activation_Delay)
                                             {
-                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                switch(chatgpt_mode_enabled)
+                                                {
+                                                    case true:
+                                                        OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString(chatbot_mode_outer_elipse_offset_color);
+                                                        OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString(chatbot_mode_outer_elipse_gradient_color);
+                                                        break;
+                                                    case false:
+                                                        OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString(normal_mode_outer_elipse_offset_color);
+                                                        OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString(normal_mode_outer_elipse_gradient_color);
+                                                        break;
+                                                }
                                             }
                                             // ELSE MAKE THE CIRCULAR STATUS INDICATOR RED
                                             else
@@ -517,8 +546,18 @@ namespace Eva_5._0
 
                                                                 // WHILE THE ONLINE SPEECH RECOGNITION ENGINE IS OPERATING SET THE CIRCULAR STATUS INDICATOR
                                                                 // COLOR AS BRIGHT BLUE
-                                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF91E1FF");
-                                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF3099FF");
+
+                                                                switch (chatgpt_mode_enabled)
+                                                                {
+                                                                    case true:
+                                                                        OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString(chatbot_mode_activated_outer_elipse_offset_color);
+                                                                        OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString(chatbot_mode_activated_outer_elipse_gradient_color);
+                                                                        break;
+                                                                    case false:
+                                                                        OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString(normal_mode_activated_outer_elipse_offset_color);
+                                                                        OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString(normal_mode_activated_outer_elipse_gradient_color);
+                                                                        break;
+                                                                }
                                                                 break;
                                                         }
                                                     }

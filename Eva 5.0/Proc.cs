@@ -390,17 +390,13 @@ namespace Eva_5._0
             
             Application.Current.Dispatcher.Invoke(async() =>
             {
-                try
+                if (App.ChatGPTResponseWindowOpened == false)
                 {
-                    if (App.ChatGPTResponseWindowOpened == false)
-                    {
-                        App.chatGPT_Response_Window = new ChatGPT_Response_Window();
-                        App.chatGPT_Response_Window.Show();
-                    }
-
-                    await App.chatGPT_Response_Window.Update_Conversation(input);
+                    App.chatGPT_Response_Window = new ChatGPT_Response_Window();
+                    App.chatGPT_Response_Window.Show();
                 }
-                catch { }
+                await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppExecutionSoundEffect);
+                await App.chatGPT_Response_Window.Update_Conversation(input);
             });
             
 
@@ -410,16 +406,8 @@ namespace Eva_5._0
 
         private static async Task<bool> Screen_Capture()
         {
-            try
-            {
-                await Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
-                await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.ScreenshotExecutionSoundEffect);
-            }
-            catch
-            {
-
-            }
-
+            await Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
+            await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.ScreenshotExecutionSoundEffect);
             return await Screen_Capture_Mechanism_Mitigator.Screen_Capture_Initiator();
         }
 
