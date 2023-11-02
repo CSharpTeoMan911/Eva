@@ -64,7 +64,7 @@ namespace Eva_5._0
 
         protected static DateTime? Online_Speech_Recogniser_Activation_Delay_Detector = null;
 
-        private static double Online_Speech_Recogniser_Activation_Delay = 2.5;
+        private static double Online_Speech_Recogniser_Activation_Delay = 3.2;
 
         // END
 
@@ -366,8 +366,8 @@ namespace Eva_5._0
                                             // ELSE MAKE THE CIRCULAR STATUS INDICATOR RED
                                             else
                                             {
-                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FFD67A71");
-                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF440505");
+                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("Red");
+                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FFF13434");
                                             }
                                         }
 
@@ -623,8 +623,8 @@ namespace Eva_5._0
 
                                             // IF THE APPLICATION'S TIMER IS NOT SET, CHANGE THE TIMER BUTTON COLOR TO RED
                                             case false:
-                                                OpenTimerMenuButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FFD67A71");
-                                                OpenTimerMenuButtonNotOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7F1111");
+                                                OpenTimerMenuButtonOffset.Color = (Color)ColorConverter.ConvertFromString("Red");
+                                                OpenTimerMenuButtonNotOffset.Color = (Color)ColorConverter.ConvertFromString("#FFF13434");
                                                 break;
                                         }
 
