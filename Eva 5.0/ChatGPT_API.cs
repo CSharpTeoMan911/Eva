@@ -44,56 +44,78 @@ namespace Eva_5._0
             string result = null;
             Type return_type = null;
 
-            Remove_Superflous_Tokens(input.Length);
-
-            // 'HttpClient' OBJECT NEEDED TO SEND HTTP REQUESTS TO THE OPENAI SERVER.
-            System.Net.Http.HttpClient api_client = new System.Net.Http.HttpClient();
-
-            try
+            if (input.Length / 4 <= 1000)
             {
-                // IF THE OPERATION COMPLETES WITHOUT ANY ERRORS
-                // THE SET TYPE VALUE WITHIN THE TUPLE IS A
-                // STRING AND THE STRING VALUE IS THE
-                // CHATGPT RESPONSE
-                //
-                // [ BEIGN ]
 
-                StringBuilder api_key_StringBuilder = new StringBuilder("Bearer");
-                api_key_StringBuilder.Append(" ");
-                api_key_StringBuilder.Append(await Settings.Get_Chat_GPT_Api_Key());
+                Remove_Superflous_Tokens(input.Length);
 
-
-                api_client.DefaultRequestHeaders.Add("Authorization", api_key_StringBuilder.ToString());
-
-
-                messages messages = new messages();
-                messages.role = "user";
-                messages.content = input;
-
-                cached_conversation.Add(messages);
-
-                request request = new request();
-                request.model = "gpt-3.5-turbo";
-                request.messages = cached_conversation.ToArray();
-                request.temperature = 0.5;
-
-
-
-
-                System.Net.Http.StringContent message_content = new System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+                // 'HttpClient' OBJECT NEEDED TO SEND HTTP REQUESTS TO THE OPENAI SERVER.
+                System.Net.Http.HttpClient api_client = new System.Net.Http.HttpClient();
 
                 try
                 {
-                    System.Net.Http.HttpResponseMessage response = await api_client.PostAsync("https://api.openai.com/v1/chat/completions", message_content);
+                    // IF THE OPERATION COMPLETES WITHOUT ANY ERRORS
+                    // THE SET TYPE VALUE WITHIN THE TUPLE IS A
+                    // STRING AND THE STRING VALUE IS THE
+                    // CHATGPT RESPONSE
+                    //
+                    // [ BEIGN ]
+
+                    StringBuilder api_key_StringBuilder = new StringBuilder("Bearer");
+                    api_key_StringBuilder.Append(" ");
+                    api_key_StringBuilder.Append(await Settings.Get_Chat_GPT_Api_Key());
+
+
+                    api_client.DefaultRequestHeaders.Add("Authorization", api_key_StringBuilder.ToString());
+
+
+                    messages messages = new messages();
+                    messages.role = "user";
+                    messages.content = input;
+
+                    cached_conversation.Add(messages);
+
+                    request request = new request();
+                    request.model = "gpt-3.5-turbo";
+                    request.messages = cached_conversation.ToArray();
+                    request.temperature = 0.5;
+
+
+
+
+                    System.Net.Http.StringContent message_content = new System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
 
                     try
                     {
-                        JObject json_response = Newtonsoft.Json.JsonConvert.DeserializeObject<JObject>(await response.Content.ReadAsStringAsync());
+                        System.Net.Http.HttpResponseMessage response = await api_client.PostAsync("https://api.openai.com/v1/chat/completions", message_content);
 
-                        Tuple<Type, string> payload_processing_result = API_Payload_Processing(json_response);
+                        try
+                        {
+                            JObject json_response = Newtonsoft.Json.JsonConvert.DeserializeObject<JObject>(await response.Content.ReadAsStringAsync());
 
-                        return_type = payload_processing_result.Item1;
-                        result = payload_processing_result.Item2;
+                            Tuple<Type, string> payload_processing_result = API_Payload_Processing(json_response);
+
+                            return_type = payload_processing_result.Item1;
+                            result = payload_processing_result.Item2;
+                        }
+                        catch
+                        {
+                            // IF AN EXCEPTION OCCURS, THEN THE OPERATION
+                            // IS NOT SUCCESSFUL AND THE SET TYPE VALUE
+                            // WITHIN THE TUPLE IS AN EXCEPTION AND THE
+                            // STRING AND THE STRING VALUE IS THE
+                            // ERROR MESSAGE
+
+                            return_type = typeof(Exception);
+                            result = "An error occured";
+                        }
+                        finally
+                        {
+                            if (response != null)
+                            {
+                                response.Dispose();
+                            }
+                        }
                     }
                     catch
                     {
@@ -108,11 +130,14 @@ namespace Eva_5._0
                     }
                     finally
                     {
-                        if (response != null)
+                        if (message_content != null)
                         {
-                            response.Dispose();
+                            message_content.Dispose();
                         }
                     }
+
+
+                    // [ END ]
                 }
                 catch
                 {
@@ -127,33 +152,19 @@ namespace Eva_5._0
                 }
                 finally
                 {
-                    if(message_content != null)
+                    if (api_client != null)
                     {
-                        message_content.Dispose();
+                        api_client.Dispose();
                     }
                 }
-
-
-                // [ END ]
             }
-            catch
+            else
             {
-                // IF AN EXCEPTION OCCURS, THEN THE OPERATION
-                // IS NOT SUCCESSFUL AND THE SET TYPE VALUE
-                // WITHIN THE TUPLE IS AN EXCEPTION AND THE
-                // STRING AND THE STRING VALUE IS THE
-                // ERROR MESSAGE
-
                 return_type = typeof(Exception);
-                result = "An error occured";
+                result = "Input exceeds the maximum number of tokens";
             }
-            finally
-            {
-                if (api_client != null)
-                {
-                    api_client.Dispose();
-                }
-            }
+
+ 
 
             return new Tuple<Type, string>(return_type, result);
         }
@@ -259,6 +270,9 @@ namespace Eva_5._0
         /// </summary>
         private static void Remove_Superflous_Tokens(int input_length)
         {
+
+            // IF THE OBJECT THAT HOLDS THE CONVERATION CACHE HAS A NUMBER OF ELEMENTS ABOVE ZERO START THE SUPERFLOUS TOKEN
+            // REMOVAL PROCESS.
             if (cached_conversation.Count > 0)
             {
                 // VARIABLE THAT HOLDS THE TOTAL DETECTED TOKENS IN THE CACHED CONVERSATION
@@ -267,41 +281,64 @@ namespace Eva_5._0
                 // VARIABLE THAT HOLDS THE MAXIMUM LIMIT OF TOKENS THAT CAN BE USED IN A CONVERSATION
                 int limit = 2148;
 
-                // CONVERSATION MESSAGE OBJECT THAT HOLDS THE MAXIMUM NUMBER OF STIPULATED TOKENS OF THE CURRENT UNFULFILLED CHATGPT REQUEST
-                messages messages = new messages();
-                messages.role = "User";
-                messages.content = new string('*', (input_length + 1000));
 
-                // DEEP COPY (NOT A REFERENCE) OF THE CHACHED CONVERSATION OBJECT
-                List<messages> cached_conversation_deep_copy = new List<messages>(cached_conversation);
+                // ALGORITHM FOR THE REMOVAL OF SUPERFLOUS TOKENS
+                //
+                // [ START ]
 
-                // INSERT THE MAXIMUM NUMBER OF STIPULATED TOKENS OF THE CURRENT UNFULFILLED CHATGPT REQUEST
-                cached_conversation_deep_copy.Add(messages);
-
-                // GET THE NUMBER OF TOKENS IN THE CHACHED CONVERSATION OBJECT
-                for (int i = 0; i < cached_conversation_deep_copy.Count; i++)
+                // GET THE NUMBER OF TOKENS IN THE CHACHED CONVERSATION DEEP COPY OBJECT
+                for (int i = 0; i < cached_conversation.Count; i++)
                 {
-                    total_tokens += cached_conversation_deep_copy[i].content.Length / 4;
+                    // DIVIDE NUMBER OF STRINGS OF THE CURRENT MESSAGE BY 4 TO GET THE NUMBER OF TOKENS 
+                    // FOR THE CURRENT MESSAGE ( 1 TOKEN = 4 ENGLISH CHARACTERS), AND INCREMENT THE
+                    // 'total_tokens' VARIABLE BY THE NUMBER OF TOKENS.
+                    total_tokens += cached_conversation[i].content.Length / 4;
                 }
+
+                // THE NUMBER OF TOKENS CURRENTLY PRESENT IN THE CONVERSATION, THE TOTAL NUMBER OF TOKENS WITHIN THE INPUT TO BE SENT WITHIN THE API REQUEST,
+                // AND THE MAXIMUM NUMBER OF TOKENS THAT CHATGPT CAN GIVE AS A RESPONSE THROUGH THE API (WHICH IN THIS CASE IS 1000) REPRESENT THE TOTAL
+                // NUMBER OF TOKENS.
+                total_tokens += 1000 + input_length;
 
                 // IF THE CURRENT NUMBER OF TOKENS EXCEEDS THE TOKEN LIMIT REMOVE MESSAGES FROM THE CONVERSATION TO SATISFY THE LIMIT REQUIREMENT
                 if (total_tokens >= limit)
                 {
                     for (int i = 0; i < cached_conversation.Count - 3; i++)
                     {
+                        // GET THE CONTENT OF THE MESSAGE AT THE CURRENT INDEX
                         string item = cached_conversation[i].content;
+
+                        // DIVIDE NUMBER OF STRINGS OF THE CURRENT MESSAGE BY 4 TO GET THE NUMBER OF TOKENS
+                        // FOR THE CURRENT MESSAGE ( 1 TOKEN = 4 ENGLISH CHARACTERS).
                         int item_tokens = item.Length / 4;
 
+                        // REMOVE THE MESSAGE FROM THE ORIGINAL OBJECT THAT STORES THE CACHED CONVERSATION
                         cached_conversation.RemoveAt(i);
+
+                        // SUSTRACT THE NUMBER OF TOKENS FROM THE VARIABLE 'total_tokens'
                         total_tokens -= item_tokens;
 
+                        // IF THE NUMBER OF TOKENS THAT ARE CURENTLY IN THE CONVERSATION ARE BELOW THE TOKEN LIMIT,
+                        // INTERRUPT THE ALGORITHM.
                         if (total_tokens < limit)
                         {
                             break;
                         }
                     }
                 }
+
+                // IF THE TOTAL AMOUT OF TOKENS AFTER THE SUPERFLOUS TOKEN REMOVAL
+                // STILL EXCEEDS THE LIMIT, THAN THE WHOLE CONVERSATION CACHE MUST
+                // BE CLEARED IN ORDER TO FOR THE API TO BE ABLE TO PROCESS 
+                // QUERIES.
+                if(total_tokens > limit)
+                {
+                    cached_conversation.Clear();
+                }
+
+                // [ END ]
             }
+
         }
 
     }

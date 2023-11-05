@@ -66,6 +66,10 @@ namespace Eva_5._0
                 case "ChatGPT error":
                     ChatGPTError();
                     break;
+
+                case "Maximum number of tokens exceeded":
+                    Token_Limit_Exceeded();
+                    break;
             }
         }
 
@@ -194,6 +198,21 @@ namespace Eva_5._0
                 ErrorContext.Inlines.Add("\n");
                 ErrorContext.Inlines.Add("or your internet connection.");
             });
+        }
+
+
+        private async void Token_Limit_Exceeded()
+        {
+            await player.Play_Sound(Sound_Player.Sounds.ErrorSoundEffect);
+
+            ErrorContext.Inlines.Add("Maximum number of tokens exceeded. ");
+            ErrorContext.Inlines.Add("Please enter a query ");
+            ErrorContext.Inlines.Add("\n");
+            ErrorContext.Inlines.Add("that contains a lower number of characters.");
+            ErrorContext.Inlines.Add("The maximum ");
+            ErrorContext.Inlines.Add("\n");
+            ErrorContext.Inlines.Add("number of characters in a query is ");
+            ErrorContext.Inlines.Add("4000 characters.");
         }
 
 

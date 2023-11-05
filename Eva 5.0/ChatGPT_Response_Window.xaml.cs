@@ -35,6 +35,8 @@ namespace Eva_5._0
         private bool SwitchOffset;
         private double OffsetArithmetic;
 
+        private bool maximum_token_limit_exceeded;
+
         public ChatGPT_Response_Window()
         {
             InitializeComponent();
@@ -176,73 +178,82 @@ namespace Eva_5._0
 
         public async Task<bool> Update_Conversation(string input)
         {
-            if (WindowIsClosing == false)
+            if(InputTextBox.Text.Length / 4 <= 1000)
             {
-
-                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                if (WindowIsClosing == false)
                 {
 
-                    if (Application.Current.MainWindow != null)
+                    if (Application.Current.Dispatcher.HasShutdownStarted == false)
                     {
-                        Response_Loading = true;
 
-                        Tuple<Type, string> result = await ChatGPT_API.Initiate_Chat_GPT(input);
-
-
-                        Application.Current.Dispatcher.Invoke(() =>
+                        if (Application.Current.MainWindow != null)
                         {
-                            if (WindowIsClosing == false)
+                            Response_Loading = true;
+
+                            Tuple<Type, string> result = await ChatGPT_API.Initiate_Chat_GPT(input);
+
+
+                            await Application.Current.Dispatcher.Invoke(async () =>
                             {
-                                if (result.Item1 == typeof(string))
+                                if (WindowIsClosing == false)
                                 {
-                                    user_input.Clear();
-                                    chat_gpt_input.Clear();
-
-                                    user_input.Append("User: ");
-                                    user_input.Append(input);
-                                    user_input.Append("\n\n");
-
-
-                                    chat_gpt_input.Append("ChatGPT: ");
-                                    chat_gpt_input.Append(result.Item2);
-                                    chat_gpt_input.Append("\n\n");
-
-                                    ResponseTextBox.Text += user_input.ToString();
-                                    ResponseTextBox.Text += chat_gpt_input.ToString();
-
-                                    user_input.Clear();
-                                    chat_gpt_input.Clear();
-
-                                    Get_Last_Response_Line();
-                                }
-                                else
-                                {
-                                    if (App.PermisissionWindowOpen == false)
+                                    if (result.Item1 == typeof(string))
                                     {
-                                        if (result.Item2 == "API authentification error")
+                                        user_input.Clear();
+                                        chat_gpt_input.Clear();
+
+                                        user_input.Append("User: ");
+                                        user_input.Append(input);
+                                        user_input.Append("\n\n");
+
+
+                                        chat_gpt_input.Append("ChatGPT: ");
+                                        chat_gpt_input.Append(result.Item2);
+                                        chat_gpt_input.Append("\n\n");
+
+                                        ResponseTextBox.Text += user_input.ToString();
+                                        ResponseTextBox.Text += chat_gpt_input.ToString();
+
+                                        user_input.Clear();
+                                        chat_gpt_input.Clear();
+
+                                        Get_Last_Response_Line();
+
+                                        await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTNotificationSoundEffect);
+                                    }
+                                    else
+                                    {
+                                        if (App.PermisissionWindowOpen == false)
                                         {
-                                            ErrorWindow errorWindow = new ErrorWindow("Invalid ChatGPT API key");
-                                            errorWindow.Show();
-                                        }
-                                        else
-                                        {
-                                            if (result.Item2 != "Task cancelled")
+                                            if (result.Item2 == "API authentification error")
                                             {
-                                                ErrorWindow errorWindow = new ErrorWindow("ChatGPT error");
+                                                ErrorWindow errorWindow = new ErrorWindow("Invalid ChatGPT API key");
                                                 errorWindow.Show();
+                                            }
+                                            else if (result.Item2 == "Input exceeds the maximum number of tokens")
+                                            {
+                                                ErrorWindow errorWindow = new ErrorWindow("Maximum number of tokens exceeded");
+                                                errorWindow.Show();
+                                            }
+                                            else
+                                            {
+                                                if (result.Item2 != "Task cancelled")
+                                                {
+                                                    ErrorWindow errorWindow = new ErrorWindow("ChatGPT error");
+                                                    errorWindow.Show();
+                                                }
                                             }
                                         }
                                     }
                                 }
-                            }
-                        });
+                            });
 
-                        await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTNotificationSoundEffect);
-                        Response_Loading = false;
+                            Response_Loading = false;
+                        }
+
                     }
 
                 }
-
             }
 
             return true;
@@ -321,14 +332,29 @@ namespace Eva_5._0
 
         private async void Update_Conversation_And_UI()
         {
-            string input = InputTextBox.Text;
-            InputTextBox.Text = String.Empty;
-            await Update_Conversation(input);
-            while (InputTextBox.Undo() == true) { }
+            if (InputTextBox.Text.Length / 4 <= 1000)
+            {
+                string input = InputTextBox.Text;
+                InputTextBox.Text = String.Empty;
+                await Update_Conversation(input);
+                while (InputTextBox.Undo() == true) { }
+                InputTextBox.Text = String.Empty;
+            }
         }
 
         private void Text_Changed(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
+            switch(InputTextBox.Text.Length / 4 > 1000)
+            {
+                case true:
+                    Warning_TextBlock.Visibility = Visibility.Visible;
+                    break;
+
+                case false:
+                    Warning_TextBlock.Visibility = Visibility.Hidden;
+                    break;
+            }
+
             #pragma warning disable CS0618 // Type or member is obsolete
             FormattedText formattedText = new FormattedText(InputTextBox.Text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface("Consolas"), 16,Brushes.Black);
             #pragma warning restore CS0618 // Type or member is obsolete
@@ -337,6 +363,8 @@ namespace Eva_5._0
             {
                 case true:
                     this.Height = 500;
+                    System.Windows.Controls.Grid.SetRow(ResponseTextBox, 0);
+
                     Window_Geometry.Rect = new Rect(0, 0, 450, 500);
                     System.Windows.Controls.Grid.SetRow(Input_Stackpanel, 6);
 
@@ -348,6 +376,8 @@ namespace Eva_5._0
                     break;
                 case false:
                     this.Height = 350;
+                    System.Windows.Controls.Grid.SetRow(ResponseTextBox, 1);
+
                     Window_Geometry.Rect = new Rect(0, 0, 450, 350);
                     System.Windows.Controls.Grid.SetRow(Input_Stackpanel, 7);
 
