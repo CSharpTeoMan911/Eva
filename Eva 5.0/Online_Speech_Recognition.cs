@@ -280,40 +280,40 @@ namespace Eva_5._0
 
             try
             {
-                System.Diagnostics.Process[] online_speech_recognition_interface_instances = System.Diagnostics.Process.GetProcessesByName("SpeechRuntime");
-
-                if (online_speech_recognition_interface_instances.Count() > 0)
+                switch (operation)
                 {
-                    switch (operation)
-                    {
-                        case Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache:
-                            // CLEAR THE CACHE OF THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS ("SpeechRuntime.exe")
-                            //
-                            // BEGIN
+                    case Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache:
+                        // CLEAR THE CACHE OF THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS ("SpeechRuntime.exe")
+                        //
+                        // BEGIN
 
-                            foreach (System.Diagnostics.Process online_speech_recognition_interface in online_speech_recognition_interface_instances)
-                            {
-                                online_speech_recognition_interface.Refresh();
-                            }
+                        foreach (System.Diagnostics.Process online_speech_recognition_interface in System.Diagnostics.Process.GetProcessesByName("SpeechRuntime"))
+                        {
+                            online_speech_recognition_interface.Refresh();
+                        }
 
-                            // END
-                            break;
+                        // END
+                        break;
 
 
 
-                        case Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown:
-                            // SHUT DOWN THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS ("SpeechRuntime.exe")
-                            //
-                            // BEGIN
+                    case Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown:
+                        // SHUT DOWN THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS ("SpeechRuntime.exe")
+                        //
+                        // BEGIN
 
-                            foreach (System.Diagnostics.Process online_speech_recognition_interface in online_speech_recognition_interface_instances)
-                            {
-                                online_speech_recognition_interface.Dispose();
-                            }
+                        foreach (System.Diagnostics.Process online_speech_recognition_interface in System.Diagnostics.Process.GetProcessesByName("SpeechRuntime"))
+                        {
+                            online_speech_recognition_interface.Dispose();
+                        }
 
-                            // END
-                            break;
-                    }
+                        while (System.Diagnostics.Process.GetProcessesByName("SpeechRuntime").Count() > 0)
+                        {
+                            // WAIT FOR THE INSTANCE OF THE SPEECH RECOGNITION INTERFACE TO CLOSE BY INITIATING A BLOCKING CALL
+                        }
+
+                        // END
+                        break;
                 }
             }
             catch

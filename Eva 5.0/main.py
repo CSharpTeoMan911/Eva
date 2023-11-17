@@ -41,9 +41,9 @@ def Wake_Word_Engine_Thread_Management():
         recognizer = KaldiRecognizer(model, 16000)
         recognizer.SetWords(['hey', 'listen', 'stop', 'listening'])
 
-        # INITIATE PYAUDIO OBJECT, LISTEN TO THE DEFAULT MIC ON 1 CHANNEL, WITH A RATE OF 16000 HZ AND A BUFFER OF 800 FRAMES
+        # INITIATE PYAUDIO OBJECT, LISTEN TO THE DEFAULT MIC ON 1 CHANNEL, WITH A RATE OF 16000 HZ AND A BUFFER OF 1600 FRAMES
         mic = pyaudio.PyAudio()
-        stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=800)
+        stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=1600)
         stream.start_stream()
 
         while True:
