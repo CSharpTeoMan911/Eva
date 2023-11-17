@@ -4,6 +4,7 @@ import pyaudio
 import threading
 import socket
 import sys
+import time
 
 
 def wake_word_operation_stdout_stream(listen):
@@ -46,7 +47,12 @@ def Wake_Word_Engine_Thread_Management():
         stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=1600)
         stream.start_stream()
 
+        # BUFFER THAT STORES THE INITIAL TIME VALUE
+        start_time = time.time()
+
         while True:
+
+            
             # READ FROM THE AUDIO DATA STREAM A 800 FRAMES PER CYCLE
             data = stream.read(800)
 
@@ -69,6 +75,28 @@ def Wake_Word_Engine_Thread_Management():
                     wake_word_operation_stdout_stream(False)
                 elif "listen" in recognizer.PartialResult():
                     wake_word_operation_stdout_stream(True)
+
+            # BUFFER THAT STORES THE CURRENT TIME VALUE
+            current_time = time.time()
+            
+            """
+            IF THE TIME ELAPSSED BETWEEN THE INITIAL POINT AND THE CURRENT
+            POINT IS GREATER OR EQUAL THAN 3, RESET THE RECOGNISER AND SET
+            THE INITIAL POINT AS THE CURRENT TIME.
+            """
+            if start_time - current_time >= 3:
+                start_time = time.time()
+
+                """
+                THE RECOGNISER MUST BE RESET TO MINIMISE THE RESPONSE TIME 
+                AND INCREASE THE ACCURACY. THE DECREASE OF ACCURACY AND 
+                RESPONSE TIME IS CAUSED BY THE FACT THAT A BUFFER FILLS 
+                WITH RECOGNISED WORDS UNTIL THE SPEECH FINISHES, AND IF 
+                THE BUFFER BECOMES LARGER, THE RECOGNISER WILL HAVE A 
+                HARDER TIME PROCESSING THE INFORMATION, THUS DECREASING T
+                HE ACCURACY AND SPEED OF THE RECOGNISER.
+                """
+                recognizer.Reset()
 
     except KeyboardInterrupt:
         sys.exit(0)

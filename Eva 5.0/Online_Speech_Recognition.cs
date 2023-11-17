@@ -26,6 +26,7 @@ namespace Eva_5._0
 
     internal class Online_Speech_Recognition : MainWindow
     {
+        private static bool shutdown_initiated = false;
         private static Windows.Media.SpeechRecognition.SpeechRecognizer OnlineSpeechRecognition;
         private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Constraints = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.FormFilling, "form-filling", "form");
 
@@ -302,14 +303,29 @@ namespace Eva_5._0
                         //
                         // BEGIN
 
-                        foreach (System.Diagnostics.Process online_speech_recognition_interface in System.Diagnostics.Process.GetProcessesByName("SpeechRuntime"))
+                        // IF NO ONLINE SPEECH RECOGNITION INTERFACE SHUTDOWN PROCESS IS INITIATED
+                        if(shutdown_initiated == false)
                         {
-                            online_speech_recognition_interface.Dispose();
-                        }
+                            // SET THE STATIC BOOL TO 'true' TO SIGNIFY THAT A SHUTDOWN PROCESS IS INITIATED
+                            // IN ORDER FOR OTHER THREADS THAT INITIATE THE ONLINE SPEECH RECOGNITION NOT
+                            // TO START ANOTHER ONLINE SPEECH RECOGNITION INTERFACE SHUTDOWN PROCESS
+                            shutdown_initiated = true;
 
-                        while (System.Diagnostics.Process.GetProcessesByName("SpeechRuntime").Count() > 0)
-                        {
-                            // WAIT FOR THE INSTANCE OF THE SPEECH RECOGNITION INTERFACE TO CLOSE BY INITIATING A BLOCKING CALL
+                            // FOREACH ONLINE SPEECH RECOGNITION INTERFACE PROCESS NAMED 'SpeechRuntime'
+                            foreach (System.Diagnostics.Process online_speech_recognition_interface in System.Diagnostics.Process.GetProcessesByName("SpeechRuntime"))
+                            {
+                                // DISPOSE ALL THE RESOURCES ASSOCIATED WITH THE INTERFACE'S PROCESS AND TERMINATE THE PROCESS SUBSEQUENTLY
+                                online_speech_recognition_interface.Dispose();
+
+                                // INITIATE A BLOCKING CALL THAT WILL SUSPEND THE CURRENT THREAD AND THE
+                                // CALLING THREAD UNTIL THE PROCESSES SET TO SHUTDOWN TERMINATE
+                                online_speech_recognition_interface.WaitForExit(1000);
+                            }
+
+                            // SET THE STATIC BOOL TO 'false' TO SIGNIFY THAT NO SHUTDOWN PROCESS IS INITIATED
+                            // IN ORDER FOR OTHER THREADS THAT INITIATE THE ONLINE SPEECH RECOGNITION TO START
+                            // ANOTHER ONLINE SPEECH RECOGNITION INTERFACE SHUTDOWN PROCESS, IF NECESSARY
+                            shutdown_initiated = false;
                         }
 
                         // END
