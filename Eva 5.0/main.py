@@ -1,32 +1,11 @@
 from vosk import Model, KaldiRecognizer
 import os
 import pyaudio
-import threading
-import socket
 import sys
 import time
 
 
-def wake_word_operation_stdout_stream(listen):
-    ################################################
-    #   INTERPROCESS COMMUNICATION USING STDOUT    #
-    ################################################
-    # WAKE WORD IS SENT THROUGH THE STDOUT STREAM  #
-    ################################################
-    try:
-        match listen:
-            case True:
-                print("listen")
-            case False:
-                print("stop listening")
-        sys.stdout.flush()
-    except KeyboardInterrupt:
-        sys.exit(0)
-
-
-
-
-def Wake_Word_Engine_Thread_Management():
+def wake_word_engine_thread_management():
     ##############################################
     # VOSK SPEECH-TO-TEXT SPEECH LANGUAGE MODEL  #
     # USING KALDI SPEECH-TO-TEXT ENGINE          #
@@ -36,11 +15,11 @@ def Wake_Word_Engine_Thread_Management():
 
     try:
         # LOAD THE VOSK SPEECH RECOGNITION MODEL FROM THE APPLICATION'S DIRECTORY
-        model = Model(model_path= os.getcwd() + "\\" + "vosk-model-small-en-us-zamia-0.5", model_name="tedlium")
+        model = Model(model_path=os.getcwd() + "\\" + "vosk-model-small-en-us-zamia-0.5", model_name="tedlium")
 
         # INITIATE KALDI SPEECH RECOGNIZER INSTANCE USING THE VOSK MODEL AND A FREQUENCY OF 16000 HZ
         recognizer = KaldiRecognizer(model, 16000)
-        recognizer.SetWords(['hey', 'listen', 'stop', 'listening'])
+        recognizer.SetWords(True)
 
         # INITIATE PYAUDIO OBJECT, LISTEN TO THE DEFAULT MIC ON 1 CHANNEL, WITH A RATE OF 16000 HZ AND A BUFFER OF 1600 FRAMES
         mic = pyaudio.PyAudio()
@@ -52,41 +31,16 @@ def Wake_Word_Engine_Thread_Management():
 
         while True:
 
-            
-            # READ FROM THE AUDIO DATA STREAM A 800 FRAMES PER CYCLE
-            data = stream.read(800)
-
-            # RETRIEVE THE AUDIO WAVEFORM DATA AND PERFORM SPEECH TO TEXT CONVERSION
-            if recognizer.AcceptWaveform(data):
-
-                # IF THE RECOGNIZED PHRASE CONTAINS "listen", THE WAKE WORD IS PASSED
-                # TO THE PARENT PROCESS ON A DIFFERENT THREAD
-                if "stop listening" in recognizer.FinalResult():
-                    wake_word_operation_stdout_stream(False)
-                elif "stop listening" in recognizer.Result():
-                    wake_word_operation_stdout_stream(False)
-                else:
-                    if "listen" in recognizer.FinalResult():
-                        wake_word_operation_stdout_stream(True)
-                    elif "listen" in recognizer.Result():
-                        wake_word_operation_stdout_stream(True)
-            else:
-                if "stop listening" in recognizer.PartialResult():
-                    wake_word_operation_stdout_stream(False)
-                elif "listen" in recognizer.PartialResult():
-                    wake_word_operation_stdout_stream(True)
-
             # BUFFER THAT STORES THE CURRENT TIME VALUE
             current_time = time.time()
-            
+
             """
-            IF THE TIME ELAPSSED BETWEEN THE INITIAL POINT AND THE CURRENT
-            POINT IS GREATER OR EQUAL THAN 3, RESET THE RECOGNISER AND SET
+            IF THE TIME ELAPSED BETWEEN THE INITIAL POINT AND THE CURRENT
+            POINT IS GREATER OR EQUAL THAN 4, RESET THE RECOGNISER AND SET
             THE INITIAL POINT AS THE CURRENT TIME.
             """
-            if start_time - current_time >= 3:
+            if current_time - start_time >= 4:
                 start_time = time.time()
-
                 """
                 THE RECOGNISER MUST BE RESET TO MINIMISE THE RESPONSE TIME 
                 AND INCREASE THE ACCURACY. THE DECREASE OF ACCURACY AND 
@@ -98,8 +52,34 @@ def Wake_Word_Engine_Thread_Management():
                 """
                 recognizer.Reset()
 
+            # READ FROM THE AUDIO DATA STREAM A 800 FRAMES PER CYCLE
+            data = stream.read(800)
+
+            # RETRIEVE THE AUDIO WAVEFORM DATA AND PERFORM SPEECH TO TEXT CONVERSION
+            if recognizer.AcceptWaveform(data):
+                keyword_spotter(recognizer.Result())
+                keyword_spotter(recognizer.FinalResult())
+            else:
+                keyword_spotter(recognizer.PartialResult())
+
     except KeyboardInterrupt:
         sys.exit(0)
 
+
+def keyword_spotter(sentence):
+    # IF THE RECOGNIZED PHRASE CONTAINS "listen" PRINT 'listen' ON THE STDOUT STREAM,
+    # ELSE IF THE PHRASE CONTAINS 'stop listening' PRINT 'stop listening' ON THE
+    # STDOUT STREAM
+    try:
+        if "stop listening" in sentence:
+            print("stop listening")
+        else:
+            if "listen" in sentence:
+                print("listen")
+        sys.stdout.flush()
+    except KeyboardInterrupt:
+        sys.exit(0)
+
+
 if __name__ == '__main__':
-    Wake_Word_Engine_Thread_Management()
+    wake_word_engine_thread_management()
