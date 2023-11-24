@@ -1,5 +1,6 @@
 ﻿using Eva_5._0.Properties;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls.Maps;
@@ -276,7 +277,21 @@ namespace Eva_5._0
         }
 
 
-        protected static Task<bool> OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation operation)
+        protected static Process[] Get_Recogniser_Interfaces()
+        {
+            Process[] interfaces = new Process[] { };
+
+            try
+            {
+                interfaces = Process.GetProcessesByName("SpeechRuntime");
+            }
+            catch { }
+
+            return interfaces;
+        }
+
+
+        protected static async Task<bool> OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation operation)
         {
 
             try
@@ -288,7 +303,7 @@ namespace Eva_5._0
                         //
                         // BEGIN
 
-                        foreach (System.Diagnostics.Process online_speech_recognition_interface in System.Diagnostics.Process.GetProcessesByName("SpeechRuntime"))
+                        foreach (System.Diagnostics.Process online_speech_recognition_interface in Get_Recogniser_Interfaces())
                         {
                             online_speech_recognition_interface.Refresh();
                         }
@@ -304,7 +319,7 @@ namespace Eva_5._0
                         // BEGIN
 
                         // IF NO ONLINE SPEECH RECOGNITION INTERFACE SHUTDOWN PROCESS IS INITIATED
-                        if(shutdown_initiated == false)
+                        if (shutdown_initiated == false)
                         {
                             // SET THE STATIC BOOL TO 'true' TO SIGNIFY THAT A SHUTDOWN PROCESS IS INITIATED
                             // IN ORDER FOR OTHER THREADS THAT INITIATE THE ONLINE SPEECH RECOGNITION NOT
@@ -312,11 +327,19 @@ namespace Eva_5._0
                             shutdown_initiated = true;
 
                             // FOREACH ONLINE SPEECH RECOGNITION INTERFACE PROCESS NAMED 'SpeechRuntime'
-                            foreach (System.Diagnostics.Process online_speech_recognition_interface in System.Diagnostics.Process.GetProcessesByName("SpeechRuntime"))
+                            foreach (Process online_speech_recognition_interface in Process.GetProcessesByName("SpeechRuntime"))
                             {
-                                // DISPOSE ALL THE RESOURCES ASSOCIATED WITH THE INTERFACE'S PROCESS AND TERMINATE THE PROCESS SUBSEQUENTLY
-                                online_speech_recognition_interface.Dispose();
+                                // THE SPEECH RECOGNITION INTERFACE MUST BE KILLED WITH CERTAINTY
+                                Process force_kill_speech_recognition_interface = new Process();
+                                force_kill_speech_recognition_interface.StartInfo.FileName = "powershell.exe";
+                                force_kill_speech_recognition_interface.StartInfo.Arguments = "Stop-Process -Name \"SpeechRuntime\" -Force";
+                                force_kill_speech_recognition_interface.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                                force_kill_speech_recognition_interface.StartInfo.CreateNoWindow = true;
+                                force_kill_speech_recognition_interface.StartInfo.UseShellExecute = false;
+                                force_kill_speech_recognition_interface.Start();
 
+
+                                // DISPOSE ALL THE RESOURCES ASSOCIATED WITH THE INTERFACE'S PROCESS AND TERMINATE THE PROCESS SUBSEQUENTLY
                                 // INITIATE A BLOCKING CALL THAT WILL SUSPEND THE CURRENT THREAD AND THE
                                 // CALLING THREAD UNTIL THE PROCESSES SET TO SHUTDOWN TERMINATE
                                 online_speech_recognition_interface.WaitForExit(1000);
@@ -334,10 +357,10 @@ namespace Eva_5._0
             }
             catch
             {
-                return Task.FromResult(false);
+                return false;
             }
 
-            return Task.FromResult(true);
+            return true;
         }
     }
 }

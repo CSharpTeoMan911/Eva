@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -74,6 +75,8 @@ namespace Eva_5._0
         private System.Threading.Thread ParallelProcessing;
 
         private System.Timers.Timer AnimationAndFunctionalityTimer;
+
+        private System.Timers.Timer SpeechRecognitionInterfaceControlTimer;
 
 
 
@@ -214,6 +217,11 @@ namespace Eva_5._0
                 Online_Speech_Recognition_Error_Management(Online_Speech_Recognition_Error_Type.Mircrophone_Access_Denied);
             }
 
+            internal static int Get_Recogniser_Interfaces_Count_Initiator()
+            {
+                return Get_Recogniser_Interfaces().Length;
+            }
+
             internal static async Task<bool> OS_Online_Speech_Recogniser_Operation(Online_Speech_Recognition_Interface_Operation operation)
             {
                 return await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(operation);
@@ -251,9 +259,12 @@ namespace Eva_5._0
             AnimationAndFunctionalityTimer.Elapsed += AnimationAndFunctionalityTimer_Elapsed;
             AnimationAndFunctionalityTimer.Interval = 45;
             AnimationAndFunctionalityTimer.Start();
+
+            SpeechRecognitionInterfaceControlTimer = new System.Timers.Timer();
+            SpeechRecognitionInterfaceControlTimer.Elapsed += SpeechRecognitionInterfaceControlTimer_Elapsed;
+            SpeechRecognitionInterfaceControlTimer.Interval = 2000;
+            SpeechRecognitionInterfaceControlTimer.Start();
         }
-
-
 
         private async void CurrentDomain_ProcessExit(object sender, EventArgs e)
         {
@@ -351,7 +362,7 @@ namespace Eva_5._0
                                             // CIRCULAR STATUS INDICATOR BLUE
                                             if (((TimeSpan)(DateTime.Now - Online_Speech_Recogniser_Activation_Delay_Detector)).TotalSeconds > Online_Speech_Recogniser_Activation_Delay)
                                             {
-                                                switch(chatgpt_mode_enabled)
+                                                switch (chatgpt_mode_enabled)
                                                 {
                                                     case true:
                                                         OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString(chatbot_mode_outer_elipse_offset_color);
@@ -574,6 +585,7 @@ namespace Eva_5._0
                                                     {
                                                         Initiated = "true";
                                                     }
+
                                                     target_value = 1000;
                                                     Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
                                                     Online_Speech_Recognition_Timer_Display.Text = String.Empty;
@@ -961,6 +973,30 @@ namespace Eva_5._0
             }
         }
 
+        private void SpeechRecognitionInterfaceControlTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            lock (Online_Speech_Recogniser_Listening)
+            {
+                lock (Wake_Word_Detected)
+                {
+                    if (Online_Speech_Recogniser_Listening == "false" && Wake_Word_Detected == "false")
+                    {
+                        // IF THE ONLINE SPEECH RECOGNITION ENGINE IS NOT LISTENING,
+                        // ENSURE THAT THE INTERFACE OF THE ONLINE SPEECH
+                        // RECOGNITION IS CLOSED
+                        async void Inactivity_Shutdown()
+                        {
+                            if (Online_Speech_Recognition_Mitigator.Get_Recogniser_Interfaces_Count_Initiator() > 0)
+                            {
+                                await Online_Speech_Recognition_Mitigator.OS_Online_Speech_Recogniser_Operation(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
+                            }
+                        }
+                        Inactivity_Shutdown();
+                    }
+                }
+            }
+        }
+
         private async void MainWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             MainWindowIsClosing = true;
@@ -973,6 +1009,16 @@ namespace Eva_5._0
                     {
                         AnimationAndFunctionalityTimer?.Stop();
                         AnimationAndFunctionalityTimer?.Dispose();
+                    }
+                    catch { }
+                }
+
+                if(SpeechRecognitionInterfaceControlTimer != null)
+                {
+                    try
+                    {
+                        SpeechRecognitionInterfaceControlTimer.Close();
+                        SpeechRecognitionInterfaceControlTimer.Dispose();
                     }
                     catch { }
                 }
