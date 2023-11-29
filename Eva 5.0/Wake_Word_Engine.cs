@@ -130,6 +130,8 @@ namespace Eva_5._0
 
                                         process_2 = Initiate_Wake_Word_Engine();
                                         Wake_Word_Detector(process_2);
+
+                                        is_wake_word_engine_loaded--;
                                     }
                                     else
                                     {
@@ -142,6 +144,8 @@ namespace Eva_5._0
 
                                         process_1 = Initiate_Wake_Word_Engine();
                                         Wake_Word_Detector(process_1);
+
+                                        is_wake_word_engine_loaded--;
                                     }
                                 }
                             }
