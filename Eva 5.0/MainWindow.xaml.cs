@@ -186,9 +186,9 @@ namespace Eva_5._0
 
         private sealed class Wake_Word_Engine_Mitigator : Wake_Word_Engine
         {
-            internal static async Task<bool> Wake_Word_Engine_Start()
+            internal static void Wake_Word_Engine_Start()
             {
-                return await Start_The_Wake_Word_Engine();
+                Start_The_Wake_Word_Engine();
             }
 
             internal static async Task<bool> Wake_Word_Engine_Stop()
@@ -262,7 +262,7 @@ namespace Eva_5._0
 
             SpeechRecognitionInterfaceControlTimer = new System.Timers.Timer();
             SpeechRecognitionInterfaceControlTimer.Elapsed += SpeechRecognitionInterfaceControlTimer_Elapsed;
-            SpeechRecognitionInterfaceControlTimer.Interval = 2000;
+            SpeechRecognitionInterfaceControlTimer.Interval = 3000;
             SpeechRecognitionInterfaceControlTimer.Start();
         }
 
@@ -1133,7 +1133,7 @@ namespace Eva_5._0
                                                     SpeechRecognitionButton.Content = "\xE1D6";
                                                 });
 
-                                                await Wake_Word_Engine_Mitigator.Wake_Word_Engine_Start();
+                                                Wake_Word_Engine_Mitigator.Wake_Word_Engine_Start();
                                                 break;
 
 

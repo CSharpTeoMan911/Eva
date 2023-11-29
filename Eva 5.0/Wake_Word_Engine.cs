@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -46,47 +47,193 @@ namespace Eva_5._0
         // 2) INSTALL THE PIP PACKAGES: "Vosk", "PyAudio", AND "sounddevice" USING THE 
         //    COMMAND: /path/to/Eva 5.0.exe/python.exe -m pip install [ PACKAGE NAME ]
 
+        private static System.Diagnostics.Stopwatch counter = new System.Diagnostics.Stopwatch();
+        private static System.Diagnostics.Process process_1 = null;
+        private static System.Diagnostics.Process process_2 = null;
 
-        private static string wake_word = "listen";
+        private static int is_wake_word_engine_loaded;
+        private static bool first_process;
+
+        private static string wake_word_engine_loaded = "[ loaded ]";
         private static string cancel_wake_word = "stop listening";
+        private static string wake_word = "listen";
         private static bool Wake_Word_Started = false;
+ 
 
-        protected static Task<bool> Start_The_Wake_Word_Engine()
+        protected static void Start_The_Wake_Word_Engine()
         {
-            // INITIATE THE WAKE WORD ENGINE USING THE VIRTUAL ENVIRONMENT WITHIN THE DIRECTORY
-            // WHERE WHERE "Eva 5.0.exe" EXECUTABLE IS LOCATED. THE PROCESS WILL NOT CREATE ANY
-            // WINDOW AND IT WILL BE STARTED AS A CHILD PROCESS OF THE "Eva 5.0.exe" PROCESS.
+            // INITIATE 2 WAKE WORD ENGINE PROCESSES ON DIFFERENT THREADS FOR CPU LOAD DISTRIBUTION PURPOSES
+            // AND ALSO TO PREVENT THE LOCKING OF THE CALLING THREAD. AFTER THE WAKE WORD ENGINE PROCESSES
+            // STARTED, INITIATE A TIMER THAT PRVENTS WAKE WORD ENGINE LOCK.
             //
             // [ BEGIN ]
 
             try
             {
+                process_1 = Initiate_Wake_Word_Engine();
+                process_2 = Initiate_Wake_Word_Engine();
 
-                System.Diagnostics.Process wake_word_process = new System.Diagnostics.Process();
-                wake_word_process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                wake_word_process.StartInfo.FileName = Environment.CurrentDirectory + "\\python.exe";
-                wake_word_process.StartInfo.RedirectStandardOutput = true;
-                wake_word_process.StartInfo.RedirectStandardError = true;
-                wake_word_process.StartInfo.CreateNoWindow = true;
-                wake_word_process.StartInfo.UseShellExecute = false;
-                wake_word_process.StartInfo.Arguments = "main.py";
-                wake_word_process.Start();
+                System.Threading.Thread process_1_thread = new System.Threading.Thread(() => { Wake_Word_Detector(process_1); });
+                process_1_thread.SetApartmentState(System.Threading.ApartmentState.STA);
+                process_1_thread.Priority = System.Threading.ThreadPriority.AboveNormal;
+                process_1_thread.IsBackground = false;
+                process_1_thread.Start();
+
+                System.Threading.Thread process_2_thread = new System.Threading.Thread(() => { Wake_Word_Detector(process_2); });
+                process_2_thread.SetApartmentState(System.Threading.ApartmentState.STA);
+                process_2_thread.Priority = System.Threading.ThreadPriority.AboveNormal;
+                process_2_thread.IsBackground = false;
+                process_2_thread.Start();
 
                 Wake_Word_Started = true;
-                Wake_Word_Detector(wake_word_process);
 
-                return Task.FromResult(true);
+                System.Timers.Timer wake_word_management_timer = new System.Timers.Timer();
+                wake_word_management_timer.Elapsed += Wake_word_management_timer_Elapsed;
+                wake_word_management_timer.Interval = 10;
+                wake_word_management_timer.Start();
+
+                counter.Start();
             }
-            catch
+            catch { }
+
+            // [ END ]
+        }
+
+        private static void Wake_word_management_timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            // RESET ONE OF THE PROCESSES EVERY 5 SECONDS, AFTER BOTH PROCESSES LOADED, BY CLOSING AND STARTING THE PROCESS.
+            // THIS IS DONE TO PREVENT WAKE WORD ENGINE LOCK.
+            //
+            // [ START ]
+
+            try
             {
-                return Task.FromResult(false);
+                if (Wake_Word_Started == true)
+                {
+                    if (MainWindowIsClosing == false)
+                    {
+                        if (App.Application_Error_Shutdown == false)
+                        {
+                            if (is_wake_word_engine_loaded == 2 && counter.ElapsedMilliseconds >= 5000)
+                            {
+                                if (counter.ElapsedMilliseconds >= 5000 && is_wake_word_engine_loaded == 2)
+                                {
+                                    if (first_process == false)
+                                    {
+                                        if (process_2 != null)
+                                            process_2.Kill();
+
+
+                                        counter.Restart();
+
+                                        first_process = true;
+
+                                        process_2 = Initiate_Wake_Word_Engine();
+                                        Wake_Word_Detector(process_2);
+                                    }
+                                    else
+                                    {
+                                        if (process_1 != null)
+                                            process_1.Kill();
+
+                                        counter.Restart();
+
+                                        first_process = false;
+
+                                        process_1 = Initiate_Wake_Word_Engine();
+                                        Wake_Word_Detector(process_1);
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (sender != null)
+                            {
+                                ((System.Timers.Timer)(sender)).Close();
+                                ((System.Timers.Timer)(sender)).Dispose();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (sender != null)
+                        {
+                            ((System.Timers.Timer)(sender)).Close();
+                            ((System.Timers.Timer)(sender)).Dispose();
+                        }
+                    }
+                }
+                else
+                {
+                    if (sender != null)
+                    {
+                        ((System.Timers.Timer)(sender)).Close();
+                        ((System.Timers.Timer)(sender)).Dispose();
+                    }
+                }
             }
+            catch { }
+
+            //
+            // [ END ]
+        }
+
+        private static System.Diagnostics.Process Initiate_Wake_Word_Engine()
+        {
+            // INITIATE THE WAKE WORD ENGINE USING THE VIRTUAL ENVIRONMENT WITHIN THE DIRECTORY
+            // WHERE WHERE "Eva 5.0.exe" EXECUTABLE IS LOCATED. THE PROCESS WILL NOT CREATE ANY
+            // WINDOW AND IT WILL BE STARTED AS A CHILD PROCESSES OF THE "Eva 5.0.exe" PROCESS.
+            //
+            // [ BEGIN ]
+
+            System.Diagnostics.Process wake_word_process = new System.Diagnostics.Process();
+            wake_word_process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            wake_word_process.StartInfo.FileName = Environment.CurrentDirectory + "\\python.exe";
+            wake_word_process.StartInfo.RedirectStandardOutput = true;
+            wake_word_process.StartInfo.RedirectStandardError = true;
+            wake_word_process.StartInfo.CreateNoWindow = true;
+            wake_word_process.StartInfo.UseShellExecute = false;
+            wake_word_process.StartInfo.Arguments = "main.py";
+            wake_word_process.Start();
+
+            return wake_word_process;
 
             // [ END ]
         }
 
         protected static Task<bool> Stop_The_Wake_Word_Engine()
         {
+
+            // RESET THE TIMER AND STOP THE PROCESSES THROUGH THE OBJECTS AS A BACKUP METHOD
+            //
+            // [ START ]
+
+            counter.Stop();
+            counter.Reset();
+
+            Wake_Word_Started = false;
+
+            try
+            {
+                if (process_1 != null)
+                    process_1.Kill();
+                process_1.Dispose();
+            }
+            catch { }
+
+
+            try
+            {
+                if (process_2 != null)
+                    process_2.Kill();
+                process_2.Dispose();
+            }
+            catch { }
+
+            // [ END ]
+
+
             // CREDIT TO [ mtijn ], LINK: https://stackoverflow.com/questions/7189117/find-all-child-processes-of-my-own-net-process-find-out-if-a-given-process-is
             // 
             // THE WMI ( WINDOWS MAGEMENT INTERFACE ) IS USED IN ORDER TO GATHER ALL THE CHILD PROCESSES OF THE "Eva 5.0.exe" PROCESS. THE WMI IS A MANAGEMENT SYSTEM
@@ -94,10 +241,6 @@ namespace Eva_5._0
             // THAT HAVE A SPECIFIC PURPOSE WITHIN THE OS PROCESS MANAGEMENT. 
             //
             // [ BEGIN ]
-
-            Wake_Word_Started = false;
-
-
 
             try
             {
@@ -303,7 +446,6 @@ namespace Eva_5._0
 
         private static async void Wake_Word_Detector(System.Diagnostics.Process python)
         {
-
             while (Wake_Word_Started == true)
             {
                 if(MainWindowIsClosing == false)
@@ -314,6 +456,7 @@ namespace Eva_5._0
                         {
                             if (python.HasExited == false)
                             {
+
                                 // READ THE DATA ON THE STOUT STREAM OF THE "Python" process
                                 char[] buffer = new char[14];
                                 await python.StandardOutput.ReadAsync(buffer, 0, buffer.Length);
@@ -328,7 +471,12 @@ namespace Eva_5._0
                                 {
                                     lock (Wake_Word_Detected)
                                     {
-                                        if (new string(buffer).Contains(cancel_wake_word) == true)
+                                        if (new string(buffer).Contains(wake_word_engine_loaded) == true)
+                                        {
+                                            counter.Restart();
+                                            is_wake_word_engine_loaded++;
+                                        }
+                                        else if (new string(buffer).Contains(cancel_wake_word) == true)
                                         {
                                             if (Online_Speech_Recogniser_Listening == "true")
                                             {
@@ -346,6 +494,10 @@ namespace Eva_5._0
                                 }
 
                                 // [ END ]
+                            }
+                            else
+                            {
+                                break;
                             }
                         }
                         catch { }
