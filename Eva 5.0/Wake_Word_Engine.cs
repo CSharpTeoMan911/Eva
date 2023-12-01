@@ -108,15 +108,17 @@ namespace Eva_5._0
 
             try
             {
+                System.Timers.Timer timer = ((System.Timers.Timer)(sender));
+
                 if (Wake_Word_Started == true)
                 {
                     if (MainWindowIsClosing == false)
                     {
                         if (App.Application_Error_Shutdown == false)
                         {
-                            if (is_wake_word_engine_loaded == 2 && counter.ElapsedMilliseconds >= 5000)
+                            if (is_wake_word_engine_loaded == 2 && counter.ElapsedMilliseconds >= 3000)
                             {
-                                if (counter.ElapsedMilliseconds >= 5000 && is_wake_word_engine_loaded == 2)
+                                if (counter.ElapsedMilliseconds >= 3000 && is_wake_word_engine_loaded == 2)
                                 {
                                     if (first_process == false)
                                     {
@@ -154,8 +156,8 @@ namespace Eva_5._0
                         {
                             if (sender != null)
                             {
-                                ((System.Timers.Timer)(sender)).Close();
-                                ((System.Timers.Timer)(sender)).Dispose();
+                                timer.Close();
+                                timer.Dispose();
                             }
                         }
                     }
@@ -163,8 +165,8 @@ namespace Eva_5._0
                     {
                         if (sender != null)
                         {
-                            ((System.Timers.Timer)(sender)).Close();
-                            ((System.Timers.Timer)(sender)).Dispose();
+                            timer.Close();
+                            timer.Dispose();
                         }
                     }
                 }
@@ -172,8 +174,8 @@ namespace Eva_5._0
                 {
                     if (sender != null)
                     {
-                        ((System.Timers.Timer)(sender)).Close();
-                        ((System.Timers.Timer)(sender)).Dispose();
+                        timer.Close();
+                        timer.Dispose();
                     }
                 }
             }
