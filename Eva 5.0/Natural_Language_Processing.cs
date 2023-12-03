@@ -52,30 +52,6 @@ namespace Eva_5._0
         private static StringBuilder WordBuffer_StringBuilder = new StringBuilder();
 
 
-        // COMPONENTS THAT INTERACT WITH SECURTY SENSITIVE FEATURES ARE CONTAINED INSIDE PRIVATE SEALED CLASSES FOR EXTRA PROTECTION
-        //
-        // [ BEGIN ]
-
-        private sealed class Special_Character_Replacement_Implementor:Special_Character_Replacement
-        {
-            internal static string Remove_Special_Characters_Procedure(string Sentence)
-            {
-                return Remove_Special_Characters(Sentence);
-            }
-        }
-
-
-        private sealed class Proc_Mitigator : Proc
-        {
-            internal static async Task<bool> Process_Initialisation<Content>(string process_type, string application, Content content)
-            {
-                return await ProcInitialisation<Content> (process_type, application, content);
-            }
-        }
-
-        // [ END ]
-
-
         protected static async Task<bool> PreProcessing(string Result)
         {
             Sentence_StringBuilder.Clear();
@@ -84,7 +60,7 @@ namespace Eva_5._0
             WebApplicationSearchContent_StringBuilder.Clear();
             WordBuffer_StringBuilder.Clear();
 
-            string Sentence = Special_Character_Replacement_Implementor.Remove_Special_Characters_Procedure(Result);
+            string Sentence = Eva_Functionalities.Special_Character_Replacement_Implementor.Remove_Special_Characters_Procedure(Result);
 
             Sentence_StringBuilder.Append(Sentence);
 
@@ -344,7 +320,7 @@ namespace Eva_5._0
                     switch (Sentence.IndexOf("take screenshot") == 0)
                     {
                         case true:
-                            await Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                            await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
                             break;
 
                         case false:
@@ -352,7 +328,7 @@ namespace Eva_5._0
                             switch (Sentence.IndexOf("take a screenshot") == 0)
                             {
                                 case true:
-                                    await Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                                    await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
                                     break;
 
                                 case false:
@@ -360,7 +336,7 @@ namespace Eva_5._0
                                     switch (Sentence.IndexOf("take a screenshot please") == 0)
                                     {
                                         case true:
-                                            await Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                                            await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
                                             break;
 
                                         case false:
@@ -368,14 +344,14 @@ namespace Eva_5._0
                                             switch (Sentence.IndexOf("please take a screenshot") == 0)
                                             {
                                                 case true:
-                                                    await Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                                                    await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
                                                     break;
 
                                                 case false:
 
                                                     if (Sentence.IndexOf("screenshot") == 0)
                                                     {
-                                                        await Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                                                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
                                                     }
                                                     break;
                                             }
@@ -435,7 +411,7 @@ namespace Eva_5._0
                     Application = await System_Application_Selector("please open ".Length - 1, Sentence_StringBuilder.ToString());
                     if(Application != String.Empty)
                     {
-                        await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
+                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
                     }
                     Application_StringBuilder.Clear();
                     break;
@@ -444,7 +420,7 @@ namespace Eva_5._0
                     Application = await System_Application_Selector("open ".Length - 1, Sentence_StringBuilder.ToString());
                     if(Application != String.Empty)
                     {
-                        await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
+                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
                     }
                     Application_StringBuilder.Clear();
                     break;
@@ -453,7 +429,7 @@ namespace Eva_5._0
                     Application = await System_Application_Selector("open ".Length - 1, Sentence_StringBuilder.ToString());
                     if (Application != String.Empty)
                     {
-                        await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
+                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
                     }
                     Application_StringBuilder.Clear();
                     break;
@@ -462,7 +438,7 @@ namespace Eva_5._0
                     Application = await System_Application_Selector("open ".Length - 1, Sentence_StringBuilder.ToString());
                     if (Application != String.Empty)
                     {
-                        await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
+                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
                     }
                     Application_StringBuilder.Clear();
                     break;
@@ -475,7 +451,7 @@ namespace Eva_5._0
 
                     if(Application != String.Empty)
                     {
-                        await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
+                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
                     }
                     Application_StringBuilder.Clear();
                     break;
@@ -486,7 +462,7 @@ namespace Eva_5._0
 
                     if (Application != String.Empty)
                     {
-                        await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
+                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
                     }
                     Application_StringBuilder.Clear();
                     break;
@@ -497,7 +473,7 @@ namespace Eva_5._0
 
                     if (Application != String.Empty)
                     {
-                        await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
+                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
                     }
                     Application_StringBuilder.Clear();
                     break;
@@ -508,7 +484,7 @@ namespace Eva_5._0
 
                     if (Application != String.Empty)
                     {
-                        await Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
+                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
                     }
                     Application_StringBuilder.Clear();
                     break;
@@ -528,7 +504,7 @@ namespace Eva_5._0
                         }
 
                         WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString();
-                        await Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
+                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
                     }
                     break;
 
@@ -544,8 +520,7 @@ namespace Eva_5._0
                         }
 
                         WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString().Trim();
-
-                        await Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
+                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
                     }
                     break;
 
@@ -561,8 +536,7 @@ namespace Eva_5._0
                         }
 
                         WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString().Trim();
-
-                        await Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
+                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
                     }
                     break;
 
@@ -578,8 +552,7 @@ namespace Eva_5._0
                         }
 
                         WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString().Trim();
-
-                        await Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
+                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
                     }
                     break;
 
@@ -599,7 +572,7 @@ namespace Eva_5._0
                             WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString();
                             break;
                     }
-                    await Proc_Mitigator.Process_Initialisation<string>("ChatGPT Process", Application, WebApplicationSearchContent);
+                    await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("ChatGPT Process", Application, WebApplicationSearchContent);
                     break;
 
                 case "set a [Timer Interval] timer":
@@ -607,7 +580,7 @@ namespace Eva_5._0
 
                     if(timer_set == true)
                     {
-                        await Proc_Mitigator.Process_Initialisation<System.Collections.Concurrent.ConcurrentDictionary<string, int>>("Timer Process", null, time_interval);
+                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<System.Collections.Concurrent.ConcurrentDictionary<string, int>>("Timer Process", null, time_interval);
                     }
                     break;
 
@@ -617,7 +590,7 @@ namespace Eva_5._0
 
                     if (timer_set == true)
                     {
-                        await Proc_Mitigator.Process_Initialisation<System.Collections.Concurrent.ConcurrentDictionary<string, int>>("Timer Process", null, time_interval);
+                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<System.Collections.Concurrent.ConcurrentDictionary<string, int>>("Timer Process", null, time_interval);
                     }
                     break;
 
@@ -626,7 +599,7 @@ namespace Eva_5._0
 
                     if (timer_set == true)
                     {
-                        await Proc_Mitigator.Process_Initialisation<System.Collections.Concurrent.ConcurrentDictionary<string, int>>("Timer Process", null, time_interval);
+                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<System.Collections.Concurrent.ConcurrentDictionary<string, int>>("Timer Process", null, time_interval);
                     }
                     break;
             }

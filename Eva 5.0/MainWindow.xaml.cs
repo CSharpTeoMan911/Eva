@@ -93,7 +93,7 @@ namespace Eva_5._0
         /// 
 
 
-        // [ BEGIN ] STATIC OBJECTS OBJECTS THAT ARE ACCESSED IN A THREAD SAFE MANNER
+        // [ BEGIN ] STATIC OBJECTS OBJECTS FOR THE SPEECH RECOGNITION SYSTEM STATE MACHINE THAT ARE ACCESSED IN A THREAD SAFE MANNER
 
         protected static string Online_Speech_Recogniser_Listening = "false";
 
@@ -111,7 +111,7 @@ namespace Eva_5._0
 
         protected static string Initiated = "false";
 
-        // [ END ] STATIC OBJECTS OBJECTS THAT ARE ACCESSED IN A THREAD SAFE MANNER
+        // [ END ] STATIC OBJECTS OBJECTS FOR THE SPEECH RECOGNITION SYSTEM STATE MACHINE THAT ARE ACCESSED IN A THREAD SAFE MANNER
 
 
 
@@ -165,73 +165,11 @@ namespace Eva_5._0
 
         private byte OnOff;
 
-
         public MainWindow()
         {
+            
             InitializeComponent();
         }
-
-
-
-        protected enum Online_Speech_Recognition_Interface_Operation
-        {
-            Online_Speech_Recognition_Interface_Clear_Cache,
-            Online_Speech_Recognition_Interface_Shutdown
-        }
-
-
-        // COMPONENTS THAT INTERACT WITH SECURTY SENSITIVE FEATURES ARE CONTAINED INSIDE PRIVATE SEALED CLASSES FOR EXTRA PROTECTION
-        //
-        // [ BEGIN ]
-
-        private sealed class Wake_Word_Engine_Mitigator : Wake_Word_Engine
-        {
-            internal static void Wake_Word_Engine_Start()
-            {
-                Start_The_Wake_Word_Engine();
-            }
-
-            internal static async Task<bool> Wake_Word_Engine_Stop()
-            {
-                return await Stop_The_Wake_Word_Engine();
-            }
-        }
-
-        private sealed class Microphone_Permissions_Mitigator : Check_Microphone_Permission
-        {
-            internal static async Task<bool> Check_Microphone_Availability()
-            {
-                return await Check_If_Microphone_Available();
-            }
-        }
-
-        private sealed class Online_Speech_Recognition_Mitigator : Online_Speech_Recognition
-        {
-            internal static void Online_Speech_Recognition_Initiation()
-            {
-                Online_Speech_Recognition_Session_Creation_And_Initiation();
-            }
-
-            internal static void Online_Speech_Recognition_Error()
-            {
-                Online_Speech_Recognition_Error_Management(Online_Speech_Recognition_Error_Type.Mircrophone_Access_Denied);
-            }
-
-            internal static int Get_Recogniser_Interfaces_Count_Initiator()
-            {
-                return Get_Recogniser_Interfaces().Length;
-            }
-
-            internal static async Task<bool> OS_Online_Speech_Recogniser_Operation(Online_Speech_Recognition_Interface_Operation operation)
-            {
-                return await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(operation);
-            }
-        }
-
-        // [ END ]
-
-
-
 
 
 
@@ -262,27 +200,26 @@ namespace Eva_5._0
 
             SpeechRecognitionInterfaceControlTimer = new System.Timers.Timer();
             SpeechRecognitionInterfaceControlTimer.Elapsed += SpeechRecognitionInterfaceControlTimer_Elapsed;
-            SpeechRecognitionInterfaceControlTimer.Interval = 3000;
+            SpeechRecognitionInterfaceControlTimer.Interval = 1000;
             SpeechRecognitionInterfaceControlTimer.Start();
         }
 
         private async void CurrentDomain_ProcessExit(object sender, EventArgs e)
         {
-            await Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
+            await Wake_Word_Engine.Stop_The_Wake_Word_Engine();
         }
 
 
 
         private async void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            await Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
+            await Wake_Word_Engine.Stop_The_Wake_Word_Engine();
         }
 
 
 
         private void AnimationAndFunctionalityTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-
             // VERIFY IF MAIN WINDOW IS CLOSING
             switch (MainWindowIsClosing)
             {
@@ -407,11 +344,14 @@ namespace Eva_5._0
                                             }
                                         }
 
-                                        // IF THE WAKE WORD ENGINE DETECTED A KEYWORD
-                                        if (Wake_Word_Detected == "true")
+                                        lock (Wake_Word_Detected)
                                         {
-                                            lock (Wake_Word_Detected)
+                                            // IF THE WAKE WORD ENGINE DETECTED A KEYWORD
+                                            if (Wake_Word_Detected == "true")
                                             {
+                                                // AFTER THE WAKE WORD DETECTION PROCEDURE IS FINISHED, RESET THE INICATOR TO ITS DEFAULT VALUE
+                                                Wake_Word_Detected = "false";
+
                                                 lock (Online_Speech_Recogniser_Disabled)
                                                 {
                                                     // IF THE ONLINE SPEECH RECOGNITION ENGINE IS NOT DISABLED
@@ -426,7 +366,7 @@ namespace Eva_5._0
                                                             // AND INITIATE THE ONLINE SPEECH RECOGNITION ENGINE.
                                                             if (await Online_Speech_Recogniser_Delay_Calculator() == true)
                                                             {
-                                                                Online_Speech_Recognition_Mitigator.Online_Speech_Recognition_Initiation();
+                                                                Online_Speech_Recognition.Online_Speech_Recognition_Session_Creation_And_Initiation();
                                                             }
                                                         });
                                                         ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
@@ -435,10 +375,8 @@ namespace Eva_5._0
                                                         ParallelProcessing.Start();
                                                     }
                                                 }
-                                            }
 
-                                            // AFTER THE WAKE WORD DETECTION PROCEDURE IS FINISHED, RESET THE INICATOR TO ITS DEFAULT VALUE
-                                            Wake_Word_Detected = "false";
+                                            }
                                         }
 
 
@@ -489,7 +427,7 @@ namespace Eva_5._0
                                                                         Online_Speech_Recogniser_Listening = "false";
                                                                         async void Shutdown()
                                                                         {
-                                                                            await Online_Speech_Recognition_Mitigator.OS_Online_Speech_Recogniser_Operation(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
+                                                                            await Online_Speech_Recognition.OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition.Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
                                                                         }
                                                                         Shutdown();
                                                                     }
@@ -986,9 +924,9 @@ namespace Eva_5._0
                         // RECOGNITION IS CLOSED
                         async void Inactivity_Shutdown()
                         {
-                            if (Online_Speech_Recognition_Mitigator.Get_Recogniser_Interfaces_Count_Initiator() > 0)
+                            if (Online_Speech_Recognition.Get_Recogniser_Interfaces().Length > 0)
                             {
-                                await Online_Speech_Recognition_Mitigator.OS_Online_Speech_Recogniser_Operation(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
+                                await Online_Speech_Recognition.OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition.Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
                             }
                         }
                         Inactivity_Shutdown();
@@ -1028,7 +966,7 @@ namespace Eva_5._0
                 ParallelProcessing = null;
 
 
-                await Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
+                await Wake_Word_Engine.Stop_The_Wake_Word_Engine();
                 Environment.Exit(0);
             }
             catch { }
@@ -1088,7 +1026,7 @@ namespace Eva_5._0
                 {
                     if (Application.Current.MainWindow != null)
                     {
-                        await Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
+                        await Wake_Word_Engine.Stop_The_Wake_Word_Engine();
                         this.Close();
                     }
                 }
@@ -1110,7 +1048,7 @@ namespace Eva_5._0
 
                         if (Application.Current.MainWindow != null)
                         {
-                            bool Microphone_Available = await Microphone_Permissions_Mitigator.Check_Microphone_Availability();
+                            bool Microphone_Available = await Check_Microphone_Permission.Check_If_Microphone_Available();
 
                             switch (Microphone_Available)
                             {
@@ -1133,7 +1071,7 @@ namespace Eva_5._0
                                                     SpeechRecognitionButton.Content = "\xE1D6";
                                                 });
 
-                                                Wake_Word_Engine_Mitigator.Wake_Word_Engine_Start();
+                                                Wake_Word_Engine.Start_The_Wake_Word_Engine();
                                                 break;
 
 
@@ -1151,7 +1089,7 @@ namespace Eva_5._0
                                                 });
 
                                                 OnOff = 0;
-                                                await Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
+                                                await Wake_Word_Engine.Stop_The_Wake_Word_Engine();
                                                 break;
                                         }
                                     });
@@ -1162,7 +1100,7 @@ namespace Eva_5._0
                                     break;
 
                                 case false:
-                                    Online_Speech_Recognition_Mitigator.Online_Speech_Recognition_Error();
+                                    Online_Speech_Recognition.Online_Speech_Recognition_Error_Management(Online_Speech_Recognition.Online_Speech_Recognition_Error_Type.Mircrophone_Access_Denied);
                                     break;
                             }
 
@@ -1273,10 +1211,11 @@ namespace Eva_5._0
         {
             System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
 
-            Task.Run(async () =>
+            async void Execute()
             {
-                await Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
-            });
+                await Wake_Word_Engine.Stop_The_Wake_Word_Engine();
+            }
+            Execute();
 
             GC.Collect(2, GCCollectionMode.Forced);
         }

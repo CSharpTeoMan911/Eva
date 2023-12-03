@@ -74,15 +74,6 @@ namespace Eva_5._0
         }
 
 
-        private sealed class Wake_Word_Engine_Mitigator : Wake_Word_Engine
-        {
-            public static void Wake_Word_Engine_Stop()
-            {
-                Stop_The_Wake_Word_Engine();
-            }
-        }
-
-
         private async void MicrophoneAccessDenied()
         {
             App.Application_Error_Shutdown = true;
@@ -668,13 +659,13 @@ namespace Eva_5._0
             TimerDisposed = true;
         }
 
-        private void ErrorWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        private async void ErrorWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             App.PermisissionWindowOpen = false;
 
             if(App.Application_Error_Shutdown == true)
             {
-                Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
+                await Wake_Word_Engine.Stop_The_Wake_Word_Engine();
                 Environment.Exit(0);
             }
         }

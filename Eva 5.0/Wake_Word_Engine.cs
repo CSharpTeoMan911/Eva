@@ -60,7 +60,7 @@ namespace Eva_5._0
         private static bool Wake_Word_Started = false;
  
 
-        protected static void Start_The_Wake_Word_Engine()
+        public static void Start_The_Wake_Word_Engine()
         {
             // INITIATE 2 WAKE WORD ENGINE PROCESSES ON DIFFERENT THREADS FOR CPU LOAD DISTRIBUTION PURPOSES
             // AND ALSO TO PREVENT THE LOCKING OF THE CALLING THREAD. AFTER THE WAKE WORD ENGINE PROCESSES
@@ -208,7 +208,7 @@ namespace Eva_5._0
             // [ END ]
         }
 
-        protected static Task<bool> Stop_The_Wake_Word_Engine()
+        public static Task<bool> Stop_The_Wake_Word_Engine()
         {
 
             // RESET THE TIMER AND STOP THE PROCESSES THROUGH THE OBJECTS AS A BACKUP METHOD
@@ -477,19 +477,19 @@ namespace Eva_5._0
                                 {
                                     lock (Wake_Word_Detected)
                                     {
-                                        if (new string(buffer).Contains(wake_word_engine_loaded) == true)
+                                        if (new string(buffer, 0, wake_word_engine_loaded.Length) == wake_word_engine_loaded)
                                         {
                                             counter.Restart();
                                             is_wake_word_engine_loaded++;
                                         }
-                                        else if (new string(buffer).Contains(cancel_wake_word) == true)
+                                        else if (new string(buffer, 0, cancel_wake_word.Length) == cancel_wake_word)
                                         {
                                             if (Online_Speech_Recogniser_Listening == "true")
                                             {
                                                 Online_Speech_Recogniser_Listening = "false";
                                             }
                                         }
-                                        else if (new string(buffer).Contains(wake_word) == true)
+                                        else if (new string(buffer, 0, wake_word.Length) == wake_word)
                                         {
                                             if (Online_Speech_Recogniser_Listening == "false")
                                             {

@@ -98,6 +98,54 @@ namespace Eva_5._0
 
         public readonly static Sound_Player sound_player = new Sound_Player();
 
+        protected class Eva_Functionalities
+        {
+            public class Recycle_Bine_Cleanup_Implementor : Recycle_Bine_Cleanup
+            {
+                internal static async Task<bool> Empty_Recycle_Bin_Implementor()
+                {
+                    return await Empty_Recycle_Bin();
+                }
+            }
+
+            public class Begin_Application_Execution_Animation : MainWindow
+            {
+                internal static void Start_The_Application_Execution_Animation()
+                {
+                    lock (BeginExecutionAnimation)
+                    {
+                        BeginExecutionAnimation = "true";
+                    }
+                }
+            }
+
+            public class Screen_Capture_Mechanism_Mitigator : Screen_Capture_Mechanism
+            {
+                internal static async Task<bool> Screen_Capture_Initiator()
+                {
+                    return await Screen_Capture();
+                }
+            }
+
+
+            public class Special_Character_Replacement_Implementor : Special_Character_Replacement
+            {
+                internal static string Remove_Special_Characters_Procedure(string Sentence)
+                {
+                    return Remove_Special_Characters(Sentence);
+                }
+            }
+
+
+            public class Proc_Mitigator : Proc
+            {
+                internal static async Task<bool> Process_Initialisation<Content>(string process_type, string application, Content content)
+                {
+                    return await ProcInitialisation<Content>(process_type, application, content);
+                }
+            }
+        }
+
 
 
         // Import the operating system's user32.dll in order to use the operating system's window focus functionality through the WinAPI

@@ -73,47 +73,10 @@ namespace Eva_5._0
          * 
          */
 
-        // COMPONENTS THAT INTERACT WITH SECURTY SENSITIVE FEATURES ARE CONTAINED INSIDE PRIVATE SEALED CLASSES FOR EXTRA PROTECTION
-        //
-        // [ BEGIN ]
-
-        private sealed class Recycle_Bine_Cleanup_Implementor:Recycle_Bine_Cleanup
-        {
-            internal static async Task<bool> Empty_Recycle_Bin_Implementor()
-            {
-                return await Empty_Recycle_Bin();
-            }
-        }
-
-        private sealed class Begin_Application_Execution_Animation:MainWindow
-        {
-            internal static Task<bool> Start_The_Application_Execution_Animation()
-            {
-                lock(BeginExecutionAnimation)
-                {
-                    BeginExecutionAnimation = "true";
-                }
-
-                return Task.FromResult(true);
-            }
-        }
-
-        private sealed class Screen_Capture_Mechanism_Mitigator : Screen_Capture_Mechanism
-        {
-            internal static async Task<bool> Screen_Capture_Initiator()
-            {
-                return await Screen_Capture();
-            }
-        }
-
-        // [ END ]
-
-
 
 
         protected static async Task<bool> ProcInitialisation<Content>(string process_type, string application, Content content)
         {
-
             switch (process_type)
             {
                 case "Online Process":
@@ -154,8 +117,7 @@ namespace Eva_5._0
                 string formated_process = Process_Builder.ToString();
                 Process_Builder.Clear();
 
-
-                await Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
+                Eva_Functionalities.Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
 
                 using (System.Diagnostics.Process Online_Process = new System.Diagnostics.Process())
                 {
@@ -167,7 +129,7 @@ namespace Eva_5._0
                     SetForegroundWindowInitiator(Online_Process.MainWindowHandle);
                 }
 
-                await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppExecutionSoundEffect);
+                await sound_player.Play_Sound(Sound_Player.Sounds.AppExecutionSoundEffect);
 
             }
             catch { }
@@ -181,19 +143,19 @@ namespace Eva_5._0
         {
             string application_executable_name = String.Empty;
 
-            bool Application_Executable_Name_Retrieval_Result = A_p_l____And____P_r_o_c.A_p_l_Name__And__A_p_l___E_x__Name.TryGetValue(Application, out application_executable_name);
+            bool Application_Executable_Name_Retrieval_Result = A_p_l_Name__And__A_p_l___E_x__Name.TryGetValue(Application, out application_executable_name);
 
 
 
             string application_process_name = String.Empty;
 
-            bool Application_Process_Name_Retrieval_Result = A_p_l____And____P_r_o_c.A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryGetValue(Application, out application_process_name);
+            bool Application_Process_Name_Retrieval_Result = A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryGetValue(Application, out application_process_name);
 
 
 
             string application_not_found_error_link = String.Empty;
 
-            bool Application_Not_Found_Error_Download_Link_Result = A_p_l____And____P_r_o_c.A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryGetValue(Application, out application_not_found_error_link);
+            bool Application_Not_Found_Error_Download_Link_Result = A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryGetValue(Application, out application_not_found_error_link);
 
 
 
@@ -218,7 +180,7 @@ namespace Eva_5._0
                             switch (application_executable_name[0] == 'U' && application_executable_name[1] == 'R' && application_executable_name[2] == 'I')
                             {
                                 case true:
-                                    await Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
+                                    Eva_Functionalities.Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
 
                                     await Windows.System.Launcher.LaunchUriAsync(new Uri(formated_application_executable_name_string));
                                     break;
@@ -229,7 +191,7 @@ namespace Eva_5._0
                                     switch (application_executable_name[0] == 'C' && application_executable_name[1] == 'M' && application_executable_name[2] == 'D')
                                     {
                                         case true:
-                                            await Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
+                                            Eva_Functionalities.Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
 
                                             using (System.Diagnostics.Process Application_Process = new System.Diagnostics.Process())
                                             {
@@ -246,7 +208,7 @@ namespace Eva_5._0
 
 
                                         case false:
-                                            await Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
+                                            Eva_Functionalities.Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
 
                                             switch (application_executable_name[0] == 'A' && application_executable_name[1] == 'P' && application_executable_name[2] == 'P')
                                             {
@@ -256,7 +218,7 @@ namespace Eva_5._0
 
                                                     if (application_name == "recycle bin cleanup")
                                                     {
-                                                        await Recycle_Bine_Cleanup_Implementor.Empty_Recycle_Bin_Implementor();
+                                                        await Eva_Functionalities.Recycle_Bine_Cleanup_Implementor.Empty_Recycle_Bin_Implementor();
                                                     }
                                                     break;
 
@@ -281,7 +243,7 @@ namespace Eva_5._0
                             }
 
 
-                            await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppExecutionSoundEffect);
+                            await sound_player.Play_Sound(Sound_Player.Sounds.AppExecutionSoundEffect);
                         }
                     }
                     catch
@@ -290,7 +252,7 @@ namespace Eva_5._0
                         {
                             if (Application_Not_Found_Error_Download_Link_Result == true)
                             {
-                                await Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
+                                Eva_Functionalities.Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
 
                                 using (System.Diagnostics.Process Application_Not_Found_Downdload_Link_Process = new System.Diagnostics.Process())
                                 {
@@ -303,7 +265,7 @@ namespace Eva_5._0
                                 }
 
 
-                                await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppExecutionSoundEffect);
+                                await sound_player.Play_Sound(Sound_Player.Sounds.AppExecutionSoundEffect);
 
                             }
                         }
@@ -320,7 +282,7 @@ namespace Eva_5._0
                     {
                         try
                         {
-                            await Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
+                            Eva_Functionalities.Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
 
                             if (application_process_name != "timer")
                             {
@@ -334,7 +296,7 @@ namespace Eva_5._0
                                 await Timer_Interval.Cancel_Time_Interval();
                             }
 
-                            await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppTerminationSoundEffect);
+                            await sound_player.Play_Sound(Sound_Player.Sounds.AppTerminationSoundEffect);
                         }
                         catch { }
                     }
@@ -371,9 +333,9 @@ namespace Eva_5._0
 
                 await Timer_Interval.Set_Time_Interval(hours_interval, minutes_interval, seconds_interval);
 
-                await Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
+                Eva_Functionalities.Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
 
-                await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppExecutionSoundEffect);
+                await sound_player.Play_Sound(Sound_Player.Sounds.AppExecutionSoundEffect);
 
             }
             catch { }
@@ -395,7 +357,7 @@ namespace Eva_5._0
                     App.chatGPT_Response_Window = new ChatGPT_Response_Window();
                     App.chatGPT_Response_Window.Show();
                 }
-                await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppExecutionSoundEffect);
+                await sound_player.Play_Sound(Sound_Player.Sounds.AppExecutionSoundEffect);
                 await App.chatGPT_Response_Window.Update_Conversation(input);
             });
             
@@ -406,9 +368,9 @@ namespace Eva_5._0
 
         private static async Task<bool> Screen_Capture()
         {
-            await Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
-            await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.ScreenshotExecutionSoundEffect);
-            return await Screen_Capture_Mechanism_Mitigator.Screen_Capture_Initiator();
+            Eva_Functionalities.Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
+            await sound_player.Play_Sound(Sound_Player.Sounds.ScreenshotExecutionSoundEffect);
+            return await Eva_Functionalities.Screen_Capture_Mechanism_Mitigator.Screen_Capture_Initiator();
         }
 
         ~Proc()

@@ -7,7 +7,7 @@ namespace Eva_5._0
     internal class Check_Microphone_Permission
     {
       
-        protected async static Task<bool> Check_If_Microphone_Available()
+        public async static Task<bool> Check_If_Microphone_Available()
         {
             try
             {
