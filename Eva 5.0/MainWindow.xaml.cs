@@ -64,8 +64,7 @@ namespace Eva_5._0
         // BEGIN
 
         protected static DateTime? Online_Speech_Recogniser_Activation_Delay_Detector = null;
-
-        private static double Online_Speech_Recogniser_Activation_Delay = 3.2;
+        private static double Online_Speech_Recogniser_Activation_Delay = 3.4;
 
         // END
 
@@ -167,7 +166,7 @@ namespace Eva_5._0
 
         public MainWindow()
         {
-            
+
             InitializeComponent();
         }
 
@@ -391,11 +390,16 @@ namespace Eva_5._0
 
                                                     lock (Online_Speech_Recogniser_Disabled)
                                                     {
-                                                        // IF THE ONLINE SPEECH RECOGNITION ENGINE IS DISABLED OR THE WINDOW IS MINIMISED,
-                                                        // MAKE THE ONLINE SPEECH RECOGNITION ENGINE STOP TAKING INPUT
-                                                        if (Window_Minimised == "true" || Online_Speech_Recogniser_Disabled == "true")
+                                                        lock (Wake_Word_Detected)
                                                         {
-                                                            Online_Speech_Recogniser_Listening = "false";
+                                                            // IF THE ONLINE SPEECH RECOGNITION ENGINE IS DISABLED OR THE WINDOW IS MINIMISED,
+                                                            // MAKE THE ONLINE SPEECH RECOGNITION ENGINE STOP TAKING INPUT
+                                                            if (Window_Minimised == "true" || Online_Speech_Recogniser_Disabled == "true")
+                                                            {
+                                                                Wake_Word_Detected = "false";
+                                                                Online_Speech_Recogniser_Listening = "false";
+                                                                Online_Speech_Recognition.Close_Speech_Recognition_Interface();
+                                                            }
                                                         }
                                                     }
 
@@ -427,6 +431,7 @@ namespace Eva_5._0
                                                                         Online_Speech_Recogniser_Listening = "false";
                                                                         async void Shutdown()
                                                                         {
+                                                                            Online_Speech_Recognition.Close_Speech_Recognition_Interface();
                                                                             await Online_Speech_Recognition.OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition.Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
                                                                         }
                                                                         Shutdown();
@@ -926,6 +931,7 @@ namespace Eva_5._0
                         {
                             if (Online_Speech_Recognition.Get_Recogniser_Interfaces().Length > 0)
                             {
+                                Online_Speech_Recognition.Close_Speech_Recognition_Interface();
                                 await Online_Speech_Recognition.OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition.Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
                             }
                         }
@@ -951,7 +957,7 @@ namespace Eva_5._0
                     catch { }
                 }
 
-                if(SpeechRecognitionInterfaceControlTimer != null)
+                if (SpeechRecognitionInterfaceControlTimer != null)
                 {
                     try
                     {

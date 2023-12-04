@@ -487,6 +487,7 @@ namespace Eva_5._0
                                             if (Online_Speech_Recogniser_Listening == "true")
                                             {
                                                 Online_Speech_Recogniser_Listening = "false";
+                                                Online_Speech_Recognition.Close_Speech_Recognition_Interface();
                                             }
                                         }
                                         else if (new string(buffer, 0, wake_word.Length) == wake_word)
