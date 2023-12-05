@@ -52,7 +52,7 @@ namespace Eva_5._0
         private static StringBuilder WordBuffer_StringBuilder = new StringBuilder();
 
 
-        protected static async Task<bool> PreProcessing(string Result)
+        public static async Task<bool> PreProcessing(string Result)
         {
             Sentence_StringBuilder.Clear();
             Application_StringBuilder.Clear();

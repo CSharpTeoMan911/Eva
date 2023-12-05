@@ -29,7 +29,7 @@ namespace Eva_5._0
     {
         private static bool shutdown_initiated = false;
         private static Windows.Media.SpeechRecognition.SpeechRecognizer OnlineSpeechRecognition;
-        private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Constraints = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.WebSearch, "web-search", "web");
+        private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Constraints = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.FormFilling, "form-filling", "form");
 
         public enum Online_Speech_Recognition_Error_Type
         {
@@ -42,20 +42,6 @@ namespace Eva_5._0
             Online_Speech_Recognition_Interface_Clear_Cache,
             Online_Speech_Recognition_Interface_Shutdown
         }
-
-        // COMPONENTS THAT INTERACT WITH SECURTY SENSITIVE FEATURES ARE CONTAINED INSIDE PRIVATE SEALED CLASSES FOR EXTRA PROTECTION
-        //
-        // [ BEGIN ]
-
-        private sealed class Natural_Language_Processing_Mitigator : Natural_Language_Processing
-        {
-            internal static async Task<bool> PreProcessing_Initiation(string Sentence)
-            {
-                return await PreProcessing(Sentence);
-            }
-        }
-
-        // [ END ]
 
 
 
@@ -171,7 +157,7 @@ namespace Eva_5._0
                             }
                         }
 
-                        await Natural_Language_Processing_Mitigator.PreProcessing_Initiation(args.Result.Text.ToLower());
+                        await Natural_Language_Processing.PreProcessing(args.Result.Text.ToLower());
 
                     Function_Not_Initiated:
                         Close_Speech_Recognition_Interface();
