@@ -931,7 +931,6 @@ namespace Eva_5._0
                         {
                             if (Online_Speech_Recognition.Get_Recogniser_Interfaces().Length > 0)
                             {
-                                Online_Speech_Recognition.Close_Speech_Recognition_Interface();
                                 await Online_Speech_Recognition.OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition.Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
                             }
                         }
