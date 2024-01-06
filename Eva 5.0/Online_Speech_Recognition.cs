@@ -29,7 +29,7 @@ namespace Eva_5._0
     {
         private static bool shutdown_initiated = false;
         private static Windows.Media.SpeechRecognition.SpeechRecognizer OnlineSpeechRecognition;
-        private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Constraints = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.FormFilling, "form-filling", "form");
+        private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Constraints = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.Dictation, "dictation", "dict");
 
         public enum Online_Speech_Recognition_Error_Type
         {
