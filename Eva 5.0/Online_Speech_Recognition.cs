@@ -29,7 +29,7 @@ namespace Eva_5._0
     {
         private static bool shutdown_initiated = false;
         private static Windows.Media.SpeechRecognition.SpeechRecognizer OnlineSpeechRecognition;
-        private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Constraints = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.Dictation, "dictation", "dict");
+        private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Constraints = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.FormFilling, "form-filling", "form");
 
         public enum Online_Speech_Recognition_Error_Type
         {
@@ -250,12 +250,14 @@ namespace Eva_5._0
         public static async void Close_Speech_Recognition_Interface()
         {
             if (OnlineSpeechRecognition != null)
+            {
                 try
                 {
                     await OnlineSpeechRecognition.ContinuousRecognitionSession.StopAsync();
                     OnlineSpeechRecognition.Dispose();
                 }
                 catch { }
+            }
         }
 
 
