@@ -283,7 +283,7 @@ namespace Eva_5._0
                     A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("visual studio 2019", @"C:\Program Files (x86)\Microsoft Visual Studio\2019\\Community\Common7\IDE\devenv.exe");
 
 
-                    A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("visual studio code", "code");
+                    A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("visual studio code", "CMD = code");
 
 
                     A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("disk cleanup", "cleanmgr.exe");

@@ -78,14 +78,26 @@ namespace Eva_5._0
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTActivationSoundEffect);
                 goto ChatGptMode;
             }
+            else if (Sentence.IndexOf("enable c") == 0 && Sentence.IndexOf(" mode") == Sentence.Length - " mode".Length)
+            {
+                MainWindow.chatgpt_mode_enabled = true;
+                await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTActivationSoundEffect);
+                goto ChatGptMode;
+            }
             else if(Sentence.IndexOf("deactivate c") == 0 && Sentence.IndexOf(" mode") == Sentence.Length - " mode".Length)
             {
                 MainWindow.chatgpt_mode_enabled = false;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTDeactivationSoundEffect);
                 goto ChatGptMode;
             }
+            else if (Sentence.IndexOf("disable c") == 0 && Sentence.IndexOf(" mode") == Sentence.Length - " mode".Length)
+            {
+                MainWindow.chatgpt_mode_enabled = false;
+                await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTDeactivationSoundEffect);
+                goto ChatGptMode;
+            }
 
-            switch(MainWindow.chatgpt_mode_enabled)
+            switch (MainWindow.chatgpt_mode_enabled)
             {
                 case true:
                     await PostProcessing("chatgpt [ ChatGPT Query ]", Sentence);

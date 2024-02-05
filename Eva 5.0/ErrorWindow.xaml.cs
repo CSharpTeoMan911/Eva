@@ -20,23 +20,8 @@ namespace Eva_5._0
         private bool SwitchWindowOffset;
         private double GradientArithmeticWindowOffset;
 
-        private bool SwitchOffsetCloseButtonOffset;
-        private double GradientArithmeticCloseButtonOffset;
-
-        private bool SwitchOffsetNormaliseOrMaximiseButtonOffset;
-        private double GradientArithmeticNormaliseOrMaximiseButtonOffset;
-
-        private bool SwitchOffsetMinimiseTheWindowOffset;
-        private double GradientArithmeticMinimiseTheWindowOffset;
-
-        private bool SwitchOffsetErrorPageTitleOffset;
-        private double GradientArithmeticErrorPageTitleOffset;
-
-        private bool SwitchOffsetErrorPageTitleContentOffset;
-        private double GradientArithmeticErrorPageTitleContentOffset;
-
-        private bool SwitchOffsetErrorPageContentOffset;
-        private double GradientArithmeticErrorPageContentOffset;
+        private bool SwitchSecondaryOffsets;
+        private double GradientArithmeticSecodaryOffsets;
 
         private bool TimerDisposed;
 
@@ -395,202 +380,43 @@ namespace Eva_5._0
                                         }
 
 
-                                        switch (SwitchOffsetCloseButtonOffset)
+                                        switch (SwitchSecondaryOffsets)
                                         {
-                                            case false:
+                                            case true:
 
-                                                switch (GradientArithmeticCloseButtonOffset <= 65)
+                                                switch (GradientArithmeticSecodaryOffsets <= 65)
                                                 {
                                                     case true:
-                                                        GradientArithmeticCloseButtonOffset++;
+                                                        GradientArithmeticSecodaryOffsets++;
                                                         CloseButtonOffset.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetCloseButtonOffset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticCloseButtonOffset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticCloseButtonOffset--;
-                                                        CloseButtonOffset.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetCloseButtonOffset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-
-                                        switch (SwitchOffsetNormaliseOrMaximiseButtonOffset)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticNormaliseOrMaximiseButtonOffset <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticNormaliseOrMaximiseButtonOffset++;
                                                         NormaliseOrMaximiseButtonOffset.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetNormaliseOrMaximiseButtonOffset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticNormaliseOrMaximiseButtonOffset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticNormaliseOrMaximiseButtonOffset--;
-                                                        NormaliseOrMaximiseButtonOffset.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetNormaliseOrMaximiseButtonOffset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-                                        switch (SwitchOffsetMinimiseTheWindowOffset)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticMinimiseTheWindowOffset <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticMinimiseTheWindowOffset++;
                                                         MinimiseTheWindowOffset.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetMinimiseTheWindowOffset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticMinimiseTheWindowOffset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticMinimiseTheWindowOffset--;
-                                                        MinimiseTheWindowOffset.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetMinimiseTheWindowOffset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-
-                                        switch (SwitchOffsetErrorPageTitleOffset)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticErrorPageTitleOffset <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticErrorPageTitleOffset++;
                                                         ErrorPageTitleOffset.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetErrorPageTitleOffset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticErrorPageTitleOffset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticErrorPageTitleOffset--;
-                                                        ErrorPageTitleOffset.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetErrorPageTitleOffset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-
-                                        switch (SwitchOffsetErrorPageTitleContentOffset)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticErrorPageTitleContentOffset <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticErrorPageTitleContentOffset++;
                                                         ErrorPageTitleContentOffset.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetErrorPageTitleContentOffset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticErrorPageTitleContentOffset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticErrorPageTitleContentOffset--;
-                                                        ErrorPageTitleContentOffset.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetErrorPageTitleContentOffset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-                                        switch (SwitchOffsetErrorPageContentOffset)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticErrorPageContentOffset <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticErrorPageContentOffset++;
                                                         ErrorPageContentOffset.Offset += 0.025;
                                                         break;
-
                                                     case false:
-                                                        SwitchOffsetErrorPageContentOffset = true;
+                                                        SwitchSecondaryOffsets = true;
                                                         break;
                                                 }
                                                 break;
 
-                                            case true:
+                                            case false:
 
-                                                switch (GradientArithmeticErrorPageContentOffset > 0)
+                                                switch (GradientArithmeticSecodaryOffsets > 0)
                                                 {
                                                     case true:
-                                                        GradientArithmeticErrorPageContentOffset--;
+                                                        GradientArithmeticSecodaryOffsets--;
+                                                        CloseButtonOffset.Offset -= 0.025;
+                                                        NormaliseOrMaximiseButtonOffset.Offset -= 0.025;
+                                                        MinimiseTheWindowOffset.Offset -= 0.025;
+                                                        ErrorPageTitleOffset.Offset -= 0.025;
+                                                        ErrorPageTitleContentOffset.Offset -= 0.025;
                                                         ErrorPageContentOffset.Offset -= 0.025;
                                                         break;
 
                                                     case false:
-                                                        SwitchOffsetErrorPageContentOffset = false;
+                                                        SwitchSecondaryOffsets = false;
                                                         break;
                                                 }
                                                 break;

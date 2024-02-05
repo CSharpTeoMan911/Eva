@@ -48,65 +48,22 @@ namespace Eva_5._0
 
 
 
-
         private bool WindowClosing;
 
 
-
-
         public static bool Ring_Timer;
-
         private bool Alarm_Started; 
-
-
 
 
         private double Initial_Timer_Cancel_Button_Width;
 
 
-
-
         private short AnimationAngleCounter;
-
         private bool DirectionPointer;
 
 
-
-
-        private bool Switch_Close_The_Window_Button_Foreground_Offset;
-
-        private int Gradient_Arithmetic_Close_The_Window_Button_Foreground_Offset;
-
-
-
-
-        private bool Switch_Timer_Clock_Textblock_Foreground_Offset;
-
-        private int Gradient_Arithmetic_Timer_Clock_Textblock_Foreground_Offset;
-
-
-
-        private bool Switch_Timer_Time_Interval_Foreground_Offset;
-
-        private int Gradient_Arithmetic_Timer_Time_Interval_Foreground_Offset;
-
-
-
-        private bool Switch_Cancel_The_Timer_Button_Foreground_Offset;
-
-        private int Gradient_Arithmetic_Cancel_The_Timer_Button_Foreground_Offset;
-
-
-
-        private bool Switch_Cancel_The_Timer_Button_Background_Offset;
-
-        private int Gradient_Arithmetic_Cancel_The_Timer_Button_Background_Offset;
-
-
-
-        private bool Switch_Window_Gradient_Offset;
-
-        private int Gradient_Arithmetic_Window_Gradient_Offset;
+        private bool SwitchWindowOffset;
+        private double GradientArithmeticWindowOffset;
 
 
 
@@ -230,209 +187,24 @@ namespace Eva_5._0
 
                                     case false:
 
-
-
-
-                                        switch (Switch_Close_The_Window_Button_Foreground_Offset)
+                                        switch (SwitchWindowOffset)
                                         {
                                             case true:
 
-                                                switch (Gradient_Arithmetic_Close_The_Window_Button_Foreground_Offset > 0)
+                                                switch (GradientArithmeticWindowOffset > 0)
                                                 {
                                                     case true:
-                                                        Gradient_Arithmetic_Close_The_Window_Button_Foreground_Offset--;
+                                                        GradientArithmeticWindowOffset--;
                                                         Close_The_Window_Button_Foreground_Offset.Offset += 0.02;
-                                                        break;
-
-                                                    case false:
-                                                        Switch_Close_The_Window_Button_Foreground_Offset = false;
-                                                        break;
-                                                }
-
-                                                break;
-
-                                            case false:
-
-                                                switch (Gradient_Arithmetic_Close_The_Window_Button_Foreground_Offset < 45)
-                                                {
-                                                    case true:
-                                                        Gradient_Arithmetic_Close_The_Window_Button_Foreground_Offset++;
-                                                        Close_The_Window_Button_Foreground_Offset.Offset -= 0.02;
-                                                        break;
-
-                                                    case false:
-                                                        Switch_Close_The_Window_Button_Foreground_Offset = true;
-                                                        break;
-                                                }
-
-                                                break;
-                                        }
-
-
-
-
-                                        switch (Switch_Timer_Clock_Textblock_Foreground_Offset)
-                                        {
-                                            case true:
-
-                                                switch (Gradient_Arithmetic_Timer_Clock_Textblock_Foreground_Offset > 0)
-                                                {
-                                                    case true:
-                                                        Gradient_Arithmetic_Timer_Clock_Textblock_Foreground_Offset--;
                                                         Timer_Clock_Textblock_Foreground_Offset.Offset += 0.02;
-                                                        break;
-
-                                                    case false:
-                                                        Switch_Timer_Clock_Textblock_Foreground_Offset = false;
-                                                        break;
-                                                }
-
-                                                break;
-
-                                            case false:
-
-                                                switch (Gradient_Arithmetic_Timer_Clock_Textblock_Foreground_Offset < 45)
-                                                {
-                                                    case true:
-                                                        Gradient_Arithmetic_Timer_Clock_Textblock_Foreground_Offset++;
-                                                        Timer_Clock_Textblock_Foreground_Offset.Offset -= 0.02;
-                                                        break;
-
-                                                    case false:
-                                                        Switch_Timer_Clock_Textblock_Foreground_Offset = true;
-                                                        break;
-                                                }
-
-                                                break;
-                                        }
-
-
-
-
-                                        switch (Switch_Timer_Time_Interval_Foreground_Offset)
-                                        {
-                                            case true:
-
-                                                switch (Gradient_Arithmetic_Timer_Time_Interval_Foreground_Offset > 0)
-                                                {
-                                                    case true:
-                                                        Gradient_Arithmetic_Timer_Time_Interval_Foreground_Offset--;
                                                         Timer_Time_Interval_Foreground_Offset.Offset += 0.02;
-                                                        break;
-
-                                                    case false:
-                                                        Switch_Timer_Time_Interval_Foreground_Offset = false;
-                                                        break;
-                                                }
-
-                                                break;
-
-                                            case false:
-
-                                                switch (Gradient_Arithmetic_Timer_Time_Interval_Foreground_Offset < 45)
-                                                {
-                                                    case true:
-                                                        Gradient_Arithmetic_Timer_Time_Interval_Foreground_Offset++;
-                                                        Timer_Time_Interval_Foreground_Offset.Offset -= 0.02;
-                                                        break;
-
-                                                    case false:
-                                                        Switch_Timer_Time_Interval_Foreground_Offset = true;
-                                                        break;
-                                                }
-
-                                                break;
-                                        }
-
-
-
-                                        switch (Switch_Cancel_The_Timer_Button_Foreground_Offset)
-                                        {
-                                            case true:
-
-                                                switch (Gradient_Arithmetic_Cancel_The_Timer_Button_Foreground_Offset > 0)
-                                                {
-                                                    case true:
-                                                        Gradient_Arithmetic_Cancel_The_Timer_Button_Foreground_Offset--;
                                                         Cancel_The_Timer_Button_Foreground_Offset.Offset += 0.02;
-                                                        break;
-
-                                                    case false:
-                                                        Switch_Cancel_The_Timer_Button_Foreground_Offset = false;
-                                                        break;
-                                                }
-
-                                                break;
-
-                                            case false:
-
-                                                switch (Gradient_Arithmetic_Cancel_The_Timer_Button_Foreground_Offset < 45)
-                                                {
-                                                    case true:
-                                                        Gradient_Arithmetic_Cancel_The_Timer_Button_Foreground_Offset++;
-                                                        Cancel_The_Timer_Button_Foreground_Offset.Offset -= 0.02;
-                                                        break;
-
-                                                    case false:
-                                                        Switch_Cancel_The_Timer_Button_Foreground_Offset = true;
-                                                        break;
-                                                }
-
-                                                break;
-                                        }
-
-
-
-                                        switch (Switch_Cancel_The_Timer_Button_Background_Offset)
-                                        {
-                                            case true:
-
-                                                switch (Gradient_Arithmetic_Cancel_The_Timer_Button_Background_Offset > 0)
-                                                {
-                                                    case true:
-                                                        Gradient_Arithmetic_Cancel_The_Timer_Button_Background_Offset--;
                                                         Cancel_The_Timer_Button_Background_Offset.Offset += 0.02;
-                                                        break;
-
-                                                    case false:
-                                                        Switch_Cancel_The_Timer_Button_Background_Offset = false;
-                                                        break;
-                                                }
-
-                                                break;
-
-                                            case false:
-
-                                                switch (Gradient_Arithmetic_Cancel_The_Timer_Button_Background_Offset < 45)
-                                                {
-                                                    case true:
-                                                        Gradient_Arithmetic_Cancel_The_Timer_Button_Background_Offset++;
-                                                        Cancel_The_Timer_Button_Background_Offset.Offset -= 0.02;
-                                                        break;
-
-                                                    case false:
-                                                        Switch_Cancel_The_Timer_Button_Background_Offset = true;
-                                                        break;
-                                                }
-
-                                                break;
-                                        }
-
-
-
-                                        switch (Switch_Window_Gradient_Offset)
-                                        {
-                                            case true:
-
-                                                switch (Gradient_Arithmetic_Window_Gradient_Offset > 0)
-                                                {
-                                                    case true:
-                                                        Gradient_Arithmetic_Window_Gradient_Offset--;
                                                         Window_Gradient_Offset.Offset += 0.02;
                                                         break;
 
                                                     case false:
-                                                        Switch_Window_Gradient_Offset = false;
+                                                        SwitchWindowOffset = false;
                                                         break;
                                                 }
 
@@ -440,24 +212,25 @@ namespace Eva_5._0
 
                                             case false:
 
-                                                switch (Gradient_Arithmetic_Window_Gradient_Offset < 45)
+                                                switch (GradientArithmeticWindowOffset < 45)
                                                 {
                                                     case true:
-                                                        Gradient_Arithmetic_Window_Gradient_Offset++;
+                                                        GradientArithmeticWindowOffset++;
+                                                        Close_The_Window_Button_Foreground_Offset.Offset -= 0.02;
+                                                        Timer_Clock_Textblock_Foreground_Offset.Offset -= 0.02;
+                                                        Timer_Time_Interval_Foreground_Offset.Offset -= 0.02;
+                                                        Cancel_The_Timer_Button_Foreground_Offset.Offset -= 0.02;
+                                                        Cancel_The_Timer_Button_Background_Offset.Offset -= 0.02;
                                                         Window_Gradient_Offset.Offset -= 0.02;
                                                         break;
 
                                                     case false:
-                                                        Switch_Window_Gradient_Offset = true;
+                                                        SwitchWindowOffset = true;
                                                         break;
                                                 }
 
                                                 break;
                                         }
-
-
-
-
 
 
 

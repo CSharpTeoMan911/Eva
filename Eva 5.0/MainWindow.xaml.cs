@@ -121,29 +121,9 @@ namespace Eva_5._0
 
 
 
-        private bool SwitchMinimiseTheWindowOffset;
+        private bool SwitchOffset;
 
-        private double MinimiseTheWindowOffsetArithmetic;
-
-        private bool SwitchCloseTheWindowButtonOffset;
-
-        private double CloseTheWindowButtonOffsetArithmetic;
-
-        private bool SwitchOpenSettingsMenuButtonOffset;
-
-        private double OpenSettingsMenuButtonOffsetArithmetic;
-
-        private bool SwitchOpenTimerMenuButtonOffset;
-
-        private double OpenTimerMenuButtonOffsetArithmetic;
-
-        private bool SwitchSpeechRecognitionButtonOffset;
-
-        private double SpeechRecognitionButtonOffsetArithmetic;
-
-        private bool SwitchOuterElipseOffset;
-
-        private double OuterElipseOffsetArithmetic;
+        private double WindowOffsetArithmetic;
 
 
         /// <summary>
@@ -681,205 +661,24 @@ namespace Eva_5._0
                                         //
                                         // [ BEGIN ]
 
-                                        switch (SwitchMinimiseTheWindowOffset)
+                                        switch (SwitchOffset)
                                         {
                                             case true:
 
-                                                switch (MinimiseTheWindowOffsetArithmetic > 0)
+                                                switch (WindowOffsetArithmetic > 0)
                                                 {
                                                     case true:
-                                                        MinimiseTheWindowOffsetArithmetic--;
+                                                        WindowOffsetArithmetic--;
                                                         MinimiseTheWindowOffset.Offset += 0.04;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchMinimiseTheWindowOffset = false;
-                                                        break;
-                                                }
-
-                                                break;
-
-                                            case false:
-
-                                                switch (MinimiseTheWindowOffsetArithmetic < 22)
-                                                {
-                                                    case true:
-                                                        MinimiseTheWindowOffsetArithmetic++;
-                                                        MinimiseTheWindowOffset.Offset -= 0.04;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchMinimiseTheWindowOffset = true;
-                                                        break;
-                                                }
-
-                                                break;
-                                        }
-
-
-
-                                        switch (SwitchCloseTheWindowButtonOffset)
-                                        {
-                                            case true:
-
-                                                switch (CloseTheWindowButtonOffsetArithmetic > 0)
-                                                {
-                                                    case true:
-                                                        CloseTheWindowButtonOffsetArithmetic--;
                                                         CloseTheWindowButtonOffset.Offset += 0.04;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchCloseTheWindowButtonOffset = false;
-                                                        break;
-                                                }
-
-                                                break;
-
-                                            case false:
-
-                                                switch (CloseTheWindowButtonOffsetArithmetic < 22)
-                                                {
-                                                    case true:
-                                                        CloseTheWindowButtonOffsetArithmetic++;
-                                                        CloseTheWindowButtonOffset.Offset -= 0.04;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchCloseTheWindowButtonOffset = true;
-                                                        break;
-                                                }
-
-                                                break;
-                                        }
-
-
-
-                                        switch (SwitchOpenSettingsMenuButtonOffset)
-                                        {
-                                            case true:
-
-                                                switch (OpenSettingsMenuButtonOffsetArithmetic > 0)
-                                                {
-                                                    case true:
-                                                        OpenSettingsMenuButtonOffsetArithmetic--;
                                                         OpenSettingsMenuButtonOffset.Offset += 0.04;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOpenSettingsMenuButtonOffset = false;
-                                                        break;
-                                                }
-
-                                                break;
-
-                                            case false:
-
-                                                switch (OpenSettingsMenuButtonOffsetArithmetic < 22)
-                                                {
-                                                    case true:
-                                                        OpenSettingsMenuButtonOffsetArithmetic++;
-                                                        OpenSettingsMenuButtonOffset.Offset -= 0.04;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOpenSettingsMenuButtonOffset = true;
-                                                        break;
-                                                }
-
-                                                break;
-                                        }
-
-
-
-                                        switch (SwitchOpenTimerMenuButtonOffset)
-                                        {
-                                            case true:
-
-                                                switch (OpenTimerMenuButtonOffsetArithmetic > 0)
-                                                {
-                                                    case true:
-                                                        OpenTimerMenuButtonOffsetArithmetic--;
                                                         OpenTimerMenuButtonOffset.Offset += 0.04;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOpenTimerMenuButtonOffset = false;
-                                                        break;
-                                                }
-
-                                                break;
-
-                                            case false:
-
-                                                switch (OpenTimerMenuButtonOffsetArithmetic < 22)
-                                                {
-                                                    case true:
-                                                        OpenTimerMenuButtonOffsetArithmetic++;
-                                                        OpenTimerMenuButtonOffset.Offset -= 0.04;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOpenTimerMenuButtonOffset = true;
-                                                        break;
-                                                }
-
-                                                break;
-                                        }
-
-
-
-
-                                        switch (SwitchSpeechRecognitionButtonOffset)
-                                        {
-                                            case true:
-
-                                                switch (SpeechRecognitionButtonOffsetArithmetic > 0)
-                                                {
-                                                    case true:
-                                                        SpeechRecognitionButtonOffsetArithmetic--;
                                                         SpeechRecognitionButtonOffset.Offset += 0.04;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchSpeechRecognitionButtonOffset = false;
-                                                        break;
-                                                }
-
-                                                break;
-
-                                            case false:
-
-                                                switch (SpeechRecognitionButtonOffsetArithmetic < 22)
-                                                {
-                                                    case true:
-                                                        SpeechRecognitionButtonOffsetArithmetic++;
-                                                        SpeechRecognitionButtonOffset.Offset -= 0.04;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchSpeechRecognitionButtonOffset = true;
-                                                        break;
-                                                }
-
-                                                break;
-                                        }
-
-
-
-                                        switch (SwitchOuterElipseOffset)
-                                        {
-                                            case true:
-
-                                                switch (OuterElipseOffsetArithmetic > 0)
-                                                {
-                                                    case true:
-                                                        OuterElipseOffsetArithmetic--;
                                                         OuterElipseOffset.Offset += 0.04;
                                                         break;
 
                                                     case false:
-                                                        SwitchOuterElipseOffset = false;
+                                                        SwitchOffset = false;
                                                         break;
                                                 }
 
@@ -887,20 +686,26 @@ namespace Eva_5._0
 
                                             case false:
 
-                                                switch (OuterElipseOffsetArithmetic < 22)
+                                                switch (WindowOffsetArithmetic < 22)
                                                 {
                                                     case true:
-                                                        OuterElipseOffsetArithmetic++;
+                                                        WindowOffsetArithmetic++;
+                                                        MinimiseTheWindowOffset.Offset -= 0.04;
+                                                        CloseTheWindowButtonOffset.Offset -= 0.04;
+                                                        OpenSettingsMenuButtonOffset.Offset -= 0.04;
+                                                        OpenTimerMenuButtonOffset.Offset -= 0.04;
+                                                        SpeechRecognitionButtonOffset.Offset -= 0.04;
                                                         OuterElipseOffset.Offset -= 0.04;
                                                         break;
 
                                                     case false:
-                                                        SwitchOuterElipseOffset = true;
+                                                        SwitchOffset = true;
                                                         break;
                                                 }
 
                                                 break;
                                         }
+
 
                                         // [ END ]
 

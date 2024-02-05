@@ -42,37 +42,12 @@ namespace Eva_5._0
         private double Wheel2Angle;
 
 
-
-        private bool SwitchOffsetCloseButtonOffset;
-        private double GradientArithmeticCloseButtonOffset;
-
-        private bool SwitchOffsetMinimiseTheWindowOffset;
-        private double GradientArithmeticMinimiseTheWindowOffset;
-
-        private bool SwitchOffsetMenuGear1Offset;
-        private double GradientArithmeticMenuGear1Offset;
-
-        private bool SwitchOffsetMenuGear2Offset;
-        private double GradientArithmeticMenuGear2Offset;
-
-        private bool SwitchOffsetSettingTitleOffset;
-        private double GradientArithmeticSettingTitleOffset;
-
         private bool SwitchWindowOffset;
         private double GradientArithmeticWindowOffset;
+        
 
-        private bool SwitchOffsetSoundButtonOffset;
-        private double GradientArithmeticSoundButtonOffset;
-
-        private bool SwitchOffsetMuteButtonOffset;
-        private double GradientArithmeticMuteButtonOffset;
-
-        private bool SwitchInstructionManualTextBlockOffset;
-        private double GradientArithmeticInstructionManualTextBlockOffset;
-
-        private bool SwitchChatGPTApiKeyOffset;
-        private double GradientArithmeticChatGPTApiKeyOffset;
-
+        private bool SwitchSecodaryOffsets;
+        private double GradientArithmeticSecondaryOffsets;
 
 
         private bool AnimationAndFunctionalityTimerDisposed;
@@ -281,173 +256,6 @@ namespace Eva_5._0
 
                                         Wheel2.RenderTransform = Wheel2Rotate;
 
-                                        switch (SwitchOffsetCloseButtonOffset)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticCloseButtonOffset <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticCloseButtonOffset++;
-                                                        CloseButtonOffset.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetCloseButtonOffset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticCloseButtonOffset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticCloseButtonOffset--;
-                                                        CloseButtonOffset.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetCloseButtonOffset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-                                        switch (SwitchOffsetMinimiseTheWindowOffset)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticMinimiseTheWindowOffset <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticMinimiseTheWindowOffset++;
-                                                        MinimiseTheWindowOffset.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetMinimiseTheWindowOffset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticMinimiseTheWindowOffset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticMinimiseTheWindowOffset--;
-                                                        MinimiseTheWindowOffset.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetMinimiseTheWindowOffset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-                                        switch (SwitchOffsetMenuGear1Offset)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticMenuGear1Offset <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticMenuGear1Offset++;
-                                                        MenuGear1Offset.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetMenuGear1Offset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticMenuGear1Offset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticMenuGear1Offset--;
-                                                        MenuGear1Offset.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetMenuGear1Offset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-
-                                        switch (SwitchOffsetMenuGear2Offset)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticMenuGear2Offset <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticMenuGear2Offset++;
-                                                        MenuGear2Offset.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetMenuGear2Offset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticMenuGear2Offset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticMenuGear2Offset--;
-                                                        MenuGear2Offset.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetMenuGear2Offset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-                                        switch (SwitchOffsetSettingTitleOffset)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticSettingTitleOffset <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticSettingTitleOffset++;
-                                                        SettingTitleOffset.Offset += 0.01;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetSettingTitleOffset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticSettingTitleOffset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticSettingTitleOffset--;
-                                                        SettingTitleOffset.Offset -= 0.01;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetSettingTitleOffset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-
 
                                         switch (SwitchWindowOffset)
                                         {
@@ -482,144 +290,52 @@ namespace Eva_5._0
                                                 break;
                                         }
 
-
-                                        switch (SwitchOffsetSoundButtonOffset)
+                                        switch (SwitchSecodaryOffsets)
                                         {
                                             case false:
 
-                                                switch (GradientArithmeticSoundButtonOffset <= 65)
+                                                switch (GradientArithmeticSecondaryOffsets <= 65)
                                                 {
                                                     case true:
-                                                        GradientArithmeticSoundButtonOffset++;
+                                                        GradientArithmeticSecondaryOffsets++;
+                                                        CloseButtonOffset.Offset += 0.025;
+                                                        MinimiseTheWindowOffset.Offset += 0.025;
+                                                        MenuGear2Offset.Offset += 0.025;
+                                                        SettingTitleOffset.Offset += 0.01;
                                                         SoundButtonOffset.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetSoundButtonOffset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticSoundButtonOffset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticSoundButtonOffset--;
-                                                        SoundButtonOffset.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetSoundButtonOffset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-
-
-                                        switch (SwitchOffsetMuteButtonOffset)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticMuteButtonOffset <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticMuteButtonOffset++;
                                                         MuteButtonOffset.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetMuteButtonOffset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticMuteButtonOffset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticMuteButtonOffset--;
-                                                        MuteButtonOffset.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetMuteButtonOffset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-
-                                        switch (SwitchInstructionManualTextBlockOffset)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticInstructionManualTextBlockOffset <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticInstructionManualTextBlockOffset++;
                                                         InstructionManualTextBlockOffset.Offset -= 0.01;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchInstructionManualTextBlockOffset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticInstructionManualTextBlockOffset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticInstructionManualTextBlockOffset--;
-                                                        InstructionManualTextBlockOffset.Offset += 0.01;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchInstructionManualTextBlockOffset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-
-                                       
-                                        switch(SwitchChatGPTApiKeyOffset)
-                                        {
-                                            case false:
-
-                                                switch(GradientArithmeticChatGPTApiKeyOffset <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticChatGPTApiKeyOffset++;
                                                         ChatGPTApiKeyOffset.Offset -= 0.01;
                                                         break;
 
                                                     case false:
-                                                        SwitchChatGPTApiKeyOffset = true;
+                                                        SwitchSecodaryOffsets = true;
                                                         break;
                                                 }
                                                 break;
 
                                             case true:
 
-                                                switch (GradientArithmeticChatGPTApiKeyOffset > 0)
+                                                switch (GradientArithmeticSecondaryOffsets > 0)
                                                 {
                                                     case true:
-                                                        GradientArithmeticChatGPTApiKeyOffset--;
+                                                        GradientArithmeticSecondaryOffsets--;
+                                                        CloseButtonOffset.Offset -= 0.025;
+                                                        MinimiseTheWindowOffset.Offset -= 0.025;
+                                                        MenuGear2Offset.Offset -= 0.025;
+                                                        SettingTitleOffset.Offset -= 0.01;
+                                                        SoundButtonOffset.Offset += 0.025;
+                                                        MuteButtonOffset.Offset += 0.025;
+                                                        InstructionManualTextBlockOffset.Offset += 0.01;
                                                         ChatGPTApiKeyOffset.Offset += 0.01;
                                                         break;
 
                                                     case false:
-                                                        SwitchChatGPTApiKeyOffset = false;
+                                                        SwitchSecodaryOffsets = false;
                                                         break;
                                                 }
                                                 break;
                                         }
-
                                         break;
 
                                 }

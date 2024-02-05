@@ -37,49 +37,8 @@ namespace Eva_5._0
         private bool SwitchWindowOffset;
         private double GradientArithmeticWindowOffset;
 
-        private bool SwitchOffsetCloseButtonOffset;
-        private double GradientArithmeticCloseButtonOffset;
-
-        private bool SwitchOffsetNormaliseOrMaximiseButtonOffset;
-        private double GradientArithmeticNormaliseOrMaximiseButtonOffset;
-
-        private bool SwitchOffsetMinimiseTheWindowOffset;
-        private double GradientArithmeticMinimiseTheWindowOffset;
-
-        private bool SwitchOffsetInstructionManualTitleTextBlockOffset;
-        private double GradientArithmeticInstructionManualTitleTextBlockOffset;
-
-        private bool SwitchOffsetAboutEvaTextBlockOffset;
-        private double GradientArithmeticAboutEvaTextBlockOffset;
-
-        private bool SwitchOffsetAboutEvaContentTextBlockOffset;
-        private double GradientArithmeticAboutEvaContentTextBlockOffset;
-
-        private bool SwitchOffsetUserInstructionsTextBlockOffset;
-        private double GradientArithmeticUserInstructionsTextBlockOffset;
-
-        private bool SwitchOffsetUserInstructionsContentTextBlockOffset;
-        private double GradientArithmeticUserInstructionsContentTextBlockOffset;
-
-        private bool SwitchOffsetCommandsTextBlockOffset;
-        private double GradientArithmeticCommandsTextBlockOffset;
-
-        private bool SwitchOffsetCommandsContentTextBlockOffset;
-        private double GradientArithmeticCommandsContentTextBlockOffset;
-
-        private bool SwitchOffsetTroubleshootingTextBlockOffset;
-        private double GradientArithmeticTroubleshootingTextBlockOffset;
-
-        private bool SwitchOffsetTroubleshootingContentTextBlockOffset1;
-        private double GradientArithmeticTroubleshootingContentTextBlockOffset1;
-
-
-        private bool SwitchOffsetExtraFeaturesTextBlockOffset;
-        private double GradientArithmeticExtraFeaturesTextBlockOffset;
-
-
-        private bool SwitchOffsetExtraFeaturesContentTextBlockOffset;
-        private double GradientArithmeticExtraFeaturesContentTextBlockOffset;
+        private bool SwitchSecondaryOffsets;
+        private double GradientArithmeticSecondaryOffsets;
 
         public InstructionManual()
         {
@@ -195,481 +154,62 @@ namespace Eva_5._0
                                         }
 
 
-                                        switch (SwitchOffsetCloseButtonOffset)
+                                        switch (SwitchSecondaryOffsets)
                                         {
                                             case false:
 
-                                                switch (GradientArithmeticCloseButtonOffset <= 65)
+                                                switch (GradientArithmeticSecondaryOffsets <= 65)
                                                 {
                                                     case true:
-                                                        GradientArithmeticCloseButtonOffset++;
+                                                        GradientArithmeticSecondaryOffsets++;
+
                                                         CloseButtonOffset.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetCloseButtonOffset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticCloseButtonOffset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticCloseButtonOffset--;
-                                                        CloseButtonOffset.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetCloseButtonOffset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-
-                                        switch (SwitchOffsetNormaliseOrMaximiseButtonOffset)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticNormaliseOrMaximiseButtonOffset <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticNormaliseOrMaximiseButtonOffset++;
                                                         NormaliseOrMaximiseButtonOffset.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetNormaliseOrMaximiseButtonOffset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticNormaliseOrMaximiseButtonOffset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticNormaliseOrMaximiseButtonOffset--;
-                                                        NormaliseOrMaximiseButtonOffset.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetNormaliseOrMaximiseButtonOffset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-                                        switch (SwitchOffsetMinimiseTheWindowOffset)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticMinimiseTheWindowOffset <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticMinimiseTheWindowOffset++;
                                                         MinimiseTheWindowOffset.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetMinimiseTheWindowOffset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticMinimiseTheWindowOffset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticMinimiseTheWindowOffset--;
-                                                        MinimiseTheWindowOffset.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetMinimiseTheWindowOffset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-                                        switch (SwitchOffsetInstructionManualTitleTextBlockOffset)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticInstructionManualTitleTextBlockOffset <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticInstructionManualTitleTextBlockOffset++;
                                                         InstructionManualTitleTextBlockOffset.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetInstructionManualTitleTextBlockOffset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticInstructionManualTitleTextBlockOffset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticInstructionManualTitleTextBlockOffset--;
-                                                        InstructionManualTitleTextBlockOffset.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetInstructionManualTitleTextBlockOffset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-                                        switch (SwitchOffsetAboutEvaTextBlockOffset)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticAboutEvaTextBlockOffset <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticAboutEvaTextBlockOffset++;
                                                         AboutEvaTextBlockOffset.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetAboutEvaTextBlockOffset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticAboutEvaTextBlockOffset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticAboutEvaTextBlockOffset--;
-                                                        AboutEvaTextBlockOffset.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetAboutEvaTextBlockOffset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-
-
-
-                                        switch (SwitchOffsetAboutEvaContentTextBlockOffset)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticAboutEvaContentTextBlockOffset <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticAboutEvaContentTextBlockOffset++;
                                                         AboutEvaContentTextBlockOffset.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetAboutEvaContentTextBlockOffset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticAboutEvaContentTextBlockOffset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticAboutEvaContentTextBlockOffset--;
-                                                        AboutEvaContentTextBlockOffset.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetAboutEvaContentTextBlockOffset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-
-                                        switch (SwitchOffsetUserInstructionsTextBlockOffset)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticUserInstructionsTextBlockOffset <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticUserInstructionsTextBlockOffset++;
                                                         UserInstructionsTextBlockOffset.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetUserInstructionsTextBlockOffset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticUserInstructionsTextBlockOffset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticUserInstructionsTextBlockOffset--;
-                                                        UserInstructionsTextBlockOffset.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetUserInstructionsTextBlockOffset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-
-
-                                        switch (SwitchOffsetUserInstructionsContentTextBlockOffset)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticUserInstructionsContentTextBlockOffset <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticUserInstructionsContentTextBlockOffset++;
                                                         UserInstructionsContentTextBlockOffset.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetUserInstructionsContentTextBlockOffset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticUserInstructionsContentTextBlockOffset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticUserInstructionsContentTextBlockOffset--;
-                                                        UserInstructionsContentTextBlockOffset.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetUserInstructionsContentTextBlockOffset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-
-
-                                        switch (SwitchOffsetCommandsTextBlockOffset)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticCommandsTextBlockOffset <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticCommandsTextBlockOffset++;
                                                         CommandsTextBlockOffset.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetCommandsTextBlockOffset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticCommandsTextBlockOffset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticCommandsTextBlockOffset--;
-                                                        CommandsTextBlockOffset.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetCommandsTextBlockOffset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-
-
-                                        switch (SwitchOffsetCommandsContentTextBlockOffset)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticCommandsContentTextBlockOffset <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticCommandsContentTextBlockOffset++;
                                                         CommandsContentTextBlockOffset.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetCommandsContentTextBlockOffset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticCommandsContentTextBlockOffset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticCommandsContentTextBlockOffset--;
-                                                        CommandsContentTextBlockOffset.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetCommandsContentTextBlockOffset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-
-
-                                        switch (SwitchOffsetTroubleshootingTextBlockOffset)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticTroubleshootingTextBlockOffset <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticTroubleshootingTextBlockOffset++;
                                                         TroubleshootingTextBlockOffset.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetTroubleshootingTextBlockOffset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticTroubleshootingTextBlockOffset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticTroubleshootingTextBlockOffset--;
-                                                        TroubleshootingTextBlockOffset.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetTroubleshootingTextBlockOffset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-
-
-                                        switch (SwitchOffsetTroubleshootingContentTextBlockOffset1)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticTroubleshootingContentTextBlockOffset1 <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticTroubleshootingContentTextBlockOffset1++;
                                                         TroubleshootingContentTextBlockOffset1.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetTroubleshootingContentTextBlockOffset1 = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticTroubleshootingContentTextBlockOffset1 > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticTroubleshootingContentTextBlockOffset1--;
-                                                        TroubleshootingContentTextBlockOffset1.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetTroubleshootingContentTextBlockOffset1 = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-
-                                        switch (SwitchOffsetExtraFeaturesTextBlockOffset)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticExtraFeaturesTextBlockOffset <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticExtraFeaturesTextBlockOffset++;
                                                         ExtraFeaturesTextBlockOffset.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetExtraFeaturesTextBlockOffset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticExtraFeaturesTextBlockOffset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticExtraFeaturesTextBlockOffset--;
-                                                        ExtraFeaturesTextBlockOffset.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchOffsetExtraFeaturesTextBlockOffset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-
-
-                                        switch (SwitchOffsetExtraFeaturesContentTextBlockOffset)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticExtraFeaturesContentTextBlockOffset <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticExtraFeaturesContentTextBlockOffset++;
                                                         ExtraFeaturesContentTextBlockOffset.Offset += 0.025;
                                                         break;
 
                                                     case false:
-                                                        SwitchOffsetExtraFeaturesContentTextBlockOffset = true;
+                                                        SwitchSecondaryOffsets = true;
                                                         break;
                                                 }
                                                 break;
 
                                             case true:
 
-                                                switch (GradientArithmeticExtraFeaturesContentTextBlockOffset > 0)
+                                                switch (GradientArithmeticSecondaryOffsets > 0)
                                                 {
                                                     case true:
-                                                        GradientArithmeticExtraFeaturesContentTextBlockOffset--;
+                                                        GradientArithmeticSecondaryOffsets--;
+
+                                                        CloseButtonOffset.Offset -= 0.025;
+                                                        NormaliseOrMaximiseButtonOffset.Offset -= 0.025;
+                                                        MinimiseTheWindowOffset.Offset -= 0.025;
+                                                        InstructionManualTitleTextBlockOffset.Offset -= 0.025;
+                                                        AboutEvaTextBlockOffset.Offset -= 0.025;
+                                                        AboutEvaContentTextBlockOffset.Offset -= 0.025;
+                                                        UserInstructionsTextBlockOffset.Offset -= 0.025;
+                                                        UserInstructionsContentTextBlockOffset.Offset -= 0.025;
+                                                        CommandsTextBlockOffset.Offset -= 0.025;
+                                                        CommandsContentTextBlockOffset.Offset -= 0.025;
+                                                        TroubleshootingTextBlockOffset.Offset -= 0.025;
+                                                        TroubleshootingContentTextBlockOffset1.Offset -= 0.025;
+                                                        ExtraFeaturesTextBlockOffset.Offset -= 0.025;
                                                         ExtraFeaturesContentTextBlockOffset.Offset -= 0.025;
                                                         break;
 
                                                     case false:
-                                                        SwitchOffsetExtraFeaturesContentTextBlockOffset = false;
+                                                        SwitchSecondaryOffsets = false;
                                                         break;
                                                 }
                                                 break;

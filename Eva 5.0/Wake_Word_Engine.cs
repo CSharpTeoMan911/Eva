@@ -116,39 +116,36 @@ namespace Eva_5._0
                     {
                         if (App.Application_Error_Shutdown == false)
                         {
-                            if (is_wake_word_engine_loaded == 2 && counter.ElapsedMilliseconds >= 3000)
+                            if (is_wake_word_engine_loaded == 2 && counter.ElapsedMilliseconds >= 2800)
                             {
-                                if (counter.ElapsedMilliseconds >= 3000 && is_wake_word_engine_loaded == 2)
+                                if (first_process == false)
                                 {
-                                    if (first_process == false)
-                                    {
-                                        if (process_2 != null)
-                                            process_2.Kill();
+                                    if (process_2 != null)
+                                        process_2.Kill();
 
 
-                                        counter.Restart();
+                                    counter.Restart();
 
-                                        first_process = true;
+                                    first_process = true;
 
-                                        process_2 = Initiate_Wake_Word_Engine();
-                                        Wake_Word_Detector(process_2);
+                                    process_2 = Initiate_Wake_Word_Engine();
+                                    Wake_Word_Detector(process_2);
 
-                                        is_wake_word_engine_loaded--;
-                                    }
-                                    else
-                                    {
-                                        if (process_1 != null)
-                                            process_1.Kill();
+                                    is_wake_word_engine_loaded--;
+                                }
+                                else
+                                {
+                                    if (process_1 != null)
+                                        process_1.Kill();
 
-                                        counter.Restart();
+                                    counter.Restart();
 
-                                        first_process = false;
+                                    first_process = false;
 
-                                        process_1 = Initiate_Wake_Word_Engine();
-                                        Wake_Word_Detector(process_1);
+                                    process_1 = Initiate_Wake_Word_Engine();
+                                    Wake_Word_Detector(process_1);
 
-                                        is_wake_word_engine_loaded--;
-                                    }
+                                    is_wake_word_engine_loaded--;
                                 }
                             }
                         }
