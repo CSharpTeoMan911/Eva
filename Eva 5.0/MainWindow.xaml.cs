@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using static Eva_5._0.Online_Speech_Recognition;
 
 namespace Eva_5._0
 {
@@ -411,8 +412,8 @@ namespace Eva_5._0
                                                                         Online_Speech_Recogniser_Listening = "false";
                                                                         async void Shutdown()
                                                                         {
-                                                                            Online_Speech_Recognition.Close_Speech_Recognition_Interface();
-                                                                            await Online_Speech_Recognition.OS_Online_Speech_Recognition_Interface_Shutdown();
+                                                                            Close_Speech_Recognition_Interface();
+                                                                            await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
                                                                         }
                                                                         Shutdown();
                                                                     }
@@ -734,9 +735,9 @@ namespace Eva_5._0
                         // RECOGNITION IS CLOSED
                         async void Inactivity_Shutdown()
                         {
-                            if (Online_Speech_Recognition.Get_Recogniser_Interfaces().Length > 0)
+                            if (Get_Recogniser_Interfaces().Length > 0)
                             {
-                                await Online_Speech_Recognition.OS_Online_Speech_Recognition_Interface_Shutdown();
+                                await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
                             }
                         }
                         Inactivity_Shutdown();

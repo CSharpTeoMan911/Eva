@@ -93,7 +93,7 @@ namespace Eva_5._0
             try
             {
                 // ENSURE THE ONLINE SPEECH RECOGNITION INTERFACE IS CLOSED
-                await OS_Online_Speech_Recognition_Interface_Shutdown();
+                await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
 
                 online_speech_recognition_timeout = DateTime.Now;
                 Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.Now;
@@ -114,6 +114,7 @@ namespace Eva_5._0
                         OnlineSpeechRecognition.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
 
                         await OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync();
+                        await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache);
                         break;
 
                     case false:
@@ -275,75 +276,80 @@ namespace Eva_5._0
         }
 
 
-        public static Task<bool> OS_Online_Speech_Recognition_Interface_Shutdown()
+        public static Task<bool> OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation operation)
         {
             try
             {
-                Process[] interfaces = Get_Recogniser_Interfaces();
-
-                if (interfaces.Length > 0)
+                switch (operation)
                 {
-                    lock (Online_Speech_Recogniser_Listening)
-                    {
-                        lock (Wake_Word_Detected)
+                    case Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache:
+                        // CLEAR THE CACHE OF THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS ("SpeechRuntime.exe")
+                        //
+                        // BEGIN
+
+                        foreach (System.Diagnostics.Process online_speech_recognition_interface in Get_Recogniser_Interfaces())
                         {
-                            lock (Speech_Detected)
+                            online_speech_recognition_interface.Refresh();
+                        }
+
+                        // END
+                        break;
+
+
+
+                    case Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown:
+                        lock (Online_Speech_Recogniser_Listening)
+                        {
+                            lock (Wake_Word_Detected)
                             {
-                                if (Online_Speech_Recogniser_Listening == "false")
+                                if (Online_Speech_Recogniser_Listening == "false" && Wake_Word_Detected == "false")
                                 {
-                                    if (Wake_Word_Detected == "false")
+                                    // SHUT DOWN THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS ("SpeechRuntime.exe")
+                                    //
+                                    // BEGIN
+
+                                    // IF NO ONLINE SPEECH RECOGNITION INTERFACE SHUTDOWN PROCESS IS INITIATED
+                                    if (shutdown_initiated == false)
                                     {
-                                        if (Speech_Detected == "false")
+                                        // SET THE STATIC BOOL TO 'true' TO SIGNIFY THAT A SHUTDOWN PROCESS IS INITIATED
+                                        // IN ORDER FOR OTHER THREADS THAT INITIATE THE ONLINE SPEECH RECOGNITION NOT
+                                        // TO START ANOTHER ONLINE SPEECH RECOGNITION INTERFACE SHUTDOWN PROCESS
+                                        shutdown_initiated = true;
+
+                                        // DISPOSE THE ONLINE SPEECH RECOGNITION INTERFACE OBJECT
+                                        Close_Speech_Recognition_Interface();
+
+                                        // FOREACH ONLINE SPEECH RECOGNITION INTERFACE PROCESS NAMED 'SpeechRuntime'
+                                        foreach (Process online_speech_recognition_interface in Process.GetProcessesByName("SpeechRuntime"))
                                         {
-                                            // SHUT DOWN THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS ("SpeechRuntime.exe")
-                                            //
-                                            // BEGIN
-
-                                            // IF NO ONLINE SPEECH RECOGNITION INTERFACE SHUTDOWN PROCESS IS INITIATED
-                                            if (shutdown_initiated == false)
-                                            {
-                                                // SET THE STATIC BOOL TO 'true' TO SIGNIFY THAT A SHUTDOWN PROCESS IS INITIATED
-                                                // IN ORDER FOR OTHER THREADS THAT INITIATE THE ONLINE SPEECH RECOGNITION NOT
-                                                // TO START ANOTHER ONLINE SPEECH RECOGNITION INTERFACE SHUTDOWN PROCESS
-                                                shutdown_initiated = true;
-
-                                                // DISPOSE THE ONLINE SPEECH RECOGNITION INTERFACE OBJECT
-                                                Close_Speech_Recognition_Interface();
-
-                                                // FOREACH ONLINE SPEECH RECOGNITION INTERFACE PROCESS NAMED 'SpeechRuntime'
-                                                foreach (Process online_speech_recognition_interface in interfaces)
-                                                {
-                                                    // DISPOSE ALL THE RESOURCES ASSOCIATED WITH THE INTERFACE'S PROCESS AND TERMINATE THE PROCESS SUBSEQUENTLY
-                                                    // INITIATE A BLOCKING CALL THAT WILL SUSPEND THE CURRENT THREAD AND THE
-                                                    // CALLING THREAD UNTIL THE PROCESSES SET TO SHUTDOWN TERMINATE
-                                                    online_speech_recognition_interface.Kill();
-                                                    online_speech_recognition_interface.WaitForExit(1000);
-                                                }
-
-
-                                                // THE SPEECH RECOGNITION INTERFACE MUST BE KILLED WITH CERTAINTY
-                                                Process force_kill_speech_recognition_interface = new Process();
-                                                force_kill_speech_recognition_interface.StartInfo.FileName = "powershell.exe";
-                                                force_kill_speech_recognition_interface.StartInfo.Arguments = "Stop-Process -Name \"SpeechRuntime\" -Force";
-                                                force_kill_speech_recognition_interface.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                                                force_kill_speech_recognition_interface.StartInfo.CreateNoWindow = true;
-                                                force_kill_speech_recognition_interface.StartInfo.UseShellExecute = false;
-                                                force_kill_speech_recognition_interface.Start();
-
-
-                                                // SET THE STATIC BOOL TO 'false' TO SIGNIFY THAT NO SHUTDOWN PROCESS IS INITIATED
-                                                // IN ORDER FOR OTHER THREADS THAT INITIATE THE ONLINE SPEECH RECOGNITION TO START
-                                                // ANOTHER ONLINE SPEECH RECOGNITION INTERFACE SHUTDOWN PROCESS, IF NECESSARY
-                                                shutdown_initiated = false;
-                                            }
-
-                                            // END
+                                            // DISPOSE ALL THE RESOURCES ASSOCIATED WITH THE INTERFACE'S PROCESS AND TERMINATE THE PROCESS SUBSEQUENTLY
+                                            // INITIATE A BLOCKING CALL THAT WILL SUSPEND THE CURRENT THREAD AND THE
+                                            // CALLING THREAD UNTIL THE PROCESSES SET TO SHUTDOWN TERMINATE
+                                            online_speech_recognition_interface.Kill();
                                         }
+
+
+                                        // THE SPEECH RECOGNITION INTERFACE MUST BE KILLED WITH CERTAINTY
+                                        Process force_kill_speech_recognition_interface = new Process();
+                                        force_kill_speech_recognition_interface.StartInfo.FileName = "powershell.exe";
+                                        force_kill_speech_recognition_interface.StartInfo.Arguments = "Stop-Process -Name \"SpeechRuntime\" -Force";
+                                        force_kill_speech_recognition_interface.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                                        force_kill_speech_recognition_interface.StartInfo.CreateNoWindow = true;
+                                        force_kill_speech_recognition_interface.StartInfo.UseShellExecute = false;
+                                        force_kill_speech_recognition_interface.Start();
+
+
+                                        // SET THE STATIC BOOL TO 'false' TO SIGNIFY THAT NO SHUTDOWN PROCESS IS INITIATED
+                                        // IN ORDER FOR OTHER THREADS THAT INITIATE THE ONLINE SPEECH RECOGNITION TO START
+                                        // ANOTHER ONLINE SPEECH RECOGNITION INTERFACE SHUTDOWN PROCESS, IF NECESSARY
+                                        shutdown_initiated = false;
                                     }
+
+                                    // END
                                 }
                             }
                         }
-                    }
+                        break;
                 }
             }
             catch
