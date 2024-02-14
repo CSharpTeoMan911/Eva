@@ -147,7 +147,6 @@ namespace Eva_5._0
 
         public MainWindow()
         {
-
             InitializeComponent();
         }
 
