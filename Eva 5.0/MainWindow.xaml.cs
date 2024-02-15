@@ -726,20 +726,14 @@ namespace Eva_5._0
             {
                 lock (Wake_Word_Detected)
                 {
-                    if (Online_Speech_Recogniser_Listening == "false" && Wake_Word_Detected == "false")
+                    // IF THE ONLINE SPEECH RECOGNITION ENGINE IS NOT LISTENING,
+                    // ENSURE THAT THE INTERFACE OF THE ONLINE SPEECH
+                    // RECOGNITION IS CLOSED
+                    async void Inactivity_Shutdown()
                     {
-                        // IF THE ONLINE SPEECH RECOGNITION ENGINE IS NOT LISTENING,
-                        // ENSURE THAT THE INTERFACE OF THE ONLINE SPEECH
-                        // RECOGNITION IS CLOSED
-                        async void Inactivity_Shutdown()
-                        {
-                            if (Get_Recogniser_Interfaces().Length > 0)
-                            {
-                                await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
-                            }
-                        }
-                        Inactivity_Shutdown();
+                        await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
                     }
+                    Inactivity_Shutdown();
                 }
             }
         }

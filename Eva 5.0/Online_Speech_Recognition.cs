@@ -27,7 +27,6 @@ namespace Eva_5._0
 
     internal class Online_Speech_Recognition : MainWindow
     {
-        private static bool shutdown_initiated = false;
         private static Windows.Media.SpeechRecognition.SpeechRecognizer OnlineSpeechRecognition;
         private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Constraints = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.FormFilling, "form-filling", "form");
 
@@ -54,30 +53,27 @@ namespace Eva_5._0
             // [ BEGIN ]
             // 
 
-            if (shutdown_initiated == false)
+            lock (Online_Speech_Recogniser_Listening)
             {
-                lock (Online_Speech_Recogniser_Listening)
+                lock (Online_Speech_Recogniser_Disabled)
                 {
-                    lock (Online_Speech_Recogniser_Disabled)
+                    lock (Window_Minimised)
                     {
-                        lock (Window_Minimised)
+                        if (Online_Speech_Recogniser_Disabled == "false")
                         {
-                            if (Online_Speech_Recogniser_Disabled == "false")
+                            if (Window_Minimised == "false")
                             {
-                                if (Window_Minimised == "false")
-                                {
-                                    Online_Speech_Recogniser_Listening = "true";
+                                Online_Speech_Recogniser_Listening = "true";
 
-                                    System.Threading.Thread ParallelProcessing = new System.Threading.Thread(async () =>
-                                    {
-                                        await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppActivationSoundEffect);
-                                        Initiate_The_Online_Speech_Recognition_Engine();
-                                    });
-                                    ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
-                                    ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
-                                    ParallelProcessing.IsBackground = false;
-                                    ParallelProcessing.Start();
-                                }
+                                System.Threading.Thread ParallelProcessing = new System.Threading.Thread(async () =>
+                                {
+                                    await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppActivationSoundEffect);
+                                    Initiate_The_Online_Speech_Recognition_Engine();
+                                });
+                                ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
+                                ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
+                                ParallelProcessing.IsBackground = false;
+                                ParallelProcessing.Start();
                             }
                         }
                     }
@@ -93,8 +89,8 @@ namespace Eva_5._0
             try
             {
                 // ENSURE THAT THE ONLINE SPEECH RECOGNITION INTERFACE IS CLOSED
-                if (Get_Recogniser_Interfaces().Count() > 0)
-                    await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
+                await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
+
 
                 online_speech_recognition_timeout = DateTime.Now;
                 Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.Now;
@@ -305,32 +301,18 @@ namespace Eva_5._0
                             {
                                 if (Online_Speech_Recogniser_Listening == "false" && Wake_Word_Detected == "false")
                                 {
-                                    // SHUT DOWN THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS ("SpeechRuntime.exe")
-                                    //
-                                    // BEGIN
-
-                                    // IF NO ONLINE SPEECH RECOGNITION INTERFACE SHUTDOWN PROCESS IS INITIATED
-                                    if (shutdown_initiated == false)
+                                    if (Get_Recogniser_Interfaces().Count() > 0)
                                     {
-                                        // SET THE STATIC BOOL TO 'true' TO SIGNIFY THAT A SHUTDOWN PROCESS IS INITIATED
-                                        // IN ORDER FOR OTHER THREADS THAT INITIATE THE ONLINE SPEECH RECOGNITION NOT
-                                        // TO START ANOTHER ONLINE SPEECH RECOGNITION INTERFACE SHUTDOWN PROCESS
-                                        shutdown_initiated = true;
+                                        // SHUT DOWN THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS ("SpeechRuntime.exe")
+                                        //
+                                        // BEGIN
 
                                         // DISPOSE THE ONLINE SPEECH RECOGNITION INTERFACE OBJECT
                                         Close_Speech_Recognition_Interface();
 
-                                        // FOREACH ONLINE SPEECH RECOGNITION INTERFACE PROCESS NAMED 'SpeechRuntime'
-                                        foreach (Process online_speech_recognition_interface in Process.GetProcessesByName("SpeechRuntime"))
-                                        {
-                                            // DISPOSE ALL THE RESOURCES ASSOCIATED WITH THE INTERFACE'S PROCESS AND TERMINATE THE PROCESS SUBSEQUENTLY
-                                            // INITIATE A BLOCKING CALL THAT WILL SUSPEND THE CURRENT THREAD AND THE
-                                            // CALLING THREAD UNTIL THE PROCESSES SET TO SHUTDOWN TERMINATE
-                                            online_speech_recognition_interface.Kill();
-                                        }
 
-
-                                        // THE SPEECH RECOGNITION INTERFACE MUST BE KILLED WITH CERTAINTY
+                                        // TERMINATE THE WINDOWS OS ONLINE SPEECH RECOGNITION INTERFACE USING
+                                        // THE OS' SHELL TO ENSURE THAT THE PROCESS WAS TERMINATED
                                         Process force_kill_speech_recognition_interface = new Process();
                                         force_kill_speech_recognition_interface.StartInfo.FileName = "powershell.exe";
                                         force_kill_speech_recognition_interface.StartInfo.Arguments = "Stop-Process -Name \"SpeechRuntime\" -Force";
@@ -339,14 +321,8 @@ namespace Eva_5._0
                                         force_kill_speech_recognition_interface.StartInfo.UseShellExecute = false;
                                         force_kill_speech_recognition_interface.Start();
 
-
-                                        // SET THE STATIC BOOL TO 'false' TO SIGNIFY THAT NO SHUTDOWN PROCESS IS INITIATED
-                                        // IN ORDER FOR OTHER THREADS THAT INITIATE THE ONLINE SPEECH RECOGNITION TO START
-                                        // ANOTHER ONLINE SPEECH RECOGNITION INTERFACE SHUTDOWN PROCESS, IF NECESSARY
-                                        shutdown_initiated = false;
+                                        // END
                                     }
-
-                                    // END
                                 }
                             }
                         }
