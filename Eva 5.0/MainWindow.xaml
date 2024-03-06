@@ -184,9 +184,19 @@
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="3" Grid.ColumnSpan="2">
 
+            <Button Focusable="False" x:Name="ContractOrExpandTheWindowButton" Click="ContractOrExpandTheMainWindow" Margin="0,2,3,0" HorizontalAlignment="Right" VerticalAlignment="Top" Content="&#xE73F;" FontSize="17" FontFamily="Segoe MDL2 Assets" FontWeight="Bold" Background="Transparent" Style="{StaticResource MyButtonStyle}">
 
 
-            <Button Focusable="False" x:Name="MinimiseTheWindowButton" Click="MinimiseTheMainWindow" Margin="0,5,7,0" HorizontalAlignment="Right" VerticalAlignment="Top" Content="&#xEF2D;" FontSize="20" FontFamily="Segoe MDL2 Assets" Background="Transparent" Style="{StaticResource MyButtonStyle}">
+                <Button.Foreground>
+                    <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                        <GradientStop Color="#FF7BBFD8" x:Name="ContractOrExpandTheWindowOffset" Offset="1"/>
+                        <GradientStop Color="#FF11497F"/>
+                    </LinearGradientBrush>
+                </Button.Foreground>
+            </Button>
+
+
+            <Button Focusable="False" x:Name="MinimiseTheWindowButton" Click="MinimiseTheMainWindow" Margin="0,2,3,0" HorizontalAlignment="Right" VerticalAlignment="Top" Content="&#xEF2D;" FontSize="17" FontFamily="Segoe MDL2 Assets" Background="Transparent" Style="{StaticResource MyButtonStyle}">
 
               
                 <Button.Foreground>
@@ -199,7 +209,7 @@
 
 
 
-            <Button Focusable="False" x:Name="CloseTheWindowButton" Click="CloseTheApplication" Margin="7,5,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" Content="&#xEF2C;" FontSize="20" FontFamily="Segoe MDL2 Assets" Background="Transparent" BorderBrush="Transparent" Style="{StaticResource MyButtonStyle}">
+            <Button Focusable="False" x:Name="CloseTheWindowButton" Click="CloseTheApplication" Margin="0,2,3,0" HorizontalAlignment="Right" VerticalAlignment="Top" Content="&#xEF2C;" FontSize="17" FontFamily="Segoe MDL2 Assets" Background="Transparent" BorderBrush="Transparent" Style="{StaticResource MyButtonStyle}">
 
                 
                 <Button.Foreground>
@@ -254,7 +264,7 @@
             </Button.Foreground>
         </Button>
 
-        <Ellipse Focusable="False" x:Name="OuterElipse" Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" Height="52" Width="52">
+        <Ellipse Focusable="False" x:Name="OuterElipse" Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" Height="50" Width="50">
             
             <Ellipse.Fill>
                 <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
@@ -264,7 +274,7 @@
             </Ellipse.Fill>
         </Ellipse>
 
-        <Ellipse Focusable="False" x:Name="InnerElipse" Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" Height="44" Width="44" Fill="#FF121111"/>
+        <Ellipse Focusable="False" x:Name="InnerElipse" Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" Height="42" Width="42" Fill="#FF121111"/>
 
 
         <Rectangle Focusable="False" Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="Rotator"  Height="57" Width="16" Fill="#FF121111" RenderTransformOrigin="0.5,0.5">

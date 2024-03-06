@@ -796,6 +796,11 @@ namespace Eva_5._0
             }
         }
 
+        private void ContractOrExpandTheMainWindow(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
         private void MinimiseTheMainWindow(object sender, RoutedEventArgs e)
         {
             if (MainWindowIsClosing == false)
