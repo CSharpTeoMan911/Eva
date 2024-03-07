@@ -35,7 +35,7 @@
 
 
     <Window.Clip>
-        <RectangleGeometry Rect="0, 0, 260, 159" RadiusX="8" RadiusY="8"/>
+        <RectangleGeometry x:Name="Window_Geometry" Rect="0, 0, 260, 159" RadiusX="8" RadiusY="8"/>
     </Window.Clip>
 
     
@@ -61,7 +61,7 @@
 
         <!--<TextBlock Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Consolas" Foreground="Red" FontSize="20" Text="20"/>-->
 
-        <Path Grid.Row="1" Grid.Column="4" StrokeThickness="2">
+        <Path x:Name="Wire1" Grid.Row="1" Grid.Column="4" StrokeThickness="2">
          
 
             <Path.Stroke>
@@ -87,7 +87,7 @@
             </Path.Data>
         </Path>
 
-        <Path Grid.Row="1" Grid.Column="4" StrokeThickness="2">
+        <Path x:Name="Wire2" Grid.Row="1" Grid.Column="4" StrokeThickness="2">
 
 
             <Path.Stroke>
@@ -113,7 +113,7 @@
             </Path.Data>
         </Path>
 
-        <Rectangle Grid.Row="2" Grid.Column="4" Height="31.5" Width="45" HorizontalAlignment="Right">
+        <Rectangle x:Name="Main_Display" Grid.Row="2" Grid.Column="4" Height="31.5" Width="45" HorizontalAlignment="Right">
 
             <Rectangle.Effect>
                 <BlurEffect Radius="2"/>
@@ -131,7 +131,7 @@
             </Rectangle.Fill>
         </Rectangle>
 
-        <Rectangle Grid.Row="2" Grid.Column="4" Width="40" Height="25" Margin="0,0,2.5,0" HorizontalAlignment="Right">
+        <Rectangle x:Name="Main_Inner_Display" Grid.Row="2" Grid.Column="4" Width="40" Height="25" Margin="0,0,2.5,0" HorizontalAlignment="Right">
             <Rectangle.Effect>
                 <BlurEffect Radius="2"/>
             </Rectangle.Effect>
@@ -163,7 +163,7 @@
             </TextBlock.Foreground>
         </TextBlock>
 
-        <Rectangle Grid.Row="2" Grid.Column="4" Width="38" Height="23" Margin="0,0,3.5,0" HorizontalAlignment="Right" Opacity="0.2">
+        <Rectangle x:Name="Main_Innermost_Display" Grid.Row="2" Grid.Column="4" Width="38" Height="23" Margin="0,0,3.5,0" HorizontalAlignment="Right" Opacity="0.2">
 
             <Rectangle.Effect>
                 <BlurEffect Radius="2"/>
@@ -182,18 +182,7 @@
         </Rectangle>
 
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="3" Grid.ColumnSpan="2">
-
-            <Button Focusable="False" x:Name="ContractOrExpandTheWindowButton" Click="ContractOrExpandTheMainWindow" Margin="0,2,3,0" HorizontalAlignment="Right" VerticalAlignment="Top" Content="&#xE73F;" FontSize="17" FontFamily="Segoe MDL2 Assets" FontWeight="Bold" Background="Transparent" Style="{StaticResource MyButtonStyle}">
-
-
-                <Button.Foreground>
-                    <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                        <GradientStop Color="#FF7BBFD8" x:Name="ContractOrExpandTheWindowOffset" Offset="1"/>
-                        <GradientStop Color="#FF11497F"/>
-                    </LinearGradientBrush>
-                </Button.Foreground>
-            </Button>
+        <StackPanel x:Name="Main_Window_Controls" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="3" Grid.ColumnSpan="2">
 
 
             <Button Focusable="False" x:Name="MinimiseTheWindowButton" Click="MinimiseTheMainWindow" Margin="0,2,3,0" HorizontalAlignment="Right" VerticalAlignment="Top" Content="&#xEF2D;" FontSize="17" FontFamily="Segoe MDL2 Assets" Background="Transparent" Style="{StaticResource MyButtonStyle}">
@@ -207,7 +196,16 @@
                 </Button.Foreground>
             </Button>
 
+            <Button Focusable="False" x:Name="ContractOrExpandTheWindowButton" Click="ContractOrExpandTheMainWindow" Margin="0,2,3,0" HorizontalAlignment="Right" VerticalAlignment="Top" Content="&#xE73F;" FontSize="17" FontFamily="Segoe MDL2 Assets" FontWeight="Bold" Background="Transparent" Style="{StaticResource MyButtonStyle}">
 
+
+                <Button.Foreground>
+                    <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                        <GradientStop Color="#FF7BBFD8" x:Name="ContractOrExpandTheWindowOffset" Offset="1"/>
+                        <GradientStop Color="#FF11497F"/>
+                    </LinearGradientBrush>
+                </Button.Foreground>
+            </Button>
 
             <Button Focusable="False" x:Name="CloseTheWindowButton" Click="CloseTheApplication" Margin="0,2,3,0" HorizontalAlignment="Right" VerticalAlignment="Top" Content="&#xEF2C;" FontSize="17" FontFamily="Segoe MDL2 Assets" Background="Transparent" BorderBrush="Transparent" Style="{StaticResource MyButtonStyle}">
 
@@ -224,36 +222,38 @@
             
         </StackPanel>
 
-
-        <Button Focusable="False" x:Name="OpenGptQueryWindowButton" Width="{Binding ElementName=OpenTimerMenuButton, Path=ActualWidth}" Height="{Binding ElementName=OpenTimerMenuButton, Path=ActualHeight}" BorderBrush="Transparent" Background="Transparent" Margin="5,0,0,5" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1" FontSize="18" Style="{StaticResource MyButtonStyle}" Click="Open_ChatGPT_Query_Window">
-            <Button.Content>
-                <Image Source="Images/Chatgpt-logo.png" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            </Button.Content>
-        </Button>
-
-
-        <Button Focusable="False" x:Name="OpenSettingsMenuButton" Click="OpenSettingsWindow" BorderBrush="Transparent" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,0,0,0" Grid.Row="2" FontFamily="Segoe MDL2 Assets" FontSize="18" Content="&#xE115;" Style="{StaticResource MyButtonStyle}">
-            <Button.Foreground>
-                <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                    <GradientStop Color="#FF7BBFD8" x:Name="OpenSettingsMenuButtonOffset" Offset="1"/>
-                    <GradientStop Color="#FF11497F"/>
-                </LinearGradientBrush>
-            </Button.Foreground>
-        </Button>
+        <StackPanel Name="Extra_Functionalities" Grid.Row="1" Grid.RowSpan="3">
+            
+            <Button Focusable="False" x:Name="OpenGptQueryWindowButton" Width="{Binding ElementName=OpenTimerMenuButton, Path=ActualWidth}" Height="{Binding ElementName=OpenTimerMenuButton, Path=ActualHeight}" BorderBrush="Transparent" Background="Transparent" Margin="5,0,0,6" HorizontalAlignment="Left" FontSize="18" Style="{StaticResource MyButtonStyle}" Click="Open_ChatGPT_Query_Window">
+                <Button.Content>
+                    <Image Source="Images/Chatgpt-logo.png" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Button.Content>
+            </Button>
 
 
-        <Button Focusable="False" x:Name="OpenTimerMenuButton" Click="OpenTimerWindow" BorderBrush="Transparent" Background="Transparent" Margin="5,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="3" FontFamily="Segoe MDL2 Assets" FontSize="18" Content="&#xED5A;" Style="{StaticResource MyButtonStyle}">
-            <Button.Foreground>
-                <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                    <GradientStop Color="#FFD67A71" x:Name="OpenTimerMenuButtonOffset" Offset="1"/>
-                    <GradientStop Color="#FF7F1111" x:Name="OpenTimerMenuButtonNotOffset"/>
-                </LinearGradientBrush>
-            </Button.Foreground>
-        </Button>
+            <Button Focusable="False" x:Name="OpenSettingsMenuButton" Click="OpenSettingsWindow" BorderBrush="Transparent" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,0,0,6" Grid.Row="2" FontFamily="Segoe MDL2 Assets" FontSize="18" Content="&#xE115;" Style="{StaticResource MyButtonStyle}">
+                <Button.Foreground>
+                    <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                        <GradientStop Color="#FF7BBFD8" x:Name="OpenSettingsMenuButtonOffset" Offset="1"/>
+                        <GradientStop Color="#FF11497F"/>
+                    </LinearGradientBrush>
+                </Button.Foreground>
+            </Button>
+
+
+            <Button Focusable="False" x:Name="OpenTimerMenuButton" Click="OpenTimerWindow" BorderBrush="Transparent" Background="Transparent" Margin="5,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="3" FontFamily="Segoe MDL2 Assets" FontSize="18" Content="&#xED5A;" Style="{StaticResource MyButtonStyle}">
+                <Button.Foreground>
+                    <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                        <GradientStop Color="#FFD67A71" x:Name="OpenTimerMenuButtonOffset" Offset="1"/>
+                        <GradientStop Color="#FF7F1111" x:Name="OpenTimerMenuButtonNotOffset"/>
+                    </LinearGradientBrush>
+                </Button.Foreground>
+            </Button>
+        </StackPanel>
 
 
 
-        <Button Focusable="False" x:Name="SpeechRecognitionButton" Click="StartOrStopSpeechRecognition" Grid.Column="2" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center" BorderBrush="Transparent" Background="Transparent" FontFamily="Segoe MDL2 Assets" FontSize="22" Content="&#xF781;" Style="{StaticResource MyButtonStyle}">
+        <Button Focusable="False" x:Name="SpeechRecognitionButton" Click="StartOrStopSpeechRecognition" Grid.ColumnSpan="5" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center" BorderBrush="Transparent" Background="Transparent" FontFamily="Segoe MDL2 Assets" FontSize="22" Content="&#xF781;" Style="{StaticResource MyButtonStyle}">
 
             
             <Button.Foreground>
@@ -264,7 +264,7 @@
             </Button.Foreground>
         </Button>
 
-        <Ellipse Focusable="False" x:Name="OuterElipse" Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" Height="50" Width="50">
+        <Ellipse Focusable="False" x:Name="OuterElipse" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="5" HorizontalAlignment="Center" VerticalAlignment="Center" Height="50" Width="50">
             
             <Ellipse.Fill>
                 <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
@@ -274,10 +274,10 @@
             </Ellipse.Fill>
         </Ellipse>
 
-        <Ellipse Focusable="False" x:Name="InnerElipse" Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" Height="42" Width="42" Fill="#FF121111"/>
+        <Ellipse Focusable="False" x:Name="InnerElipse" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="5" HorizontalAlignment="Center" VerticalAlignment="Center" Height="42" Width="42" Fill="#FF121111"/>
 
 
-        <Rectangle Focusable="False" Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="Rotator"  Height="57" Width="16" Fill="#FF121111" RenderTransformOrigin="0.5,0.5">
+        <Rectangle Focusable="False" Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="Rotator"  Height="52" Width="16" Fill="#FF121111" RenderTransformOrigin="0.5,0.5">
 
             
             <Rectangle.RenderTransform>

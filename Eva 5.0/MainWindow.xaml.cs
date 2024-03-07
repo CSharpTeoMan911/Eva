@@ -5,7 +5,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+
 using static Eva_5._0.Online_Speech_Recognition;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 
 namespace Eva_5._0
 {
@@ -36,6 +39,8 @@ namespace Eva_5._0
         private short Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index;
 
         private short target_value = 1000;
+
+        private bool Cropped;
 
 
 
@@ -670,6 +675,7 @@ namespace Eva_5._0
                                                     case true:
                                                         WindowOffsetArithmetic--;
                                                         MinimiseTheWindowOffset.Offset += 0.04;
+                                                        ContractOrExpandTheWindowOffset.Offset += 0.04;
                                                         CloseTheWindowButtonOffset.Offset += 0.04;
                                                         OpenSettingsMenuButtonOffset.Offset += 0.04;
                                                         OpenTimerMenuButtonOffset.Offset += 0.04;
@@ -691,6 +697,7 @@ namespace Eva_5._0
                                                     case true:
                                                         WindowOffsetArithmetic++;
                                                         MinimiseTheWindowOffset.Offset -= 0.04;
+                                                        ContractOrExpandTheWindowOffset.Offset -= 0.04;
                                                         CloseTheWindowButtonOffset.Offset -= 0.04;
                                                         OpenSettingsMenuButtonOffset.Offset -= 0.04;
                                                         OpenTimerMenuButtonOffset.Offset -= 0.04;
@@ -798,7 +805,67 @@ namespace Eva_5._0
 
         private void ContractOrExpandTheMainWindow(object sender, RoutedEventArgs e)
         {
-            
+            switch (Cropped)
+            {
+                case true:
+                    Window_Geometry.Rect = new Rect(0, 0, 260, 159);
+                    ContractOrExpandTheWindowButton.Content = "\xE73F";
+                    this.Height = 159;
+                    this.Width = 260;
+                    Extra_Functionalities.Width = double.NaN;
+                    Wire1.Width = double.NaN;
+                    Wire2.Width = double.NaN;
+                    Main_Display.Width = 45;
+                    Main_Inner_Display.Width = 40;
+                    Main_Innermost_Display.Width = 38;
+                    Online_Speech_Recognition_Timer_Display.Width = double.NaN;
+                    Online_Speech_Recognition_Timer_Display.Visibility = Visibility.Visible;
+                    Grid.SetColumn(Main_Window_Controls, 3);
+                    Grid.SetColumnSpan(Main_Window_Controls, 3);
+                    OuterElipse.Width = 50;
+                    OuterElipse.Height = 50;
+                    InnerElipse.Width = 42;
+                    InnerElipse.Height = 42;
+                    Rotator.Height = 52;
+                    Grid.SetRow(SpeechRecognitionButton, 4);
+                    Grid.SetRowSpan(SpeechRecognitionButton, 1);
+                    SpeechRecognitionButton.FontSize = 22;
+                    ContractOrExpandTheWindowButton.FontSize = 17;
+                    MinimiseTheWindowButton.FontSize = 17;
+                    CloseTheWindowButton.FontSize = 17;
+                    Cropped = false;
+                    break;
+
+
+                case false:
+                    Window_Geometry.Rect = new Rect(0, 0, 120, 120);
+                    ContractOrExpandTheWindowButton.Content = "\xE740";
+                    this.Height = 120;
+                    this.Width = 120;
+                    Extra_Functionalities.Width = 0;
+                    Wire1.Width = 0;
+                    Wire2.Width = 0;
+                    Main_Display.Width = 0;
+                    Main_Inner_Display.Width = 0;
+                    Main_Innermost_Display.Width = 0;
+                    Online_Speech_Recognition_Timer_Display.Width = 0;
+                    Online_Speech_Recognition_Timer_Display.Visibility = Visibility.Hidden;
+                    Grid.SetColumn(Main_Window_Controls, 0);
+                    Grid.SetColumnSpan(Main_Window_Controls, 6);
+                    OuterElipse.Width = 40;
+                    OuterElipse.Height = 40;
+                    InnerElipse.Width = 33;
+                    InnerElipse.Height = 33;
+                    Rotator.Height = 42;
+                    Grid.SetRow(SpeechRecognitionButton, 3);
+                    Grid.SetRowSpan(SpeechRecognitionButton, 4);
+                    SpeechRecognitionButton.FontSize = 19;
+                    ContractOrExpandTheWindowButton.FontSize = 14;
+                    MinimiseTheWindowButton.FontSize = 14;
+                    CloseTheWindowButton.FontSize = 14;
+                    Cropped = true;
+                    break;
+            }
         }
 
         private void MinimiseTheMainWindow(object sender, RoutedEventArgs e)
