@@ -58,11 +58,14 @@ namespace Eva_5._0
         {
             // Construct the class and resources related to applications, processes and web-links
             // related to the Eva functions
-
             new A_p_l____And____P_r_o_c();
         }
 
-
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+            ChatGPT_API.Get_Available_Gpt_Models();
+        }
 
         protected override async void OnExit(ExitEventArgs e)
         {

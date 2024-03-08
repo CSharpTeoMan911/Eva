@@ -278,6 +278,21 @@ namespace Eva_5._0
             return (await Update_Settings_File(settings_File));
         }
 
+
+        public static async Task<string> Get_Current_Chat_GPT__Model()
+        {
+            return (await Load_Settings_File()).Gpt_Model;
+        }
+
+
+        public static async Task<bool> Set_Current_Chat_GPT__Model(string gpt_model)
+        {
+            Settings_File settings_File = await Load_Settings_File();
+            settings_File.Gpt_Model = gpt_model;
+
+            return (await Update_Settings_File(settings_File));
+        }
+
         // [ END ]
 
 

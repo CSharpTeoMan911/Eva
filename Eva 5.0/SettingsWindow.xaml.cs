@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Windows;
+using System.Collections.Generic;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Linq;
 
 namespace Eva_5._0
 {
@@ -32,7 +34,7 @@ namespace Eva_5._0
     {
         private System.Timers.Timer AnimationAndFunctionalityTimer;
 
-
+        private static int current_model_index;
 
         private bool WindowIsClosing;
 
@@ -51,8 +53,6 @@ namespace Eva_5._0
 
 
         private bool AnimationAndFunctionalityTimerDisposed;
-
-
 
         public SettingsWindow()
         {
@@ -128,8 +128,23 @@ namespace Eva_5._0
 
         private async void SettingsWindowLoaded(object sender, RoutedEventArgs e)
         {
-            
+            if (ChatGPT_API.gpt_models.Count > 0)
+            {
+                string current_model = await Settings.Get_Current_Chat_GPT__Model();
+                int model_index = ChatGPT_API.gpt_models.IndexOf(current_model);
 
+                if (model_index != -1)
+                {
+                    current_model_index = model_index;
+                    GptModelDisplay.Text = ChatGPT_API.gpt_models.ElementAt(current_model_index);
+                }
+                else
+                {
+                    GptModelDisplay.Text = ChatGPT_API.gpt_models.ElementAt(current_model_index);
+                    await Settings.Set_Current_Chat_GPT__Model(ChatGPT_API.gpt_models.First());
+                }
+            }
+ 
 
             AnimationAndFunctionalityTimer = new System.Timers.Timer();
             AnimationAndFunctionalityTimer.Disposed += AnimationAndFunctionalityTimer_Disposed;
@@ -306,6 +321,9 @@ namespace Eva_5._0
                                                         MuteButtonOffset.Offset -= 0.025;
                                                         InstructionManualTextBlockOffset.Offset -= 0.01;
                                                         ChatGPTApiKeyOffset.Offset -= 0.01;
+                                                        GPTModelOffset.Offset -= 0.01;
+                                                        PreviousModelButtonOffset.Offset -= 0.025;
+                                                        NextModelButtonOffset.Offset -= 0.025;
                                                         break;
 
                                                     case false:
@@ -328,6 +346,9 @@ namespace Eva_5._0
                                                         MuteButtonOffset.Offset += 0.025;
                                                         InstructionManualTextBlockOffset.Offset += 0.01;
                                                         ChatGPTApiKeyOffset.Offset += 0.01;
+                                                        GPTModelOffset.Offset += 0.01;
+                                                        PreviousModelButtonOffset.Offset += 0.025;
+                                                        NextModelButtonOffset.Offset += 0.025;
                                                         break;
 
                                                     case false:
@@ -470,6 +491,39 @@ namespace Eva_5._0
 
             System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect(2, GCCollectionMode.Forced);
+        }
+
+        private void TextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+
+        }
+
+        private async void PreviousModel(object sender, RoutedEventArgs e)
+        {
+            if (ChatGPT_API.gpt_models.Count > 0)
+            {
+                if (current_model_index > 0)
+                {
+                    current_model_index--;
+                    string current_gpt_model = ChatGPT_API.gpt_models.ElementAt(current_model_index);
+                    GptModelDisplay.Text = current_gpt_model;
+                    await Settings.Set_Current_Chat_GPT__Model(current_gpt_model);
+                }
+            }
+        }
+
+        private async void NextModel(object sender, RoutedEventArgs e)
+        {
+            if (ChatGPT_API.gpt_models.Count > 0)
+            {
+                if (current_model_index < ChatGPT_API.gpt_models.Count - 1)
+                {
+                    current_model_index++;
+                    string current_gpt_model = ChatGPT_API.gpt_models.ElementAt(current_model_index);
+                    GptModelDisplay.Text = current_gpt_model;
+                    await Settings.Set_Current_Chat_GPT__Model(current_gpt_model);
+                }
+            }
         }
     }
 }

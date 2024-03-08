@@ -122,10 +122,11 @@ namespace Eva_5._0
                 using (System.Diagnostics.Process Online_Process = new System.Diagnostics.Process())
                 {
                     Online_Process.StartInfo.FileName = formated_process;
-                    Online_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                    Online_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                    Online_Process.StartInfo.CreateNoWindow = true;
                     Online_Process.StartInfo.UseShellExecute = true;
                     Online_Process.Start();
-
+                    
                     SetForegroundWindowInitiator(Online_Process.MainWindowHandle);
                 }
 
@@ -182,7 +183,13 @@ namespace Eva_5._0
                                 case true:
                                     Eva_Functionalities.Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
 
-                                    await Windows.System.Launcher.LaunchUriAsync(new Uri(formated_application_executable_name_string));
+                                    using (System.Diagnostics.Process Application_Process = new System.Diagnostics.Process())
+                                    {
+                                        Application_Process.StartInfo.FileName = formated_application_executable_name_string;
+                                        Application_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                                        Application_Process.StartInfo.UseShellExecute = true;
+                                        Application_Process.Start();
+                                    }
                                     break;
 
 

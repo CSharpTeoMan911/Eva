@@ -8,7 +8,8 @@ namespace Eva_5._0
 {
     internal class Settings_File
     {
-        public bool Sound_On;
-        public string Open_AI_Chat_GPT_Key;
+        public bool Sound_On { get; set; }
+        public string Gpt_Model { get; set; }
+        public string Open_AI_Chat_GPT_Key { get; set; }
     }
 }

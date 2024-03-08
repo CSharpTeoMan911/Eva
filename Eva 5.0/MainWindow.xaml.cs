@@ -34,7 +34,7 @@ namespace Eva_5._0
     {
         private static RotateTransform Rotate = new RotateTransform();
 
-        private static System.Collections.Generic.List<string> Online_Speech_Recognition_Timeout_Timer_UI_Intervals = new System.Collections.Generic.List<string>() { "20", "19", "18", "17", "16", "15", "14", "13", "12", "11", "10", "9", "8", "7", "6", "5", "4", "3", "2", "1", "0" };
+        private static System.Collections.Generic.List<string> Online_Speech_Recognition_Timeout_Timer_UI_Intervals = new System.Collections.Generic.List<string>();
 
         private short Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index;
 
@@ -152,6 +152,9 @@ namespace Eva_5._0
 
         public MainWindow()
         {
+            for (int i = 20; i >= 0; i--)
+                Online_Speech_Recognition_Timeout_Timer_UI_Intervals.Add(i.ToString());
+
             InitializeComponent();
         }
 
