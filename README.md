@@ -8,8 +8,8 @@
 
 <br>
 
-* Changed the wake word engine from PocketSphinx to Vosk
-* Added ChatGPT voice prompt query capacity
+* Eva can now interact with multiple GPT models
+* Eva now has a crop function that allow users to use the application with minimal intrreruptions
 
 <br>
 <br>
