@@ -92,7 +92,8 @@ namespace Eva_5._0
                 string response_string = await response.Content.ReadAsStringAsync();
 
                 // DESERIALISE AND STORE THE JSON RESULT INSIDE AN OBJECT
-                models models = Newtonsoft.Json.JsonConvert.DeserializeObject<models>(response_string);
+
+                models models = await JsonSerialisation.JsonDeserialiser<models>(response_string);
 
 
                 // CLEAN THE DATA WITHIN THE EXTRACTED HTTP PAYLOAD BY ELIMINATING NON-GPT MODELS
@@ -178,8 +179,7 @@ namespace Eva_5._0
 
 
 
-
-                    System.Net.Http.StringContent message_content = new System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+                    System.Net.Http.StringContent message_content = new System.Net.Http.StringContent(await JsonSerialisation.JsonSerialiser(request), Encoding.UTF8, "application/json");
 
                     try
                     {
@@ -187,7 +187,7 @@ namespace Eva_5._0
 
                         try
                         {
-                            JObject json_response = Newtonsoft.Json.JsonConvert.DeserializeObject<JObject>(await response.Content.ReadAsStringAsync());
+                            JObject json_response = await JsonSerialisation.JsonDeserialiser<JObject>(await response.Content.ReadAsStringAsync());
 
                             Tuple<Type, string> payload_processing_result = API_Payload_Processing(json_response);
 

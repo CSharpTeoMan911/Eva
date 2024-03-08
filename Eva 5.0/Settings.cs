@@ -111,17 +111,17 @@ namespace Eva_5._0
                     byte[] settings_file_binary = new byte[settings_file_stream.Length];
                     await settings_file_stream.ReadAsync(settings_file_binary, 0, settings_file_binary.Length);
 
-                    settings_File = Newtonsoft.Json.JsonConvert.DeserializeObject<Settings_File>(Encoding.UTF8.GetString(settings_file_binary));
+                    settings_File = await JsonSerialisation.JsonDeserialiser<Settings_File>(Encoding.UTF8.GetString(settings_file_binary));
 
                     // [ END ]
                 }
-                catch
+                catch 
                 {
-
+                    
                 }
                 finally
                 {
-                    if(settings_file_stream != null)
+                    if (settings_file_stream != null)
                     {
                         settings_file_stream.Close();
                         settings_file_stream.Dispose();
@@ -193,7 +193,7 @@ namespace Eva_5._0
             //
             // [ BEGIN ]
 
-            byte[] settings_file_binary = Encoding.UTF8.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(settings_File));
+            byte[] settings_file_binary = Encoding.UTF8.GetBytes(await JsonSerialisation.JsonSerialiser(settings_File));
 
             System.IO.FileStream settings_file_stream = System.IO.File.Create(settings_file_name, settings_file_binary.Length, System.IO.FileOptions.Asynchronous);
 
