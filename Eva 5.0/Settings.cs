@@ -79,71 +79,71 @@ namespace Eva_5._0
             Settings_File settings_File = new Settings_File();
             settings_File.Sound_On = true;
             settings_File.Open_AI_Chat_GPT_Key = String.Empty;
-
+            settings_File.ModelTemperature = 5;
             // [ END ]
 
 
-            
-
-
-
-
-            if (System.IO.File.Exists(settings_file_name) == true)
+            try
             {
-                // IF THE SETTINGS FILE EXISTS, A "FileStream" OBJECT IS CRATED
-                // IN ORDER TO OPEN THE FILE IN A BINARY DATA STREAM AND READ
-                // THE FILE'S BINARY CONTENTS
-                //
-                // [ BEGIN ]
 
-
-                System.IO.FileStream settings_file_stream = System.IO.File.OpenRead(settings_file_name);
-
-                try
+                if (System.IO.File.Exists(settings_file_name) == true)
                 {
-                    // THE BINARY INFORMATION OF THE SETTINGS FILE IS READ IN A BUFFER
-                    // AND THE BUFFER IS THEN CONVERTED IN A STRING IN ORDER TO BE 
-                    // DE-SERIALIZED FROM THE JSON FILE FORMAT IN THE "Settings_File"
-                    // FORMAT. 
+                    // IF THE SETTINGS FILE EXISTS, A "FileStream" OBJECT IS CRATED
+                    // IN ORDER TO OPEN THE FILE IN A BINARY DATA STREAM AND READ
+                    // THE FILE'S BINARY CONTENTS
                     //
                     // [ BEGIN ]
 
-                    byte[] settings_file_binary = new byte[settings_file_stream.Length];
-                    await settings_file_stream.ReadAsync(settings_file_binary, 0, settings_file_binary.Length);
 
-                    settings_File = await JsonSerialisation.JsonDeserialiser<Settings_File>(Encoding.UTF8.GetString(settings_file_binary));
+                    System.IO.FileStream settings_file_stream = System.IO.File.OpenRead(settings_file_name);
+
+                    try
+                    {
+                        // THE BINARY INFORMATION OF THE SETTINGS FILE IS READ IN A BUFFER
+                        // AND THE BUFFER IS THEN CONVERTED IN A STRING IN ORDER TO BE 
+                        // DE-SERIALIZED FROM THE JSON FILE FORMAT IN THE "Settings_File"
+                        // FORMAT. 
+                        //
+                        // [ BEGIN ]
+
+                        byte[] settings_file_binary = new byte[settings_file_stream.Length];
+                        await settings_file_stream.ReadAsync(settings_file_binary, 0, settings_file_binary.Length);
+
+                        settings_File = await JsonSerialisation.JsonDeserialiser<Settings_File>(Encoding.UTF8.GetString(settings_file_binary));
+
+                        // [ END ]
+                    }
+                    catch
+                    {
+
+                    }
+                    finally
+                    {
+                        if (settings_file_stream != null)
+                        {
+                            settings_file_stream.Close();
+                            settings_file_stream.Dispose();
+                        }
+                    }
 
                     // [ END ]
                 }
-                catch 
+                else
                 {
-                    
+                    // IF THE SETTINGS FILE DOES NOT EXIST, PASS THE 
+                    // "Settings_File" CLASS INSTANCE TO THIS 
+                    // METHOD AND CREATE A SETTINGS FILE
+                    // USING THE PRESET DEFAULT VALUES 
+                    // OF THIS CLASS INSTANCE
+                    //
+                    // [ BEGIN ]
+
+                    await Create_Settings_File(settings_File);
+
+                    // [ END ]
                 }
-                finally
-                {
-                    if (settings_file_stream != null)
-                    {
-                        settings_file_stream.Close();
-                        settings_file_stream.Dispose();
-                    }
-                }
-
-                // [ END ]
             }
-            else
-            {
-                // IF THE SETTINGS FILE DOES NOT EXIST, PASS THE 
-                // "Settings_File" CLASS INSTANCE TO THIS 
-                // METHOD AND CREATE A SETTINGS FILE
-                // USING THE PRESET DEFAULT VALUES 
-                // OF THIS CLASS INSTANCE
-                //
-                // [ BEGIN ]
-
-                await Create_Settings_File(settings_File);
-
-                // [ END ]
-            }
+            catch { }
 
             return settings_File;
         }
@@ -163,21 +163,22 @@ namespace Eva_5._0
 
             // [ END ]
 
-
-
-
-            // IF THE SETTINGS FILE EXIST, DELETE IT AND CREATE A
-            // NEW SETTINGS FILE WITH THE SET VALUES
-            //
-            // [ BEGIN ]
-
-            if (System.IO.File.Exists(settings_file_name) == true)
+            try
             {
-                System.IO.File.Delete(settings_file_name);
+                // IF THE SETTINGS FILE EXIST, DELETE IT AND CREATE A
+                // NEW SETTINGS FILE WITH THE SET VALUES
+                //
+                // [ BEGIN ]
+
+                if (System.IO.File.Exists(settings_file_name) == true)
+                {
+                    System.IO.File.Delete(settings_file_name);
+                }
+
+                // [ END ]
+
             }
-
-            // [ END ]
-
+            catch { }
             return await Create_Settings_File(settings_File);
         }
 
@@ -193,27 +194,31 @@ namespace Eva_5._0
             //
             // [ BEGIN ]
 
-            byte[] settings_file_binary = Encoding.UTF8.GetBytes(await JsonSerialisation.JsonSerialiser(settings_File));
-
-            System.IO.FileStream settings_file_stream = System.IO.File.Create(settings_file_name, settings_file_binary.Length, System.IO.FileOptions.Asynchronous);
-
             try
             {
-                await settings_file_stream.WriteAsync(settings_file_binary, 0, settings_file_binary.Length);
-                await settings_file_stream.FlushAsync();
-            }
-            catch
-            {
+                byte[] settings_file_binary = Encoding.UTF8.GetBytes(await JsonSerialisation.JsonSerialiser(settings_File));
 
-            }
-            finally
-            {
-                if(settings_file_stream != null)
+                System.IO.FileStream settings_file_stream = System.IO.File.Create(settings_file_name, settings_file_binary.Length, System.IO.FileOptions.Asynchronous);
+
+                try
                 {
-                    settings_file_stream.Close();
-                    settings_file_stream.Dispose();
+                    await settings_file_stream.WriteAsync(settings_file_binary, 0, settings_file_binary.Length);
+                    await settings_file_stream.FlushAsync();
+                }
+                catch
+                {
+
+                }
+                finally
+                {
+                    if (settings_file_stream != null)
+                    {
+                        settings_file_stream.Close();
+                        settings_file_stream.Dispose();
+                    }
                 }
             }
+            catch { }
 
             // [ END ]
 
@@ -289,6 +294,19 @@ namespace Eva_5._0
         {
             Settings_File settings_File = await Load_Settings_File();
             settings_File.Gpt_Model = gpt_model;
+
+            return (await Update_Settings_File(settings_File));
+        }
+
+        public static async Task<int> Get_Current_Model_Temperature()
+        {
+            return (await Load_Settings_File()).ModelTemperature;
+        }
+
+        public static async Task<bool> Set_Current_Model_Temperature(int temp)
+        {
+            Settings_File settings_File = await Load_Settings_File();
+            settings_File.ModelTemperature = temp;
 
             return (await Update_Settings_File(settings_File));
         }

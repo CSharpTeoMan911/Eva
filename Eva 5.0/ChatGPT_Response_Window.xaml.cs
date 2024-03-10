@@ -63,6 +63,19 @@ namespace Eva_5._0
                     {
                         if (Application.Current.MainWindow != null)
                         {
+                            if (App.Application_Error_Shutdown)
+                            {
+                                try
+                                {
+                                    if (Animation_Timer != null)
+                                    {
+                                        Animation_Timer.Stop();
+                                        this.Close();
+                                    }
+                                }
+                                catch { }
+                            }
+
                             if (Response_Loading == true)
                             {
                                 Loading_Background.Height = ResponseTextBox.Height;

@@ -10,6 +10,7 @@ namespace Eva_5._0
     {
         public bool Sound_On { get; set; }
         public string Gpt_Model { get; set; }
+        public int ModelTemperature { get; set; }
         public string Open_AI_Chat_GPT_Key { get; set; }
     }
 }

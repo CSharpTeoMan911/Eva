@@ -5,8 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Eva_5._0"
         mc:Ignorable="d"
-        Title="Settings" Height="400" Width="300" WindowStyle="None" AllowsTransparency="True" Opacity="0.98" Loaded="SettingsWindowLoaded" Closing="WindowClosing" Icon="Images/Eva icon.png">
-
+        Title="Settings" Height="480" Width="330" WindowStyle="None" AllowsTransparency="True" Opacity="0.98" Loaded="SettingsWindowLoaded" Closing="WindowClosing" Icon="Images/Eva icon.png">
 
     <!--/////////////////////////////////////////////////////////////////////////////
         ///                                                                       ///
@@ -23,14 +22,12 @@
         /// DO NOT REMOVE THIS FILE HEADER                                        ///
         ///                                                                       ///
         /////////////////////////////////////////////////////////////////////////////-->
-    
-    
+
+
     <Window.Clip>
-        <RectangleGeometry Rect="0, 0, 300, 400" RadiusX="20" RadiusY="20"/>
+        <RectangleGeometry Rect="0, 0, 330, 480" RadiusX="20" RadiusY="20"/>
     </Window.Clip>
-    
-    
-    
+
 
     <Window.Background>
         <LinearGradientBrush StartPoint="0.5, 1" EndPoint="1, 0">
@@ -201,6 +198,31 @@
                 </StackPanel>
             </StackPanel>
 
+
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,30,0,0" Orientation="Horizontal">
+                <TextBlock Margin="0,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontFamily="Corbel Light" Text="Temperature">
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
+                            <GradientStop Color="#FF7BBFD8" x:Name="ModelTempLabelOffset" Offset="1"/>
+                            <GradientStop Color="#FF1B70C3"/>
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+                </TextBlock>
+                <StackPanel Background="Black">
+                    <StackPanel.Clip>
+                        <RectangleGeometry Rect="0,0,125,40" RadiusX="5" RadiusY="5"/>
+                    </StackPanel.Clip>
+                    <Slider x:Name="TemperatureSelector" Margin="10,0,10,0" Delay="1000" ValueChanged="TemperatureChanged" TickFrequency="1" IsSnapToTickEnabled="True" Width="100"/>
+                    <TextBlock x:Name="TemperatureDisplay" FontSize="15" HorizontalAlignment="Center" Text="100%">
+                        <TextBlock.Foreground>
+                            <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
+                                <GradientStop Color="#FF7BBFD8" x:Name="ModelTempOffset" Offset="1"/>
+                                <GradientStop Color="#FF1B70C3"/>
+                            </LinearGradientBrush>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+                </StackPanel>
+            </StackPanel>
 
 
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,30,0,0" Orientation="Horizontal">

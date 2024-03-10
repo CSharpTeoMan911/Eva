@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SharpToken;
-using Windows.Media.Core;
 
 
 namespace Eva_5._0
@@ -128,6 +127,7 @@ namespace Eva_5._0
             Type return_type = null;
 
             string selected_model = await Settings.Get_Current_Chat_GPT__Model();
+            double temp = await Settings.Get_Current_Model_Temperature();
             int tokens = await GetGptModelEncoding(input);
 
             if (tokens < 4096)
@@ -174,7 +174,9 @@ namespace Eva_5._0
                     }
 
                     request.messages = cached_conversation.ToArray();
-                    request.temperature = 0.5;
+
+                    temp = temp / 10;
+                    request.temperature = temp;
                     request.max_tokens = 4096;
 
 
@@ -353,14 +355,6 @@ namespace Eva_5._0
         }
 
 
-
-
-        /// <summary>
-        /// 
-        /// METHOD THAT REMOVES THE NUMBER OF TOKENS ABOVE THE ACCEPTED LIMIT BY OPENAI'S CHATGPT API.
-        /// THE ALGORITHM HAS AN O(N) TIME COMPLEXITY AND A O(1) SPACE COMPLEXITY
-        /// 
-        /// </summary>
         private static async void Remove_Superflous_Tokens(int tokens)
         {
             // IF THE NUMBERS OF EXTRACTED GPT MODELS IS GREATER THAN 0

@@ -120,10 +120,7 @@ namespace Eva_5._0
                             {
                                 if (first_process == false)
                                 {
-                                    if (process_2 != null)
-                                        process_2.Kill();
-
-
+                                    process_2?.Kill();
                                     counter.Restart();
 
                                     first_process = true;
@@ -135,8 +132,7 @@ namespace Eva_5._0
                                 }
                                 else
                                 {
-                                    if (process_1 != null)
-                                        process_1.Kill();
+                                    process_1?.Kill();
 
                                     counter.Restart();
 
@@ -212,25 +208,23 @@ namespace Eva_5._0
             //
             // [ START ]
 
-            counter.Stop();
-            counter.Reset();
+            counter?.Stop();
+            counter?.Reset();
 
             Wake_Word_Started = false;
 
             try
             {
-                if (process_1 != null)
-                    process_1.Kill();
-                process_1.Dispose();
+                process_1?.Kill();
+                process_1?.Dispose();
             }
             catch { }
 
 
             try
             {
-                if (process_2 != null)
-                    process_2.Kill();
-                process_2.Dispose();
+                process_2?.Kill();
+                process_2?.Dispose();
             }
             catch { }
 

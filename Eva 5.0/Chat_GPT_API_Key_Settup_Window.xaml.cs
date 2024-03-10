@@ -25,6 +25,8 @@ namespace Eva_5._0
         private bool SwitchOffset;
         private double OffsetArithmetic;
 
+        private delegate void ReloadCurrentModel();
+        private ReloadCurrentModel reloadCurrentModel = new ReloadCurrentModel(SettingsWindow.ReloadCurrentModel);
 
         public Chat_GPT_API_Key_Settup_Window()
         {
@@ -86,8 +88,6 @@ namespace Eva_5._0
                     // IF THE MAIN WINDOW IS NOT NULL
                     if (Application.Current.MainWindow != null)
                     {
-
-
                         await Application.Current.Dispatcher.InvokeAsync(() =>
                         {
                             Loading_Stackpanel.Height = 180;
@@ -141,7 +141,7 @@ namespace Eva_5._0
                             // IF THE RETURN TYPE OF THE OPERATION IS NOT AN EXCEPTION
                             // THIS MEANS THAT THE API KEY IS VALID AND THE WIDOW IS
                             // CLOSED 
-
+                            reloadCurrentModel.Invoke();
                             this.Close();
                         }
                     }
@@ -189,6 +189,18 @@ namespace Eva_5._0
                     {
                         if (Application.Current.MainWindow != null)
                         {
+                            if (App.Application_Error_Shutdown)
+                            {
+                                try
+                                {
+                                    if (Animation_Timer != null)
+                                    {
+                                        Animation_Timer.Stop();
+                                        this.Close();
+                                    }
+                                }
+                                catch { }
+                            }
 
                             switch (SwitchOffset)
                             {

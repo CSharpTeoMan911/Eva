@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows;
-using System.Collections.Generic;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Linq;
@@ -33,12 +32,11 @@ namespace Eva_5._0
     public partial class SettingsWindow : Window
     {
         private System.Timers.Timer AnimationAndFunctionalityTimer;
+        private System.Timers.Timer TemperatureChangedTimer;
 
         private static int current_model_index;
 
         private bool WindowIsClosing;
-
-
 
         private double Wheel1Angle;
         private double Wheel2Angle;
@@ -51,11 +49,14 @@ namespace Eva_5._0
         private bool SwitchSecodaryOffsets;
         private double GradientArithmeticSecondaryOffsets;
 
+        private bool TempChanged;
+        private int Temp;
 
-        private bool AnimationAndFunctionalityTimerDisposed;
+        private static SettingsWindow CurrentInstance;
 
         public SettingsWindow()
         {
+            CurrentInstance = this;
             InitializeComponent();
         }
 
@@ -128,29 +129,18 @@ namespace Eva_5._0
 
         private async void SettingsWindowLoaded(object sender, RoutedEventArgs e)
         {
-            if (ChatGPT_API.gpt_models.Count > 0)
-            {
-                string current_model = await Settings.Get_Current_Chat_GPT__Model();
-                int model_index = ChatGPT_API.gpt_models.IndexOf(current_model);
-
-                if (model_index != -1)
-                {
-                    current_model_index = model_index;
-                    GptModelDisplay.Text = ChatGPT_API.gpt_models.ElementAt(current_model_index);
-                }
-                else
-                {
-                    GptModelDisplay.Text = ChatGPT_API.gpt_models.ElementAt(current_model_index);
-                    await Settings.Set_Current_Chat_GPT__Model(ChatGPT_API.gpt_models.First());
-                }
-            }
- 
+            LoadCurrentModel();
+            LoadTemperature();
 
             AnimationAndFunctionalityTimer = new System.Timers.Timer();
-            AnimationAndFunctionalityTimer.Disposed += AnimationAndFunctionalityTimer_Disposed;
             AnimationAndFunctionalityTimer.Elapsed += AnimationAndFunctionalityTimer_Elapsed;
             AnimationAndFunctionalityTimer.Interval = 10;
             AnimationAndFunctionalityTimer.Start();
+
+            TemperatureChangedTimer = new System.Timers.Timer();
+            TemperatureChangedTimer.Elapsed += TemperatureChangedTimer_Elapsed;
+            TemperatureChangedTimer.Interval = 100;
+            TemperatureChangedTimer.Start();
 
             this.Topmost = true;
 
@@ -180,9 +170,75 @@ namespace Eva_5._0
 
         }
 
-        private void AnimationAndFunctionalityTimer_Disposed(object sender, EventArgs e)
+        private void TemperatureChangedTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            AnimationAndFunctionalityTimerDisposed = true;
+            switch (WindowIsClosing)
+            {
+
+                case true:
+                    try
+                    {
+                        AnimationAndFunctionalityTimer.Stop();
+                    }
+                    catch { }
+                    break;
+
+                case false:
+
+                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                    {
+
+                        case true:
+                            try
+                            {
+                                AnimationAndFunctionalityTimer.Stop();
+                            }
+                            catch { }
+                            break;
+
+                        case false:
+
+                            Application.Current.Dispatcher.Invoke(async() =>
+                            {
+                                switch (Application.Current.MainWindow == null)
+                                {
+
+                                    case true:
+                                        try
+                                        {
+                                            AnimationAndFunctionalityTimer.Stop();
+                                        }
+                                        catch { }
+                                        break;
+
+                                    case false:
+
+                                        if (App.Application_Error_Shutdown)
+                                        {
+                                            try
+                                            {
+                                                if (AnimationAndFunctionalityTimer != null)
+                                                {
+                                                    AnimationAndFunctionalityTimer.Stop();
+                                                    this.Close();
+                                                }
+                                            }
+                                            catch { }
+                                        }
+
+                                        if (TempChanged == true)
+                                        {
+                                            TempChanged = false;
+                                            await Settings.Set_Current_Model_Temperature(Temp);
+                                        }
+                                        break;
+
+                                }
+                            });
+                            break;
+                    }
+                    break;
+            }
         }
 
         private void AnimationAndFunctionalityTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -225,12 +281,23 @@ namespace Eva_5._0
                                             AnimationAndFunctionalityTimer.Stop();
                                         }
                                         catch { }
-                                        this.Close();
                                         break;
 
                                     case false:
 
-                                        
+                                        if (App.Application_Error_Shutdown)
+                                        {
+                                            try
+                                            {
+                                                if (AnimationAndFunctionalityTimer != null)
+                                                {
+                                                    AnimationAndFunctionalityTimer.Stop();
+                                                    this.Close();
+                                                }
+                                            }
+                                            catch { }
+                                        }
+
                                         switch (Wheel1Angle <= 360)
                                         {
                                             case true:
@@ -324,6 +391,8 @@ namespace Eva_5._0
                                                         GPTModelOffset.Offset -= 0.01;
                                                         PreviousModelButtonOffset.Offset -= 0.025;
                                                         NextModelButtonOffset.Offset -= 0.025;
+                                                        ModelTempLabelOffset.Offset -= 0.01;
+                                                        ModelTempOffset.Offset -= 0.01;
                                                         break;
 
                                                     case false:
@@ -349,6 +418,8 @@ namespace Eva_5._0
                                                         GPTModelOffset.Offset += 0.01;
                                                         PreviousModelButtonOffset.Offset += 0.025;
                                                         NextModelButtonOffset.Offset += 0.025;
+                                                        ModelTempLabelOffset.Offset += 0.01;
+                                                        ModelTempOffset.Offset += 0.01;
                                                         break;
 
                                                     case false:
@@ -476,28 +547,6 @@ namespace Eva_5._0
             }
         }
 
-
-
-
-        ~SettingsWindow()
-        {
-            if (AnimationAndFunctionalityTimerDisposed == false)
-            {
-                if (AnimationAndFunctionalityTimer != null)
-                {
-                    AnimationAndFunctionalityTimer.Dispose();
-                }
-            }
-
-            System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-            GC.Collect(2, GCCollectionMode.Forced);
-        }
-
-        private void TextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
-        {
-
-        }
-
         private async void PreviousModel(object sender, RoutedEventArgs e)
         {
             if (ChatGPT_API.gpt_models.Count > 0)
@@ -512,6 +561,31 @@ namespace Eva_5._0
             }
         }
 
+        private async void LoadCurrentModel()
+        {
+            if (ChatGPT_API.gpt_models.Count > 0)
+            {
+                string current_model = await Settings.Get_Current_Chat_GPT__Model();
+                int model_index = ChatGPT_API.gpt_models.IndexOf(current_model);
+
+                if (model_index != -1)
+                {
+                    current_model_index = model_index;
+                    GptModelDisplay.Text = ChatGPT_API.gpt_models.ElementAt(current_model_index);
+                }
+                else
+                {
+                    GptModelDisplay.Text = ChatGPT_API.gpt_models.ElementAt(current_model_index);
+                    await Settings.Set_Current_Chat_GPT__Model(ChatGPT_API.gpt_models.First());
+                }
+            }
+        }
+
+        public static void ReloadCurrentModel()
+        {
+            CurrentInstance.LoadCurrentModel();
+        }
+
         private async void NextModel(object sender, RoutedEventArgs e)
         {
             if (ChatGPT_API.gpt_models.Count > 0)
@@ -524,6 +598,30 @@ namespace Eva_5._0
                     await Settings.Set_Current_Chat_GPT__Model(current_gpt_model);
                 }
             }
+        }
+
+        private void TemperatureChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            int value = (int)(e.NewValue * 10);
+            TemperatureDisplay.Text = value + "%";
+
+            Temp = (int)e.NewValue;
+            TempChanged = true;
+        }
+
+        private async void LoadTemperature()
+        {
+            int temp = await Settings.Get_Current_Model_Temperature();
+            TemperatureSelector.Value = temp;
+            TemperatureDisplay.Text = (temp * 10) + "%";
+        }
+
+        ~SettingsWindow()
+        {
+            AnimationAndFunctionalityTimer?.Dispose();
+            CurrentInstance = null;
+            System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
+            GC.Collect(2, GCCollectionMode.Forced);
         }
     }
 }

@@ -35,9 +35,6 @@ namespace Eva_5._0
     {
         private System.Timers.Timer Animation_And_Functionality_Timer;
 
-        private static System.Media.SoundPlayer Alarm_Sound_Effect = new System.Media.SoundPlayer("AlarmSound.wav");
-
-
         private static StringBuilder total_time = new StringBuilder();
 
         private static StringBuilder hours_interval = new StringBuilder();
@@ -186,6 +183,20 @@ namespace Eva_5._0
 
 
                                     case false:
+
+                                        if (App.Application_Error_Shutdown)
+                                        {
+                                            try
+                                            {
+                                                if (Animation_And_Functionality_Timer != null)
+                                                {
+                                                    Animation_And_Functionality_Timer.Stop();
+                                                    this.Close();
+                                                }
+                                            }
+                                            catch { }
+                                        }
+
 
                                         switch (SwitchWindowOffset)
                                         {

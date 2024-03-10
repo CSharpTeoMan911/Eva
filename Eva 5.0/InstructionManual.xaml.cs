@@ -100,8 +100,6 @@ namespace Eva_5._0
                                         }
                                         catch { }
 
-                                        this.Close();
-
                                         break;
 
                                     case false:
@@ -113,9 +111,8 @@ namespace Eva_5._0
                                                 if (AnimationTimer != null)
                                                 {
                                                     AnimationTimer.Stop();
+                                                    this.Close();
                                                 }
-
-                                                this.Close();
                                             }
                                             catch { }
                                         }
