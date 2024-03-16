@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Eva_5._0
@@ -116,7 +114,7 @@ namespace Eva_5._0
                     {
                         if (App.Application_Error_Shutdown == false)
                         {
-                            if (is_wake_word_engine_loaded == 2 && counter.ElapsedMilliseconds >= 2800)
+                            if (is_wake_word_engine_loaded == 2 && counter.ElapsedMilliseconds >= 5000)
                             {
                                 if (first_process == false)
                                 {
