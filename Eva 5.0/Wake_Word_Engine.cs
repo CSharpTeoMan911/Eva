@@ -57,7 +57,7 @@ namespace Eva_5._0
         private static string wake_word = "listen";
         private static bool Wake_Word_Started = false;
 
-        private static int wake_word_engine_reset_time = 1500;
+        private static int wake_word_engine_reset_time = 4000;
  
 
         public static void Start_The_Wake_Word_Engine()
