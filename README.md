@@ -96,7 +96,8 @@ A third tokenisation is performed in order to extract the variables content. Thi
 
 <br>
 
-![236642357-631a217c-e49c-4fbe-9001-8998422a8295](https://github.com/CSharpTeoMan911/Eva/assets/87245086/cbed89ab-0788-4fcf-976d-bb694cdb888f)
+
+![302436808-cbed89ab-0788-4fcf-976d-bb694cdb888f](https://github.com/CSharpTeoMan911/Eva/assets/87245086/bf68529e-295f-4300-9b8f-15959da55643)
 
 <br>
 
