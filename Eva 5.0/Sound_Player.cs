@@ -113,13 +113,13 @@ namespace Eva_5._0.Properties
 
         public Task<bool> Dispose_Sound_Effects()
         {
-            AppExecutionSoundEffect.Dispose();
-            AppTerminationSoundEffect.Dispose();
-            ScreenshotExecutionSoundEffect.Dispose();
-            Alarm_Sound_Effect.Dispose();
-            ErrorSoundEffect.Dispose();
-            AppActivationSoundEffect.Dispose();
-            ChatGPTNotificationSoundEffect.Dispose();
+            AppExecutionSoundEffect?.Dispose();
+            AppTerminationSoundEffect?.Dispose();
+            ScreenshotExecutionSoundEffect?.Dispose();
+            Alarm_Sound_Effect?.Dispose();
+            ErrorSoundEffect?.Dispose();
+            AppActivationSoundEffect?.Dispose();
+            ChatGPTNotificationSoundEffect?.Dispose();
 
             return Task.FromResult(true);
         }

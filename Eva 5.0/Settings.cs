@@ -119,11 +119,8 @@ namespace Eva_5._0
                     }
                     finally
                     {
-                        if (settings_file_stream != null)
-                        {
-                            settings_file_stream.Close();
-                            settings_file_stream.Dispose();
-                        }
+                        settings_file_stream?.Close();
+                        settings_file_stream?.Dispose();
                     }
 
                     // [ END ]
@@ -211,11 +208,8 @@ namespace Eva_5._0
                 }
                 finally
                 {
-                    if (settings_file_stream != null)
-                    {
-                        settings_file_stream.Close();
-                        settings_file_stream.Dispose();
-                    }
+                    settings_file_stream?.Close();
+                    settings_file_stream?.Dispose();
                 }
             }
             catch { }

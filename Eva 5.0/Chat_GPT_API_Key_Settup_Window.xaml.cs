@@ -258,12 +258,7 @@ namespace Eva_5._0
         // TIMER IS DISPOSED.
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-
-            if (Animation_Timer != null)
-            {
-                Animation_Timer.Dispose();
-            }
-
+            Animation_Timer?.Dispose();
             WindowIsClosing = true;
         }
     }

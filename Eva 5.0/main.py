@@ -17,13 +17,11 @@ mic = pyaudio.PyAudio()
 stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=1600)
 stream.start_stream()
 
+is_loaded = False
+
 
 def wake_word_engine_operation():
     global thread
-
-    print("[ loaded ]")
-    sys.stdout.flush()
-    
     try:
         while True:
             thread = threading.Thread(target=wake_word_engine_thread_management())
@@ -41,10 +39,15 @@ def wake_word_engine_thread_management():
     # CREDIT TO https://buddhi-ashen-dev.vercel.app/posts/offline-speech-recognition
 
     global thread
+    global is_loaded
 
     try:
         # READ FROM THE AUDIO DATA STREAM A 800 FRAMES PER CYCLE
         data = stream.read(800, False)
+
+        if is_loaded is False:
+            print("[ loaded ]")
+            is_loaded = True
 
         # RETRIEVE THE AUDIO WAVEFORM DATA AND PERFORM SPEECH TO TEXT CONVERSION
         if recognizer.AcceptWaveform(data):

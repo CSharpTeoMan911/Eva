@@ -247,15 +247,12 @@ namespace Eva_5._0
 
         public static async void Close_Speech_Recognition_Interface()
         {
-            if (OnlineSpeechRecognition != null)
+            try
             {
-                try
-                {
-                    await OnlineSpeechRecognition.ContinuousRecognitionSession.StopAsync();
-                    OnlineSpeechRecognition.Dispose();
-                }
-                catch { }
+                await OnlineSpeechRecognition.ContinuousRecognitionSession?.StopAsync();
+                OnlineSpeechRecognition?.Dispose();
             }
+            catch { }
         }
 
 

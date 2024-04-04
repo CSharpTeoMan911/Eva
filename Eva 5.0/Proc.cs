@@ -6,25 +6,6 @@ using System.Windows;
 
 namespace Eva_5._0
 {
-
-
-    /////////////////////////////////////////////////////////////////////////////
-    ///                                                                       ///
-    ///                   PRODUCT: EVA A.I. ASSISTANT                         ///
-    ///                                                                       ///
-    ///                   AUTHOR: TEODOR MIHAIL                               ///
-    ///                                                                       ///
-    ///                                                                       ///
-    /// ANY UNAUTHORISED TRADEMARK USE OF THIS SOFTWARE IS PUNISHABLE BY LAW  ///
-    ///                                                                       ///
-    /// THE AUTHOR OF THIS SOFTWARE DOES NOT LET ANY PEOPLE PATENT OR USE     ///
-    /// THIS PRODUCT'S TRADEMARK.                                             ///
-    ///                                                                       ///
-    /// DO NOT REMOVE THIS FILE HEADER                                        ///
-    ///                                                                       ///
-    /////////////////////////////////////////////////////////////////////////////
-
-
     internal class Proc:A_p_l____And____P_r_o_c
     {
 
@@ -119,15 +100,24 @@ namespace Eva_5._0
 
                 Eva_Functionalities.Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
 
-                using (System.Diagnostics.Process Online_Process = new System.Diagnostics.Process())
+                System.Diagnostics.Process Online_Process = new System.Diagnostics.Process();
+                try
                 {
                     Online_Process.StartInfo.FileName = formated_process;
                     Online_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                     Online_Process.StartInfo.CreateNoWindow = true;
                     Online_Process.StartInfo.UseShellExecute = true;
                     Online_Process.Start();
-                    
+
                     SetForegroundWindowInitiator(Online_Process.MainWindowHandle);
+                }
+                catch
+                {
+
+                }
+                finally
+                {
+                    Online_Process?.Dispose();
                 }
 
                 await sound_player.Play_Sound(Sound_Player.Sounds.AppExecutionSoundEffect);
@@ -175,6 +165,7 @@ namespace Eva_5._0
                 case "open":
                     try
                     {
+                        System.Diagnostics.Process Application_Process = null;
 
                         if (Application_Executable_Name_Retrieval_Result == true)
                         {
@@ -183,12 +174,21 @@ namespace Eva_5._0
                                 case true:
                                     Eva_Functionalities.Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
 
-                                    using (System.Diagnostics.Process Application_Process = new System.Diagnostics.Process())
+                                    Application_Process = new System.Diagnostics.Process();
+                                    try
                                     {
                                         Application_Process.StartInfo.FileName = formated_application_executable_name_string;
                                         Application_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
                                         Application_Process.StartInfo.UseShellExecute = true;
                                         Application_Process.Start();
+                                    }
+                                    catch
+                                    {
+
+                                    }
+                                    finally
+                                    {
+                                        Application_Process?.Dispose();
                                     }
                                     break;
 
@@ -200,7 +200,8 @@ namespace Eva_5._0
                                         case true:
                                             Eva_Functionalities.Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
 
-                                            using (System.Diagnostics.Process Application_Process = new System.Diagnostics.Process())
+                                            Application_Process = new System.Diagnostics.Process();
+                                            try
                                             {
                                                 Application_Process.StartInfo.WorkingDirectory = @"C:\Users\" + Environment.UserName + @"\Desktop";
                                                 Application_Process.StartInfo.Arguments = "/k " + formated_application_executable_name_string;
@@ -209,6 +210,14 @@ namespace Eva_5._0
                                                 Application_Process.StartInfo.CreateNoWindow = true;
                                                 Application_Process.StartInfo.FileName = "cmd";
                                                 Application_Process.Start();
+                                            }
+                                            catch
+                                            {
+
+                                            }
+                                            finally
+                                            {
+                                                Application_Process?.Dispose();
                                             }
                                             break;
 
@@ -232,7 +241,9 @@ namespace Eva_5._0
 
 
                                                 case false:
-                                                    using (System.Diagnostics.Process Application_Process = new System.Diagnostics.Process())
+                                                    Application_Process = new System.Diagnostics.Process();
+
+                                                    try
                                                     {
                                                         Application_Process.StartInfo.WorkingDirectory = @"C:\Users\" + Environment.UserName + @"\Desktop";
                                                         Application_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
@@ -241,6 +252,14 @@ namespace Eva_5._0
                                                         Application_Process.Start();
 
                                                         SetForegroundWindowInitiator(Application_Process.MainWindowHandle);
+                                                    }
+                                                    catch
+                                                    {
+
+                                                    }
+                                                    finally
+                                                    {
+                                                        Application_Process?.Dispose();
                                                     }
                                                     break;
                                             }
@@ -261,7 +280,8 @@ namespace Eva_5._0
                             {
                                 Eva_Functionalities.Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
 
-                                using (System.Diagnostics.Process Application_Not_Found_Downdload_Link_Process = new System.Diagnostics.Process())
+                                System.Diagnostics.Process Application_Not_Found_Downdload_Link_Process = new System.Diagnostics.Process();
+                                try
                                 {
                                     Application_Not_Found_Downdload_Link_Process.StartInfo.FileName = application_not_found_error_link;
                                     Application_Not_Found_Downdload_Link_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
@@ -270,7 +290,14 @@ namespace Eva_5._0
 
                                     SetForegroundWindowInitiator(Application_Not_Found_Downdload_Link_Process.MainWindowHandle);
                                 }
+                                catch
+                                {
 
+                                }
+                                finally
+                                {
+                                    Application_Not_Found_Downdload_Link_Process?.Dispose();
+                                }
 
                                 await sound_player.Play_Sound(Sound_Player.Sounds.AppExecutionSoundEffect);
 
@@ -295,7 +322,7 @@ namespace Eva_5._0
                             {
                                 foreach (System.Diagnostics.Process p in System.Diagnostics.Process.GetProcessesByName(application_process_name))
                                 {
-                                    p.Kill();
+                                    p?.Kill();
                                 }
                             }
                             else

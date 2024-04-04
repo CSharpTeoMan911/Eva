@@ -209,10 +209,7 @@ namespace Eva_5._0
                         }
                         finally
                         {
-                            if (response != null)
-                            {
-                                response.Dispose();
-                            }
+                            response?.Dispose();
                         }
                     }
                     catch
@@ -228,10 +225,7 @@ namespace Eva_5._0
                     }
                     finally
                     {
-                        if (message_content != null)
-                        {
-                            message_content.Dispose();
-                        }
+                        message_content?.Dispose();
                     }
 
 
@@ -250,10 +244,7 @@ namespace Eva_5._0
                 }
                 finally
                 {
-                    if (api_client != null)
-                    {
-                        api_client.Dispose();
-                    }
+                    api_client?.Dispose();
                 }
             }
             else

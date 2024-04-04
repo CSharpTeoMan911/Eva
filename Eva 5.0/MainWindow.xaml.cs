@@ -754,25 +754,19 @@ namespace Eva_5._0
 
             try
             {
-                if (AnimationAndFunctionalityTimer != null)
+                try
                 {
-                    try
-                    {
-                        AnimationAndFunctionalityTimer?.Stop();
-                        AnimationAndFunctionalityTimer?.Dispose();
-                    }
-                    catch { }
+                    AnimationAndFunctionalityTimer?.Stop();
+                    AnimationAndFunctionalityTimer?.Dispose();
                 }
+                catch { }
 
-                if (SpeechRecognitionInterfaceControlTimer != null)
+                try
                 {
-                    try
-                    {
-                        SpeechRecognitionInterfaceControlTimer.Close();
-                        SpeechRecognitionInterfaceControlTimer.Dispose();
-                    }
-                    catch { }
+                    SpeechRecognitionInterfaceControlTimer?.Close();
+                    SpeechRecognitionInterfaceControlTimer?.Dispose();
                 }
+                catch { }
 
                 BeginExecutionAnimation = null;
 

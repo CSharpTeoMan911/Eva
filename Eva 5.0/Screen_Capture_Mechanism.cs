@@ -150,10 +150,7 @@ namespace Eva_5._0
                             }
                             finally
                             {
-                                if(picture_file_writer != null)
-                                {
-                                    picture_file_writer.Dispose();
-                                }
+                                picture_file_writer?.Dispose();
                             }
 
 
@@ -164,10 +161,7 @@ namespace Eva_5._0
                         }
                         finally
                         {
-                            if(main_memory_stream != null)
-                            {
-                                main_memory_stream.Dispose();
-                            }
+                            main_memory_stream?.Dispose();
                         }
 
 
@@ -178,10 +172,7 @@ namespace Eva_5._0
                     }
                     finally
                     {
-                        if(g != null)
-                        {
-                            g.Dispose();
-                        }
+                        g?.Dispose();
                     }
 
 
@@ -192,11 +183,8 @@ namespace Eva_5._0
                 }
                 finally
                 {
-                    if(bitmap != null)
-                    {
-                        // DISPOSE THE BITMAP OBJECT MANUALLY IN ORDER TO ENSURE THAT IT WAS DISPOSED PROPERLY
-                        bitmap.Dispose();
-                    }
+                    // DISPOSE THE BITMAP OBJECT MANUALLY IN ORDER TO ENSURE THAT IT WAS DISPOSED PROPERLY
+                    bitmap?.Dispose();
                 }
                 
 

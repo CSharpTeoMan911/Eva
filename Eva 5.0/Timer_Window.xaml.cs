@@ -493,14 +493,11 @@ namespace Eva_5._0
 
         ~Timer_Window()
         {
-            if(Animation_And_Functionality_Timer != null)
+            try
             {
-                try
-                {
-                    Animation_And_Functionality_Timer.Dispose();
-                }
-                catch { }
+                Animation_And_Functionality_Timer?.Dispose();
             }
+            catch { }
         }
 
     }

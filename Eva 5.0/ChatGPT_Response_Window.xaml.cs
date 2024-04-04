@@ -180,11 +180,7 @@ namespace Eva_5._0
         {
             WindowIsClosing = true;
             App.ChatGPTResponseWindowOpened = false;
-
-            if (Animation_Timer != null)
-            {
-                Animation_Timer.Dispose();
-            }
+            Animation_Timer?.Dispose();
         }
 
 
@@ -221,13 +217,16 @@ namespace Eva_5._0
                                     chat_gpt_input.Append(result.Item2);
                                     chat_gpt_input.Append("\n\n");
 
-                                    ResponseTextBox.Text += user_input.ToString();
-                                    ResponseTextBox.Text += chat_gpt_input.ToString();
+                                    ResponseTextBox.AppendText(user_input.ToString());
+
+                                    int last_line = ResponseTextBox.GetLastVisibleLineIndex();
+
+                                    ResponseTextBox.AppendText(chat_gpt_input.ToString());
 
                                     user_input.Clear();
                                     chat_gpt_input.Clear();
 
-                                    Get_Last_Response_Line();
+                                    Get_Last_Response_Line(last_line);
 
                                     await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTNotificationSoundEffect);
                                 }
@@ -386,18 +385,9 @@ namespace Eva_5._0
             }
         }
 
-        private void Get_Last_Response_Line()
+        private void Get_Last_Response_Line(int last_line)
         {
-            int detected_index = 0;
-            for(int i = 0; i < ResponseTextBox.LineCount; i++)
-            {
-                if (ResponseTextBox.GetLineText(i).Contains("ChatGPT: "))
-                {
-                    detected_index = i;
-                }
-            }
-
-            ResponseTextBox.ScrollToLine(detected_index);
+            ResponseTextBox.ScrollToLine(last_line);
         }
     }
 }

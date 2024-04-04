@@ -57,7 +57,7 @@ namespace Eva_5._0
         private static string wake_word = "listen";
         private static bool Wake_Word_Started = false;
 
-        private static int wake_word_engine_reset_time = 4000;
+        private static int wake_word_engine_reset_time = 5000;
  
 
         public static void Start_The_Wake_Word_Engine()
@@ -75,13 +75,13 @@ namespace Eva_5._0
 
                 System.Threading.Thread process_1_thread = new System.Threading.Thread(() => { Wake_Word_Detector(process_1); });
                 process_1_thread.SetApartmentState(System.Threading.ApartmentState.STA);
-                process_1_thread.Priority = System.Threading.ThreadPriority.AboveNormal;
+                process_1_thread.Priority = System.Threading.ThreadPriority.Highest;
                 process_1_thread.IsBackground = false;
                 process_1_thread.Start();
 
                 System.Threading.Thread process_2_thread = new System.Threading.Thread(() => { Wake_Word_Detector(process_2); });
                 process_2_thread.SetApartmentState(System.Threading.ApartmentState.STA);
-                process_2_thread.Priority = System.Threading.ThreadPriority.AboveNormal;
+                process_2_thread.Priority = System.Threading.ThreadPriority.Highest;
                 process_2_thread.IsBackground = false;
                 process_2_thread.Start();
 
@@ -152,8 +152,8 @@ namespace Eva_5._0
                         {
                             if (sender != null)
                             {
-                                timer.Close();
-                                timer.Dispose();
+                                timer?.Close();
+                                timer?.Dispose();
                             }
                         }
                     }
@@ -161,8 +161,8 @@ namespace Eva_5._0
                     {
                         if (sender != null)
                         {
-                            timer.Close();
-                            timer.Dispose();
+                            timer?.Close();
+                            timer?.Dispose();
                         }
                     }
                 }
@@ -170,8 +170,8 @@ namespace Eva_5._0
                 {
                     if (sender != null)
                     {
-                        timer.Close();
-                        timer.Dispose();
+                        timer?.Close();
+                        timer?.Dispose();
                     }
                 }
             }
@@ -470,7 +470,7 @@ namespace Eva_5._0
                                 lock (Online_Speech_Recogniser_Listening)
                                 {
                                     lock (Wake_Word_Detected)
-                                    {
+                                    { 
                                         if (new string(buffer, 0, wake_word_engine_loaded.Length) == wake_word_engine_loaded)
                                         {
                                             counter.Restart();

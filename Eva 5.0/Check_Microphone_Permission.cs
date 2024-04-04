@@ -31,7 +31,7 @@ namespace Eva_5._0
 
 
                 // DISPOSE THE "MediaCapture" CLASS OBJECT FROM MEMORY
-                capture.Dispose();
+                capture?.Dispose();
 
                 return true;
             }

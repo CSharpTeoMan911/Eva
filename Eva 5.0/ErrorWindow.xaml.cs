@@ -525,19 +525,9 @@ namespace Eva_5._0
 
         ~ErrorWindow()
         {
-            switch (TimerDisposed)
+            if (TimerDisposed == false)
             {
-                case false:
-
-                    switch (AnimationTimer == null)
-                    {
-
-                        case false:
-
-                            AnimationTimer.Dispose();
-                            break;
-                    }
-                    break;
+                AnimationTimer?.Dispose();
             }
         }
     }
