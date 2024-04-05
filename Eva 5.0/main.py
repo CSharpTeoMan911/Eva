@@ -3,6 +3,7 @@ import os
 import pyaudio
 import sys
 import threading
+from functools import lru_cache
 
 thread = None
 
@@ -46,7 +47,8 @@ def wake_word_engine_thread_management():
         data = stream.read(800, False)
 
         if is_loaded is False:
-            print("[ loaded ]")
+            sys.stdout.write("[ loaded ]")
+            sys.stdout.flush()
             is_loaded = True
 
         # RETRIEVE THE AUDIO WAVEFORM DATA AND PERFORM SPEECH TO TEXT CONVERSION
@@ -67,10 +69,10 @@ def keyword_spotter(sentence):
     # STDOUT STREAM
     try:
         if "stop listening" in sentence:
-            print("stop listening")
+            sys.stdout.write("stop listening")
         else:
             if "listen" in sentence:
-                print("listen")
+                sys.stdout.write("listen")
         sys.stdout.flush()
     except KeyboardInterrupt:
         sys.exit(0)

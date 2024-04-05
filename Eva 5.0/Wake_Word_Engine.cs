@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Eva_5._0
@@ -46,18 +49,17 @@ namespace Eva_5._0
         //    COMMAND: /path/to/Eva 5.0.exe/python.exe -m pip install [ PACKAGE NAME ]
 
         private static System.Diagnostics.Stopwatch counter = new System.Diagnostics.Stopwatch();
-        private static System.Diagnostics.Process process_1 = null;
-        private static System.Diagnostics.Process process_2 = null;
+        private static ConcurrentQueue<Process> wake_word_processes = new ConcurrentQueue<Process>();
 
-        private static int is_wake_word_engine_loaded;
-        private static bool first_process;
+        private static readonly int max_wake_word_engines = 2;
+        private static int wake_word_engines_loaded;
 
         private static string wake_word_engine_loaded = "[ loaded ]";
         private static string cancel_wake_word = "stop listening";
         private static string wake_word = "listen";
         private static bool Wake_Word_Started = false;
 
-        private static int wake_word_engine_reset_time = 5000;
+        private static int wake_word_engine_reset_time = 4500;
  
 
         public static void Start_The_Wake_Word_Engine()
@@ -70,20 +72,16 @@ namespace Eva_5._0
 
             try
             {
-                process_1 = Initiate_Wake_Word_Engine();
-                process_2 = Initiate_Wake_Word_Engine();
-
-                System.Threading.Thread process_1_thread = new System.Threading.Thread(() => { Wake_Word_Detector(process_1); });
-                process_1_thread.SetApartmentState(System.Threading.ApartmentState.STA);
-                process_1_thread.Priority = System.Threading.ThreadPriority.Highest;
-                process_1_thread.IsBackground = false;
-                process_1_thread.Start();
-
-                System.Threading.Thread process_2_thread = new System.Threading.Thread(() => { Wake_Word_Detector(process_2); });
-                process_2_thread.SetApartmentState(System.Threading.ApartmentState.STA);
-                process_2_thread.Priority = System.Threading.ThreadPriority.Highest;
-                process_2_thread.IsBackground = false;
-                process_2_thread.Start();
+                for(int i = 1; i <= max_wake_word_engines; i++)
+                {
+                    System.Threading.Thread thread = new System.Threading.Thread(() => { Wake_Word_Detector(Initiate_Wake_Word_Engine()); })
+                    {
+                        Priority = System.Threading.ThreadPriority.Highest,
+                        IsBackground = false,
+                    };
+                    thread.SetApartmentState(System.Threading.ApartmentState.STA);
+                    thread.Start();
+                }
 
                 Wake_Word_Started = true;
 
@@ -116,34 +114,19 @@ namespace Eva_5._0
                     {
                         if (App.Application_Error_Shutdown == false)
                         {
-                            if (is_wake_word_engine_loaded == 2)
+                            if (wake_word_engines_loaded == max_wake_word_engines)
                             {
                                 if (counter.ElapsedMilliseconds >= wake_word_engine_reset_time)
                                 {
-                                    if (first_process == false)
+                                    Process process = null;
+
+                                    if (wake_word_processes.Count > 1)
                                     {
-                                        process_2?.Kill();
-                                        counter.Restart();
-
-                                        first_process = true;
-
-                                        process_2 = Initiate_Wake_Word_Engine();
-                                        Wake_Word_Detector(process_2);
-
-                                        is_wake_word_engine_loaded--;
-                                    }
-                                    else
-                                    {
-                                        process_1?.Kill();
-
-                                        counter.Restart();
-
-                                        first_process = false;
-
-                                        process_1 = Initiate_Wake_Word_Engine();
-                                        Wake_Word_Detector(process_1);
-
-                                        is_wake_word_engine_loaded--;
+                                        wake_word_processes?.TryDequeue(out process);
+                                        process?.Kill();
+                                        wake_word_engines_loaded--;
+                                        Wake_Word_Detector(Initiate_Wake_Word_Engine());
+                                        counter?.Restart();
                                     }
                                 }
                             }
@@ -199,6 +182,8 @@ namespace Eva_5._0
             wake_word_process.StartInfo.Arguments = "main.py";
             wake_word_process.Start();
 
+            wake_word_processes.Enqueue(wake_word_process);
+
             return wake_word_process;
 
             // [ END ]
@@ -216,20 +201,12 @@ namespace Eva_5._0
 
             Wake_Word_Started = false;
 
-            try
+            Process process = null;
+            while (wake_word_processes.Count > 0)
             {
-                process_1?.Kill();
-                process_1?.Dispose();
+                wake_word_processes?.TryDequeue(out process);
+                process?.Kill();
             }
-            catch { }
-
-
-            try
-            {
-                process_2?.Kill();
-                process_2?.Dispose();
-            }
-            catch { }
 
             // [ END ]
 
@@ -444,75 +421,94 @@ namespace Eva_5._0
 
 
 
-        private static async void Wake_Word_Detector(System.Diagnostics.Process python)
+        private static async void Wake_Word_Detector(Process python)
         {
-            while (Wake_Word_Started == true)
+            System.IO.Stream StdoutStream = python.StandardOutput.BaseStream;
+
+            try
             {
-                if(MainWindowIsClosing == false)
+                while (Wake_Word_Started == true)
                 {
-                    if (App.Application_Error_Shutdown == false)
+                    if (MainWindowIsClosing == false)
                     {
-                        try
+                        if (App.Application_Error_Shutdown == false)
                         {
-                            if (python.HasExited == false)
+                            try
                             {
-
-                                // READ THE DATA ON THE STOUT STREAM OF THE "Python" process
-                                char[] buffer = new char[14];
-                                await python.StandardOutput.ReadAsync(buffer, 0, buffer.Length);
-
-
-                                // LOCK THE "Online_Speech_Recogniser_Listening" OBJECT ON THE STACK 
-                                // IN ORDER TO BLOCK OTHER THREADS FROM MODIFYING IT
-                                //
-                                // [ BEGIN ]
-
-                                lock (Online_Speech_Recogniser_Listening)
+                                if (python.HasExited == false)
                                 {
-                                    lock (Wake_Word_Detected)
-                                    { 
-                                        if (new string(buffer, 0, wake_word_engine_loaded.Length) == wake_word_engine_loaded)
+
+                                    // READ THE DATA ON THE STOUT STREAM OF THE "Python" process
+                                    byte[] buffer = new byte[1024];
+                                    int bytes_read = await StdoutStream.ReadAsync(buffer, 0, buffer.Length);
+                                    string stdout_value = Encoding.UTF8.GetString(buffer, 0, bytes_read);
+
+
+                                    // LOCK THE "Online_Speech_Recogniser_Listening" OBJECT ON THE STACK 
+                                    // IN ORDER TO BLOCK OTHER THREADS FROM MODIFYING IT
+                                    //
+                                    // [ BEGIN ]
+
+                                    lock (Online_Speech_Recogniser_Listening)
+                                    {
+                                        lock (Wake_Word_Detected)
                                         {
-                                            counter.Restart();
-                                            is_wake_word_engine_loaded++;
-                                        }
-                                        else if (new string(buffer, 0, cancel_wake_word.Length) == cancel_wake_word)
-                                        {
-                                            if (Online_Speech_Recogniser_Listening == "true")
+                                            if (stdout_value == wake_word_engine_loaded)
                                             {
-                                                Online_Speech_Recogniser_Listening = "false";
-                                                Online_Speech_Recognition.Close_Speech_Recognition_Interface();
+                                                counter.Restart();
+                                                wake_word_engines_loaded++;
                                             }
-                                        }
-                                        else if (new string(buffer, 0, wake_word.Length) == wake_word)
-                                        {
-                                            if (Online_Speech_Recogniser_Listening == "false")
+                                            else if (stdout_value == cancel_wake_word)
                                             {
-                                                Wake_Word_Detected = "true";
+                                                if (Online_Speech_Recogniser_Listening == "true")
+                                                {
+                                                    Online_Speech_Recogniser_Listening = "false";
+                                                    Online_Speech_Recognition.Close_Speech_Recognition_Interface();
+                                                }
+                                            }
+                                            else if (stdout_value == wake_word)
+                                            {
+                                                if (Online_Speech_Recogniser_Listening == "false")
+                                                {
+                                                    Wake_Word_Detected = "true";
+                                                }
                                             }
                                         }
                                     }
-                                }
 
-                                // [ END ]
+                                    // [ END ]
+                                }
+                                else
+                                {
+                                    break;
+                                }
                             }
-                            else
-                            {
-                                break;
-                            }
+                            catch { }
                         }
-                        catch { }
+                        else
+                        {
+                            break;
+                        }
                     }
                     else
                     {
                         break;
                     }
                 }
-                else
-                {
-                    break;
-                }
             }
+            catch
+            {
+
+            }
+            finally
+            {
+                try
+                {
+                    StdoutStream?.Dispose();
+                }
+                catch { }
+            }
+
         }
 
 
