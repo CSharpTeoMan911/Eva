@@ -219,14 +219,12 @@ namespace Eva_5._0
 
                                     ResponseTextBox.AppendText(user_input.ToString());
 
-                                    int last_line = ResponseTextBox.GetLastVisibleLineIndex();
+                                    Get_Last_Response_Line();
 
                                     ResponseTextBox.AppendText(chat_gpt_input.ToString());
 
                                     user_input.Clear();
                                     chat_gpt_input.Clear();
-
-                                    Get_Last_Response_Line(last_line);
 
                                     await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTNotificationSoundEffect);
                                 }
@@ -341,10 +339,11 @@ namespace Eva_5._0
         private async void Update_Conversation_And_UI()
         {
             string input = InputTextBox.Text;
-            InputTextBox.Text = String.Empty;
+            InputTextBox.IsEnabled = false;
+            InputTextBox.Clear();
+            InputTextBox.Text = InputTextBox.Text.Remove(0, InputTextBox.MaxLength);
             await Update_Conversation(input);
-            while (InputTextBox.Undo() == true) { }
-            InputTextBox.Text = String.Empty;
+            InputTextBox.IsEnabled = true;
         }
 
         private void Text_Changed(object sender, System.Windows.Controls.TextChangedEventArgs e)
@@ -385,9 +384,9 @@ namespace Eva_5._0
             }
         }
 
-        private void Get_Last_Response_Line(int last_line)
+        private void Get_Last_Response_Line()
         {
-            ResponseTextBox.ScrollToLine(last_line);
+            ResponseTextBox.ScrollToLine(ResponseTextBox.LineCount - 1);
         }
     }
 }
