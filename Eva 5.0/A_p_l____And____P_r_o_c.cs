@@ -148,19 +148,6 @@ namespace Eva_5._0
 
 
 
-        // Import the operating system's user32.dll in order to use the operating system's window focus functionality through the WinAPI
-        [DllImport("user32.dll")]
-        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
-
-
-        // Each time the method is called, the integer pointer of the application's handle within the operating system is passed and set as the top window
-        protected static void SetForegroundWindowInitiator(IntPtr Process_Window_Handle)
-        {
-            SetWindowPos(Process_Window_Handle, new IntPtr(-1), 0, 0, 0, 0, 0x0200 | 0x0400);
-        }
-
-
-
 
         public A_p_l____And____P_r_o_c()
         {

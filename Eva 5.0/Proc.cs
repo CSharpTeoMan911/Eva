@@ -108,8 +108,6 @@ namespace Eva_5._0
                     Online_Process.StartInfo.CreateNoWindow = true;
                     Online_Process.StartInfo.UseShellExecute = true;
                     Online_Process.Start();
-
-                    SetForegroundWindowInitiator(Online_Process.MainWindowHandle);
                 }
                 catch
                 {
@@ -251,7 +249,6 @@ namespace Eva_5._0
                                                         Application_Process.StartInfo.UseShellExecute = true;
                                                         Application_Process.Start();
 
-                                                        SetForegroundWindowInitiator(Application_Process.MainWindowHandle);
                                                     }
                                                     catch
                                                     {
@@ -288,7 +285,6 @@ namespace Eva_5._0
                                     Application_Not_Found_Downdload_Link_Process.StartInfo.UseShellExecute = true;
                                     Application_Not_Found_Downdload_Link_Process.Start();
 
-                                    SetForegroundWindowInitiator(Application_Not_Found_Downdload_Link_Process.MainWindowHandle);
                                 }
                                 catch
                                 {
