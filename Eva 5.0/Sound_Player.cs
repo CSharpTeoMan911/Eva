@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Management;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,6 +10,7 @@ namespace Eva_5._0.Properties
 {
     public class Sound_Player
     {
+        private System.Media.SoundPlayer SpeechSynthesisStream = new System.Media.SoundPlayer();
         private System.Media.SoundPlayer AppExecutionSoundEffect = new System.Media.SoundPlayer("Sounds/App execution.wav");
         private System.Media.SoundPlayer AppTerminationSoundEffect = new System.Media.SoundPlayer("Sounds/App closing.wav");
         private System.Media.SoundPlayer ScreenshotExecutionSoundEffect = new System.Media.SoundPlayer("Sounds/Screenshot_Sound_Effect.wav");
@@ -93,6 +96,23 @@ namespace Eva_5._0.Properties
                             ChatGPTDeactivationSoundEffect.Play();
                         }
                         break;
+                }
+            }
+
+            return true;
+        }
+
+        public async Task<bool> Play_Synthesis(Stream stream)
+        {
+            bool SoundOrOff = await Eva_5._0.Settings.Get_Sound_Settings();
+            bool Sythesis_On = await Eva_5._0.Settings.Get_Synthesis_Settings();
+
+            if (SoundOrOff == true)
+            {
+                if (Sythesis_On == true)
+                {
+                    SpeechSynthesisStream.Stream = stream;
+                    SpeechSynthesisStream.PlaySync();
                 }
             }
 

@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using Windows.UI.Xaml.Controls.Maps;
 
 namespace Eva_5._0
@@ -33,7 +34,8 @@ namespace Eva_5._0
         public enum Online_Speech_Recognition_Error_Type
         {
             Online_Speech_Recognition_Access_Denied,
-            Mircrophone_Access_Denied
+            Mircrophone_Access_Denied,
+            Language_Not_Supported
         }
 
         public enum Online_Speech_Recognition_Interface_Operation
@@ -96,31 +98,35 @@ namespace Eva_5._0
                 Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.Now;
                 OnlineSpeechRecognition = new Windows.Media.SpeechRecognition.SpeechRecognizer();
 
-
-                Constraints.Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Max;
-                OnlineSpeechRecognition.Constraints.Add(Constraints);
-
-                Windows.Media.SpeechRecognition.SpeechRecognitionCompilationResult ConstratintsCompilation = await OnlineSpeechRecognition.CompileConstraintsAsync();
-
-                switch (ConstratintsCompilation.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
+                if (OnlineSpeechRecognition.CurrentLanguage.LanguageTag == "en-US" || OnlineSpeechRecognition.CurrentLanguage.LanguageTag == "en-GB")
                 {
-                    case true:
-                        OnlineSpeechRecognition.StateChanged += OnlineSpeechRecognition_StateChanged;
-                        OnlineSpeechRecognition.ContinuousRecognitionSession.AutoStopSilenceTimeout = TimeSpan.FromSeconds(9);
-                        OnlineSpeechRecognition.ContinuousRecognitionSession.Completed += ContinuousRecognitionSession_Completed;
-                        OnlineSpeechRecognition.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
+                    Constraints.Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Max;
+                    OnlineSpeechRecognition.Constraints.Add(Constraints);
 
-                        await OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync();
-                        await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache);
-                        break;
+                    Windows.Media.SpeechRecognition.SpeechRecognitionCompilationResult ConstratintsCompilation = await OnlineSpeechRecognition.CompileConstraintsAsync();
 
-                    case false:
-                        Close_Speech_Recognition_Interface();
-                        break;
+                    switch (ConstratintsCompilation.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
+                    {
+                        case true:
+                            OnlineSpeechRecognition.StateChanged += OnlineSpeechRecognition_StateChanged;
+                            OnlineSpeechRecognition.ContinuousRecognitionSession.AutoStopSilenceTimeout = TimeSpan.FromSeconds(9);
+                            OnlineSpeechRecognition.ContinuousRecognitionSession.Completed += ContinuousRecognitionSession_Completed;
+                            OnlineSpeechRecognition.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
+
+                            await OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync();
+                            await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache);
+                            break;
+
+                        case false:
+                            Close_Speech_Recognition_Interface();
+                            break;
+                    }
                 }
-
-
-
+                else
+                {
+                    Close_Speech_Recognition_Interface();
+                    Online_Speech_Recognition_Error_Management(Online_Speech_Recognition_Error_Type.Language_Not_Supported);
+                }
             }
             catch (Exception E)
             {
@@ -222,26 +228,36 @@ namespace Eva_5._0
 
         public static void Online_Speech_Recognition_Error_Management(Online_Speech_Recognition_Error_Type error)
         {
-            switch (error)
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                case Online_Speech_Recognition_Error_Type.Online_Speech_Recognition_Access_Denied:
-                    if (App.PermisissionWindowOpen == false)
-                    {
-                        System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                switch (error)
+                {
+                    case Online_Speech_Recognition_Error_Type.Online_Speech_Recognition_Access_Denied:
+                        if (App.PermisissionWindowOpen == false)
                         {
-                            ErrorWindow OpenPermissionDeclinedWindow = new ErrorWindow("Online Speech Recognition Access Denied");
+                            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                ErrorWindow OpenPermissionDeclinedWindow = new ErrorWindow("Online Speech Recognition Access Denied");
+                                OpenPermissionDeclinedWindow.Show();
+                            });
+                        }
+                        break;
+                    case Online_Speech_Recognition_Error_Type.Mircrophone_Access_Denied:
+                        if (App.PermisissionWindowOpen == false)
+                        {
+                            ErrorWindow OpenPermissionDeclinedWindow = new ErrorWindow("Mircrophone Access Denied");
                             OpenPermissionDeclinedWindow.Show();
-                        });
-                    }
-                    break;
-                case Online_Speech_Recognition_Error_Type.Mircrophone_Access_Denied:
-                    if (App.PermisissionWindowOpen == false)
-                    {
-                        ErrorWindow OpenPermissionDeclinedWindow = new ErrorWindow("Mircrophone Access Denied");
-                        OpenPermissionDeclinedWindow.Show();
-                    }
-                    break;
-            }
+                        }
+                        break;
+                    case Online_Speech_Recognition_Error_Type.Language_Not_Supported:
+                        if (App.PermisissionWindowOpen == false)
+                        {
+                            ErrorWindow OpenPermissionDeclinedWindow = new ErrorWindow("Language not supported");
+                            OpenPermissionDeclinedWindow.Show();
+                        }
+                        break;
+                }
+            });
         }
 
 

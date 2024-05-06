@@ -254,10 +254,24 @@ namespace Eva_5._0
         }
 
 
+        public static async Task<bool> Get_Synthesis_Settings()
+        {
+            return (await Load_Settings_File()).Synthesis_On;
+        }
+
+
         public static async Task<bool> Set_Sound_Settings(bool Option)
         {
             Settings_File settings_File = await Load_Settings_File();
             settings_File.Sound_On = Option;
+
+            return (await Update_Settings_File(settings_File));
+        }
+
+        public static async Task<bool> Set_Synthesis_Settings(bool Option)
+        {
+            Settings_File settings_File = await Load_Settings_File();
+            settings_File.Synthesis_On = Option;
 
             return (await Update_Settings_File(settings_File));
         }

@@ -3,6 +3,7 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Windows.UI.WebUI;
 
 namespace Eva_5._0
 {
@@ -91,6 +92,14 @@ namespace Eva_5._0
 
             try
             {
+                StringBuilder synthesis_builder = new StringBuilder(SearchContent);
+                synthesis_builder.Append(" on ");
+                synthesis_builder.Append(WebApplication);
+
+                await SpeechSynthesis.Synthesis(SpeechSynthesis.Action.Searching, SearchContent, WebApplication);
+
+
+
                 W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryGetValue(WebApplication, out Process);
 
                 StringBuilder Process_Builder = new StringBuilder(Process);
@@ -163,6 +172,8 @@ namespace Eva_5._0
                 case "open":
                     try
                     {
+                        await SpeechSynthesis.Synthesis(SpeechSynthesis.Action.Opening, null, Application);
+
                         System.Diagnostics.Process Application_Process = null;
 
                         if (Application_Executable_Name_Retrieval_Result == true)
@@ -312,6 +323,8 @@ namespace Eva_5._0
                     {
                         try
                         {
+                            await SpeechSynthesis.Synthesis(SpeechSynthesis.Action.Closing, null, Application);
+
                             Eva_Functionalities.Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
 
                             if (application_process_name != "timer")
@@ -342,6 +355,8 @@ namespace Eva_5._0
         {
             try
             {
+                await SpeechSynthesis.Synthesis(SpeechSynthesis.Action.Setting, null, "a timer");
+
                 int hours_interval = 0;
 
                 Timer_Time_Intervals.TryGetValue("hours", out hours_interval);
@@ -398,6 +413,8 @@ namespace Eva_5._0
 
         private static async Task<bool> Screen_Capture()
         {
+            await SpeechSynthesis.Synthesis(SpeechSynthesis.Action.Taking, null, "a screenshot");
+
             Eva_Functionalities.Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
             await sound_player.Play_Sound(Sound_Player.Sounds.ScreenshotExecutionSoundEffect);
             return await Eva_Functionalities.Screen_Capture_Mechanism_Mitigator.Screen_Capture_Initiator();

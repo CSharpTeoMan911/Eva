@@ -112,7 +112,7 @@
                 <TextBlock.Foreground>
                     <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                         <GradientStop Color="#FFF94040" x:Name="ErrorPageTitleOffset" Offset="1"/>
-                        <GradientStop Color="#FF730F0F"/>
+                        <GradientStop Color="#FFB93030"/>
                     </LinearGradientBrush>
                 </TextBlock.Foreground>
             </TextBlock>
@@ -123,7 +123,7 @@
                 <TextBlock.Foreground>
                     <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                         <GradientStop Color="#FFF94040" x:Name="ErrorPageTitleContentOffset" Offset="1"/>
-                        <GradientStop Color="#FF730F0F"/>
+                        <GradientStop Color="#FFB93030"/>
                     </LinearGradientBrush>
                 </TextBlock.Foreground>
             </TextBlock>
@@ -133,7 +133,7 @@
             <TextBlock.Foreground>
                 <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                     <GradientStop Color="#FFF94040" x:Name="ErrorPageContentOffset" Offset="1"/>
-                    <GradientStop Color="#FF730F0F"/>
+                    <GradientStop Color="#FFB93030"/>
                 </LinearGradientBrush>
             </TextBlock.Foreground>
         </TextBlock>

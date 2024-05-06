@@ -907,7 +907,6 @@ namespace Eva_5._0
 
         private async void StartOrStopSpeechRecognition(object sender, RoutedEventArgs e)
         {
-
             if (Button_Timeout == 0)
             {
                 Button_Timeout = 400;

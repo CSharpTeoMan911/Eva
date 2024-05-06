@@ -59,7 +59,7 @@ namespace Eva_5._0
         private static string wake_word = "listen";
         private static bool Wake_Word_Started = false;
 
-        private static int wake_word_engine_reset_time = 1500;
+        private static int wake_word_engine_reset_time = 2500;
  
 
         public static void Start_The_Wake_Word_Engine()
@@ -192,35 +192,37 @@ namespace Eva_5._0
         public static Task<bool> Stop_The_Wake_Word_Engine()
         {
 
-            // RESET THE TIMER AND STOP THE PROCESSES THROUGH THE OBJECTS AS A BACKUP METHOD
-            //
-            // [ START ]
-
-            counter?.Stop();
-            counter?.Reset();
-
-            Wake_Word_Started = false;
-
-            Process process = null;
-            while (wake_word_processes.Count > 0)
-            {
-                wake_word_processes?.TryDequeue(out process);
-                process?.Kill();
-            }
-
-            // [ END ]
-
-
-            // CREDIT TO [ mtijn ], LINK: https://stackoverflow.com/questions/7189117/find-all-child-processes-of-my-own-net-process-find-out-if-a-given-process-is
-            // 
-            // THE WMI ( WINDOWS MAGEMENT INTERFACE ) IS USED IN ORDER TO GATHER ALL THE CHILD PROCESSES OF THE "Eva 5.0.exe" PROCESS. THE WMI IS A MANAGEMENT SYSTEM
-            // OF WINDOWS THAT ALLOWS THE OPERATING SYSTEM TO MANAGE PROCESSES AND SERVICES SECURELY AND EXPLICITLY THROUGH THE USE OF SQL QUERIES MADE TO OBJECTS
-            // THAT HAVE A SPECIFIC PURPOSE WITHIN THE OS PROCESS MANAGEMENT. 
-            //
-            // [ BEGIN ]
 
             try
             {
+                // RESET THE TIMER AND STOP THE PROCESSES THROUGH THE OBJECTS AS A BACKUP METHOD
+                //
+                // [ START ]
+
+                counter?.Stop();
+                counter?.Reset();
+
+                Wake_Word_Started = false;
+
+                Process process = null;
+                while (wake_word_processes.Count > 0)
+                {
+                    wake_word_processes?.TryDequeue(out process);
+                    process?.Kill();
+                }
+
+                // [ END ]
+
+
+                // CREDIT TO [ mtijn ], LINK: https://stackoverflow.com/questions/7189117/find-all-child-processes-of-my-own-net-process-find-out-if-a-given-process-is
+                // 
+                // THE WMI ( WINDOWS MAGEMENT INTERFACE ) IS USED IN ORDER TO GATHER ALL THE CHILD PROCESSES OF THE "Eva 5.0.exe" PROCESS. THE WMI IS A MANAGEMENT SYSTEM
+                // OF WINDOWS THAT ALLOWS THE OPERATING SYSTEM TO MANAGE PROCESSES AND SERVICES SECURELY AND EXPLICITLY THROUGH THE USE OF SQL QUERIES MADE TO OBJECTS
+                // THAT HAVE A SPECIFIC PURPOSE WITHIN THE OS PROCESS MANAGEMENT. 
+                //
+                // [ BEGIN ]
+
+
                 // ALL THE SUB-PROCESSES ( CHILD PROCESSES ) OF THE "Eva 5.0.exe" PROCESS ARE EXTRACTED USING THE "ManagementObjectSearcher" CLASS
                 System.Management.ManagementObjectSearcher sub_processes = new System.Management.ManagementObjectSearcher("SELECT * " + "FROM Win32_Process " + "WHERE ParentProcessId=" + System.Diagnostics.Process.GetCurrentProcess().Id);
 
@@ -415,8 +417,6 @@ namespace Eva_5._0
             {
                 return Task.FromResult(false);
             }
-
-            // [ END ]
         }
 
 

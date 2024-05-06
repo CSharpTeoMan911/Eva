@@ -31,31 +31,42 @@ namespace Eva_5._0
 
         public ErrorWindow(string ErrorType)
         {
-            App.PermisissionWindowOpen = true;
             InitializeComponent();
+            App.PermisissionWindowOpen = true;
 
-            switch (ErrorType)
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                case "Mircrophone Access Denied":
-                    MicrophoneAccessDenied();
-                    break;
+                switch (ErrorType)
+                {
+                    case "Mircrophone Access Denied":
+                        MicrophoneAccessDenied();
+                        break;
 
-                case "Online Speech Recognition Access Denied":
-                    OnlineSpeechRecognitionAccessDenied();
-                    break;
+                    case "Online Speech Recognition Access Denied":
+                        OnlineSpeechRecognitionAccessDenied();
+                        break;
 
-                case "Invalid ChatGPT API key":
-                    InvalidChatGPTAPIKey();
-                    break;
+                    case "Invalid ChatGPT API key":
+                        InvalidChatGPTAPIKey();
+                        break;
 
-                case "ChatGPT error":
-                    ChatGPTError();
-                    break;
+                    case "ChatGPT error":
+                        ChatGPTError();
+                        break;
 
-                case "Maximum number of tokens exceeded":
-                    Token_Limit_Exceeded();
-                    break;
-            }
+                    case "Maximum number of tokens exceeded":
+                        Token_Limit_Exceeded();
+                        break;
+
+                    case "Language not supported":
+                        Language_Not_Supported();
+                        break;
+
+                    case "Unsupported Voice":
+                        Unsupported_Voice();
+                        break;
+                }
+            });
         }
 
 
@@ -190,6 +201,48 @@ namespace Eva_5._0
             ErrorContext.Inlines.Add("number of characters in a query is ");
             ErrorContext.Inlines.Add("4000 characters.");
         }
+
+
+        private async void Language_Not_Supported()
+        {
+            try
+            {
+                await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:speech"));
+
+                await player.Play_Sound(Sound_Player.Sounds.ErrorSoundEffect);
+
+                ErrorContext.Inlines.Add("The English language pack is ");
+                ErrorContext.Inlines.Add("not detected on your system. \n");
+                ErrorContext.Inlines.Add("Go to Settings  ->  Time & Language  ->  Language.\n");
+                ErrorContext.Inlines.Add("Under the 'Preferred Languages' section press the \n");
+                ErrorContext.Inlines.Add("'Add a language' button and download the 'en-US'\n");
+                ErrorContext.Inlines.Add("or the 'en-GB' language pack. You must restart\n");
+                ErrorContext.Inlines.Add("your computer afterwards.");
+            }
+            catch { }
+        }
+
+
+        private async void Unsupported_Voice()
+        {
+            try
+            {
+                await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:speech"));
+
+                await player.Play_Sound(Sound_Player.Sounds.ErrorSoundEffect);
+
+                ErrorContext.Inlines.Add("The English voices language pack is ");
+                ErrorContext.Inlines.Add("not detected on your system. \n");
+                ErrorContext.Inlines.Add("Go to Settings  ->  Time & Language  ->  Speech.\n");
+                ErrorContext.Inlines.Add("Under the 'Manage voices' section press the \n");
+                ErrorContext.Inlines.Add("'Add voice' button and download the 'en-US'\n");
+                ErrorContext.Inlines.Add("or the 'en-GB' voice language pack.");
+            }
+            catch { }
+        }
+
+
+
 
 
         private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
@@ -382,9 +435,9 @@ namespace Eva_5._0
 
                                         switch (SwitchSecondaryOffsets)
                                         {
-                                            case true:
+                                            case false:
 
-                                                switch (GradientArithmeticSecodaryOffsets <= 65)
+                                                switch (GradientArithmeticSecodaryOffsets <= 100)
                                                 {
                                                     case true:
                                                         GradientArithmeticSecodaryOffsets++;
@@ -401,7 +454,7 @@ namespace Eva_5._0
                                                 }
                                                 break;
 
-                                            case false:
+                                            case true:
 
                                                 switch (GradientArithmeticSecodaryOffsets > 0)
                                                 {

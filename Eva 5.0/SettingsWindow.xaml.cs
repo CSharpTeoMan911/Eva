@@ -168,6 +168,32 @@ namespace Eva_5._0
                     break;
             }
 
+
+
+            bool SythesisOnOrOff = await Settings.Get_Synthesis_Settings();
+
+
+            switch (SythesisOnOrOff)
+            {
+                case true:
+                    SynthesisSoundOnButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
+                    SynthesisSoundOffButton.Background = new SolidColorBrush(Colors.Transparent);
+
+                    SynthesisMuteButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF1B70C3");
+                    SynthesisSoundButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+
+
+                    break;
+
+                case false:
+                    SynthesisSoundOffButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
+                    SynthesisSoundOnButton.Background = new SolidColorBrush(Colors.Transparent);
+
+                    SynthesisSoundButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF1B70C3");
+                    SynthesisMuteButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                    break;
+            }
+
         }
 
         private void TemperatureChangedTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -384,8 +410,11 @@ namespace Eva_5._0
                                                         MinimiseTheWindowOffset.Offset += 0.025;
                                                         MenuGear2Offset.Offset += 0.025;
                                                         SettingTitleOffset.Offset += 0.01;
+                                                        SynthesisSettingTitleOffset.Offset += 0.01;
                                                         SoundButtonOffset.Offset -= 0.025;
                                                         MuteButtonOffset.Offset -= 0.025;
+                                                        SynthesisSoundButtonOffset.Offset -= 0.025;
+                                                        SynthesisMuteButtonOffset.Offset -= 0.025;
                                                         InstructionManualTextBlockOffset.Offset -= 0.01;
                                                         ChatGPTApiKeyOffset.Offset -= 0.01;
                                                         GPTModelOffset.Offset -= 0.01;
@@ -411,8 +440,11 @@ namespace Eva_5._0
                                                         MinimiseTheWindowOffset.Offset -= 0.025;
                                                         MenuGear2Offset.Offset -= 0.025;
                                                         SettingTitleOffset.Offset -= 0.01;
+                                                        SynthesisSettingTitleOffset.Offset -= 0.01;
                                                         SoundButtonOffset.Offset += 0.025;
                                                         MuteButtonOffset.Offset += 0.025;
+                                                        SynthesisSoundButtonOffset.Offset += 0.025;
+                                                        SynthesisMuteButtonOffset.Offset += 0.025;
                                                         InstructionManualTextBlockOffset.Offset += 0.01;
                                                         ChatGPTApiKeyOffset.Offset += 0.01;
                                                         GPTModelOffset.Offset += 0.01;
@@ -482,6 +514,58 @@ namespace Eva_5._0
 
                         SoundButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF1B70C3");
                         MuteButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+
+                    }
+
+                }
+
+            }
+        }
+
+        private async void SynthesisSoundOn(object sender, RoutedEventArgs e)
+        {
+            if (App.SettingsWindowOpen == true)
+            {
+
+                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                {
+
+                    if (Application.Current.MainWindow != null)
+                    {
+
+                        await Settings.Set_Synthesis_Settings(true);
+
+                        SynthesisSoundOnButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
+                        SynthesisSoundOffButton.Background = new SolidColorBrush(Colors.Transparent);
+
+                        SynthesisMuteButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF1B70C3");
+                        SynthesisSoundButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+
+                    }
+
+                }
+
+            }
+        }
+
+        private async void SynthesisSoundOff(object sender, RoutedEventArgs e)
+        {
+            if (App.SettingsWindowOpen == true)
+            {
+
+                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                {
+
+                    if (Application.Current.MainWindow != null)
+                    {
+
+                        await Settings.Set_Synthesis_Settings(false);
+
+                        SynthesisSoundOffButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
+                        SynthesisSoundOnButton.Background = new SolidColorBrush(Colors.Transparent);
+
+                        SynthesisSoundButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF1B70C3");
+                        SynthesisMuteButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
 
                     }
 
