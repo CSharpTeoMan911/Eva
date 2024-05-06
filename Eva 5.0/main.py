@@ -8,7 +8,7 @@ from functools import lru_cache
 thread = None
 
 # LOAD THE VOSK SPEECH RECOGNITION MODEL FROM THE APPLICATION'S DIRECTORY
-model = Model(model_path=os.getcwd() + "\\" + "vosk-model-small-en-us-zamia-0.5", model_name="tedlium")
+model = Model(model_path=os.getcwd() + "\\" + "vosk-model-small-en-us-zamia-0.5")
 
 # INITIATE KALDI SPEECH RECOGNIZER INSTANCE USING THE VOSK MODEL AND A FREQUENCY OF 16000 HZ
 recognizer = KaldiRecognizer(model, 16000)
