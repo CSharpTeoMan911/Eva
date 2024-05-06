@@ -8,8 +8,7 @@
 
 <br>
 
-* Eva can now interact with multiple GPT models
-* Eva now has a crop function that allow users to use the application with minimal intrreruptions
+* Eva can now speak using Speech Synthesis.
 
 <br>
 <br>
