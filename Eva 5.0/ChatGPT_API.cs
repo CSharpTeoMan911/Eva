@@ -97,9 +97,9 @@ namespace Eva_5._0
 
                 // CLEAN THE DATA WITHIN THE EXTRACTED HTTP PAYLOAD BY ELIMINATING NON-GPT MODELS
                 // AND VISION BASED MODELS
-                for (int i = 0; i < models.data.Count; i++)
+                for (int i = 0; i < models?.data?.Count; i++)
                 {
-                    string current_model = models.data.ElementAt(i).id;
+                    string current_model = models?.data?.ElementAt(i).id;
 
                     if (current_model.Contains("gpt") == true)
                     {
