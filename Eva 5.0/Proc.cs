@@ -1,6 +1,7 @@
 ﻿using Eva_5._0.Properties;
 using System;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Windows.UI.WebUI;
@@ -55,31 +56,42 @@ namespace Eva_5._0
          * 
          */
 
-
+        // INT THAT IS MONITORING THE AMOUNT OF TASKS THAT ARE CURRENTLY RUNNING
+        public static int tasks_running;
 
         protected static async Task<bool> ProcInitialisation<Content>(string process_type, string application, Content content)
         {
-            switch (process_type)
+            // IF THE AMOUNT OF TASKS CURRENTLY RUNNING IS '0'
+            if (tasks_running == 0)
             {
-                case "Online Process":
-                    await OnlineProcesses(application, content as string);
-                    break;
+                // INCREMENT THE AMOUNT OF TASKS CURRENTLY RUNNING BY '1'
+                Interlocked.Increment(ref tasks_running);
 
-                case "ChatGPT Process":
-                    await ChatGPT_API_Interface(content as string);
-                    break;
+                switch (process_type)
+                {
+                    case "Online Process":
+                        await OnlineProcesses(application, content as string);
+                        break;
 
-                case "System Process":
-                    await SystemProcesses(application, content as string);
-                    break;
+                    case "ChatGPT Process":
+                        await ChatGPT_API_Interface(content as string);
+                        break;
 
-                case "Timer Process":
-                    await TimerProcess(content as System.Collections.Concurrent.ConcurrentDictionary<string, int>);
-                    break;
+                    case "System Process":
+                        await SystemProcesses(application, content as string);
+                        break;
 
-                case "Screen Capture Process":
-                    await Screen_Capture();
-                    break;
+                    case "Timer Process":
+                        await TimerProcess(content as System.Collections.Concurrent.ConcurrentDictionary<string, int>);
+                        break;
+
+                    case "Screen Capture Process":
+                        await Screen_Capture();
+                        break;
+                }
+
+                // DECREMENT THE AMOUNT OF TASKS CURRENTLY RUNNING BY '1'
+                Interlocked.Decrement(ref tasks_running);
             }
 
             return true;
@@ -92,13 +104,7 @@ namespace Eva_5._0
 
             try
             {
-                StringBuilder synthesis_builder = new StringBuilder(SearchContent);
-                synthesis_builder.Append(" on ");
-                synthesis_builder.Append(WebApplication);
-
-                await SpeechSynthesis.Synthesis(SpeechSynthesis.Action.Searching, SearchContent, WebApplication);
-
-
+                _= await SpeechSynthesis.Synthesis(SpeechSynthesis.Action.Searching, SearchContent, WebApplication);
 
                 W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryGetValue(WebApplication, out Process);
 

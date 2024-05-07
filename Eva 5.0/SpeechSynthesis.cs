@@ -67,10 +67,7 @@ namespace Eva_5._0
                     await A_p_l____And____P_r_o_c.sound_player.Play_Synthesis(stream.AsStream());
                 }
             }
-            catch(Exception E) 
-            {
-                System.Diagnostics.Debug.WriteLine("Speech synthesis error: " + E.Message);
-            }
+            catch { }
 
             return true;
         }

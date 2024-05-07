@@ -453,24 +453,27 @@ namespace Eva_5._0
                                     {
                                         lock (Wake_Word_Detected)
                                         {
-                                            if (stdout_value == wake_word_engine_loaded)
+                                            if (Proc.tasks_running == 0)
                                             {
-                                                counter.Restart();
-                                                wake_word_engines_loaded++;
-                                            }
-                                            else if (stdout_value == cancel_wake_word)
-                                            {
-                                                if (Online_Speech_Recogniser_Listening == "true")
+                                                if (stdout_value == wake_word_engine_loaded)
                                                 {
-                                                    Online_Speech_Recogniser_Listening = "false";
-                                                    Online_Speech_Recognition.Close_Speech_Recognition_Interface();
+                                                    counter.Restart();
+                                                    wake_word_engines_loaded++;
                                                 }
-                                            }
-                                            else if (stdout_value == wake_word)
-                                            {
-                                                if (Online_Speech_Recogniser_Listening == "false")
+                                                else if (stdout_value == cancel_wake_word)
                                                 {
-                                                    Wake_Word_Detected = "true";
+                                                    if (Online_Speech_Recogniser_Listening == "true")
+                                                    {
+                                                        Online_Speech_Recogniser_Listening = "false";
+                                                        Online_Speech_Recognition.Close_Speech_Recognition_Interface();
+                                                    }
+                                                }
+                                                else if (stdout_value == wake_word)
+                                                {
+                                                    if (Online_Speech_Recogniser_Listening == "false")
+                                                    {
+                                                        Wake_Word_Detected = "true";
+                                                    }
                                                 }
                                             }
                                         }

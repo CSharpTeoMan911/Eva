@@ -156,14 +156,16 @@ namespace Eva_5._0
                             {
                                 if (Window_Minimised == "true" || Online_Speech_Recogniser_Disabled == "true")
                                 {
+                                    Close_Speech_Recognition_Interface();
                                     goto Function_Not_Initiated;
                                 }
                             }
                         }
+
+                        Close_Speech_Recognition_Interface();
                         await Natural_Language_Processing.PreProcessing(args.Result.Text.ToLower());
 
-                    Function_Not_Initiated:
-                        Close_Speech_Recognition_Interface();
+                    Function_Not_Initiated:;
                         break;
                 }
             }
