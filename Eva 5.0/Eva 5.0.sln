@@ -5,9 +5,7 @@ VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eva 5.0", "Eva 5.0.csproj", "{0E255796-9D90-4F37-B02A-D903B243772B}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Eva", "..\Eva\Eva.vdproj", "{24B42624-B9F2-4446-9FF6-A41081335070}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvaOnInstall", "..\..\..\EvaOnInstall\EvaOnInstall.csproj", "{7CB3BE1E-33B2-4DDA-9D5A-45753153BF86}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Eva", "..\Eva\Eva.vdproj", "{5796B00E-B9BE-48EB-A169-83538EE3FC25}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,18 +23,10 @@ Global
 		{0E255796-9D90-4F37-B02A-D903B243772B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0E255796-9D90-4F37-B02A-D903B243772B}.Release|x86.ActiveCfg = Release|x86
 		{0E255796-9D90-4F37-B02A-D903B243772B}.Release|x86.Build.0 = Release|x86
-		{24B42624-B9F2-4446-9FF6-A41081335070}.Debug|Any CPU.ActiveCfg = Debug
-		{24B42624-B9F2-4446-9FF6-A41081335070}.Debug|x86.ActiveCfg = Debug
-		{24B42624-B9F2-4446-9FF6-A41081335070}.Release|Any CPU.ActiveCfg = Release
-		{24B42624-B9F2-4446-9FF6-A41081335070}.Release|x86.ActiveCfg = Release
-		{7CB3BE1E-33B2-4DDA-9D5A-45753153BF86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7CB3BE1E-33B2-4DDA-9D5A-45753153BF86}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7CB3BE1E-33B2-4DDA-9D5A-45753153BF86}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{7CB3BE1E-33B2-4DDA-9D5A-45753153BF86}.Debug|x86.Build.0 = Debug|Any CPU
-		{7CB3BE1E-33B2-4DDA-9D5A-45753153BF86}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7CB3BE1E-33B2-4DDA-9D5A-45753153BF86}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7CB3BE1E-33B2-4DDA-9D5A-45753153BF86}.Release|x86.ActiveCfg = Release|Any CPU
-		{7CB3BE1E-33B2-4DDA-9D5A-45753153BF86}.Release|x86.Build.0 = Release|Any CPU
+		{5796B00E-B9BE-48EB-A169-83538EE3FC25}.Debug|Any CPU.ActiveCfg = Debug
+		{5796B00E-B9BE-48EB-A169-83538EE3FC25}.Debug|x86.ActiveCfg = Debug
+		{5796B00E-B9BE-48EB-A169-83538EE3FC25}.Release|Any CPU.ActiveCfg = Release
+		{5796B00E-B9BE-48EB-A169-83538EE3FC25}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
