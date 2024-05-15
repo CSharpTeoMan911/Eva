@@ -199,7 +199,8 @@ namespace Eva_5._0
                                     }
                                     catch
                                     {
-
+                                        if (Application_Not_Found_Error_Download_Link_Result == true)
+                                            MissingApplicationDownload(application_not_found_error_link);
                                     }
                                     finally
                                     {
@@ -228,7 +229,8 @@ namespace Eva_5._0
                                             }
                                             catch
                                             {
-
+                                                if (Application_Not_Found_Error_Download_Link_Result == true)
+                                                    MissingApplicationDownload(application_not_found_error_link);
                                             }
                                             finally
                                             {
@@ -269,7 +271,8 @@ namespace Eva_5._0
                                                     }
                                                     catch
                                                     {
-
+                                                        if (Application_Not_Found_Error_Download_Link_Result == true)
+                                                            MissingApplicationDownload(application_not_found_error_link);
                                                     }
                                                     finally
                                                     {
@@ -288,36 +291,8 @@ namespace Eva_5._0
                     }
                     catch
                     {
-                        try
-                        {
-                            if (Application_Not_Found_Error_Download_Link_Result == true)
-                            {
-                                Eva_Functionalities.Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
-
-                                System.Diagnostics.Process Application_Not_Found_Downdload_Link_Process = new System.Diagnostics.Process();
-                                try
-                                {
-                                    Application_Not_Found_Downdload_Link_Process.StartInfo.FileName = application_not_found_error_link;
-                                    Application_Not_Found_Downdload_Link_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-                                    Application_Not_Found_Downdload_Link_Process.StartInfo.UseShellExecute = true;
-                                    Application_Not_Found_Downdload_Link_Process.Start();
-
-                                }
-                                catch
-                                {
-
-                                }
-                                finally
-                                {
-                                    Application_Not_Found_Downdload_Link_Process?.Dispose();
-                                }
-
-                                await sound_player.Play_Sound(Sound_Player.Sounds.AppExecutionSoundEffect);
-
-                            }
-                        }
-                        catch { }
-
+                        if (Application_Not_Found_Error_Download_Link_Result == true)
+                            MissingApplicationDownload(application_not_found_error_link);
                     }
                     break;
 
@@ -355,6 +330,31 @@ namespace Eva_5._0
             return true;
         }
 
+
+        private static async void MissingApplicationDownload(string application_not_found_error_link)
+        {
+            Eva_Functionalities.Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
+
+            System.Diagnostics.Process Application_Not_Found_Download_Link_Process = new System.Diagnostics.Process();
+            try
+            {
+                Application_Not_Found_Download_Link_Process.StartInfo.FileName = application_not_found_error_link;
+                Application_Not_Found_Download_Link_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                Application_Not_Found_Download_Link_Process.StartInfo.UseShellExecute = true;
+                Application_Not_Found_Download_Link_Process.Start();
+
+            }
+            catch
+            {
+
+            }
+            finally
+            {
+                Application_Not_Found_Download_Link_Process?.Dispose();
+            }
+
+            await sound_player.Play_Sound(Sound_Player.Sounds.AppExecutionSoundEffect);
+        }
 
 
         private async static Task<bool> TimerProcess(System.Collections.Concurrent.ConcurrentDictionary<string, int> Timer_Time_Intervals)

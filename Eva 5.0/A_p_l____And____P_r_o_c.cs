@@ -264,10 +264,13 @@ namespace Eva_5._0
                     A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("terminal", @"C:\Users\" + Environment.UserName + @"\AppData\Local\Microsoft\WindowsApps\wt.exe");
 
 
-                    A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("visual studio 2022", @"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\devenv.exe");
+                    A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("visual studio 2022", @"CMD = ""start """" devenv""");
 
 
-                    A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("visual studio 2019", @"C:\Program Files (x86)\Microsoft Visual Studio\2019\\Community\Common7\IDE\devenv.exe");
+                    A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("visual studio 2019", @"CMD = ""start """" devenv""");
+
+
+                    A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("visual studio", @"CMD = ""start """" devenv""");
 
 
                     A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("visual studio code", "CMD = code");
@@ -666,6 +669,8 @@ namespace Eva_5._0
 
                     A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("visual studio 2019", "devenv");
 
+                    A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("visual studio", "devenv");
+
                     A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("visual studio code", "Code");
 
                     A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("disk cleanup", "cleanmgr");
@@ -762,6 +767,8 @@ namespace Eva_5._0
                     A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryAdd("visual studio 2022", "https://visualstudio.microsoft.com/vs/");
 
                     A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryAdd("visual studio 2019", "https://visualstudio.microsoft.com/vs/older-downloads/");
+
+                    A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryAdd("visual studio", "https://visualstudio.microsoft.com/vs/");
 
                     A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryAdd("visual studio code", "https://code.visualstudio.com/download");
 
