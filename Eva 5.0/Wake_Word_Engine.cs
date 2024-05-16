@@ -48,18 +48,12 @@ namespace Eva_5._0
         // 2) INSTALL THE PIP PACKAGES: "Vosk", "PyAudio", AND "sounddevice" USING THE 
         //    COMMAND: /path/to/Eva 5.0.exe/python.exe -m pip install [ PACKAGE NAME ]
 
-        private static System.Diagnostics.Stopwatch counter = new System.Diagnostics.Stopwatch();
-        private static ConcurrentQueue<Process> wake_word_processes = new ConcurrentQueue<Process>();
-
-        private static readonly int max_wake_word_engines = 2;
-        private static int wake_word_engines_loaded;
+        private static Process main_wake_word_process = new Process();
 
         private static string wake_word_engine_loaded = "[ loaded ]";
         private static string cancel_wake_word = "stop listening";
         private static string wake_word = "listen";
         private static bool Wake_Word_Started = false;
-
-        private static int wake_word_engine_reset_time = 3250;
  
 
         public static void Start_The_Wake_Word_Engine()
@@ -72,95 +66,18 @@ namespace Eva_5._0
 
             try
             {
-                for(int i = 1; i <= max_wake_word_engines; i++)
+                System.Threading.Thread thread = new System.Threading.Thread(() => { Wake_Word_Detector(Initiate_Wake_Word_Engine()); })
                 {
-                    System.Threading.Thread thread = new System.Threading.Thread(() => { Wake_Word_Detector(Initiate_Wake_Word_Engine()); })
-                    {
-                        Priority = System.Threading.ThreadPriority.Highest,
-                        IsBackground = false,
-                    };
-                    thread.SetApartmentState(System.Threading.ApartmentState.STA);
-                    thread.Start();
-                }
+                    Priority = System.Threading.ThreadPriority.Highest,
+                    IsBackground = false,
+                };
+                thread.SetApartmentState(System.Threading.ApartmentState.STA);
+                thread.Start();
 
                 Wake_Word_Started = true;
-
-                System.Timers.Timer wake_word_management_timer = new System.Timers.Timer();
-                wake_word_management_timer.Elapsed += Wake_word_management_timer_Elapsed;
-                wake_word_management_timer.Interval = 10;
-                wake_word_management_timer.Start();
-
-                counter.Start();
             }
             catch { }
 
-            // [ END ]
-        }
-
-        private static void Wake_word_management_timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            // RESET ONE OF THE PROCESSES EVERY 5 SECONDS, AFTER BOTH PROCESSES LOADED, BY CLOSING AND STARTING THE PROCESS.
-            // THIS IS DONE TO PREVENT WAKE WORD ENGINE LOCK.
-            //
-            // [ START ]
-
-            try
-            {
-                System.Timers.Timer timer = ((System.Timers.Timer)(sender));
-
-                if (Wake_Word_Started == true)
-                {
-                    if (MainWindowIsClosing == false)
-                    {
-                        if (App.Application_Error_Shutdown == false)
-                        {
-                            if (wake_word_engines_loaded == max_wake_word_engines)
-                            {
-                                if (counter.ElapsedMilliseconds >= wake_word_engine_reset_time)
-                                {
-                                    Process process = null;
-
-                                    if (wake_word_processes.Count > 1)
-                                    {
-                                        wake_word_processes?.TryDequeue(out process);
-                                        process?.Kill();
-                                        wake_word_engines_loaded--;
-                                        Wake_Word_Detector(Initiate_Wake_Word_Engine());
-                                        counter?.Restart();
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (sender != null)
-                            {
-                                timer?.Close();
-                                timer?.Dispose();
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (sender != null)
-                        {
-                            timer?.Close();
-                            timer?.Dispose();
-                        }
-                    }
-                }
-                else
-                {
-                    if (sender != null)
-                    {
-                        timer?.Close();
-                        timer?.Dispose();
-                    }
-                }
-            }
-            catch { }
-
-            //
             // [ END ]
         }
 
@@ -182,7 +99,7 @@ namespace Eva_5._0
             wake_word_process.StartInfo.Arguments = "main.py";
             wake_word_process.Start();
 
-            wake_word_processes.Enqueue(wake_word_process);
+            main_wake_word_process = wake_word_process;
 
             return wake_word_process;
 
@@ -195,23 +112,13 @@ namespace Eva_5._0
 
             try
             {
-                // RESET THE TIMER AND STOP THE PROCESSES THROUGH THE OBJECTS AS A BACKUP METHOD
-                //
-                // [ START ]
-
-                counter?.Stop();
-                counter?.Reset();
-
                 Wake_Word_Started = false;
 
-                Process process = null;
-                while (wake_word_processes.Count > 0)
+                try
                 {
-                    wake_word_processes?.TryDequeue(out process);
-                    process?.Kill();
+                    main_wake_word_process?.Dispose();
                 }
-
-                // [ END ]
+                catch { }
 
 
                 // CREDIT TO [ mtijn ], LINK: https://stackoverflow.com/questions/7189117/find-all-child-processes-of-my-own-net-process-find-out-if-a-given-process-is
@@ -455,12 +362,7 @@ namespace Eva_5._0
                                         {
                                             if (Proc.tasks_running == 0)
                                             {
-                                                if (stdout_value == wake_word_engine_loaded)
-                                                {
-                                                    counter.Restart();
-                                                    wake_word_engines_loaded++;
-                                                }
-                                                else if (stdout_value == cancel_wake_word)
+                                                if (stdout_value == cancel_wake_word)
                                                 {
                                                     if (Online_Speech_Recogniser_Listening == "true")
                                                     {

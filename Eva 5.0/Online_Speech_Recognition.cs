@@ -29,7 +29,10 @@ namespace Eva_5._0
     internal class Online_Speech_Recognition : MainWindow
     {
         private static Windows.Media.SpeechRecognition.SpeechRecognizer OnlineSpeechRecognition;
-        private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Constraints = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.FormFilling, "form-filling", "form");
+        private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Constraints = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(
+                                                                                                          Windows.Media.SpeechRecognition.SpeechRecognitionScenario.FormFilling, 
+                                                                                                          "form-filling", 
+                                                                                                          "form");
 
         public enum Online_Speech_Recognition_Error_Type
         {

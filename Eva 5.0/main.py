@@ -3,12 +3,13 @@ import os
 import pyaudio
 import sys
 import threading
+import time
 from functools import lru_cache
 
 thread = None
 
 # LOAD THE VOSK SPEECH RECOGNITION MODEL FROM THE APPLICATION'S DIRECTORY
-model = Model(model_path=os.getcwd() + "\\" + "vosk-model-small-en-us-zamia-0.5")
+model = Model(model_path=os.getcwd() + "\\" + "vosk-model-en-us-daanzu-20200905-lgraph")
 
 # INITIATE KALDI SPEECH RECOGNIZER INSTANCE USING THE VOSK MODEL AND A FREQUENCY OF 16000 HZ
 recognizer = KaldiRecognizer(model, 16000)
@@ -18,7 +19,7 @@ mic = pyaudio.PyAudio()
 stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=1600)
 stream.start_stream()
 
-is_loaded = False
+reset_time = time.time()
 
 
 def wake_word_engine_operation():
@@ -40,16 +41,17 @@ def wake_word_engine_thread_management():
     # CREDIT TO https://buddhi-ashen-dev.vercel.app/posts/offline-speech-recognition
 
     global thread
-    global is_loaded
+    global reset_time
 
     try:
+        current_time = time.time()
+
+        if current_time - reset_time >= 2000:
+            reset_time = current_time
+            recognizer.Reset()
+
         # READ FROM THE AUDIO DATA STREAM A 800 FRAMES PER CYCLE
         data = stream.read(800, False)
-
-        if is_loaded is False:
-            sys.stdout.write("[ loaded ]")
-            sys.stdout.flush()
-            is_loaded = True
 
         # RETRIEVE THE AUDIO WAVEFORM DATA AND PERFORM SPEECH TO TEXT CONVERSION
         if recognizer.AcceptWaveform(data):
