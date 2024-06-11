@@ -51,7 +51,6 @@ namespace Eva_5._0
         private static System.Diagnostics.Stopwatch counter = new System.Diagnostics.Stopwatch();
         private static ConcurrentQueue<Process> wake_word_processes = new ConcurrentQueue<Process>();
 
-        private static readonly int max_wake_word_engines = 2;
         private static int wake_word_engines_loaded;
 
         private static string wake_word_engine_loaded = "[ loaded ]";
@@ -59,7 +58,8 @@ namespace Eva_5._0
         private static string wake_word = "listen";
         private static bool Wake_Word_Started = false;
 
-        private static int wake_word_engine_reset_time = 3250;
+        // 1000 (milliseconds) * 60 (seconds) * 5 (minutes) =  300000 (5 minutes in milliseconds)
+        private static int wake_word_engine_reset_time = 300000;
 
 
         public static void Start_The_Wake_Word_Engine()
@@ -72,16 +72,13 @@ namespace Eva_5._0
 
             try
             {
-                for (int i = 1; i <= max_wake_word_engines; i++)
+                System.Threading.Thread thread = new System.Threading.Thread(() => { Wake_Word_Detector(Initiate_Wake_Word_Engine()); })
                 {
-                    System.Threading.Thread thread = new System.Threading.Thread(() => { Wake_Word_Detector(Initiate_Wake_Word_Engine()); })
-                    {
-                        Priority = System.Threading.ThreadPriority.Highest,
-                        IsBackground = false,
-                    };
-                    thread.SetApartmentState(System.Threading.ApartmentState.STA);
-                    thread.Start();
-                }
+                    Priority = System.Threading.ThreadPriority.Highest,
+                    IsBackground = false,
+                };
+                thread.SetApartmentState(System.Threading.ApartmentState.STA);
+                thread.Start();
 
                 Wake_Word_Started = true;
 
@@ -114,18 +111,23 @@ namespace Eva_5._0
                     {
                         if (App.Application_Error_Shutdown == false)
                         {
-                            if (wake_word_engines_loaded == max_wake_word_engines)
+                            if (counter.ElapsedMilliseconds >= wake_word_engine_reset_time)
                             {
-                                if (counter.ElapsedMilliseconds >= wake_word_engine_reset_time)
+                                if (wake_word_engines_loaded == 1)
+                                {
+                                    if (wake_word_processes.Count == 1)
+                                    {
+                                        Wake_Word_Detector(Initiate_Wake_Word_Engine());
+                                    }
+                                }
+                                else if (wake_word_engines_loaded == 2)
                                 {
                                     Process process = null;
-
-                                    if (wake_word_processes.Count > 1)
+                                    if (wake_word_processes.Count == 2)
                                     {
                                         wake_word_processes?.TryDequeue(out process);
                                         process?.Kill();
                                         wake_word_engines_loaded--;
-                                        Wake_Word_Detector(Initiate_Wake_Word_Engine());
                                         counter?.Restart();
                                     }
                                 }

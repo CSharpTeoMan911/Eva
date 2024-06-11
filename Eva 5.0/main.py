@@ -2,9 +2,10 @@ from vosk import Model, KaldiRecognizer
 import os
 import pyaudio
 import sys
+import time
 
 # LOAD THE VOSK SPEECH RECOGNITION MODEL FROM THE APPLICATION'S DIRECTORY
-model = Model(model_path=os.getcwd() + "\\" + "vosk-model-small-en-us-zamia-0.5")
+model = Model(model_path=os.getcwd() + "\\" + "vosk-model-small-en-us-zamia-0.5", lang="en-us")
 
 # INITIATE KALDI SPEECH RECOGNIZER INSTANCE USING THE VOSK MODEL AND A FREQUENCY OF 16000 HZ
 recognizer = KaldiRecognizer(model, 16000)
@@ -15,6 +16,8 @@ stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, fr
 stream.start_stream()
 
 wake_word_engine_loaded = False
+buffer = bytes()
+count = 0
 
 
 def wake_word_engine_operation():
@@ -34,22 +37,28 @@ def wake_word_engine_thread_management():
     # CREDIT TO https://buddhi-ashen-dev.vercel.app/posts/offline-speech-recognition
 
     global wake_word_engine_loaded
+    global buffer
+    global count
 
     try:
         # READ FROM THE AUDIO DATA STREAM A 800 FRAMES PER CYCLE
         data = stream.read(800, False)
-
+        buffer += data
         if wake_word_engine_loaded is False:
             sys.stdout.write("[ loaded ]")
             sys.stdout.flush()
             wake_word_engine_loaded = True
 
-        # RETRIEVE THE AUDIO WAVEFORM DATA AND PERFORM SPEECH TO TEXT CONVERSION
-        if recognizer.AcceptWaveform(data):
-            keyword_spotter(recognizer.Result())
-            keyword_spotter(recognizer.FinalResult())
-        else:
-            keyword_spotter(recognizer.PartialResult())
+        if count == 20:
+            count = 0
+            # RETRIEVE THE AUDIO WAVEFORM DATA AND PERFORM SPEECH TO TEXT CONVERSION
+            if recognizer.AcceptWaveform(buffer):
+                keyword_spotter(recognizer.Result())
+                keyword_spotter(recognizer.FinalResult())
+            else:
+                keyword_spotter(recognizer.PartialResult())
+            buffer = bytes()
+        count += 1
     except KeyboardInterrupt:
         sys.exit(0)
 
