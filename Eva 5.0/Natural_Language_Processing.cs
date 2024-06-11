@@ -592,7 +592,7 @@ namespace Eva_5._0
 
                     if(timer_set == true)
                     {
-                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<System.Collections.Concurrent.ConcurrentDictionary<string, int>>("Timer Process", null, time_interval);
+                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
                     }
                     break;
 
@@ -602,7 +602,7 @@ namespace Eva_5._0
 
                     if (timer_set == true)
                     {
-                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<System.Collections.Concurrent.ConcurrentDictionary<string, int>>("Timer Process", null, time_interval);
+                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
                     }
                     break;
 
@@ -611,7 +611,7 @@ namespace Eva_5._0
 
                     if (timer_set == true)
                     {
-                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<System.Collections.Concurrent.ConcurrentDictionary<string, int>>("Timer Process", null, time_interval);
+                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
                     }
                     break;
             }

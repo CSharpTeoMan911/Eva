@@ -30,9 +30,9 @@ namespace Eva_5._0
     {
         private static Windows.Media.SpeechRecognition.SpeechRecognizer OnlineSpeechRecognition;
         private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Constraints = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(
-                                                                                                          Windows.Media.SpeechRecognition.SpeechRecognitionScenario.FormFilling, 
-                                                                                                          "form-filling", 
-                                                                                                          "form");
+                                                                                                          Windows.Media.SpeechRecognition.SpeechRecognitionScenario.WebSearch, 
+                                                                                                          "web-search", 
+                                                                                                          "web");
 
         public enum Online_Speech_Recognition_Error_Type
         {
@@ -96,13 +96,17 @@ namespace Eva_5._0
                 // ENSURE THAT THE ONLINE SPEECH RECOGNITION INTERFACE IS CLOSED
                 await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
 
-
+                // SET THE SPEECH RECOGNITION TIMEOUT AND SPEECH RECOGNITION VARIABLES AS THE CURRENT TIME
                 online_speech_recognition_timeout = DateTime.Now;
                 Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.Now;
+
+                // INITIATE THE SPEECH RECOGNITION ENGINE
                 OnlineSpeechRecognition = new Windows.Media.SpeechRecognition.SpeechRecognizer();
 
+                // IF THE LANGUAGE USED BY THE OPERATING SYSTEM FOR SPEECH RECOGNITION IS EITHER AMERICAN OR BRITISH ENGLISH
                 if (OnlineSpeechRecognition.CurrentLanguage.LanguageTag == "en-US" || OnlineSpeechRecognition.CurrentLanguage.LanguageTag == "en-GB")
                 {
+                    // SET THE CONSTRAINTS OF THE SPEECH RECOGNITION ENGINE TO USE A "form-filling" CONFIGURATION 
                     Constraints.Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Max;
                     OnlineSpeechRecognition.Constraints.Add(Constraints);
 

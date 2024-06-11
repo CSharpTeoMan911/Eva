@@ -2,14 +2,9 @@ from vosk import Model, KaldiRecognizer
 import os
 import pyaudio
 import sys
-import threading
-import time
-from functools import lru_cache
-
-thread = None
 
 # LOAD THE VOSK SPEECH RECOGNITION MODEL FROM THE APPLICATION'S DIRECTORY
-model = Model(model_path=os.getcwd() + "\\" + "vosk-model-en-us-daanzu-20200905-lgraph")
+model = Model(model_path=os.getcwd() + "\\" + "vosk-model-small-en-us-zamia-0.5")
 
 # INITIATE KALDI SPEECH RECOGNIZER INSTANCE USING THE VOSK MODEL AND A FREQUENCY OF 16000 HZ
 recognizer = KaldiRecognizer(model, 16000)
@@ -19,15 +14,13 @@ mic = pyaudio.PyAudio()
 stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=1600)
 stream.start_stream()
 
-reset_time = time.time()
+wake_word_engine_loaded = False
 
 
 def wake_word_engine_operation():
-    global thread
     try:
         while True:
-            thread = threading.Thread(target=wake_word_engine_thread_management())
-            thread.start()
+            wake_word_engine_thread_management()
     except KeyboardInterrupt:
         sys.exit(0)
 
@@ -40,18 +33,16 @@ def wake_word_engine_thread_management():
 
     # CREDIT TO https://buddhi-ashen-dev.vercel.app/posts/offline-speech-recognition
 
-    global thread
-    global reset_time
+    global wake_word_engine_loaded
 
     try:
-        current_time = time.time()
-
-        if current_time - reset_time >= 2000:
-            reset_time = current_time
-            recognizer.Reset()
-
         # READ FROM THE AUDIO DATA STREAM A 800 FRAMES PER CYCLE
         data = stream.read(800, False)
+
+        if wake_word_engine_loaded is False:
+            sys.stdout.write("[ loaded ]")
+            sys.stdout.flush()
+            wake_word_engine_loaded = True
 
         # RETRIEVE THE AUDIO WAVEFORM DATA AND PERFORM SPEECH TO TEXT CONVERSION
         if recognizer.AcceptWaveform(data):
@@ -59,8 +50,6 @@ def wake_word_engine_thread_management():
             keyword_spotter(recognizer.FinalResult())
         else:
             keyword_spotter(recognizer.PartialResult())
-        if thread is not None:
-            thread.join()
     except KeyboardInterrupt:
         sys.exit(0)
 

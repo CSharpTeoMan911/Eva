@@ -70,7 +70,7 @@ namespace Eva_5._0
         // BEGIN
 
         protected static DateTime? Online_Speech_Recogniser_Activation_Delay_Detector = null;
-        private static readonly double Online_Speech_Recogniser_Activation_Delay = 2.6;
+        private static readonly double Online_Speech_Recogniser_Activation_Delay = 2.8;
 
         // END
 
@@ -907,41 +907,51 @@ namespace Eva_5._0
 
         private async void StartOrStopSpeechRecognition(object sender, RoutedEventArgs e)
         {
+            // IF THE TIMEOUT IS 0
             if (Button_Timeout == 0)
             {
+                // SET THE BUTTON TIMEOUT TO 400 MILLISECONDS
                 Button_Timeout = 400;
 
+                // IF THE MAIN WINDOW IS NOT CLOSING
                 if (MainWindowIsClosing == false)
                 {
-
+                    // IF THE APPLICATION UI DISPATCHER IS NOT CLOSING
                     if (Application.Current.Dispatcher.HasShutdownStarted == false)
                     {
 
+                        // IF THE MAIN WINDOW IS NOT NULL
                         if (Application.Current.MainWindow != null)
                         {
+                            // CHECK IF THE MICROPHONE IS AVAILABLE
                             bool Microphone_Available = await Check_Microphone_Permission.Check_If_Microphone_Available();
 
                             switch (Microphone_Available)
                             {
+                                // IF THE MICROPHONE IS AVAILABLE
                                 case true:
                                     OnOff++;
 
+                                    // RUN THE WAKE WORD WNGINE INITIATION / TERMINATION ON A DIFFERENT THREAD
                                     ParallelProcessing = new System.Threading.Thread(async () =>
                                     {
                                         switch (OnOff)
                                         {
                                             case 1:
 
+                                                // LOCK THE VARIABLE ON THE STACK TO BE ACCESSED ONLY BY THE CURRENT THREAD
                                                 lock (Online_Speech_Recogniser_Disabled)
                                                 {
                                                     Online_Speech_Recogniser_Disabled = "false";
                                                 }
 
+                                                // CHANGE THE BUTTON CONTENT BY INVOKING THE OPERATION ON THE UI THREAD
                                                 Application.Current.Dispatcher.Invoke(() =>
                                                 {
                                                     SpeechRecognitionButton.Content = "\xE1D6";
                                                 });
 
+                                                // START THE WAKE WORD ENGINE PROCESS
                                                 Wake_Word_Engine.Start_The_Wake_Word_Engine();
                                                 break;
 
@@ -949,17 +959,21 @@ namespace Eva_5._0
 
                                             case 2:
 
+                                                // LOCK THE VARIABLE ON THE STACK TO BE ACCESSED ONLY BY THE CURRENT THREAD
                                                 lock (Online_Speech_Recogniser_Disabled)
                                                 {
                                                     Online_Speech_Recogniser_Disabled = "true";
                                                 }
 
+                                                // CHANGE THE BUTTON CONTENT BY INVOKING THE OPERATION ON THE UI THREAD
                                                 Application.Current.Dispatcher.Invoke(() =>
                                                 {
                                                     SpeechRecognitionButton.Content = "\xF781";
                                                 });
 
                                                 OnOff = 0;
+
+                                                // TEMINATE THE WAKE WORD ENGINE PROCESS
                                                 await Wake_Word_Engine.Stop_The_Wake_Word_Engine();
                                                 break;
                                         }
@@ -971,7 +985,11 @@ namespace Eva_5._0
                                     break;
 
                                 case false:
-                                    Online_Speech_Recognition.Online_Speech_Recognition_Error_Management(Online_Speech_Recognition.Online_Speech_Recognition_Error_Type.Mircrophone_Access_Denied);
+                                    // INITIATE THE ERROR PAGE SIGNIFYING THAT THE MICROPHONE IS NOT AVAILABLE
+                                    // AND/OR THE OS DOES NOT HAVE THE PERMISSION TO ACCESSS THE MICROPHONE
+                                    Online_Speech_Recognition.Online_Speech_Recognition_Error_Management(
+                                                              Online_Speech_Recognition.Online_Speech_Recognition_Error_Type
+                                                              .Mircrophone_Access_Denied);
                                     break;
                             }
 
