@@ -154,9 +154,6 @@ namespace Eva_5._0
             string application_not_found_error_link = String.Empty;
             bool Application_Not_Found_Error_Download_Link_Result = commands.A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryGetValue(Application, out application_not_found_error_link);
 
-            string classifier = application_executable_name.Substring(0, 3);
-            string formatted_application_executable_name_string = application_executable_name.Substring(6);
-
             switch (Process)
             {
                 case "open":
@@ -164,6 +161,9 @@ namespace Eva_5._0
                     {
                         if (Application_Executable_Name_Retrieval_Result == true)
                         {
+                            string classifier = application_executable_name.Substring(0, 3);
+                            string formatted_application_executable_name_string = application_executable_name.Substring(6);
+
                             await SpeechSynthesis.Synthesis(SpeechSynthesis.Action.Opening, null, Application);
 
                             System.Diagnostics.Process Application_Process = null;
@@ -195,8 +195,11 @@ namespace Eva_5._0
                                     Application_Process = new System.Diagnostics.Process();
                                     try
                                     {
+                                        System.Diagnostics.Debug.WriteLine(formatted_application_executable_name_string);
+
+
                                         Application_Process.StartInfo.WorkingDirectory = @"C:\Users\" + Environment.UserName + @"\Desktop";
-                                        Application_Process.StartInfo.Arguments = "/k " + formatted_application_executable_name_string;
+                                        Application_Process.StartInfo.Arguments = "/k \"" + formatted_application_executable_name_string + "\"";
                                         Application_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                                         Application_Process.StartInfo.UseShellExecute = true;
                                         Application_Process.StartInfo.CreateNoWindow = true;

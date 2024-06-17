@@ -11,7 +11,12 @@ namespace Eva_5._0
         public static readonly string commands_file_name = "commands_pallet.json";
 
 
-
+        public enum ResetType
+        {
+            Exe,
+            Proc,
+            WebApp
+        }
 
         // THIS METHOD ENSURES THAT THE PERMISSIONS TO THE SETTINGS FILE FOR THE CURRENT
         // USER INCLUDE READ, WRITE, AND DELETE FUNCTIONALITIES TO THE SETTINGS FILE.
@@ -124,7 +129,22 @@ namespace Eva_5._0
         }
 
 
-        public static Task<bool> Generate_Initial_Commands(Command_Pallet_File commands)
+        public static async Task<bool> Generate_Initial_Commands(Command_Pallet_File commands)
+        {
+
+            await Add_A_p_l_Name__And__A_p_l___E_x__Name(commands);
+
+            await Add_A_p_l_Name__And__A_p_l___P_r_o_c_Name(commands);
+
+            await Add_W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name(commands);
+
+            await App_A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k(commands);
+
+            return true;
+        }
+
+
+        private static Task<bool> Add_A_p_l_Name__And__A_p_l___E_x__Name(Command_Pallet_File commands)
         {
             commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("chrome", "PRC = chrome.exe");
 
@@ -219,13 +239,13 @@ namespace Eva_5._0
             commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("terminal", @"PRC = C:\Users\" + Environment.UserName + @"\AppData\Local\Microsoft\WindowsApps\wt.exe");
 
 
-            commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("visual studio 2022", @"CMD = ""start """" devenv""");
+            commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("visual studio 2022", @"CMD = start """" devenv");
 
 
-            commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("visual studio 2019", @"CMD = ""start """" devenv""");
+            commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("visual studio 2019", @"CMD = start """" devenv");
 
 
-            commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("visual studio", @"CMD = ""start """" devenv""");
+            commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("visual studio", @"CMD = start """" devenv");
 
 
             commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("visual studio code", "CMD = code");
@@ -571,8 +591,11 @@ namespace Eva_5._0
             ///// END ///////////// Settings //////////////
 
 
+            return Task.FromResult(true);
+        }
 
-
+        private static Task<bool> Add_A_p_l_Name__And__A_p_l___P_r_o_c_Name(Command_Pallet_File commands)
+        {
 
 
             commands.A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("chrome", "chrome");
@@ -641,9 +664,11 @@ namespace Eva_5._0
 
             commands.A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("control panel", "Control Panel");
 
+            return Task.FromResult(true);
+        }
 
-
-
+        private static Task<bool> Add_W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name(Command_Pallet_File commands)
+        {
             // WEB APPLICATIONS
             //
             // BEGIN
@@ -692,8 +717,11 @@ namespace Eva_5._0
 
             // END
 
+            return Task.FromResult(true);
+        }
 
-
+        private static Task<bool> App_A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k(Command_Pallet_File commands)
+        {
             commands.A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryAdd("chrome", "https://www.google.co.uk/chrome/");
 
             commands.A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryAdd("firefox", "https://www.mozilla.org/en-GB/firefox/new/");
@@ -736,7 +764,6 @@ namespace Eva_5._0
 
             return Task.FromResult(true);
         }
-
 
         private static async Task<bool> Update_Commands_File(Command_Pallet_File commands_File)
         {
@@ -844,6 +871,28 @@ namespace Eva_5._0
         public static async Task<bool> Set_Commands(Command_Pallet_File commands_File)
         {
             return (await Update_Commands_File(commands_File));
+        }
+
+        public static async Task<bool> Reset_Commands(Commands_Customisation.Option type)
+        {
+            switch (type)
+            {
+                case Commands_Customisation.Option.OpenApplications:
+                    A_p_l____And____P_r_o_c.commands.A_p_l_Name__And__A_p_l___E_x__Name.Clear();
+                    await Add_A_p_l_Name__And__A_p_l___E_x__Name(A_p_l____And____P_r_o_c.commands);
+                    break;
+                case Commands_Customisation.Option.CloseApplications:
+                    A_p_l____And____P_r_o_c.commands.A_p_l_Name__And__A_p_l___P_r_o_c_Name.Clear();
+                    await Add_A_p_l_Name__And__A_p_l___P_r_o_c_Name(A_p_l____And____P_r_o_c.commands);
+                    break;
+                case Commands_Customisation.Option.SearchContentOnWebApplications:
+                    A_p_l____And____P_r_o_c.commands.W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.Clear();
+                    await Add_W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name(A_p_l____And____P_r_o_c.commands);
+                    break;
+            }
+
+            await Update_Commands_File(A_p_l____And____P_r_o_c.commands);
+            return true;
         }
 
         // [ END ]

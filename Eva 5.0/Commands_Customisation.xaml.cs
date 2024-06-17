@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,6 +23,8 @@ namespace Eva_5._0
     {
         private ConcurrentDictionary<string, string> clone = new ConcurrentDictionary<string, string>();
         private ConcurrentDictionary<string, string> controls_command = new ConcurrentDictionary<string, string>();
+        private DateTime timeout;
+
         private bool file_manipulation_init;
 
         public enum Option
@@ -40,6 +43,7 @@ namespace Eva_5._0
 
         public Commands_Customisation(Option option)
         {
+            timeout = DateTime.Now.AddMilliseconds(-1000);
             selected_option = option;
             InitializeComponent();
         }
@@ -61,11 +65,8 @@ namespace Eva_5._0
 
         private void LoadContents()
         {
-            Application.Current.Dispatcher.Invoke(async () =>
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                await Command_Pallet.Get_Commands();
-                Main_Content.Children.Clear();
-                clone = new ConcurrentDictionary<string, string>();
                 switch (selected_option)
                 {
                     case Option.OpenApplications:
@@ -142,12 +143,12 @@ namespace Eva_5._0
                     type_display.IsReadOnly = true;
 
                     Button prev_ = new Button();
-                    prev_.Click += (object sender, RoutedEventArgs e) => Prev__Click(sender, e, type_display, command);
+                    prev_.Click += (object sender, RoutedEventArgs e) => Prev__Click(sender, e, type_display);
                     prev_.FontFamily = new FontFamily("Segoe MDL2 Assets");
                     prev_.Content = "\xE016";
 
                     Button next_ = new Button();
-                    next_.Click += (object sender, RoutedEventArgs e) => Next__Click(sender, e, type_display, command);
+                    next_.Click += (object sender, RoutedEventArgs e) => Next__Click(sender, e, type_display);
                     next_.FontFamily = new FontFamily("Segoe MDL2 Assets");
                     next_.Content = "\xE017";
 
@@ -170,7 +171,7 @@ namespace Eva_5._0
                     Button remove = new Button();
                     remove.FontFamily = new FontFamily("Segoe MDL2 Assets");
                     remove.Margin = new Thickness(30, 0, 0, 0);
-                    remove.Click += (object sender, RoutedEventArgs e) => Remove_Click(sender, e, command);
+                    remove.Click += (object sender, RoutedEventArgs e) => Remove_Click(sender, e, command, item_border);
                     remove.Content = "\xE107";
 
                     current_item.Children.Add(command_label);
@@ -194,22 +195,34 @@ namespace Eva_5._0
             }
         }
 
-        private async void Remove_Click(object sender, RoutedEventArgs e, TextBox key)
+        private async void Remove_Click(object sender, RoutedEventArgs e, TextBox key, Border current_item)
         {
-            if (file_manipulation_init == false)
-            {
-                file_manipulation_init = true;
+            if ((DateTime.Now - timeout).TotalMilliseconds >= 1000)
+                if (file_manipulation_init == false)
+                {
+                    file_manipulation_init = true;
 
-                string previous_command = String.Empty;
-                controls_command.TryGetValue(key.Name, out previous_command);
+                    timeout = DateTime.Now;
 
-                clone.TryRemove(previous_command, out _);
+                    string previous_command = String.Empty;
+                    controls_command.TryGetValue(key.Name, out previous_command);
 
-                await UpdateCommands();
-                LoadContents();
 
-                file_manipulation_init = false;
-            }
+                    string value = String.Empty;
+                    clone.TryRemove(previous_command, out value);
+
+                    foreach (UIElement element in Main_Content.Children)
+                        if (((Border)element) == current_item)
+                        {
+                            Main_Content.BeginInit();
+                            Main_Content.Children.Remove(element);
+                            Main_Content.EndInit();
+                            Main_Content.UpdateLayout();
+                            break;
+                        }
+                    await UpdateCommands();
+                    file_manipulation_init = false;
+                }
         }
 
         private void Reset_command_Click(object sender, RoutedEventArgs e, TextBox key, TextBox value, TextBox type)
@@ -228,62 +241,127 @@ namespace Eva_5._0
             type.Text = command_type;
         }
 
+        private void Reset_command_Click_Other(object sender, RoutedEventArgs e, TextBox key, TextBox value)
+        {
+            string previous_command = String.Empty;
+            controls_command.TryGetValue(key.Name, out previous_command);
+
+            string content = String.Empty;
+            clone.TryGetValue(previous_command, out content);
+
+            key.Text = previous_command;
+            value.Text = content;
+        }
+
         private async void Update_command_Click(object sender, RoutedEventArgs e, TextBox key, TextBox value, TextBox type)
         {
-            if (file_manipulation_init == false)
-            {
-                file_manipulation_init = true;
+            key.Text = key.Text.ToLower().Trim();
+            value.Text = value.Text.Trim();
 
-                string previous_value = String.Empty;
-                controls_command.TryGetValue(key.Name, out previous_value);
-
-                string command_content = String.Empty;
-                clone.TryGetValue(key.Text, out command_content);
-
-                StringBuilder content_builder = new StringBuilder(type.Text);
-                content_builder.Append(" = ");
-                content_builder.Append(value.Text);
-
-                if (key.Text == String.Empty)
+            if ((DateTime.Now - timeout).TotalMilliseconds >= 1000)
+                if (file_manipulation_init == false)
                 {
-                    key.Text = previous_value;
-                }
-                else
-                {
-                    if (key.Text == previous_value)
+                    file_manipulation_init = true;
+
+                    string previous_value = String.Empty;
+                    controls_command.TryGetValue(key.Name, out previous_value);
+
+                    string command_content = String.Empty;
+                    clone.TryGetValue(key.Text, out command_content);
+
+                    StringBuilder content_builder = new StringBuilder(type.Text);
+                    content_builder.Append(" = ");
+                    content_builder.Append(value.Text);
+
+                    if (key.Text == String.Empty)
                     {
-                        clone.TryUpdate(key.Text, content_builder.ToString(), command_content);
+                        key.Text = previous_value;
                     }
                     else
                     {
-                        if (command_content != String.Empty && command_content != null)
+                        if (key.Text == previous_value)
                         {
-                            key.Text = previous_value;
-                            MessageBox.Show("The key already exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            clone.TryUpdate(key.Text, content_builder.ToString(), command_content);
                         }
                         else
                         {
-                            clone.TryRemove(previous_value, out command_content);
-                            clone.TryAdd(key.Text, content_builder.ToString());
-                            controls_command.TryUpdate(key.Name, key.Text, previous_value);
+                            if (command_content != String.Empty && command_content != null)
+                            {
+                                key.Text = previous_value;
+                                MessageBox.Show("The key already exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                            else
+                            {
+                                clone.TryRemove(previous_value, out command_content);
+                                clone.TryAdd(key.Text, content_builder.ToString());
+                                controls_command.TryUpdate(key.Name, key.Text, previous_value);
+                            }
                         }
                     }
-                }
 
-                await UpdateCommands();
-                file_manipulation_init = false;
-            }
+                    await UpdateCommands();
+                    file_manipulation_init = false;
+                }
+        }
+
+        private async void Update_command_Click_Other(object sender, RoutedEventArgs e, TextBox key, TextBox value)
+        {
+            key.Text = key.Text.ToLower().Trim();
+            value.Text = value.Text.Trim();
+
+            if ((DateTime.Now - timeout).TotalMilliseconds >= 1000)
+                if (file_manipulation_init == false)
+                {
+                    file_manipulation_init = true;
+
+                    string previous_value = String.Empty;
+                    controls_command.TryGetValue(key.Name, out previous_value);
+
+                    string command_content = String.Empty;
+                    clone.TryGetValue(key.Text, out command_content);
+
+                    if (key.Text == String.Empty)
+                    {
+                        key.Text = previous_value;
+                    }
+                    else
+                    {
+                        if (key.Text == previous_value)
+                        {
+                            clone.TryUpdate(key.Text, value.Text, command_content);
+                        }
+                        else
+                        {
+                            if (command_content != String.Empty && command_content != null)
+                            {
+                                key.Text = previous_value;
+                                MessageBox.Show("The key already exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                            else
+                            {
+                                clone.TryRemove(previous_value, out command_content);
+                                clone.TryAdd(key.Text, value.Text);
+                                controls_command.TryUpdate(key.Name, key.Text, previous_value);
+                            }
+                        }
+                    }
+
+                    await UpdateCommands();
+                    file_manipulation_init = false;
+                }
         }
 
 
         private void Load_Other(ConcurrentDictionary<string, string> selected_items)
         {
+            int index = 0;
+
             foreach (string key in selected_items.Keys)
             {
-                string process_value = String.Empty;
-                selected_items.TryGetValue(key, out process_value);;
+                string command_value = String.Empty;
+                selected_items.TryGetValue(key, out command_value);
 
-                clone.TryAdd(key, process_value);
+                clone.TryAdd(key, command_value);
 
                 Main_Content.BeginInit();
 
@@ -295,7 +373,7 @@ namespace Eva_5._0
                 StackPanel current_item = new StackPanel();
                 current_item.Orientation = Orientation.Horizontal;
                 current_item.Width = Main_Content_ScrollViewer.ActualWidth;
-                current_item.Margin = new Thickness(60, 10, 0, 10);
+                current_item.Margin = new Thickness(10, 10, 0, 10);
 
 
                 TextBlock command_label = new TextBlock();
@@ -303,27 +381,44 @@ namespace Eva_5._0
                 command_label.Margin = new Thickness(5, 0, 0, 0);
 
                 TextBox command = new TextBox();
+                command.Name = "TextBox_" + index;
                 command.Text = key;
                 command.Width = 100;
+                controls_command.TryAdd(command.Name, key);
 
                 TextBlock content_label = new TextBlock();
                 content_label.Text = "Content: ";
                 content_label.Margin = new Thickness(20, 0, 0, 0);
 
                 TextBox content = new TextBox();
-                content.Text = process_value;
-                content.Width = 200;
+                content.Text = command_value;
+                content.Width = 100;
 
+
+                Button reset_command = new Button();
+                reset_command.FontFamily = new FontFamily("Segoe MDL2 Assets");
+                reset_command.Margin = new Thickness(30, 0, 0, 0);
+                reset_command.Content = "\xE149";
+                reset_command.Click += (object sender, RoutedEventArgs e) => Reset_command_Click_Other(sender, e, command, content);
+
+                Button update_command = new Button();
+                update_command.FontFamily = new FontFamily("Segoe MDL2 Assets");
+                update_command.Margin = new Thickness(30, 0, 0, 0);
+                update_command.Content = "\xE105";
+                update_command.Click += (object sender, RoutedEventArgs e) => Update_command_Click_Other(sender, e, command, content);
 
                 Button remove = new Button();
                 remove.FontFamily = new FontFamily("Segoe MDL2 Assets");
                 remove.Margin = new Thickness(30, 0, 0, 0);
+                remove.Click += (object sender, RoutedEventArgs e) => Remove_Click(sender, e, command, item_border);
                 remove.Content = "\xE107";
 
                 current_item.Children.Add(command_label);
                 current_item.Children.Add(command);
                 current_item.Children.Add(content_label);
                 current_item.Children.Add(content);
+                current_item.Children.Add(reset_command);
+                current_item.Children.Add(update_command);
                 current_item.Children.Add(remove);
 
 
@@ -331,11 +426,13 @@ namespace Eva_5._0
                 Main_Content.Children.Add(item_border);
 
                 Main_Content.EndInit();
+
+                index++;
             }
         }
 
 
-        private void Prev__Click(object sender, RoutedEventArgs e, TextBox type_display, TextBox key)
+        private void Prev__Click(object sender, RoutedEventArgs e, TextBox type_display)
         {
             if (type_display.Text == "CMD")
             {
@@ -347,7 +444,7 @@ namespace Eva_5._0
             }
         }
 
-        private void Next__Click(object sender, RoutedEventArgs e, TextBox type_display, TextBox key)
+        private void Next__Click(object sender, RoutedEventArgs e, TextBox type_display)
         {
             if (type_display.Text == "URI")
             {
@@ -369,9 +466,11 @@ namespace Eva_5._0
                     break;
                 case Option.CloseApplications:
                     A_p_l____And____P_r_o_c.commands.A_p_l_Name__And__A_p_l___P_r_o_c_Name = clone;
+                    await Command_Pallet.Set_Commands(A_p_l____And____P_r_o_c.commands);
                     break;
                 case Option.SearchContentOnWebApplications:
                     A_p_l____And____P_r_o_c.commands.W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name = clone;
+                    await Command_Pallet.Set_Commands(A_p_l____And____P_r_o_c.commands);
                     break;
             }
 
@@ -381,6 +480,57 @@ namespace Eva_5._0
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
 
+        }
+
+        private void UpdateClone(ConcurrentDictionary<string, string> clone_)
+        {
+            clone = clone_;
+        }
+
+        private async void Reset_Commands(object sender, RoutedEventArgs e)
+        {
+            if ((DateTime.Now - timeout).TotalMilliseconds >= 1000)
+                if (file_manipulation_init == false)
+                {
+                    file_manipulation_init = true;
+
+                    await Command_Pallet.Reset_Commands(selected_option);
+
+                    switch (selected_option)
+                    {
+                        case Option.OpenApplications:
+                            clone = A_p_l____And____P_r_o_c.commands.A_p_l_Name__And__A_p_l___E_x__Name;
+                            break;
+                        case Option.CloseApplications:
+                            clone = A_p_l____And____P_r_o_c.commands.A_p_l_Name__And__A_p_l___P_r_o_c_Name;
+                            break;
+                        case Option.SearchContentOnWebApplications:
+                            clone = A_p_l____And____P_r_o_c.commands.W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name;
+                            break;
+                    }
+                    timeout = DateTime.Now;
+                    await UpdateCommands();
+
+                    Main_Content.Children.Clear();
+
+                    LoadContents();
+                    Main_Content.UpdateLayout();
+
+                    file_manipulation_init = false;
+                }
+        }
+
+        private async void AddCommand(object sender, RoutedEventArgs e)
+        {
+            Command_Addition command_Addition = new Command_Addition(selected_option, clone, new Command_Addition.UpdateCallback(UpdateClone));
+            command_Addition.ShowDialog();
+
+            await UpdateCommands();
+
+            Main_Content.Children.Clear();
+
+            LoadContents();
+            Main_Content.UpdateLayout();
         }
     }
 }

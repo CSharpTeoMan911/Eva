@@ -132,6 +132,9 @@
     <Compile Include="Commands_Main_Window.xaml.cs">
       <DependentUpon>Commands_Main_Window.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Command_Addition.xaml.cs">
+      <DependentUpon>Command_Addition.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Command_Pallet.cs" />
     <Compile Include="Command_Pallet_File.cs" />
     <Compile Include="ErrorWindow.xaml.cs">
@@ -171,6 +174,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Commands_Main_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Command_Addition.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
