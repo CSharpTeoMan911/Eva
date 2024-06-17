@@ -102,6 +102,8 @@ namespace Eva_5._0
                     {
                         SentenceStringBuilder.Replace("+", " plus ");
                     }
+
+                    SentenceStringBuilder.Replace("  ", " ");
                 }
             }
             catch

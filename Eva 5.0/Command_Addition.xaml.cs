@@ -51,7 +51,7 @@ namespace Eva_5._0
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-
+            GC.Collect(10);
         }
 
         private void Load_Contents()

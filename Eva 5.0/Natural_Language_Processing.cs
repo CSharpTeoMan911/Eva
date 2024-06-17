@@ -62,6 +62,8 @@ namespace Eva_5._0
 
             string Sentence = Eva_Functionalities.Special_Character_Replacement_Implementor.Remove_Special_Characters_Procedure(Result);
 
+            System.Diagnostics.Debug.WriteLine(Sentence);
+
             Sentence_StringBuilder.Append(Sentence);
 
             // THE FIRST TOKENIZATION IS INITIATED. THE FIRST TOKENIZATION IS RESPONSIBLE FOR PARAMETER ASSOCIATION WITH THEIR RESPECTIVE COMMAND FORMATS

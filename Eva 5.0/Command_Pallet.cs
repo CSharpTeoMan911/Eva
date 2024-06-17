@@ -356,7 +356,7 @@ namespace Eva_5._0
 
                 commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("autoplay settings", "URI = ms-settings:autoplay");
 
-                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("USB settings", "URI = ms-settings:usb");
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("usb settings", "URI = ms-settings:usb");
 
                 commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("default web browser settings", "URI = ms-settings:defaultbrowsersettings");
 
@@ -393,6 +393,8 @@ namespace Eva_5._0
                 commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("mouse settings", "URI = ms-settings:easeofaccess-mouse");
 
                 commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("i control settings", "URI = ms-settings:easeofaccess-eyecontrol");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("eye control settings", "URI = ms-settings:easeofaccess-eyecontrol");
 
                 commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("icontrol settings", "URI = ms-settings:easeofaccess-eyecontrol");
 
@@ -480,7 +482,7 @@ namespace Eva_5._0
 
                 commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("account info settings", "URI = ms-settings:privacy-accountinfo");
 
-                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("contacts settings", "URI = -settings:privacy-contacts");
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("contacts settings", "URI = ms-settings:privacy-contacts");
 
                 commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("phone calls settings", "URI = ms-settings:privacy-phonecalls");
 
@@ -547,6 +549,10 @@ namespace Eva_5._0
 
                 commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("4 developer settings", "URI = ms-settings:developers");
 
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("for developer settings", "URI = ms-settings:developers");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("for developers settings", "URI = ms-settings:developers");
+
                 commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("windows insider program settings", "URI = ms-settings:windowsinsider");
 
 
@@ -579,9 +585,290 @@ namespace Eva_5._0
 
                 commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("about settings", "URI = ms-settings:about");
 
+
             }
             else if (System.Runtime.InteropServices.RuntimeInformation.OSDescription.Contains("Windows 11") == true)
             {
+                // Accounts Page
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("accounts settings", "URI = ms-settings:yourinfo");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("your info settings", "URI = ms-settings:yourinfo");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("sign in options settings", "URI = ms-settings:signinoptions");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("e-mail and accounts settings", "URI = ms-settings:emailandaccounts");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("e-mail and account settings", "URI = ms-settings:emailandaccounts");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("access work or school settings", "URI = ms-settings:workplace");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("family and other users settings", "URI = ms-settings:otherusers");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("family and other user settings", "URI = ms-settings:otherusers");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("windows backup settings", "URI = ms-settings:sync");
+
+
+
+                // Apps Page
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("apps settings", "URI = ms-settings:appsfeatures");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("installed apps settings", "URI = ms-settings:appsfeatures");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("default apps settings", "URI = ms-settings:defaultapps");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("offline maps settings", "URI = ms-settings:maps");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("apps for websites settings", "URI = ms-settings:appsforwebsites");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("apps for website settings", "URI = ms-settings:appsforwebsites");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("video playback settings", "URI = ms-settings:videoplayback");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("startup apps settings", "URI = ms-settings:startupapps");
+
+
+
+
+                // Bluetooth and devices
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("bluetooth and devices settings", "URI = ms-settings:bluetooth");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("printers and scanners settings", "URI = ms-settings:printers");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("printers and scanner settings", "URI = ms-settings:printers");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("mouse settings", "URI = ms-settings:mousetouchpad");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("pen and windows ink settings", "URI = ms-settings:pen");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("autoplay settings", "URI = ms-settings:autoplay");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("usb settings", "URI = ms-settings:usb");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("default apps settings", "URI = ms-settings:defaultbrowsersettings");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("mobile devices settings", "URI = ms-settings:mobile-devices");
+
+
+
+
+
+                // Accessibility
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("accessibility settings", "URI = ms-settings:easeofaccess-display");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("text size settings", "URI = ms-settings:easeofaccess-display");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("mouse pointer and touch settings", "URI = ms-settings:easeofaccess-mousepointer");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("text cursor settings", "URI = ms-settings:easeofaccess-cursor");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("magnifier settings", "URI = ms-settings:easeofaccess-magnifier");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("color filters settings", "URI = ms-settings:easeofaccess-colorfilter");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("contrast themes settings", "URI = ms-settings:easeofaccess-highcontrast");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("narrator settings", "URI = ms-settings:easeofaccess-narrator");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("audio settings", "URI = ms-settings:easeofaccess-audio");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("captions settings", "URI = ms-settings:easeofaccess-closedcaptioning");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("speech settings", "URI = ms-settings:easeofaccess-speechrecognition");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("keyboard settings", "URI = ms-settings:easeofaccess-keyboard");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("mouse settings", "URI = ms-settings:easeofaccess-mouse");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("i control settings", "URI = ms-settings:easeofaccess-eyecontrol");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("eye control settings", "URI = ms-settings:easeofaccess-eyecontrol");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("icontrol settings", "URI = ms-settings:easeofaccess-eyecontrol");
+
+
+
+
+
+                // Gaming
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("gaming settings", "URI = ms-settings:gaming-gamebar");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("game bar settings", "URI = ms-settings:gaming-gamebar");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("game mode settings", "URI = ms-settings:gaming-gamemode");
+
+
+
+
+                // Network and Internet
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("network and internet settings", "URI = ms-settings:network-wifi");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("wi-fi settings", "URI = ms-settings:network-wifi");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("ethernet settings", "URI = ms-settings:network-ethernet");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("dial up settings", "URI = ms-settings:network-dialup");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("dial app settings", "URI = ms-settings:network-dialup");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("VPN settings", "URI = ms-settings:network-vpn");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("airplane mode settings", "URI = ms-settings:network-airplanemode");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("mobile hotspot settings", "URI = ms-settings:network-mobilehotspot");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("proxy settings", "URI = ms-settings:network-proxy");
+
+
+
+
+                // Personalisation
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("personalization settings", "URI = ms-settings:personalization-background");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("background settings", "URI = ms-settings:personalization-background");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("colors settings", "URI = ms-settings:personalization-colors");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("colours settings", "URI = ms-settings:personalization-colors");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("lock screen settings", "URI = ms-settings:lockscreen");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("themes settings", "URI = ms-settings:themes");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("start settings", "URI = ms-settings:personalization-start");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("taskbar settings", "URI = ms-settings:taskbar");
+
+
+
+
+                // Privacy
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("privacy and security settings", "URI = ms-settings:privacy-general");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("search permissions settings", "URI = ms-settings:search-permissions");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("inking and typing personalization settings", "URI = ms-settings:privacy-speechtyping");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("diagnostics and feedback settings", "URI = ms-settings:privacy-feedback");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("activity history settings", "URI = ms-settings:privacy-activityhistory");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("location settings", "URI = ms-settings:privacy-location");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("camera settings", "URI = ms-settings:privacy-webcam");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("microphone settings", "URI = ms-settings:privacy-microphone");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("voice activation settings", "URI = ms-settings:privacy-voiceactivation");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("account info settings", "URI = ms-settings:privacy-accountinfo");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("contacts settings", "URI = ms-settings:privacy-contacts");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("phone calls settings", "URI = ms-settings:privacy-phonecalls");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("e-mail settings", "URI = ms-settings:privacy-email");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("messaging settings", "URI = ms-settings:privacy-messaging");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("radios settings", "URI = ms-settings:privacy-radios");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("other devices settings", "URI = ms-settings:privacy-customdevices");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("app diagnostics settings", "URI = ms-settings:privacy-appdiagnostics");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("automatic file downloads settings", "URI = ms-settings:privacy-automaticfiledownloads");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("documents settings", "URI = ms-settings:privacy-documents");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("pictures settings", "URI = ms-settings:privacy-pictures");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("videos settings", "URI = ms-settings:privacy-videos");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("file system settings", "URI = ms-settings:privacy-broadfilesystemaccess");
+
+
+
+
+                // Time and Language
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("time and language settings", "URI = ms-settings:dateandtime");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("typing settings", "URI = ms-settings:typing");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("date and time settings", "URI = ms-settings:dateandtime");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("language and region settings", "URI = ms-settings:regionlanguage");
+
+
+
+
+
+                // Windows Update
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("windows update settings", "URI = ms-settings:windowsupdate");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("delivery optimization settings", "URI = ms-settings:delivery-optimization");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("windows security settings", "URI = ms-settings:windowsdefender");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("backup settings", "URI = ms-settings:backup");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("troubleshoot settings", "URI = ms-settings:troubleshoot");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("recovery settings", "URI = ms-settings:recovery");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("activation settings", "URI = ms-settings:activation");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("find my device settings", "URI = ms-settings:findmydevice");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("4 developers settings", "URI = ms-settings:developers");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("4 developer settings", "URI = ms-settings:developers");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("for developer settings", "URI = ms-settings:developers");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("for developers settings", "URI = ms-settings:developers");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("windows insider program settings", "URI = ms-settings:windowsinsider");
+
+
+
+                // System 
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("system settings", "URI = ms-settings:display");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("display settings", "URI = ms-settings:display");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("sound settings", "URI = ms-settings:sound");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("notifications settings", "URI = ms-settings:notifications");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("focus settings", "URI = ms-settings:quiethours");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("power settings", "URI = ms-settings:powersleep");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("storage settings", "URI = ms-settings:storagesense");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("multitasking settings", "URI = ms-settings:multitasking");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("projecting to this PC settings", "URI = ms-settings:project");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("nearby sharing settings", "URI = ms-settings:crossdevice");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("clipboard settings", "URI = ms-settings:clipboard");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("remote desktop settings", "URI = ms-settings:remotedesktop");
+
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("about settings", "URI = ms-settings:about");
 
             }
 
@@ -593,6 +880,7 @@ namespace Eva_5._0
 
             return Task.FromResult(true);
         }
+
 
         private static Task<bool> Add_A_p_l_Name__And__A_p_l___P_r_o_c_Name(Command_Pallet_File commands)
         {

@@ -280,6 +280,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Eva icon.png" />
     <Content Include="main.py" />
     <Content Include="Sounds\AlarmSound.wav" />
     <Content Include="Sounds\App closing.wav" />

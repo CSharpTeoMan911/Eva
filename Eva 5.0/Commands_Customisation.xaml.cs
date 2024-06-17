@@ -63,8 +63,10 @@ namespace Eva_5._0
             LoadContents();
         }
 
-        private void LoadContents()
+        private async void LoadContents()
         {
+            A_p_l____And____P_r_o_c.commands = await Command_Pallet.Get_Commands();
+
             Application.Current.Dispatcher.Invoke(() =>
             {
                 switch (selected_option)
@@ -479,7 +481,7 @@ namespace Eva_5._0
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-
+            GC.Collect(10);
         }
 
         private void UpdateClone(ConcurrentDictionary<string, string> clone_)
