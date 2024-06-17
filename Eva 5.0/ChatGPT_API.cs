@@ -63,7 +63,7 @@ namespace Eva_5._0
         }
 
 
-        public static async void Get_Available_Gpt_Models()
+        public static async Task<bool> Get_Available_Gpt_Models()
         {
             // 'HttpClient' OBJECT NEEDED TO SEND HTTP REQUESTS TO THE OPENAI SERVER.
             System.Net.Http.HttpClient api_client = new System.Net.Http.HttpClient();
@@ -121,6 +121,8 @@ namespace Eva_5._0
                 api_client?.Dispose();
                 response?.Dispose();
             }
+
+            return true;
         }
 
         public static async Task<Tuple<Type, string>> Initiate_Chat_GPT(string input)

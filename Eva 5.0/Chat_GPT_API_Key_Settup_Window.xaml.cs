@@ -93,6 +93,7 @@ namespace Eva_5._0
                             Loading_Stackpanel.Height = 180;
                         });
 
+                        string current_key = await Settings.Get_Chat_GPT_Api_Key();
 
                         await Settings.Set_Chat_GPT_Api_Key(Chat_GPT_Api_Key_TextBox.Text);
 
@@ -119,6 +120,8 @@ namespace Eva_5._0
                             //
                             // [ BEIGN ]
 
+                            await Settings.Set_Chat_GPT_Api_Key(current_key);
+
                             if (App.PermisissionWindowOpen == false)
                             {
                                 if(initiation_result.Item2 == "API authentification error")
@@ -140,7 +143,8 @@ namespace Eva_5._0
                         {
                             // IF THE RETURN TYPE OF THE OPERATION IS NOT AN EXCEPTION
                             // THIS MEANS THAT THE API KEY IS VALID AND THE WIDOW IS
-                            // CLOSED 
+                            // CLOSED
+                            await ChatGPT_API.Get_Available_Gpt_Models();
                             reloadCurrentModel.Invoke();
                             this.Close();
                         }

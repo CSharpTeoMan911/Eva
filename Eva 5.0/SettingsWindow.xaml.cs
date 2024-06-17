@@ -409,12 +409,16 @@ namespace Eva_5._0
                                                         CloseButtonOffset.Offset += 0.025;
                                                         MinimiseTheWindowOffset.Offset += 0.025;
                                                         MenuGear2Offset.Offset += 0.025;
-                                                        SettingTitleOffset.Offset += 0.01;
-                                                        SynthesisSettingTitleOffset.Offset += 0.01;
+                                                        SettingTitleOffset.Offset -= 0.01;
+                                                        SynthesisSettingTitleOffset.Offset -= 0.01;
                                                         SoundButtonOffset.Offset -= 0.025;
                                                         MuteButtonOffset.Offset -= 0.025;
+                                                        SetCommandsButtonOffset.Offset -= 0.025;
+                                                        InstructionManualButtonOffset.Offset -= 0.025;
+                                                        SetChatGptApiButtonOffset.Offset -= 0.025;
                                                         SynthesisSoundButtonOffset.Offset -= 0.025;
                                                         SynthesisMuteButtonOffset.Offset -= 0.025;
+                                                        SetCommandsTitleOffset.Offset -= 0.01;
                                                         InstructionManualTextBlockOffset.Offset -= 0.01;
                                                         ChatGPTApiKeyOffset.Offset -= 0.01;
                                                         GPTModelOffset.Offset -= 0.01;
@@ -439,12 +443,16 @@ namespace Eva_5._0
                                                         CloseButtonOffset.Offset -= 0.025;
                                                         MinimiseTheWindowOffset.Offset -= 0.025;
                                                         MenuGear2Offset.Offset -= 0.025;
-                                                        SettingTitleOffset.Offset -= 0.01;
-                                                        SynthesisSettingTitleOffset.Offset -= 0.01;
+                                                        SettingTitleOffset.Offset += 0.01;
+                                                        SynthesisSettingTitleOffset.Offset += 0.01;
                                                         SoundButtonOffset.Offset += 0.025;
                                                         MuteButtonOffset.Offset += 0.025;
+                                                        SetCommandsButtonOffset.Offset += 0.025;
+                                                        InstructionManualButtonOffset.Offset += 0.025;
                                                         SynthesisSoundButtonOffset.Offset += 0.025;
+                                                        SetChatGptApiButtonOffset.Offset += 0.025;
                                                         SynthesisMuteButtonOffset.Offset += 0.025;
+                                                        SetCommandsTitleOffset.Offset += 0.01;
                                                         InstructionManualTextBlockOffset.Offset += 0.01;
                                                         ChatGPTApiKeyOffset.Offset += 0.01;
                                                         GPTModelOffset.Offset += 0.01;
@@ -647,26 +655,30 @@ namespace Eva_5._0
 
         private async void LoadCurrentModel()
         {
-            if (ChatGPT_API.gpt_models.Count > 0)
+            await Application.Current.Dispatcher.InvokeAsync(async() =>
             {
-                string current_model = await Settings.Get_Current_Chat_GPT__Model();
-                int model_index = ChatGPT_API.gpt_models.IndexOf(current_model);
+                if (ChatGPT_API.gpt_models.Count > 0)
+                {
+                    string current_model = await Settings.Get_Current_Chat_GPT__Model();
+                    int model_index = ChatGPT_API.gpt_models.IndexOf(current_model);
 
-                if (model_index != -1)
-                {
-                    current_model_index = model_index;
-                    GptModelDisplay.Text = ChatGPT_API.gpt_models.ElementAt(current_model_index);
+                    if (model_index != -1)
+                    {
+                        current_model_index = model_index;
+                        GptModelDisplay.Text = ChatGPT_API.gpt_models.ElementAt(current_model_index);
+                    }
+                    else
+                    {
+                        GptModelDisplay.Text = ChatGPT_API.gpt_models.ElementAt(0);
+                        await Settings.Set_Current_Chat_GPT__Model(ChatGPT_API.gpt_models.First());
+                    }
                 }
-                else
-                {
-                    GptModelDisplay.Text = ChatGPT_API.gpt_models.ElementAt(current_model_index);
-                    await Settings.Set_Current_Chat_GPT__Model(ChatGPT_API.gpt_models.First());
-                }
-            }
+            });
         }
 
         public static void ReloadCurrentModel()
         {
+            System.Diagnostics.Debug.WriteLine("\n\n!!!! RELOADED !!!!");
             CurrentInstance.LoadCurrentModel();
         }
 
@@ -698,6 +710,12 @@ namespace Eva_5._0
             int temp = await Settings.Get_Current_Model_Temperature();
             TemperatureSelector.Value = temp;
             TemperatureDisplay.Text = (temp * 10) + "%";
+        }
+
+        private void SetCommands(object sender, RoutedEventArgs e)
+        {
+            Commands_Main_Window commands = new Commands_Main_Window();
+            commands.ShowDialog();
         }
 
         ~SettingsWindow()

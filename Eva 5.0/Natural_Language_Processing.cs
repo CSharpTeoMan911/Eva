@@ -830,7 +830,7 @@ namespace Eva_5._0
                 Application_StringBuilder.Append(Sentence[index]);
 
                 app = Application_StringBuilder.ToString();
-                A_p_l_Name__And__A_p_l___E_x__Name.TryGetValue(app, out Token_Buffer);
+                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryGetValue(app, out Token_Buffer);
 
 
                 if (Token_Buffer != null)
@@ -868,7 +868,7 @@ namespace Eva_5._0
                 Application_StringBuilder.Append(Sentence[index]);
 
                 process = Application_StringBuilder.ToString();
-                A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryGetValue(process, out Token_Buffer);
+                commands.A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryGetValue(process, out Token_Buffer);
 
 
                 if (Token_Buffer != null)
@@ -919,7 +919,7 @@ namespace Eva_5._0
                 WebApplication_StringBuilder.Append(Sentence[index]);
 
                 web_app = WebApplication_StringBuilder.ToString();
-                W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryGetValue(web_app, out Token_Buffer);
+                commands.W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryGetValue(web_app, out Token_Buffer);
 
 
                 if(Token_Buffer != null)

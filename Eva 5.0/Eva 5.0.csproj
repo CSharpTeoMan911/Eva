@@ -126,6 +126,14 @@
     </Compile>
     <Compile Include="Check_Microphone_Permission.cs" />
     <Compile Include="Check_Role.cs" />
+    <Compile Include="Commands_Customisation.xaml.cs">
+      <DependentUpon>Commands_Customisation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Commands_Main_Window.xaml.cs">
+      <DependentUpon>Commands_Main_Window.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Command_Pallet.cs" />
+    <Compile Include="Command_Pallet_File.cs" />
     <Compile Include="ErrorWindow.xaml.cs">
       <DependentUpon>ErrorWindow.xaml</DependentUpon>
     </Compile>
@@ -155,6 +163,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Chat_GPT_API_Key_Settup_Window.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Commands_Customisation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Commands_Main_Window.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

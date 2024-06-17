@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Eva_5._0"
         mc:Ignorable="d"
-        Title="Settings" Height="530" Width="360" WindowStyle="None" AllowsTransparency="True" Opacity="0.98" Loaded="SettingsWindowLoaded" Closing="WindowClosing" Icon="Images/Eva icon.png">
+        Title="Settings" Height="500" Width="340" WindowStyle="None" AllowsTransparency="True" Opacity="0.98" Loaded="SettingsWindowLoaded" Closing="WindowClosing" Icon="Images/Eva icon.png">
 
     <!--/////////////////////////////////////////////////////////////////////////////
         ///                                                                       ///
@@ -25,7 +25,7 @@
 
 
     <Window.Clip>
-        <RectangleGeometry Rect="0, 0, 360, 530" RadiusX="20" RadiusY="20"/>
+        <RectangleGeometry Rect="0, 0, 340, 500" RadiusX="20" RadiusY="20"/>
     </Window.Clip>
 
 
@@ -94,9 +94,9 @@
             </Button>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Grid.RowSpan="2" Grid.Row="1" Grid.ColumnSpan="5" VerticalAlignment="Top" HorizontalAlignment="Center">
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,0" Grid.RowSpan="2" Grid.Row="1" Grid.ColumnSpan="5" VerticalAlignment="Top" HorizontalAlignment="Center">
 
-            <TextBlock x:Name="Wheel1" FontFamily="Segoe MDL2 Assets" FontSize="75" Text="&#xF8B0;" RenderTransformOrigin="0.5, 0.5">
+            <TextBlock x:Name="Wheel1" FontFamily="Segoe MDL2 Assets" FontSize="90" Text="&#xF8B0;" RenderTransformOrigin="0.5, 0.5">
                 <TextBlock.Foreground>
                     <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                         <GradientStop Color="#FF0079EA" x:Name="MenuGear1Offset" Offset="1"/>
@@ -105,7 +105,7 @@
                 </TextBlock.Foreground>
             </TextBlock>
 
-            <TextBlock x:Name="Wheel2" FontFamily="Segoe MDL2 Assets" FontSize="45" VerticalAlignment="Bottom" Text="&#xF8B0;" RenderTransformOrigin="0.5, 0.5">
+            <TextBlock x:Name="Wheel2" FontFamily="Segoe MDL2 Assets" FontSize="60" VerticalAlignment="Bottom" Text="&#xF8B0;" RenderTransformOrigin="0.5, 0.5">
                 <TextBlock.Foreground>
                     <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                         <GradientStop Color="#FF0079EA" x:Name="MenuGear2Offset" Offset="1"/>
@@ -116,192 +116,220 @@
         </StackPanel>
 
 
-        <StackPanel Grid.Row="2" Grid.ColumnSpan="5" VerticalAlignment="Center" Margin="0,10,0,0" Grid.RowSpan="7">
-            
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,0" Orientation="Horizontal">
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="6" VerticalAlignment="Center" Margin="0,20,0,0" Grid.RowSpan="7">
 
-                <TextBlock Margin="0,0,10,0" HorizontalAlignment="Center" FontSize="20" FontFamily="Corbel Light" Text="Sound">
-                    <TextBlock.Foreground>
-                        <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
-                            <GradientStop Color="#FF7BBFD8" x:Name="SettingTitleOffset" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </TextBlock.Foreground>
-                </TextBlock>
+            <StackPanel Margin="33,20,0,0" HorizontalAlignment="Center" Orientation="Vertical">
+                
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,0,0" Orientation="Horizontal">
 
-
-                <StackPanel Background="Black"  Orientation="Horizontal">
-                    <Button x:Name="SoundOnButton" Background="Transparent" BorderBrush="Transparent" Margin="0,0,10,0" FontSize="16" FontFamily="Segoe MDL2 Assets" Content="&#xE767;" Click="SoundOn" Style="{StaticResource MyButtonStyle}">
-                        <Button.Foreground>
-                            <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
-                                <GradientStop Color="#FF7BBFD8" x:Name="SoundButtonOffset" Offset="1"/>
-                                <GradientStop Color="#FF1B70C3"/>
-                            </LinearGradientBrush>
-                        </Button.Foreground>
-                    </Button>
-
-                    <Button x:Name="SoundOffButton" Background="Transparent" BorderBrush="Transparent" FontSize="16" FontFamily="Segoe MDL2 Assets" Content="&#xE74F;" Click="SoundOff" Style="{StaticResource MyButtonStyle}">
-                        <Button.Foreground>
-                            <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
-                                <GradientStop Color="#FF7BBFD8" x:Name="MuteButtonOffset" Offset="1"/>
-                                <GradientStop Color="#FF1B70C3"/>
-                            </LinearGradientBrush>
-                        </Button.Foreground>
-
-                    </Button>
-                </StackPanel>
-
-            </StackPanel>
-
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,30,0,0" Orientation="Horizontal">
-
-                <TextBlock Margin="0,0,10,0" HorizontalAlignment="Center" FontSize="20" FontFamily="Corbel Light" Text="Speech synthesis">
-                    <TextBlock.Foreground>
-                        <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
-                            <GradientStop Color="#FF7BBFD8" x:Name="SynthesisSettingTitleOffset" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </TextBlock.Foreground>
-                </TextBlock>
-
-
-                <StackPanel Background="Black"  Orientation="Horizontal">
-                    <Button x:Name="SynthesisSoundOnButton" Background="Transparent" BorderBrush="Transparent" Margin="0,0,10,0" FontSize="16" FontFamily="Segoe MDL2 Assets" Content="&#xE767;" Click="SynthesisSoundOn" Style="{StaticResource MyButtonStyle}">
-                        <Button.Foreground>
-                            <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
-                                <GradientStop Color="#FF7BBFD8" x:Name="SynthesisSoundButtonOffset" Offset="1"/>
-                                <GradientStop Color="#FF1B70C3"/>
-                            </LinearGradientBrush>
-                        </Button.Foreground>
-                    </Button>
-
-                    <Button x:Name="SynthesisSoundOffButton" Background="Transparent" BorderBrush="Transparent" FontSize="16" FontFamily="Segoe MDL2 Assets" Content="&#xE74F;" Click="SynthesisSoundOff" Style="{StaticResource MyButtonStyle}">
-                        <Button.Foreground>
-                            <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
-                                <GradientStop Color="#FF7BBFD8" x:Name="SynthesisMuteButtonOffset" Offset="1"/>
-                                <GradientStop Color="#FF1B70C3"/>
-                            </LinearGradientBrush>
-                        </Button.Foreground>
-
-                    </Button>
-                </StackPanel>
-
-            </StackPanel>
-
-
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,30,0,0" Orientation="Horizontal">
-                <TextBlock Margin="0,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontFamily="Corbel Light" Text="Model">
-                    <TextBlock.Foreground>
-                        <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
-                            <GradientStop Color="#FF7BBFD8" x:Name="GPTModelOffset" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </TextBlock.Foreground>
-                </TextBlock>
-
-                <StackPanel Width="150" Height="30" Background="Black" Orientation="Horizontal">
-                    <StackPanel.Clip>
-                        <RectangleGeometry Rect="0,0,150,30" RadiusX="3" RadiusY="3"/>
-                    </StackPanel.Clip>
-
-                    <Button x:Name="PreviousModelButton" Background="Black" BorderBrush="Transparent" FontSize="15" FontFamily="Segoe MDL2 Assets" Content="&#xEDD9;" Click="PreviousModel" Style="{StaticResource MyButtonStyle}">
-                        <Button.Foreground>
-                            <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
-                                <GradientStop Color="#FF7BBFD8" x:Name="PreviousModelButtonOffset" Offset="1"/>
-                                <GradientStop Color="#FF1B70C3"/>
-                            </LinearGradientBrush>
-                        </Button.Foreground>
-                    </Button>
-
-                    <TextBox x:Name="GptModelDisplay" BorderThickness="0" Width="100" Height="30" IsReadOnly="True" FontFamily="Consolas" FontWeight="Bold" VerticalAlignment="Center" TextWrapping="Wrap">
-                        <TextBox.Background>
-                            <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
-                                <GradientStop Color="#FF7BBFD8" x:Name="CurrentGPTModelOffset" Offset="1"/>
-                                <GradientStop Color="#FF1B70C3"/>
-                            </LinearGradientBrush>
-                        </TextBox.Background>
-                    </TextBox>
-
-                    <Button x:Name="NextModelButton" Background="Black" BorderBrush="Transparent" Margin="0,0,0,0" FontSize="15" FontFamily="Segoe MDL2 Assets" Content="&#xEDDA;" Click="NextModel" Style="{StaticResource MyButtonStyle}">
-                        <Button.Foreground>
-                            <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
-                                <GradientStop Color="#FF7BBFD8" x:Name="NextModelButtonOffset" Offset="1"/>
-                                <GradientStop Color="#FF1B70C3"/>
-                            </LinearGradientBrush>
-                        </Button.Foreground>
-                    </Button>
-                </StackPanel>
-            </StackPanel>
-
-
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,30,0,0" Orientation="Horizontal">
-                <TextBlock Margin="0,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontFamily="Corbel Light" Text="Temperature">
-                    <TextBlock.Foreground>
-                        <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
-                            <GradientStop Color="#FF7BBFD8" x:Name="ModelTempLabelOffset" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </TextBlock.Foreground>
-                </TextBlock>
-                <StackPanel Background="Black">
-                    <StackPanel.Clip>
-                        <RectangleGeometry Rect="0,0,125,40" RadiusX="5" RadiusY="5"/>
-                    </StackPanel.Clip>
-                    <Slider x:Name="TemperatureSelector" Margin="10,0,10,0" Delay="1000" ValueChanged="TemperatureChanged" TickFrequency="1" IsSnapToTickEnabled="True" Width="100"/>
-                    <TextBlock x:Name="TemperatureDisplay" FontSize="15" HorizontalAlignment="Center" Text="100%">
+                    <TextBlock Margin="0,0,10,0" HorizontalAlignment="Center" FontSize="20" FontFamily="Corbel Light" Text="Sound">
                         <TextBlock.Foreground>
                             <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
-                                <GradientStop Color="#FF7BBFD8" x:Name="ModelTempOffset" Offset="1"/>
+                                <GradientStop Color="#FF7BBFD8" x:Name="SettingTitleOffset" Offset="1"/>
                                 <GradientStop Color="#FF1B70C3"/>
                             </LinearGradientBrush>
                         </TextBlock.Foreground>
                     </TextBlock>
+
+
+                    <StackPanel Background="Black"  Orientation="Horizontal">
+                        <Button x:Name="SoundOnButton" Background="Transparent" BorderBrush="Transparent" Margin="0,0,10,0" FontSize="16" FontFamily="Segoe MDL2 Assets" Content="&#xE767;" Click="SoundOn" Style="{StaticResource MyButtonStyle}">
+                            <Button.Foreground>
+                                <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
+                                    <GradientStop Color="#FF7BBFD8" x:Name="SoundButtonOffset" Offset="1"/>
+                                    <GradientStop Color="#FF1B70C3"/>
+                                </LinearGradientBrush>
+                            </Button.Foreground>
+                        </Button>
+
+                        <Button x:Name="SoundOffButton" Background="Transparent" BorderBrush="Transparent" FontSize="16" FontFamily="Segoe MDL2 Assets" Content="&#xE74F;" Click="SoundOff" Style="{StaticResource MyButtonStyle}">
+                            <Button.Foreground>
+                                <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
+                                    <GradientStop Color="#FF7BBFD8" x:Name="MuteButtonOffset" Offset="1"/>
+                                    <GradientStop Color="#FF1B70C3"/>
+                                </LinearGradientBrush>
+                            </Button.Foreground>
+
+                        </Button>
+                    </StackPanel>
+
                 </StackPanel>
+
+
+
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,15,0,0" Orientation="Horizontal">
+
+                    <TextBlock Margin="0,0,10,0" HorizontalAlignment="Center" FontSize="20" FontFamily="Corbel Light" Text="Set commands">
+                        <TextBlock.Foreground>
+                            <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
+                                <GradientStop Color="#FF7BBFD8" x:Name="SetCommandsTitleOffset" Offset="1"/>
+                                <GradientStop Color="#FF1B70C3"/>
+                            </LinearGradientBrush>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+
+
+                    <Button FontFamily="Segoe MDL2 Assets" Click="SetCommands" Background="Black" FontSize="16" VerticalAlignment="Center" Content="&#xE15E;" Style="{StaticResource MyButtonStyle}">
+                        <Button.Foreground>
+                            <LinearGradientBrush>
+                                <GradientStop Color="#FF7BBFD8" x:Name="SetCommandsButtonOffset" Offset="1"/>
+                                <GradientStop Color="#FF1B70C3"/>
+                            </LinearGradientBrush>
+                        </Button.Foreground>
+                    </Button>
+
+
+                </StackPanel>
+
+
+                <StackPanel Orientation="Horizontal" Margin="0,15,0,0" VerticalAlignment="Center" HorizontalAlignment="Left">
+
+                    <TextBlock Text="Instruction Manual" FontSize="20" FontFamily="Corbel Light" Margin="0,0,10,0">
+                        <TextBlock.Foreground>
+                            <LinearGradientBrush>
+                                <GradientStop Color="#FF7BBFD8" x:Name="InstructionManualTextBlockOffset" Offset="1"/>
+                                <GradientStop Color="#FF1B70C3"/>
+                            </LinearGradientBrush>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+
+                    <Button FontFamily="Segoe MDL2 Assets" Click="OpenInstructionManual" Background="Black" FontSize="16" VerticalAlignment="Center" Content="&#xE946;" Style="{StaticResource MyButtonStyle}">
+                        <Button.Foreground>
+                            <LinearGradientBrush>
+                                <GradientStop Color="#FF7BBFD8" x:Name="InstructionManualButtonOffset" Offset="1"/>
+                                <GradientStop Color="#FF1B70C3"/>
+                            </LinearGradientBrush>
+                        </Button.Foreground>
+                    </Button>
+                </StackPanel>
+
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,15,0,0" Orientation="Horizontal">
+
+                    <TextBlock Margin="0,0,10,0" HorizontalAlignment="Center" FontSize="20" FontFamily="Corbel Light" Text="Speech synthesis">
+                        <TextBlock.Foreground>
+                            <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
+                                <GradientStop Color="#FF7BBFD8" x:Name="SynthesisSettingTitleOffset" Offset="1"/>
+                                <GradientStop Color="#FF1B70C3"/>
+                            </LinearGradientBrush>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+
+
+                    <StackPanel Background="Black"  Orientation="Horizontal">
+                        <Button x:Name="SynthesisSoundOnButton" Background="Transparent" BorderBrush="Transparent" Margin="0,0,10,0" FontSize="16" FontFamily="Segoe MDL2 Assets" Content="&#xE767;" Click="SynthesisSoundOn" Style="{StaticResource MyButtonStyle}">
+                            <Button.Foreground>
+                                <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
+                                    <GradientStop Color="#FF7BBFD8" x:Name="SynthesisSoundButtonOffset" Offset="1"/>
+                                    <GradientStop Color="#FF1B70C3"/>
+                                </LinearGradientBrush>
+                            </Button.Foreground>
+                        </Button>
+
+                        <Button x:Name="SynthesisSoundOffButton" Background="Transparent" BorderBrush="Transparent" FontSize="16" FontFamily="Segoe MDL2 Assets" Content="&#xE74F;" Click="SynthesisSoundOff" Style="{StaticResource MyButtonStyle}">
+                            <Button.Foreground>
+                                <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
+                                    <GradientStop Color="#FF7BBFD8" x:Name="SynthesisMuteButtonOffset" Offset="1"/>
+                                    <GradientStop Color="#FF1B70C3"/>
+                                </LinearGradientBrush>
+                            </Button.Foreground>
+
+                        </Button>
+                    </StackPanel>
+
+                </StackPanel>
+
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,15,0,0" Orientation="Horizontal">
+                    <TextBlock Margin="0,0,10,0" HorizontalAlignment="Center" FontSize="20" FontFamily="Corbel Light" Text="ChatGPT API key">
+                        <TextBlock.Foreground>
+                            <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
+                                <GradientStop Color="#FF7BBFD8" x:Name="ChatGPTApiKeyOffset" Offset="1"/>
+                                <GradientStop Color="#FF1B70C3"/>
+                            </LinearGradientBrush>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+
+                    <Button FontFamily="Segoe MDL2 Assets" Click="Set_Chat_Gpt_Api_Key" Background="Black" FontSize="16" VerticalAlignment="Center" Content="&#xE15E;" Style="{StaticResource MyButtonStyle}">
+                        <Button.Foreground>
+                            <LinearGradientBrush>
+                                <GradientStop Color="#FF7BBFD8" x:Name="SetChatGptApiButtonOffset" Offset="1"/>
+                                <GradientStop Color="#FF1B70C3"/>
+                            </LinearGradientBrush>
+                        </Button.Foreground>
+                    </Button>
+                </StackPanel>
+
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,15,0,0" Orientation="Horizontal">
+                    <TextBlock Margin="0,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontFamily="Corbel Light" Text="GPT Model">
+                        <TextBlock.Foreground>
+                            <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
+                                <GradientStop Color="#FF7BBFD8" x:Name="GPTModelOffset" Offset="1"/>
+                                <GradientStop Color="#FF1B70C3"/>
+                            </LinearGradientBrush>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+
+                    <StackPanel Width="150" Height="30" Background="Black" Orientation="Horizontal">
+                        <StackPanel.Clip>
+                            <RectangleGeometry Rect="0,0,150,30" RadiusX="3" RadiusY="3"/>
+                        </StackPanel.Clip>
+
+                        <Button x:Name="PreviousModelButton" Background="Black" BorderBrush="Transparent" FontSize="15" FontFamily="Segoe MDL2 Assets" Content="&#xEDD9;" Click="PreviousModel" Style="{StaticResource MyButtonStyle}">
+                            <Button.Foreground>
+                                <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
+                                    <GradientStop Color="#FF7BBFD8" x:Name="PreviousModelButtonOffset" Offset="1"/>
+                                    <GradientStop Color="#FF1B70C3"/>
+                                </LinearGradientBrush>
+                            </Button.Foreground>
+                        </Button>
+
+                        <TextBox x:Name="GptModelDisplay" BorderThickness="0" Width="100" Height="30" IsReadOnly="True" FontFamily="Consolas" FontWeight="Bold" VerticalAlignment="Center" TextWrapping="Wrap">
+                            <TextBox.Background>
+                                <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
+                                    <GradientStop Color="#FF7BBFD8" x:Name="CurrentGPTModelOffset" Offset="1"/>
+                                    <GradientStop Color="#FF1B70C3"/>
+                                </LinearGradientBrush>
+                            </TextBox.Background>
+                        </TextBox>
+
+                        <Button x:Name="NextModelButton" Background="Black" BorderBrush="Transparent" Margin="0,0,0,0" FontSize="15" FontFamily="Segoe MDL2 Assets" Content="&#xEDDA;" Click="NextModel" Style="{StaticResource MyButtonStyle}">
+                            <Button.Foreground>
+                                <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
+                                    <GradientStop Color="#FF7BBFD8" x:Name="NextModelButtonOffset" Offset="1"/>
+                                    <GradientStop Color="#FF1B70C3"/>
+                                </LinearGradientBrush>
+                            </Button.Foreground>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+
+
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,15,0,0" Orientation="Horizontal">
+                    <TextBlock Margin="0,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontFamily="Corbel Light" Text="Model Creativity">
+                        <TextBlock.Foreground>
+                            <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
+                                <GradientStop Color="#FF7BBFD8" x:Name="ModelTempLabelOffset" Offset="1"/>
+                                <GradientStop Color="#FF1B70C3"/>
+                            </LinearGradientBrush>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+                    <StackPanel Background="Black">
+                        <StackPanel.Clip>
+                            <RectangleGeometry Rect="0,0,125,40" RadiusX="5" RadiusY="5"/>
+                        </StackPanel.Clip>
+                        <Slider x:Name="TemperatureSelector" Margin="10,0,10,0" Delay="1000" ValueChanged="TemperatureChanged" TickFrequency="1" IsSnapToTickEnabled="True" Width="100"/>
+                        <TextBlock x:Name="TemperatureDisplay" FontSize="15" HorizontalAlignment="Center" Text="100%">
+                            <TextBlock.Foreground>
+                                <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
+                                    <GradientStop Color="#FF7BBFD8" x:Name="ModelTempOffset" Offset="1"/>
+                                    <GradientStop Color="#FF1B70C3"/>
+                                </LinearGradientBrush>
+                            </TextBlock.Foreground>
+                        </TextBlock>
+                    </StackPanel>
+                </StackPanel>
+
             </StackPanel>
 
-
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,30,0,0" Orientation="Horizontal">
-                <TextBlock Margin="0,0,10,0" HorizontalAlignment="Center" FontSize="20" FontFamily="Corbel Light" Text="ChatGPT API key">
-                    <TextBlock.Foreground>
-                        <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
-                            <GradientStop Color="#FF7BBFD8" x:Name="ChatGPTApiKeyOffset" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </TextBlock.Foreground>
-                </TextBlock>
-
-                <Button FontFamily="Segoe MDL2 Assets" Click="Set_Chat_Gpt_Api_Key" Background="Black" FontSize="16" VerticalAlignment="Center" Content="&#xE15E;" Style="{StaticResource MyButtonStyle}">
-                    <Button.Foreground>
-                        <LinearGradientBrush>
-                            <GradientStop Color="#FF7BBFD8" x:Name="SetChatGptApiButtonOffset" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </Button.Foreground>
-                </Button>
-            </StackPanel>
-
-
-
-            <StackPanel Orientation="Horizontal" Margin="0,30,0,0" VerticalAlignment="Center" HorizontalAlignment="Center">
-
-                <TextBlock Text="Instruction Manual" FontSize="20" FontFamily="Corbel Light" Margin="0,0,10,0">
-                    <TextBlock.Foreground>
-                        <LinearGradientBrush>
-                            <GradientStop Color="#FF7BBFD8" x:Name="InstructionManualTextBlockOffset" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </TextBlock.Foreground>
-                </TextBlock>
-
-                <Button FontFamily="Segoe MDL2 Assets" Click="OpenInstructionManual" Background="Black" FontSize="16" VerticalAlignment="Center" Content="&#xE946;" Style="{StaticResource MyButtonStyle}">
-                    <Button.Foreground>
-                        <LinearGradientBrush>
-                            <GradientStop Color="#FF7BBFD8" x:Name="InstructionManualButtonOffset" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </Button.Foreground>
-                </Button>
-            </StackPanel>
         </StackPanel>
 
 

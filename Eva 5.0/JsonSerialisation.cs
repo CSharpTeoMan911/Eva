@@ -49,6 +49,7 @@ namespace Eva_5._0
                 {
                     using (JsonWriter writer = new JsonTextWriter(tw))
                     {
+                        writer.Formatting = Formatting.Indented;
                         serializer.Serialize(writer, item);
                         return_item = tw.ToString();
                     }

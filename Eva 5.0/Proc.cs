@@ -106,7 +106,7 @@ namespace Eva_5._0
             {
                 _= await SpeechSynthesis.Synthesis(SpeechSynthesis.Action.Searching, SearchContent, WebApplication);
 
-                W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryGetValue(WebApplication, out Process);
+                commands.W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryGetValue(WebApplication, out Process);
 
                 StringBuilder Process_Builder = new StringBuilder(Process);
                 Process_Builder.Append(SearchContent);
@@ -146,53 +146,37 @@ namespace Eva_5._0
         private static async Task<bool> SystemProcesses(string Application, string Process)
         {
             string application_executable_name = String.Empty;
-
-            bool Application_Executable_Name_Retrieval_Result = A_p_l_Name__And__A_p_l___E_x__Name.TryGetValue(Application, out application_executable_name);
-
-
+            bool Application_Executable_Name_Retrieval_Result = commands.A_p_l_Name__And__A_p_l___E_x__Name.TryGetValue(Application, out application_executable_name);
 
             string application_process_name = String.Empty;
-
-            bool Application_Process_Name_Retrieval_Result = A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryGetValue(Application, out application_process_name);
-
-
+            bool Application_Process_Name_Retrieval_Result = commands.A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryGetValue(Application, out application_process_name);
 
             string application_not_found_error_link = String.Empty;
+            bool Application_Not_Found_Error_Download_Link_Result = commands.A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryGetValue(Application, out application_not_found_error_link);
 
-            bool Application_Not_Found_Error_Download_Link_Result = A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryGetValue(Application, out application_not_found_error_link);
-
-
-
-            StringBuilder formated_application_executable_name = new StringBuilder(application_executable_name);
-            if(formated_application_executable_name.Length > 6)
-            {
-                formated_application_executable_name.Remove(0, 6);
-            }
-
-            string formated_application_executable_name_string = formated_application_executable_name.ToString();
-            formated_application_executable_name.Clear();
-
+            string classifier = application_executable_name.Substring(0, 3);
+            string formatted_application_executable_name_string = application_executable_name.Substring(6);
 
             switch (Process)
             {
                 case "open":
                     try
                     {
-                        await SpeechSynthesis.Synthesis(SpeechSynthesis.Action.Opening, null, Application);
-
-                        System.Diagnostics.Process Application_Process = null;
-
                         if (Application_Executable_Name_Retrieval_Result == true)
                         {
-                            switch (application_executable_name[0] == 'U' && application_executable_name[1] == 'R' && application_executable_name[2] == 'I')
-                            {
-                                case true:
-                                    Eva_Functionalities.Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
+                            await SpeechSynthesis.Synthesis(SpeechSynthesis.Action.Opening, null, Application);
 
+                            System.Diagnostics.Process Application_Process = null;
+
+                            Eva_Functionalities.Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
+
+                            switch (classifier)
+                            {
+                                case "URI":
                                     Application_Process = new System.Diagnostics.Process();
                                     try
                                     {
-                                        Application_Process.StartInfo.FileName = formated_application_executable_name_string;
+                                        Application_Process.StartInfo.FileName = formatted_application_executable_name_string;
                                         Application_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
                                         Application_Process.StartInfo.UseShellExecute = true;
                                         Application_Process.Start();
@@ -207,84 +191,56 @@ namespace Eva_5._0
                                         Application_Process?.Dispose();
                                     }
                                     break;
-
-
-
-                                case false:
-                                    switch (application_executable_name[0] == 'C' && application_executable_name[1] == 'M' && application_executable_name[2] == 'D')
+                                case "CMD":
+                                    Application_Process = new System.Diagnostics.Process();
+                                    try
                                     {
-                                        case true:
-                                            Eva_Functionalities.Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
+                                        Application_Process.StartInfo.WorkingDirectory = @"C:\Users\" + Environment.UserName + @"\Desktop";
+                                        Application_Process.StartInfo.Arguments = "/k " + formatted_application_executable_name_string;
+                                        Application_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                                        Application_Process.StartInfo.UseShellExecute = true;
+                                        Application_Process.StartInfo.CreateNoWindow = true;
+                                        Application_Process.StartInfo.FileName = "cmd";
+                                        Application_Process.Start();
+                                    }
+                                    catch
+                                    {
+                                        if (Application_Not_Found_Error_Download_Link_Result == true)
+                                            MissingApplicationDownload(application_not_found_error_link);
+                                    }
+                                    finally
+                                    {
+                                        Application_Process?.Dispose();
+                                    }
+                                    break;
+                                case "APP":
+                                    if (formatted_application_executable_name_string == "recycle bin cleanup")
+                                    {
+                                        await Eva_Functionalities.Recycle_Bine_Cleanup_Implementor.Empty_Recycle_Bin_Implementor();
+                                    }
+                                    break;
+                                case "PRC":
+                                    Application_Process = new System.Diagnostics.Process();
+                                    try
+                                    {
+                                        Application_Process.StartInfo.WorkingDirectory = @"C:\Users\" + Environment.UserName + @"\Desktop";
+                                        Application_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                                        Application_Process.StartInfo.FileName = formatted_application_executable_name_string;
+                                        Application_Process.StartInfo.UseShellExecute = true;
+                                        Application_Process.Start();
 
-                                            Application_Process = new System.Diagnostics.Process();
-                                            try
-                                            {
-                                                Application_Process.StartInfo.WorkingDirectory = @"C:\Users\" + Environment.UserName + @"\Desktop";
-                                                Application_Process.StartInfo.Arguments = "/k " + formated_application_executable_name_string;
-                                                Application_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                                                Application_Process.StartInfo.UseShellExecute = true;
-                                                Application_Process.StartInfo.CreateNoWindow = true;
-                                                Application_Process.StartInfo.FileName = "cmd";
-                                                Application_Process.Start();
-                                            }
-                                            catch
-                                            {
-                                                if (Application_Not_Found_Error_Download_Link_Result == true)
-                                                    MissingApplicationDownload(application_not_found_error_link);
-                                            }
-                                            finally
-                                            {
-                                                Application_Process?.Dispose();
-                                            }
-                                            break;
-
-
-
-                                        case false:
-                                            Eva_Functionalities.Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
-
-                                            switch (application_executable_name[0] == 'A' && application_executable_name[1] == 'P' && application_executable_name[2] == 'P')
-                                            {
-                                                case true:
-
-                                                    string application_name = formated_application_executable_name_string;
-
-                                                    if (application_name == "recycle bin cleanup")
-                                                    {
-                                                        await Eva_Functionalities.Recycle_Bine_Cleanup_Implementor.Empty_Recycle_Bin_Implementor();
-                                                    }
-                                                    break;
-
-
-
-                                                case false:
-                                                    Application_Process = new System.Diagnostics.Process();
-
-                                                    try
-                                                    {
-                                                        Application_Process.StartInfo.WorkingDirectory = @"C:\Users\" + Environment.UserName + @"\Desktop";
-                                                        Application_Process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-                                                        Application_Process.StartInfo.FileName = application_executable_name;
-                                                        Application_Process.StartInfo.UseShellExecute = true;
-                                                        Application_Process.Start();
-
-                                                    }
-                                                    catch
-                                                    {
-                                                        if (Application_Not_Found_Error_Download_Link_Result == true)
-                                                            MissingApplicationDownload(application_not_found_error_link);
-                                                    }
-                                                    finally
-                                                    {
-                                                        Application_Process?.Dispose();
-                                                    }
-                                                    break;
-                                            }
-                                            break;
+                                    }
+                                    catch(Exception E)
+                                    {
+                                        if (Application_Not_Found_Error_Download_Link_Result == true)
+                                            MissingApplicationDownload(application_not_found_error_link);
+                                    }
+                                    finally
+                                    {
+                                        Application_Process?.Dispose();
                                     }
                                     break;
                             }
-
 
                             await sound_player.Play_Sound(Sound_Player.Sounds.AppExecutionSoundEffect);
                         }
