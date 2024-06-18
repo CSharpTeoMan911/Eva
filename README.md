@@ -9,6 +9,7 @@
 <br>
 
 * Eva can now excute custom commands made by the user.
+* Eva can now become invisible. Say 'Listen', then say either 'visible' or 'invisible' to make the window invisible or visible accordingly.
 
 <br>
 <br>
