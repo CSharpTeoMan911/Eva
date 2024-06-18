@@ -173,6 +173,14 @@ In order to give commands to Eva say the word "Listen" or "Hey listen" followed 
 
 <br>
 
+# Command customisation
+
+![Eva_Capture2072297579](https://github.com/CSharpTeoMan911/Eva/assets/87245086/6076ec7e-f28c-46fc-8ed2-1f2cfc1e6ff8)
+
+Add, remove, modify commands as you desire. For detailed instruction regarding command customisation, go to the Wiki page https://github.com/CSharpTeoMan911/Eva/wiki/Commands-customisation 
+
+<br>
+
 # What Eva can do?
 
 <br>
