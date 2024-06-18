@@ -8,7 +8,8 @@
 
 <br>
 
-* Eva can now speak using Speech Synthesis.
+* Eva can now excute custom commands made by the user.
+* Eva can now become invisible. Say 'Listen', then say either 'visible' or 'invisible' to make the window invisible or visible accordingly.
 
 <br>
 <br>
@@ -170,6 +171,14 @@ In order to give commands to Eva say the word "Listen" or "Hey listen" followed 
 ![Eva_Capture1277613527](https://user-images.githubusercontent.com/87245086/201437431-b0853d46-8418-49cc-bb01-1714ed4064f0.jpg)
 
 ![Eva_Capture34673362](https://user-images.githubusercontent.com/87245086/201437439-a3196b97-7d39-457e-ac38-38300363ab61.jpg)
+
+<br>
+
+# Command customisation
+
+![Eva_Capture2072297579](https://github.com/CSharpTeoMan911/Eva/assets/87245086/6076ec7e-f28c-46fc-8ed2-1f2cfc1e6ff8)
+
+Add, remove, and modify commands as you desire. For detailed instruction regarding command customisation, go to the Wiki page https://github.com/CSharpTeoMan911/Eva/wiki/Commands-customisation 
 
 <br>
 
