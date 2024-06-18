@@ -62,8 +62,6 @@ namespace Eva_5._0
 
             string Sentence = Eva_Functionalities.Special_Character_Replacement_Implementor.Remove_Special_Characters_Procedure(Result);
 
-            System.Diagnostics.Debug.WriteLine(Sentence);
-
             Sentence_StringBuilder.Append(Sentence);
 
             // THE FIRST TOKENIZATION IS INITIATED. THE FIRST TOKENIZATION IS RESPONSIBLE FOR PARAMETER ASSOCIATION WITH THEIR RESPECTIVE COMMAND FORMATS
@@ -74,7 +72,20 @@ namespace Eva_5._0
             //
             // [ BEGIN ]
 
-            if (Sentence.IndexOf("activate c") == 0 && Sentence.IndexOf(" mode") == Sentence.Length - " mode".Length)
+
+            if (Sentence == "invisible")
+            {
+                MainWindow.invisibility_mode = true;
+                await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTActivationSoundEffect);
+                goto ChatGptMode;
+            }
+            else if (Sentence == "visible")
+            {
+                MainWindow.invisibility_mode = false;
+                await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTDeactivationSoundEffect);
+                goto ChatGptMode;
+            }
+            else if (Sentence.IndexOf("activate c") == 0 && Sentence.IndexOf(" mode") == Sentence.Length - " mode".Length)
             {
                 MainWindow.chatgpt_mode_enabled = true;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTActivationSoundEffect);

@@ -18,11 +18,10 @@ namespace Eva_5._0
             WebApp
         }
 
-        // THIS METHOD ENSURES THAT THE PERMISSIONS TO THE SETTINGS FILE FOR THE CURRENT
+        // THIS METHOD ENSURES THAT THE PERMISSIONS TO THE COMMANDS FILE FOR THE CURRENT
         // USER INCLUDE READ, WRITE, AND DELETE FUNCTIONALITIES TO THE SETTINGS FILE.
         // THE SETTINGS FILE MUST HAVE READ AND WRITE PERMISSIONS IN ORDER FOR THE 
-        // APPLICATION TO ACCESS THE CHATGPT API KEY AND THE SET VOLUME SETTINGS,
-        // OTHERWISE THE APPLICATION CAN CRASH.
+        // APPLICATION TO ACCESS THE COMMANDS OTHERWISE THE APPLICATION CAN CRASH.
         private static void Ensure_Access_To_The_Commands_File()
         {
             if (System.IO.File.Exists(commands_file_name) == true)
@@ -43,9 +42,9 @@ namespace Eva_5._0
 
         private static async Task<Command_Pallet_File> Load_Commands_File()
         {
-            // THE REQUIRED FILE ACCESS METHODS FOR THE SETTINGS FILE
+            // THE REQUIRED FILE ACCESS METHODS FOR THE COMMANDS FILE
             // ARE ENSURED BEFORE ANY READ OPERATION IS PERFORMED
-            // ON THE SETTINGS FILE TO AVOID FATAL ERRORS AND ALSO 
+            // ON THE COMMANDS FILE TO AVOID FATAL ERRORS AND ALSO 
             // BE ABLE TO READ THE VALUES
             //
             // [ BEGIN ]
@@ -59,7 +58,7 @@ namespace Eva_5._0
 
 
 
-            // A "Settings_File" CLASS OBJECT IS CREATED WITH SOME DEFAULT VALUES.
+            // A "Command_Pallet_File" CLASS OBJECT IS CREATED WITH SOME DEFAULT VALUES.
             // IF THE SETTINGS FILE DOES NOT EXIST, A SETTINGS FILE WILL BE CRATED
             // WITH THESE DEFAULT VALUES.
             Command_Pallet_File commands_File = new Command_Pallet_File();
@@ -70,7 +69,7 @@ namespace Eva_5._0
 
                 if (System.IO.File.Exists(commands_file_name) == true)
                 {
-                    // IF THE SETTINGS FILE EXISTS, A "FileStream" OBJECT IS CRATED
+                    // IF THE COMMANDS FILE EXISTS, A "FileStream" OBJECT IS CREATED
                     // IN ORDER TO OPEN THE FILE IN A BINARY DATA STREAM AND READ
                     // THE FILE'S BINARY CONTENTS
                     //
@@ -81,9 +80,9 @@ namespace Eva_5._0
 
                     try
                     {
-                        // THE BINARY INFORMATION OF THE SETTINGS FILE IS READ IN A BUFFER
+                        // THE BINARY INFORMATION OF THE COMMANDS FILE IS READ IN A BUFFER
                         // AND THE BUFFER IS THEN CONVERTED IN A STRING IN ORDER TO BE 
-                        // DE-SERIALIZED FROM THE JSON FILE FORMAT IN THE "Settings_File"
+                        // DE-SERIALIZED FROM THE JSON FILE FORMAT IN THE "Command_Pallet_File"
                         // FORMAT. 
                         //
                         // [ BEGIN ]
@@ -109,8 +108,8 @@ namespace Eva_5._0
                 }
                 else
                 {
-                    // IF THE SETTINGS FILE DOES NOT EXIST, PASS THE 
-                    // "Settings_File" CLASS INSTANCE TO THIS 
+                    // IF THE COMMANDS FILE DOES NOT EXIST, PASS THE 
+                    // "Command_Pallet_File" CLASS INSTANCE TO THIS 
                     // METHOD AND CREATE A SETTINGS FILE
                     // USING THE PRESET DEFAULT VALUES 
                     // OF THIS CLASS INSTANCE
@@ -1055,9 +1054,9 @@ namespace Eva_5._0
 
         private static async Task<bool> Update_Commands_File(Command_Pallet_File commands_File)
         {
-            // THE REQUIRED FILE ACCESS METHODS FOR THE SETTINGS FILE
+            // THE REQUIRED FILE ACCESS METHODS FOR THE COMMANDS FILE
             // ARE ENSURED BEFORE ANY DELETE OPERATION IS
-            // PERFORMED ON THE SETTINGS FILE TO AVOID FATAL
+            // PERFORMED ON THE COMMANDS FILE TO AVOID FATAL
             // ERRORS AND ALSO BE ABLE TO READ THE VALUES
             //
             // [ BEGIN ]
@@ -1068,8 +1067,8 @@ namespace Eva_5._0
 
             try
             {
-                // IF THE SETTINGS FILE EXIST, DELETE IT AND CREATE A
-                // NEW SETTINGS FILE WITH THE SET VALUES
+                // IF THE COMMANDS FILE EXIST, DELETE IT AND CREATE A
+                // NEW COMMANDS FILE WITH THE SET VALUES
                 //
                 // [ BEGIN ]
 
@@ -1089,10 +1088,10 @@ namespace Eva_5._0
 
         private static async Task<bool> Create_Commands_File(Command_Pallet_File commands_File)
         {
-            // SERIALIZE THE "Settings_File" OBJECT IN A JSON FILE FORMAT
+            // SERIALIZE THE "Command_Pallet_File" OBJECT IN A JSON FILE FORMAT
             // AND CONVERT THE SERIALIZED INFORMATION IN A BINARY FORMAT.
             // WRITE THE BINARY INFORMATION USING A "FileStream" OBJECT
-            // BY CREATING A SETTINGS FILE AND WRITING INTO IT USING 
+            // BY CREATING A COMMANDS FILE AND WRITING INTO IT USING 
             // THE STREAM.
             //
             // [ BEGIN ]
@@ -1128,9 +1127,9 @@ namespace Eva_5._0
 
 
 
-            // THE REQUIRED FILE ACCESS METHODS FOR THE SETTINGS FILE
+            // THE REQUIRED FILE ACCESS METHODS FOR THE COMMANDS FILE
             // ARE ENSURED BEFORE ANY WRITE OPERATION IS
-            // PERFORMED ON THE SETTINGS FILE TO AVOID FATAL
+            // PERFORMED ON THE COMMANDS FILE TO AVOID FATAL
             // ERRORS AND ALSO BE ABLE TO READ THE VALUES
             //
             // [ BEGIN ]
@@ -1146,21 +1145,23 @@ namespace Eva_5._0
 
 
 
-        // GETTER AND SETTER METHODS FOR THE APPLICATION'S SETTINGS FILE
+        // GETTER AND SETTER METHODS FOR THE APPLICATION'S COMMANDS FILE
         //
         // [ BEGIN ]
 
+        // GET THE CURRENT COMMANDS FILE
         public static async Task<Command_Pallet_File> Get_Commands()
         {
             return await Load_Commands_File();
         }
 
-
+        // UPDATE THE COMMANDS FILE
         public static async Task<bool> Set_Commands(Command_Pallet_File commands_File)
         {
             return (await Update_Commands_File(commands_File));
         }
 
+        // RESET THE COMMANDS FILE BY RESETING ONE OF THE COLLECTIONS TO THEIR DEFAULT VALUE AND UPDATE THE FILE
         public static async Task<bool> Reset_Commands(Commands_Customisation.Option type)
         {
             switch (type)

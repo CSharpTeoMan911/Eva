@@ -40,8 +40,9 @@ namespace Eva_5._0
 
         private short target_value = 1000;
 
-        private bool Cropped;
+        private bool Cropped = true;
 
+        public static bool? invisibility_mode;
 
 
         // COLORS FOR THE CIRCULAR INDICATOR FOR EACH OPERATIONAL MODE (CHATBOT MODE AND NORMAL MODE)
@@ -271,6 +272,21 @@ namespace Eva_5._0
 
                                     // ELSE, CONTINUE EXECUTING THE TIMER'S CURRENT ITERATION
                                     case false:
+
+                                        switch (invisibility_mode)
+                                        {
+                                            case true:
+                                                this.Height = 0;
+                                                this.Width = 0;
+                                                invisibility_mode = null;
+                                                break;
+
+                                            case false:
+                                                Crop_Or_UnCrop();
+                                                invisibility_mode = null;
+                                                break;
+                                        }
+                                        
 
 
                                         // KEEP THE MAIN WINDOW AS TOPMOST WINDOW (THE ONLINE SPEECH RECOGNITION ENGINE WORKS ONLY IF THE APPLICATION'S WINDOW IS ACTIVE)
@@ -802,6 +818,12 @@ namespace Eva_5._0
 
         private void ContractOrExpandTheMainWindow(object sender, RoutedEventArgs e)
         {
+            Cropped = !Cropped;
+            Crop_Or_UnCrop();
+        }
+
+        private void Crop_Or_UnCrop()
+        {
             switch (Cropped)
             {
                 case true:
@@ -830,7 +852,6 @@ namespace Eva_5._0
                     ContractOrExpandTheWindowButton.FontSize = 17;
                     MinimiseTheWindowButton.FontSize = 17;
                     CloseTheWindowButton.FontSize = 17;
-                    Cropped = false;
                     break;
 
 
@@ -860,10 +881,10 @@ namespace Eva_5._0
                     ContractOrExpandTheWindowButton.FontSize = 14;
                     MinimiseTheWindowButton.FontSize = 14;
                     CloseTheWindowButton.FontSize = 14;
-                    Cropped = true;
                     break;
             }
         }
+
 
         private void MinimiseTheMainWindow(object sender, RoutedEventArgs e)
         {
