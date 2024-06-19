@@ -155,7 +155,6 @@
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings_File.cs" />
-    <Compile Include="Special_Character_Replacement.cs" />
     <Compile Include="SpeechSynthesis.cs" />
     <Compile Include="Timer_Interval.cs" />
     <Compile Include="Timer_Window.xaml.cs">

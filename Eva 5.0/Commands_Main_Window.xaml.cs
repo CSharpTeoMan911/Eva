@@ -19,9 +19,18 @@ namespace Eva_5._0
     /// </summary>
     public partial class Commands_Main_Window : Window
     {
+
+        private SettingsWindow.OpenSpeech openSpeech;
+
         public Commands_Main_Window()
         {
             InitializeComponent();
+        }
+
+        public Commands_Main_Window(SettingsWindow.OpenSpeech openSpeech_)
+        {
+            InitializeComponent();
+            this.openSpeech = openSpeech_;
         }
 
         private void Move_Window(object sender, MouseButtonEventArgs e)
@@ -36,19 +45,19 @@ namespace Eva_5._0
 
         private void OpenApplications(object sender, RoutedEventArgs e)
         {
-            Commands_Customisation commands_Customisation = new Commands_Customisation(Commands_Customisation.Option.OpenApplications);
+            Commands_Customisation commands_Customisation = new Commands_Customisation(Commands_Customisation.Option.OpenApplications, openSpeech);
             commands_Customisation.ShowDialog();
         }
 
         private void CloseApplications(object sender, RoutedEventArgs e)
         {
-            Commands_Customisation commands_Customisation = new Commands_Customisation(Commands_Customisation.Option.CloseApplications);
+            Commands_Customisation commands_Customisation = new Commands_Customisation(Commands_Customisation.Option.CloseApplications, openSpeech);
             commands_Customisation.ShowDialog();
         }
 
         private void SearchOnWebApplications(object sender, RoutedEventArgs e)
         {
-            Commands_Customisation commands_Customisation = new Commands_Customisation(Commands_Customisation.Option.SearchContentOnWebApplications);
+            Commands_Customisation commands_Customisation = new Commands_Customisation(Commands_Customisation.Option.SearchContentOnWebApplications, openSpeech);
             commands_Customisation.ShowDialog();
         }
     }

@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Eva_5._0"
         mc:Ignorable="d"
-        Title="Command Addition" Height="95" Width="650" Topmost="True"  WindowStyle="None" AllowsTransparency="True" Loaded="Window_Loaded" Closing="Window_Closing" Icon="/Eva icon.png">
+        Title="Command Addition" Height="160" Width="650" Topmost="True"  WindowStyle="None" AllowsTransparency="True" Loaded="Window_Loaded" Closing="Window_Closing" Icon="/Eva icon.png">
 
     <Window.Clip>
-        <RectangleGeometry Rect="0,0,650,95" RadiusX="10" RadiusY="10"/>
+        <RectangleGeometry Rect="0,0,650,160" RadiusX="10" RadiusY="10"/>
     </Window.Clip>
 
     <Window.Background>
@@ -44,7 +44,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Rectangle Fill="Transparent"  Grid.RowSpan="3" Grid.ColumnSpan="9" MouseDown="Move_Window"/>
+        <Rectangle Fill="Transparent"  Grid.RowSpan="2" Grid.ColumnSpan="9" MouseDown="Move_Window"/>
 
 
 
@@ -52,9 +52,15 @@
             <Button FontFamily="Segoe MDL2 Assets"  Content="&#xEF2C;" FontSize="13" Foreground="White" Style="{StaticResource MyWhiteButtonStyle}" Click="CloseWindow"/>
         </StackPanel>
 
-        <StackPanel Name="Main_Content" Grid.Row="3" Grid.RowSpan="6" Grid.ColumnSpan="9" Background="White">
+        <StackPanel Name="Main_Content" Grid.Row="2" Grid.RowSpan="4" Grid.ColumnSpan="9" Background="White">
             
         </StackPanel>
 
+        <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.RowSpan="3" Grid.ColumnSpan="9" Background="#FFE6E6E6">
+            <StackPanel Width="660" Orientation="Horizontal">
+                <TextBlock Margin="20,0,0,0" VerticalAlignment="Center" FontSize="14" Text="Test the command: "/>
+                <TextBox x:Name="Eva_Command" Margin="5,0,0,0" FontFamily="Corbel Light" VerticalAlignment="Center" Width="450" FontSize="16"/>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Window>

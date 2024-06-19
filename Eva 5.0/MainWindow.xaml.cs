@@ -9,6 +9,7 @@ using System.Windows.Media;
 using static Eva_5._0.Online_Speech_Recognition;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using System.Threading;
 
 namespace Eva_5._0
 {
@@ -149,7 +150,7 @@ namespace Eva_5._0
 
         private double RotationValue;
 
-        private byte OnOff;
+        private int OnOff;
 
         public MainWindow()
         {
@@ -951,58 +952,20 @@ namespace Eva_5._0
                             {
                                 // IF THE MICROPHONE IS AVAILABLE
                                 case true:
-                                    OnOff++;
 
-                                    // RUN THE WAKE WORD WNGINE INITIATION / TERMINATION ON A DIFFERENT THREAD
-                                    ParallelProcessing = new System.Threading.Thread(async () =>
+                                    // RUN THE WAKE WORD WNGINE INITIATION / TERMINATION
+                                    switch (OnOff)
                                     {
-                                        switch (OnOff)
-                                        {
-                                            case 1:
-
-                                                // LOCK THE VARIABLE ON THE STACK TO BE ACCESSED ONLY BY THE CURRENT THREAD
-                                                lock (Online_Speech_Recogniser_Disabled)
-                                                {
-                                                    Online_Speech_Recogniser_Disabled = "false";
-                                                }
-
-                                                // CHANGE THE BUTTON CONTENT BY INVOKING THE OPERATION ON THE UI THREAD
-                                                Application.Current.Dispatcher.Invoke(() =>
-                                                {
-                                                    SpeechRecognitionButton.Content = "\xE1D6";
-                                                });
-
-                                                // START THE WAKE WORD ENGINE PROCESS
-                                                Wake_Word_Engine.Start_The_Wake_Word_Engine();
-                                                break;
+                                        case 0:
+                                            await SpeechOn();
+                                            break;
 
 
 
-                                            case 2:
-
-                                                // LOCK THE VARIABLE ON THE STACK TO BE ACCESSED ONLY BY THE CURRENT THREAD
-                                                lock (Online_Speech_Recogniser_Disabled)
-                                                {
-                                                    Online_Speech_Recogniser_Disabled = "true";
-                                                }
-
-                                                // CHANGE THE BUTTON CONTENT BY INVOKING THE OPERATION ON THE UI THREAD
-                                                Application.Current.Dispatcher.Invoke(() =>
-                                                {
-                                                    SpeechRecognitionButton.Content = "\xF781";
-                                                });
-
-                                                OnOff = 0;
-
-                                                // TEMINATE THE WAKE WORD ENGINE PROCESS
-                                                await Wake_Word_Engine.Stop_The_Wake_Word_Engine();
-                                                break;
-                                        }
-                                    });
-                                    ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
-                                    ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
-                                    ParallelProcessing.IsBackground = false;
-                                    ParallelProcessing.Start();
+                                        case 1:
+                                            await SpeechOff();
+                                            break;
+                                    }
                                     break;
 
                                 case false:
@@ -1025,6 +988,57 @@ namespace Eva_5._0
         }
 
 
+        private Task<bool> SpeechOn()
+        {
+            if (OnOff == 0)
+            {
+                // LOCK THE VARIABLE ON THE STACK TO BE ACCESSED ONLY BY THE CURRENT THREAD
+                lock (Online_Speech_Recogniser_Disabled)
+                {
+                    Online_Speech_Recogniser_Disabled = "false";
+                }
+
+                // CHANGE THE BUTTON CONTENT BY INVOKING THE OPERATION ON THE UI THREAD
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    SpeechRecognitionButton.Content = "\xE1D6";
+                });
+
+                // START THE WAKE WORD ENGINE PROCESS
+                Wake_Word_Engine.Start_The_Wake_Word_Engine();
+
+                Interlocked.Increment(ref OnOff);
+            }
+
+            return Task.FromResult(true);
+        }
+
+
+        private async Task<bool> SpeechOff()
+        {
+            if (OnOff == 1)
+            {
+                // LOCK THE VARIABLE ON THE STACK TO BE ACCESSED ONLY BY THE CURRENT THREAD
+                lock (Online_Speech_Recogniser_Disabled)
+                {
+                    Online_Speech_Recogniser_Disabled = "true";
+                }
+
+                // CHANGE THE BUTTON CONTENT BY INVOKING THE OPERATION ON THE UI THREAD
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    SpeechRecognitionButton.Content = "\xF781";
+                });
+
+                OnOff = 0;
+
+                // TEMINATE THE WAKE WORD ENGINE PROCESS
+                await Wake_Word_Engine.Stop_The_Wake_Word_Engine();
+            }
+
+            return true;
+        }
+
 
         private void OpenSettingsWindow(object sender, RoutedEventArgs e)
         {
@@ -1040,7 +1054,7 @@ namespace Eva_5._0
                         if (App.SettingsWindowOpen == false)
                         {
                             App.SettingsWindowOpen = true;
-                            SettingsWindow SettingWindowObject = new SettingsWindow();
+                            SettingsWindow SettingWindowObject = new SettingsWindow(new SettingsWindow.OpenSpeech(SpeechOn));
                             SettingWindowObject.Show();
                         }
 

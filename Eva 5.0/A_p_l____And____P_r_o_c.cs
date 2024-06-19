@@ -3,6 +3,8 @@ using System;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Windows.Devices.Display.Core;
+using Windows.UI.Input.Inking;
 
 namespace Eva_5._0
 {
@@ -83,7 +85,7 @@ namespace Eva_5._0
 
 
 
-
+        public static string display_recognition_result = String.Empty;
 
         public static Command_Pallet_File commands = new Command_Pallet_File();
 
@@ -117,15 +119,6 @@ namespace Eva_5._0
                 internal static async Task<bool> Screen_Capture_Initiator()
                 {
                     return await Screen_Capture();
-                }
-            }
-
-
-            public class Special_Character_Replacement_Implementor : Special_Character_Replacement
-            {
-                internal static string Remove_Special_Characters_Procedure(string Sentence)
-                {
-                    return Remove_Special_Characters(Sentence);
                 }
             }
 

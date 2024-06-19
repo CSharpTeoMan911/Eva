@@ -3,6 +3,8 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Linq;
+using System.Threading.Tasks;
+using static Eva_5._0.SettingsWindow;
 
 namespace Eva_5._0
 {
@@ -53,9 +55,18 @@ namespace Eva_5._0
         private int Temp;
 
         private static SettingsWindow CurrentInstance;
+        public delegate Task<bool> OpenSpeech();
+        private OpenSpeech openSpeech;
 
         public SettingsWindow()
         {
+            CurrentInstance = this;
+            InitializeComponent();
+        }
+
+        public SettingsWindow(OpenSpeech openSpeech_)
+        {
+            openSpeech = openSpeech_;
             CurrentInstance = this;
             InitializeComponent();
         }
@@ -714,7 +725,7 @@ namespace Eva_5._0
 
         private void SetCommands(object sender, RoutedEventArgs e)
         {
-            Commands_Main_Window commands = new Commands_Main_Window();
+            Commands_Main_Window commands = new Commands_Main_Window(openSpeech);
             commands.ShowDialog();
         }
 

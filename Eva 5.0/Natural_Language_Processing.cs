@@ -60,7 +60,10 @@ namespace Eva_5._0
             WebApplicationSearchContent_StringBuilder.Clear();
             WordBuffer_StringBuilder.Clear();
 
+            Result = new StringBuilder(Result, Result.Length).Replace("\n", " new line ").ToString();
             Sentence_StringBuilder.Append(Result);
+
+            display_recognition_result = Result;
 
             // THE FIRST TOKENIZATION IS INITIATED. THE FIRST TOKENIZATION IS RESPONSIBLE FOR PARAMETER ASSOCIATION WITH THEIR RESPECTIVE COMMAND FORMATS
             // FOR EXAMPLE IF YOU SAY "SEARCH ROBOTS ARE COOL ON YOUTUBE" THE FIRST TOKENIZATION WILL ASSOCIATE THE COMMAND WITH THE 

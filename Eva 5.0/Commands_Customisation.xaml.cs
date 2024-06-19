@@ -27,6 +27,8 @@ namespace Eva_5._0
 
         private bool file_manipulation_init;
 
+        private SettingsWindow.OpenSpeech openSpeech;
+
         public enum Option
         {
             OpenApplications,
@@ -41,11 +43,12 @@ namespace Eva_5._0
             InitializeComponent();
         }
 
-        public Commands_Customisation(Option option)
+        public Commands_Customisation(Option option, SettingsWindow.OpenSpeech openSpeech_)
         {
             timeout = DateTime.Now.AddMilliseconds(-2000);
             selected_option = option;
             InitializeComponent();
+            this.openSpeech = openSpeech_;
         }
 
         private void Move_Window(object sender, MouseButtonEventArgs e)
@@ -532,7 +535,7 @@ namespace Eva_5._0
 
         private void AddCommand(object sender, RoutedEventArgs e)
         {
-            Command_Addition command_Addition = new Command_Addition(selected_option, clone, new Command_Addition.UpdateCallback(UpdateClone));
+            Command_Addition command_Addition = new Command_Addition(selected_option, clone, new Command_Addition.UpdateCallback(UpdateClone), openSpeech);
             command_Addition.ShowDialog();
         }
     }
