@@ -40,6 +40,8 @@ namespace Eva_5._0
 
         private async void Window_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
+            A_p_l____And____P_r_o_c.CommandTest = true;
+            A_p_l____And____P_r_o_c.display_recognition_result = String.Empty;
             await openSpeech.Invoke();
 
             System.Timers.Timer recognition_checkup = new System.Timers.Timer();
@@ -101,6 +103,7 @@ namespace Eva_5._0
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            A_p_l____And____P_r_o_c.CommandTest = false;
             WindowIsClosing = true;
             GC.Collect(10);
         }

@@ -2,6 +2,7 @@
 using System.CodeDom;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows.Documents;
 
 namespace Eva_5._0
@@ -64,6 +65,9 @@ namespace Eva_5._0
             Sentence_StringBuilder.Append(Result);
 
             display_recognition_result = Result;
+
+            if (CommandTest == true)
+                goto End;
 
             // THE FIRST TOKENIZATION IS INITIATED. THE FIRST TOKENIZATION IS RESPONSIBLE FOR PARAMETER ASSOCIATION WITH THEIR RESPECTIVE COMMAND FORMATS
             // FOR EXAMPLE IF YOU SAY "SEARCH ROBOTS ARE COOL ON YOUTUBE" THE FIRST TOKENIZATION WILL ASSOCIATE THE COMMAND WITH THE 
@@ -398,6 +402,7 @@ namespace Eva_5._0
  
 
         ChatGptMode:
+        End:
             Sentence_StringBuilder.Clear();
             Application_StringBuilder.Clear();
             WebApplication_StringBuilder.Clear();

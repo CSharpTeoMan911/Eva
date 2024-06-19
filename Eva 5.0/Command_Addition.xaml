@@ -59,7 +59,7 @@
         <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.RowSpan="3" Grid.ColumnSpan="9" Background="#FFE6E6E6">
             <StackPanel Width="660" Orientation="Horizontal">
                 <TextBlock Margin="20,0,0,0" VerticalAlignment="Center" FontSize="14" Text="Test the command: "/>
-                <TextBox x:Name="Eva_Command" Margin="5,0,0,0" FontFamily="Corbel Light" VerticalAlignment="Center" Width="450" FontSize="16"/>
+                <TextBox x:Name="Eva_Command" Margin="5,0,0,0" FontFamily="Corbel Light" VerticalAlignment="Center" Width="450" IsReadOnly="True" FontSize="18"/>
             </StackPanel>
         </StackPanel>
     </Grid>

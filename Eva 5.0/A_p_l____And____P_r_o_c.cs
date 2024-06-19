@@ -83,7 +83,7 @@ namespace Eva_5._0
         //
         //    * LINKS THAT MUST BE ACCESSED IN ORDER FOR THE USER TO DOWNLOAD THE APPLICATION ARE STORED IN ( "APPLICATION DOWNLOAD LINK", "www.APPLICATION DOWNLOAD LINK.com" ) KEY VALUE FORMAT
 
-
+        public static bool CommandTest;
 
         public static string display_recognition_result = String.Empty;
 
