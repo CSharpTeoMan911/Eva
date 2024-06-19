@@ -60,9 +60,7 @@ namespace Eva_5._0
             WebApplicationSearchContent_StringBuilder.Clear();
             WordBuffer_StringBuilder.Clear();
 
-            string Sentence = Eva_Functionalities.Special_Character_Replacement_Implementor.Remove_Special_Characters_Procedure(Result);
-
-            Sentence_StringBuilder.Append(Sentence);
+            Sentence_StringBuilder.Append(Result);
 
             // THE FIRST TOKENIZATION IS INITIATED. THE FIRST TOKENIZATION IS RESPONSIBLE FOR PARAMETER ASSOCIATION WITH THEIR RESPECTIVE COMMAND FORMATS
             // FOR EXAMPLE IF YOU SAY "SEARCH ROBOTS ARE COOL ON YOUTUBE" THE FIRST TOKENIZATION WILL ASSOCIATE THE COMMAND WITH THE 
@@ -73,37 +71,37 @@ namespace Eva_5._0
             // [ BEGIN ]
 
 
-            if (Sentence == "invisible")
+            if (Result == "invisible")
             {
                 MainWindow.invisibility_mode = true;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTActivationSoundEffect);
                 goto ChatGptMode;
             }
-            else if (Sentence == "visible")
+            else if (Result == "visible")
             {
                 MainWindow.invisibility_mode = false;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTDeactivationSoundEffect);
                 goto ChatGptMode;
             }
-            else if (Sentence.IndexOf("activate c") == 0 && Sentence.IndexOf(" mode") == Sentence.Length - " mode".Length)
+            else if (Result.IndexOf("activate c") == 0 && Result.IndexOf(" mode") == Result.Length - " mode".Length)
             {
                 MainWindow.chatgpt_mode_enabled = true;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTActivationSoundEffect);
                 goto ChatGptMode;
             }
-            else if (Sentence.IndexOf("enable c") == 0 && Sentence.IndexOf(" mode") == Sentence.Length - " mode".Length)
+            else if (Result.IndexOf("enable c") == 0 && Result.IndexOf(" mode") == Result.Length - " mode".Length)
             {
                 MainWindow.chatgpt_mode_enabled = true;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTActivationSoundEffect);
                 goto ChatGptMode;
             }
-            else if(Sentence.IndexOf("deactivate c") == 0 && Sentence.IndexOf(" mode") == Sentence.Length - " mode".Length)
+            else if(Result.IndexOf("deactivate c") == 0 && Result.IndexOf(" mode") == Result.Length - " mode".Length)
             {
                 MainWindow.chatgpt_mode_enabled = false;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTDeactivationSoundEffect);
                 goto ChatGptMode;
             }
-            else if (Sentence.IndexOf("disable c") == 0 && Sentence.IndexOf(" mode") == Sentence.Length - " mode".Length)
+            else if (Result.IndexOf("disable c") == 0 && Result.IndexOf(" mode") == Result.Length - " mode".Length)
             {
                 MainWindow.chatgpt_mode_enabled = false;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTDeactivationSoundEffect);
@@ -113,42 +111,42 @@ namespace Eva_5._0
             switch (MainWindow.chatgpt_mode_enabled)
             {
                 case true:
-                    await PostProcessing("chatgpt [ ChatGPT Query ]", Sentence);
+                    await PostProcessing("chatgpt [ ChatGPT Query ]", Result);
                     break;
 
                 case false:
-                    switch (Sentence.IndexOf("please open ") == 0)
+                    switch (Result.IndexOf("please open ") == 0)
                     {
                         case true:
 
-                            await PostProcessing("please open [Application]", Sentence);
+                            await PostProcessing("please open [Application]", Result);
                             break;
 
                         case false:
 
-                            switch (Sentence.IndexOf("open ") == 0)
+                            switch (Result.IndexOf("open ") == 0)
                             {
                                 case true:
 
-                                    switch (Sentence.LastIndexOf(" please") + " please".Length - 1 == Sentence.Length - 1)
+                                    switch (Result.LastIndexOf(" please") + " please".Length - 1 == Result.Length - 1)
                                     {
                                         case true:
 
-                                            await PostProcessing("open [Application] please", Sentence);
+                                            await PostProcessing("open [Application] please", Result);
                                             break;
 
                                         case false:
 
-                                            switch (Sentence.LastIndexOf(" now") + " now".Length - 1 == Sentence.Length - 1)
+                                            switch (Result.LastIndexOf(" now") + " now".Length - 1 == Result.Length - 1)
                                             {
                                                 case true:
 
-                                                    await PostProcessing("open [Application] now", Sentence);
+                                                    await PostProcessing("open [Application] now", Result);
                                                     break;
 
                                                 case false:
 
-                                                    await PostProcessing("open [Application]", Sentence);
+                                                    await PostProcessing("open [Application]", Result);
                                                     break;
                                             }
 
@@ -161,38 +159,38 @@ namespace Eva_5._0
 
 
 
-                    switch (Sentence.IndexOf("please close ") == 0)
+                    switch (Result.IndexOf("please close ") == 0)
                     {
                         case true:
 
-                            await PostProcessing("please close [Application]", Sentence);
+                            await PostProcessing("please close [Application]", Result);
                             break;
 
                         case false:
 
-                            switch (Sentence.IndexOf("close ") == 0)
+                            switch (Result.IndexOf("close ") == 0)
                             {
                                 case true:
 
-                                    switch (Sentence.LastIndexOf(" please") + " please".Length - 1 == Sentence.Length - 1)
+                                    switch (Result.LastIndexOf(" please") + " please".Length - 1 == Result.Length - 1)
                                     {
                                         case true:
 
-                                            await PostProcessing("close [Application] please", Sentence);
+                                            await PostProcessing("close [Application] please", Result);
                                             break;
 
                                         case false:
 
-                                            switch (Sentence.LastIndexOf(" now") + " now".Length - 1 == Sentence.Length - 1)
+                                            switch (Result.LastIndexOf(" now") + " now".Length - 1 == Result.Length - 1)
                                             {
                                                 case true:
 
-                                                    await PostProcessing("close [Application] now", Sentence);
+                                                    await PostProcessing("close [Application] now", Result);
                                                     break;
 
                                                 case false:
 
-                                                    await PostProcessing("close [Application]", Sentence);
+                                                    await PostProcessing("close [Application]", Result);
                                                     break;
                                             }
 
@@ -206,36 +204,36 @@ namespace Eva_5._0
 
 
 
-                    switch (Sentence.IndexOf("please search on ") == 0)
+                    switch (Result.IndexOf("please search on ") == 0)
                     {
                         case true:
 
-                            await PostProcessing("please search on [Web Application Keyword] [Content]", Sentence);
+                            await PostProcessing("please search on [Web Application Keyword] [Content]", Result);
                             break;
 
                         case false:
 
-                            switch ((Sentence.IndexOf("please search ") == 0) && (Sentence.Contains(" on ") == true))
+                            switch ((Result.IndexOf("please search ") == 0) && (Result.Contains(" on ") == true))
                             {
                                 case true:
 
-                                    await PostProcessing("please search [Content] on [Web Application Keyword]", Sentence);
+                                    await PostProcessing("please search [Content] on [Web Application Keyword]", Result);
                                     break;
 
                                 case false:
 
-                                    switch (Sentence.IndexOf("search on ") == 0)
+                                    switch (Result.IndexOf("search on ") == 0)
                                     {
                                         case true:
 
-                                            await PostProcessing("search on [Web Application Keyword] [Content]", Sentence);
+                                            await PostProcessing("search on [Web Application Keyword] [Content]", Result);
                                             break;
 
                                         case false:
 
-                                            if ((Sentence.IndexOf("search ") == 0) && (Sentence.Contains(" on ") == true))
+                                            if ((Result.IndexOf("search ") == 0) && (Result.Contains(" on ") == true))
                                             {
-                                                await PostProcessing("search [Content] on [Web Application Keyword]", Sentence);
+                                                await PostProcessing("search [Content] on [Web Application Keyword]", Result);
                                             }
                                             break;
                                     }
@@ -248,27 +246,27 @@ namespace Eva_5._0
 
 
 
-                    switch (Sentence.IndexOf("set a ") == 0)
+                    switch (Result.IndexOf("set a ") == 0)
                     {
                         case true:
 
-                            switch (Sentence.IndexOf(" timer") == Sentence.Length - 6)
+                            switch (Result.IndexOf(" timer") == Result.Length - 6)
                             {
                                 case true:
 
-                                    await PostProcessing("set a [Timer Interval] timer", Sentence);
+                                    await PostProcessing("set a [Timer Interval] timer", Result);
                                     break;
 
 
                                 case false:
 
-                                    switch (Sentence.IndexOf(" please") == Sentence.Length - 7)
+                                    switch (Result.IndexOf(" please") == Result.Length - 7)
                                     {
                                         case true:
 
-                                            if (Sentence.IndexOf(" timer ") == Sentence.Length - 13)
+                                            if (Result.IndexOf(" timer ") == Result.Length - 13)
                                             {
-                                                await PostProcessing("set a [Timer Interval] timer please", Sentence);
+                                                await PostProcessing("set a [Timer Interval] timer please", Result);
                                             }
                                             break;
                                     }
@@ -279,12 +277,12 @@ namespace Eva_5._0
 
 
                         case false:
-                            switch (Sentence.IndexOf("please set a ") == 0)
+                            switch (Result.IndexOf("please set a ") == 0)
                             {
                                 case true:
-                                    if (Sentence.IndexOf(" timer") == Sentence.Length - 6)
+                                    if (Result.IndexOf(" timer") == Result.Length - 6)
                                     {
-                                        await PostProcessing("please set a [Timer Interval] timer", Sentence);
+                                        await PostProcessing("please set a [Timer Interval] timer", Result);
                                     }
                                     break;
                             }
@@ -293,29 +291,29 @@ namespace Eva_5._0
 
 
 
-                    if (Sentence.IndexOf("set ") != 0)
+                    if (Result.IndexOf("set ") != 0)
                     {
-                        if (Sentence.IndexOf(' ') == 3)
+                        if (Result.IndexOf(' ') == 3)
                         {
-                            switch (Sentence.IndexOf('g') == 0)
+                            switch (Result.IndexOf('g') == 0)
                             {
                                 case true:
-                                    await PostProcessing("chatgpt [ ChatGPT Query ]", Sentence);
+                                    await PostProcessing("chatgpt [ ChatGPT Query ]", Result);
                                     break;
 
 
                                 case false:
-                                    switch (Sentence.IndexOf('p') == 1)
+                                    switch (Result.IndexOf('p') == 1)
                                     {
                                         case true:
-                                            await PostProcessing("chatgpt [ ChatGPT Query ]", Sentence);
+                                            await PostProcessing("chatgpt [ ChatGPT Query ]", Result);
                                             break;
 
 
                                         case false:
-                                            if (Sentence.IndexOf('t') == 2)
+                                            if (Result.IndexOf('t') == 2)
                                             {
-                                                await PostProcessing("chatgpt [ ChatGPT Query ]", Sentence);
+                                                await PostProcessing("chatgpt [ ChatGPT Query ]", Result);
                                             }
                                             break;
                                     }
@@ -342,7 +340,7 @@ namespace Eva_5._0
                     // SCREENSHOT PROCESS
                     //[ BEGIN ]
 
-                    switch (Sentence.IndexOf("take screenshot") == 0)
+                    switch (Result.IndexOf("take screenshot") == 0)
                     {
                         case true:
                             await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
@@ -350,7 +348,7 @@ namespace Eva_5._0
 
                         case false:
 
-                            switch (Sentence.IndexOf("take a screenshot") == 0)
+                            switch (Result.IndexOf("take a screenshot") == 0)
                             {
                                 case true:
                                     await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
@@ -358,7 +356,7 @@ namespace Eva_5._0
 
                                 case false:
 
-                                    switch (Sentence.IndexOf("take a screenshot please") == 0)
+                                    switch (Result.IndexOf("take a screenshot please") == 0)
                                     {
                                         case true:
                                             await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
@@ -366,7 +364,7 @@ namespace Eva_5._0
 
                                         case false:
 
-                                            switch (Sentence.IndexOf("please take a screenshot") == 0)
+                                            switch (Result.IndexOf("please take a screenshot") == 0)
                                             {
                                                 case true:
                                                     await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
@@ -374,7 +372,7 @@ namespace Eva_5._0
 
                                                 case false:
 
-                                                    if (Sentence.IndexOf("screenshot") == 0)
+                                                    if (Result.IndexOf("screenshot") == 0)
                                                     {
                                                         await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
                                                     }

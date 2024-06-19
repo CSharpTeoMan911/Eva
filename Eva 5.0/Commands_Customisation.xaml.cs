@@ -22,7 +22,7 @@ namespace Eva_5._0
     public partial class Commands_Customisation : Window
     {
         private ConcurrentDictionary<string, string> clone = new ConcurrentDictionary<string, string>();
-        private ConcurrentDictionary<string, string> controls_command = new ConcurrentDictionary<string, string>();
+        private ConcurrentDictionary<TextBox, string> controls_command = new ConcurrentDictionary<TextBox, string>();
         private DateTime timeout;
 
         private bool file_manipulation_init;
@@ -43,7 +43,7 @@ namespace Eva_5._0
 
         public Commands_Customisation(Option option)
         {
-            timeout = DateTime.Now.AddMilliseconds(-1000);
+            timeout = DateTime.Now.AddMilliseconds(-2000);
             selected_option = option;
             InitializeComponent();
         }
@@ -121,7 +121,7 @@ namespace Eva_5._0
                     command.Name = "TextBox_" + index;
                     command.Text = key;
                     command.Width = 100;
-                    controls_command.TryAdd(command.Name, key);
+                    controls_command.TryAdd(command, key);
 
                     TextBlock content_label = new TextBlock();
                     content_label.Text = "Content: ";
@@ -207,7 +207,7 @@ namespace Eva_5._0
                     timeout = DateTime.Now;
 
                     string previous_command = String.Empty;
-                    controls_command.TryGetValue(key.Name, out previous_command);
+                    controls_command.TryGetValue(key, out previous_command);
 
 
                     string value = String.Empty;
@@ -230,7 +230,7 @@ namespace Eva_5._0
         private void Reset_command_Click(object sender, RoutedEventArgs e, TextBox key, TextBox value, TextBox type)
         {
             string previous_command = String.Empty;
-            controls_command.TryGetValue(key.Name, out previous_command);
+            controls_command.TryGetValue(key, out previous_command);
 
             string content = String.Empty;
             clone.TryGetValue(previous_command, out content);
@@ -246,7 +246,7 @@ namespace Eva_5._0
         private void Reset_command_Click_Other(object sender, RoutedEventArgs e, TextBox key, TextBox value)
         {
             string previous_command = String.Empty;
-            controls_command.TryGetValue(key.Name, out previous_command);
+            controls_command.TryGetValue(key, out previous_command);
 
             string content = String.Empty;
             clone.TryGetValue(previous_command, out content);
@@ -266,7 +266,7 @@ namespace Eva_5._0
                     file_manipulation_init = true;
 
                     string previous_value = String.Empty;
-                    controls_command.TryGetValue(key.Name, out previous_value);
+                    controls_command.TryGetValue(key, out previous_value);
 
                     string command_content = String.Empty;
                     clone.TryGetValue(key.Text, out command_content);
@@ -296,7 +296,7 @@ namespace Eva_5._0
                             {
                                 clone.TryRemove(previous_value, out command_content);
                                 clone.TryAdd(key.Text, content_builder.ToString());
-                                controls_command.TryUpdate(key.Name, key.Text, previous_value);
+                                controls_command.TryUpdate(key, key.Text, previous_value);
                             }
                         }
                     }
@@ -317,7 +317,7 @@ namespace Eva_5._0
                     file_manipulation_init = true;
 
                     string previous_value = String.Empty;
-                    controls_command.TryGetValue(key.Name, out previous_value);
+                    controls_command.TryGetValue(key, out previous_value);
 
                     string command_content = String.Empty;
                     clone.TryGetValue(key.Text, out command_content);
@@ -343,7 +343,7 @@ namespace Eva_5._0
                             {
                                 clone.TryRemove(previous_value, out command_content);
                                 clone.TryAdd(key.Text, value.Text);
-                                controls_command.TryUpdate(key.Name, key.Text, previous_value);
+                                controls_command.TryUpdate(key, key.Text, previous_value);
                             }
                         }
                     }
@@ -386,7 +386,7 @@ namespace Eva_5._0
                 command.Name = "TextBox_" + index;
                 command.Text = key;
                 command.Width = 100;
-                controls_command.TryAdd(command.Name, key);
+                controls_command.TryAdd(command, key);
 
                 TextBlock content_label = new TextBlock();
                 content_label.Text = "Content: ";
@@ -484,9 +484,17 @@ namespace Eva_5._0
             GC.Collect(10);
         }
 
-        private void UpdateClone(ConcurrentDictionary<string, string> clone_)
+        private async  void UpdateClone(ConcurrentDictionary<string, string> clone_)
         {
             clone = clone_;
+            controls_command.Clear();
+
+            await UpdateCommands();
+
+            Main_Content.Children.Clear();
+
+            LoadContents();
+            Main_Content.UpdateLayout();
         }
 
         private async void Reset_Commands(object sender, RoutedEventArgs e)
@@ -522,17 +530,10 @@ namespace Eva_5._0
                 }
         }
 
-        private async void AddCommand(object sender, RoutedEventArgs e)
+        private void AddCommand(object sender, RoutedEventArgs e)
         {
             Command_Addition command_Addition = new Command_Addition(selected_option, clone, new Command_Addition.UpdateCallback(UpdateClone));
             command_Addition.ShowDialog();
-
-            await UpdateCommands();
-
-            Main_Content.Children.Clear();
-
-            LoadContents();
-            Main_Content.UpdateLayout();
         }
     }
 }
