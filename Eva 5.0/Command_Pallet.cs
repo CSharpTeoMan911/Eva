@@ -281,7 +281,7 @@ namespace Eva_5._0
             ///// BEGIN ///////////// Settings //////////////
 
 
-            if (System.Runtime.InteropServices.RuntimeInformation.OSDescription.Contains("Windows 10") == true)
+            if (App.Get_Windows_Version() == "Windows 10")
             {
                 // Accounts Page
 
@@ -586,7 +586,7 @@ namespace Eva_5._0
 
 
             }
-            else if (System.Runtime.InteropServices.RuntimeInformation.OSDescription.Contains("Windows 11") == true)
+            else
             {
                 // Accounts Page
 

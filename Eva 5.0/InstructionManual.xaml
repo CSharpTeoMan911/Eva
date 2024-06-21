@@ -208,11 +208,29 @@
 
 
 
-                <TextBlock x:Name="ExtraFeaturesContent" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;&#x0a;If you want to prevent the accidental&#x0a;activation of Eva without pressing&#x0a;the &#xEC71; button, just press the  &#xEF2D;&#x0a;button in order to minimise the&#x0a;application. When you want to&#x0a;give Eva commands just&#x0a;restore the application&#x0a;window.&#x0a;&#x0a;&#x0a;&#x0a;">
+                <TextBlock x:Name="ExtraFeaturesContent" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;&#x0a;If you want to prevent the accidental&#x0a;activation of Eva without pressing&#x0a;the &#xEC71; button, just press the  &#xEF2D;&#x0a;button in order to minimise the&#x0a;application. When you want to&#x0a;give Eva commands just&#x0a;restore the application&#x0a;window.&#x0a;&#x0a;">
 
                     <TextBlock.Foreground>
                         <LinearGradientBrush>
                             <GradientStop Color="#FF7BBFD8" x:Name="ExtraFeaturesContentTextBlockOffset" Offset="1"/>
+                            <GradientStop Color="#FF1B70C3"/>
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+
+                </TextBlock>
+
+                <TextBlock x:Name="ExtraFeaturesContent2" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="To customise the commands, go to&#x0a;">
+                     <Hyperlink
+                        NavigateUri="https://github.com/CSharpTeoMan911/Eva/wiki/Commands-customisation"
+                        RequestNavigate="Navigate_To_Commands_Customisation">
+                        <StackPanel>
+                            <TextBlock Text="for a detailed tutorial."/>
+                        </StackPanel>
+                    </Hyperlink>
+                    
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush>
+                            <GradientStop Color="#FF7BBFD8" x:Name="ExtraFeaturesContentTextBlockOffset2" Offset="1"/>
                             <GradientStop Color="#FF1B70C3"/>
                         </LinearGradientBrush>
                     </TextBlock.Foreground>

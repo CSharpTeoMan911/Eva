@@ -173,6 +173,7 @@ namespace Eva_5._0
 
             // [ END ]
 
+            System.Diagnostics.Debug.WriteLine(App.Get_Windows_Version());
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;

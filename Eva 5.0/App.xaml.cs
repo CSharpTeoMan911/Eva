@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.Devices;
+using System;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -44,6 +47,7 @@ namespace Eva_5._0
 
         public static ChatGPT_Response_Window chatGPT_Response_Window;
 
+        private static string windows_version = String.Empty;
 
         private sealed class Wake_Word_Engine_Mitigator : Wake_Word_Engine
         {
@@ -56,9 +60,46 @@ namespace Eva_5._0
 
         public App()
         {
+            Set_Windows_Version();
+
             // Construct the class and resources related to applications, processes and web-links
             // related to the Eva functions
             new A_p_l____And____P_r_o_c();
+        }
+
+        public static string Get_Windows_Version()
+        {
+            return windows_version;
+        }
+
+        private static void Set_Windows_Version()
+        {
+            string main_version_section = "Windows";
+
+            ComputerInfo computer = new ComputerInfo();
+
+            int main_os_index = computer.OSFullName.IndexOf(main_version_section);
+
+            if (main_os_index != -1)
+            {
+                StringBuilder os_builder = new StringBuilder(main_version_section);
+                os_builder.Append(" ");
+                os_builder.Append(computer.OSFullName.ElementAt(main_os_index + main_version_section.Length + 1));
+                os_builder.Append(computer.OSFullName.ElementAt(main_os_index + main_version_section.Length + 2));
+
+                if (Convert.ToInt32(os_builder.ToString(os_builder.Length - 2, 2)) >= 10)
+                {
+                    windows_version = os_builder.ToString();
+                }
+                else
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        MessageBox.Show("The app requires that the minimum OS version is Windows 10", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    });
+                    Environment.Exit(1);
+                }
+            }
         }
 
         protected override async void OnStartup(StartupEventArgs e)

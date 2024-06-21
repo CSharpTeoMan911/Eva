@@ -81,7 +81,14 @@ namespace Eva_5._0
 
                 await Application.Current.Dispatcher.InvokeAsync(() =>
                 {
-                    ErrorContext.Text = "Go to Settings  ->  Privacy  ->  Microphone.\n\n\nUnder the  [Allow apps to access your microphone]\nsection, press the button associated with it, in order\nto enable it.";
+                    if (App.Get_Windows_Version() == "Windows 10")
+                    {
+                        ErrorContext.Text = "Go to Settings  ->  Privacy  ->  Microphone.\n\n\nUnder the  [Allow apps to access your microphone]\nsection, press the button associated with it, in order\nto enable it.";
+                    }
+                    else
+                    {
+                        ErrorContext.Text = "Go to Privacy & Security  ->  Microphone.\n\n\nUnder the  [Microphone access] section, press the\nbutton associated with it, in order to enable it.";
+                    }
                 });
             }
             catch { }
@@ -97,7 +104,14 @@ namespace Eva_5._0
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    ErrorContext.Text = "Go to Settings  ->  Privacy  ->  Speech.\n\n\nUnder the  [Online speech recognition]  section,\npress the button associated with it,\nin order to enable it.";
+                    if (App.Get_Windows_Version() == "Windows 10")
+                    {
+                        ErrorContext.Text = "Go to Settings  ->  Privacy  ->  Speech.\n\n\nUnder the  [Online speech recognition]  section,\npress the button associated with it,\nin order to enable it.";
+                    }
+                    else
+                    {
+                        ErrorContext.Text = "Go to Privacy & Security  ->  Speech.\n\n\nUnder the  [Online speech recognition]  section,\npress the button associated with it,\nin order to enable it.";
+                    }
                 });
             }
             catch { }

@@ -327,6 +327,11 @@ namespace Eva_5._0
             System.Diagnostics.Process.Start(e.Uri.ToString());
         }
 
+        private void Navigate_To_Commands_Customisation(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            System.Diagnostics.Process.Start(e.Uri.ToString());
+        }
+
         private async void Open_Settings_At_Speech_Recognition(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
             await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:speech"));
