@@ -93,6 +93,8 @@ namespace Eva_5._0
 
         public readonly static Sound_Player sound_player = new Sound_Player();
 
+        public static StringFormatting stringFormatting = new StringFormatting();
+
         protected class Eva_Functionalities
         {
             public class Recycle_Bine_Cleanup_Implementor : Recycle_Bine_Cleanup

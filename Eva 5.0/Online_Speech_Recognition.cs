@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Windows.UI.Xaml.Controls.Maps;
@@ -170,7 +171,8 @@ namespace Eva_5._0
                         }
 
                         Close_Speech_Recognition_Interface();
-                        await Natural_Language_Processing.PreProcessing(args.Result.Text.ToLower());
+                        string Result = args.Result.Text.ToLower();
+                        await Natural_Language_Processing.PreProcessing(await A_p_l____And____P_r_o_c.stringFormatting.Format(new StringBuilder(Result, Result.Length)));
 
                     Function_Not_Initiated:;
                         break;

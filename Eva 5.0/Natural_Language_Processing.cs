@@ -60,8 +60,6 @@ namespace Eva_5._0
             WebApplication_StringBuilder.Clear();
             WebApplicationSearchContent_StringBuilder.Clear();
             WordBuffer_StringBuilder.Clear();
-
-            Result = new StringBuilder(Result, Result.Length).Replace("\n", " new line ").ToString();
             Sentence_StringBuilder.Append(Result);
 
             display_recognition_result = Result;
@@ -582,6 +580,7 @@ namespace Eva_5._0
                             WebApplicationSearchContent_StringBuilder.Append(Sentence[Index]);
                         }
 
+                       
                         WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString().Trim();
                         await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
                     }

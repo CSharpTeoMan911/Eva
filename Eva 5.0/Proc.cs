@@ -109,7 +109,7 @@ namespace Eva_5._0
                 commands.W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryGetValue(WebApplication, out Process);
 
                 StringBuilder Process_Builder = new StringBuilder(Process);
-                Process_Builder.Append(System.Web.HttpUtility.UrlEncode(SearchContent));
+                Process_Builder.Append(await stringFormatting.UrlEncode(new StringBuilder(SearchContent)));
                 string formated_process = Process_Builder.ToString();
                 Process_Builder.Clear();
 
@@ -195,8 +195,6 @@ namespace Eva_5._0
                                     Application_Process = new System.Diagnostics.Process();
                                     try
                                     {
-                                        System.Diagnostics.Debug.WriteLine(formatted_application_executable_name_string);
-
 
                                         Application_Process.StartInfo.WorkingDirectory = @"C:\Users\" + Environment.UserName + @"\Desktop";
                                         Application_Process.StartInfo.Arguments = "/k \"" + formatted_application_executable_name_string + "\"";

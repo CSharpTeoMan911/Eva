@@ -689,7 +689,6 @@ namespace Eva_5._0
 
         public static void ReloadCurrentModel()
         {
-            System.Diagnostics.Debug.WriteLine("\n\n!!!! RELOADED !!!!");
             CurrentInstance.LoadCurrentModel();
         }
 
