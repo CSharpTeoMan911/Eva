@@ -9,9 +9,9 @@ namespace Eva_5._0
 {
     internal class StringFormatting
     {
-        public string whitespace = " ";
+        public static string whitespace = " ";
 
-        public Task<string> Format(StringBuilder builder)
+        public static Task<string> Format(StringBuilder builder)
         {
             builder.Replace("\n", " new line ");
             List<char> processed = new List<char>();
@@ -32,7 +32,7 @@ namespace Eva_5._0
             return Task.FromResult(builder.ToString());
         }
 
-        public Task<string> UrlEncode(StringBuilder builder)
+        public static Task<string> UrlEncode(StringBuilder builder)
         {
             StringBuilder return_value = new StringBuilder();
 

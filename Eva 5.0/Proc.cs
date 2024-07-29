@@ -109,7 +109,7 @@ namespace Eva_5._0
                 commands.W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryGetValue(WebApplication, out Process);
 
                 StringBuilder Process_Builder = new StringBuilder(Process);
-                Process_Builder.Append(await stringFormatting.UrlEncode(new StringBuilder(SearchContent)));
+                Process_Builder.Append(await StringFormatting.UrlEncode(new StringBuilder(SearchContent)));
                 string formated_process = Process_Builder.ToString();
                 Process_Builder.Clear();
 

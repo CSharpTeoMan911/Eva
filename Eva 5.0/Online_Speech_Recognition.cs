@@ -172,7 +172,7 @@ namespace Eva_5._0
 
                         Close_Speech_Recognition_Interface();
                         string Result = args.Result.Text.ToLower();
-                        await Natural_Language_Processing.PreProcessing(await A_p_l____And____P_r_o_c.stringFormatting.Format(new StringBuilder(Result, Result.Length)));
+                        await Natural_Language_Processing.PreProcessing(await StringFormatting.Format(new StringBuilder(Result, Result.Length)));
 
                     Function_Not_Initiated:;
                         break;
