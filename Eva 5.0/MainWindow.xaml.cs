@@ -435,6 +435,7 @@ namespace Eva_5._0
                                                                         Online_Speech_Recogniser_Listening = "false";
                                                                         async void Shutdown()
                                                                         {
+                                                                            await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache);
                                                                             Close_Speech_Recognition_Interface();
                                                                             await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
                                                                         }
@@ -757,6 +758,7 @@ namespace Eva_5._0
                     // RECOGNITION IS CLOSED
                     async void Inactivity_Shutdown()
                     {
+                        await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache);
                         await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
                     }
                     Inactivity_Shutdown();
