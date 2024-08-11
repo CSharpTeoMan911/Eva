@@ -30,10 +30,16 @@ namespace Eva_5._0
     internal class Online_Speech_Recognition : MainWindow
     {
         private static Windows.Media.SpeechRecognition.SpeechRecognizer OnlineSpeechRecognition;
-        private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Constraints = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(
+
+        private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Form_Filling_Constraint = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(
                                                                                                           Windows.Media.SpeechRecognition.SpeechRecognitionScenario.FormFilling, 
                                                                                                           "form-filling", 
                                                                                                           "form");
+
+        private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Web_Search_Constraint= new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(
+                                                                                                  Windows.Media.SpeechRecognition.SpeechRecognitionScenario.WebSearch,
+                                                                                                  "web-search",
+                                                                                                  "web");
 
         public enum Online_Speech_Recognition_Error_Type
         {
@@ -107,9 +113,12 @@ namespace Eva_5._0
                 // IF THE LANGUAGE USED BY THE OPERATING SYSTEM FOR SPEECH RECOGNITION IS EITHER AMERICAN OR BRITISH ENGLISH
                 if (OnlineSpeechRecognition.CurrentLanguage.LanguageTag == "en-US" || OnlineSpeechRecognition.CurrentLanguage.LanguageTag == "en-GB")
                 {
-                    // SET THE CONSTRAINTS OF THE SPEECH RECOGNITION ENGINE TO USE A "form-filling" CONFIGURATION 
-                    Constraints.Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Max;
-                    OnlineSpeechRecognition.Constraints.Add(Constraints);
+                    // SET THE CONSTRAINTS OF THE SPEECH RECOGNITION ENGINE TO USE BOTH THE "form-filling" AND "web-search" CONFIGURATIONS
+                    Form_Filling_Constraint.Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Max;
+                    Web_Search_Constraint.Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Max;
+
+                    OnlineSpeechRecognition.Constraints.Add(Form_Filling_Constraint);
+                    OnlineSpeechRecognition.Constraints.Add(Web_Search_Constraint);
 
                     Windows.Media.SpeechRecognition.SpeechRecognitionCompilationResult ConstratintsCompilation = await OnlineSpeechRecognition.CompileConstraintsAsync();
 
