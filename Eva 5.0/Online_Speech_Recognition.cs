@@ -35,10 +35,7 @@ namespace Eva_5._0
                                                                                                           "form-filling", 
                                                                                                           "form");
 
-        private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Web_Search_Constraint= new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(
-                                                                                                  Windows.Media.SpeechRecognition.SpeechRecognitionScenario.WebSearch,
-                                                                                                  "web-search",
-                                                                                                  "web");
+
 
 
         public enum Online_Speech_Recognition_Error_Type
@@ -107,18 +104,16 @@ namespace Eva_5._0
                 online_speech_recognition_timeout = DateTime.Now;
                 Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.Now;
 
+
                 // INITIATE THE SPEECH RECOGNITION ENGINE
                 OnlineSpeechRecognition = new Windows.Media.SpeechRecognition.SpeechRecognizer();
 
                 // IF THE LANGUAGE USED BY THE OPERATING SYSTEM FOR SPEECH RECOGNITION IS EITHER AMERICAN OR BRITISH ENGLISH
                 if (OnlineSpeechRecognition.CurrentLanguage.LanguageTag == "en-US" || OnlineSpeechRecognition.CurrentLanguage.LanguageTag == "en-GB")
                 {
-                    // SET THE CONSTRAINTS OF THE SPEECH RECOGNITION ENGINE TO USE BOTH THE "form-filling" AND "web-search" CONFIGURATIONS
+                    // SET THE CONSTRAINTS OF THE SPEECH RECOGNITION ENGINE TO USE THE "form-filling" CONFIGURATION
                     Form_Filling_Constraint.Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Max;
-                    Web_Search_Constraint.Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Max;
-
                     OnlineSpeechRecognition.Constraints.Add(Form_Filling_Constraint);
-                    OnlineSpeechRecognition.Constraints.Add(Web_Search_Constraint);
 
                     Windows.Media.SpeechRecognition.SpeechRecognitionCompilationResult ConstraintsCompilation = await OnlineSpeechRecognition.CompileConstraintsAsync();
 
@@ -127,10 +122,13 @@ namespace Eva_5._0
                         case true:
                             OnlineSpeechRecognition.StateChanged += OnlineSpeechRecognition_StateChanged;
                             OnlineSpeechRecognition.ContinuousRecognitionSession.AutoStopSilenceTimeout = TimeSpan.FromSeconds(9);
+                            OnlineSpeechRecognition.Timeouts.EndSilenceTimeout = TimeSpan.FromSeconds(9);
+                            OnlineSpeechRecognition.Timeouts.InitialSilenceTimeout = TimeSpan.FromSeconds(9);
+                            OnlineSpeechRecognition.Timeouts.BabbleTimeout = TimeSpan.FromSeconds(9);
                             OnlineSpeechRecognition.ContinuousRecognitionSession.Completed += ContinuousRecognitionSession_Completed;
                             OnlineSpeechRecognition.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
 
-                            await OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync();
+                            await OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionMode.PauseOnRecognition);
                             await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache);
                             break;
 
