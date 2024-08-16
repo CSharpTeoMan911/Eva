@@ -5,7 +5,7 @@ import sys
 import time
 
 # LOAD THE VOSK SPEECH RECOGNITION MODEL FROM THE APPLICATION'S DIRECTORY
-model = Model(model_path=os.getcwd() + "\\" + "vosk-model-small-en-us-zamia-0.5", lang="en-us")
+model = Model(model_path=os.getcwd() + "\\" + "vosk-model-en-us-daanzu-20200905-lgraph", lang="en-us")
 
 # INITIATE KALDI SPEECH RECOGNIZER INSTANCE USING THE VOSK MODEL AND A FREQUENCY OF 16000 HZ
 recognizer = KaldiRecognizer(model, 16000)
@@ -17,10 +17,13 @@ stream.start_stream()
 
 wake_word_engine_loaded = False
 buffer = bytes()
-count = 0
+
+start = float(0)
 
 
 def wake_word_engine_operation():
+    global start
+    start = time.time()
     try:
         while True:
             wake_word_engine_thread_management()
@@ -38,7 +41,7 @@ def wake_word_engine_thread_management():
 
     global wake_word_engine_loaded
     global buffer
-    global count
+    global start
 
     try:
         # READ FROM THE AUDIO DATA STREAM A 800 FRAMES PER CYCLE
@@ -49,8 +52,9 @@ def wake_word_engine_thread_management():
             sys.stdout.flush()
             wake_word_engine_loaded = True
 
-        if count == 20:
-            count = 0
+            time.time()
+
+        if time.time() - start  > 0.8:
             # RETRIEVE THE AUDIO WAVEFORM DATA AND PERFORM SPEECH TO TEXT CONVERSION
             if recognizer.AcceptWaveform(buffer):
                 keyword_spotter(recognizer.Result())
@@ -58,7 +62,7 @@ def wake_word_engine_thread_management():
             else:
                 keyword_spotter(recognizer.PartialResult())
             buffer = bytes()
-        count += 1
+            start = time.time()
     except KeyboardInterrupt:
         sys.exit(0)
 

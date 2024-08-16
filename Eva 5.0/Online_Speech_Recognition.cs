@@ -112,7 +112,7 @@ namespace Eva_5._0
                 if (OnlineSpeechRecognition.CurrentLanguage.LanguageTag == "en-US" || OnlineSpeechRecognition.CurrentLanguage.LanguageTag == "en-GB")
                 {
                     // SET THE CONSTRAINTS OF THE SPEECH RECOGNITION ENGINE TO USE THE "form-filling" CONFIGURATION
-                    Form_Filling_Constraint.Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Max;
+                    Form_Filling_Constraint.Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Default;
                     OnlineSpeechRecognition.Constraints.Add(Form_Filling_Constraint);
 
                     Windows.Media.SpeechRecognition.SpeechRecognitionCompilationResult ConstraintsCompilation = await OnlineSpeechRecognition.CompileConstraintsAsync();
