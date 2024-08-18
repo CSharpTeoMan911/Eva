@@ -337,10 +337,6 @@ namespace Eva_5._0
             await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:speech"));
         }
 
-        private async void Open_Settings_At_Language(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
-        {
-            await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:keyboard"));
-        }
 
         private void Window_Size_Changed(object sender, SizeChangedEventArgs e)
         {

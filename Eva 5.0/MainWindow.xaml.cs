@@ -974,7 +974,7 @@ namespace Eva_5._0
                                     // AND/OR THE OS DOES NOT HAVE THE PERMISSION TO ACCESSS THE MICROPHONE
                                     Online_Speech_Recognition.Online_Speech_Recognition_Error_Management(
                                                               Online_Speech_Recognition.Online_Speech_Recognition_Error_Type
-                                                              .Mircrophone_Access_Denied);
+                                                              .Microphone_Access_Denied);
                                     break;
                             }
 

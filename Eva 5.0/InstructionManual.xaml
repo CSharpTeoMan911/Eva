@@ -251,34 +251,10 @@
                 </TextBlock>
 
 
-                <TextBlock x:Name="TroubleshootingContents0_1" Margin="0,30,0,0" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;If Eva cannot understand you is because you do not use English &#x0a;as the selected language for speech recognition.&#x0a;To select English as the speech recognition language,&#x0a;open the Settings page and go to the settings section&#x0a;">
-                    
-                    <Hyperlink
-                        NavigateUri=""
-                        RequestNavigate="Open_Settings_At_Language">
-                        <StackPanel>
-                            <TextBlock Text="Time and Language -> Language -> Preffered language.&#x0a;Under the Preffered language section, press the '+' &#x0a;button, select the 'English (United States)' language&#x0a;package, follow the instructions to install the language,&#x0a;and restart the computer afterwards."/>
-                        </StackPanel>
-                    </Hyperlink>
+                <TextBlock x:Name="TroubleshootingContents0_1" Margin="0,30,0,0" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;If Eva cannot understand you is because you selected an English&#x0a;version that is not suitable for your accent. To select the desired&#x0a;English version open the 'Application's Settings Page' and select&#x0a;the English version under the 'Speech Language' section.&#x0a;">
                     <TextBlock.Foreground>
                         <LinearGradientBrush>
                             <GradientStop Color="#FF7BBFD8" x:Name="TroubleshootingContentTextBlockOffset0_1" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </TextBlock.Foreground>
-                </TextBlock>
-                <TextBlock x:Name="TroubleshootingContents0_2" Margin="0,0,0,30" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;After the language pack is installed and the computer restarted&#x0a;open the Settings page and go to the settings section&#x0a;">
-                    
-                    <Hyperlink
-                        NavigateUri=""
-                        RequestNavigate="Open_Settings_At_Speech_Recognition">
-                        <StackPanel>
-                            <TextBlock Text="Time and Language -> Speech -> Speech language.&#x0a;Under the Speech language section, select the&#x0a;'English (United States)' language."/>
-                        </StackPanel>
-                    </Hyperlink>
-                    <TextBlock.Foreground>
-                        <LinearGradientBrush>
-                            <GradientStop Color="#FF7BBFD8" x:Name="TroubleshootingContentTextBlockOffset0_2" Offset="1"/>
                             <GradientStop Color="#FF1B70C3"/>
                         </LinearGradientBrush>
                     </TextBlock.Foreground>

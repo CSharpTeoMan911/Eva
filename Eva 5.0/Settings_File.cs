@@ -13,5 +13,6 @@ namespace Eva_5._0
         public string Gpt_Model { get; set; }
         public int ModelTemperature { get; set; }
         public string Open_AI_Chat_GPT_Key { get; set; }
+        public string Online_Speech_Recognition_Language { get; set; } = "en-GB";
     }
 }

@@ -205,6 +205,9 @@ namespace Eva_5._0
                     break;
             }
 
+
+            string SpeechLanguage = await Settings.Get_Speech_Language_Settings();
+            SpeechLanguageDisplay.Text = SpeechLanguage;
         }
 
         private void TemperatureChangedTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -437,6 +440,9 @@ namespace Eva_5._0
                                                         NextModelButtonOffset.Offset -= 0.025;
                                                         ModelTempLabelOffset.Offset -= 0.01;
                                                         ModelTempOffset.Offset -= 0.01;
+                                                        SpeechLanguagelOffset.Offset -= 0.01;
+                                                        PreviousSpeechLanguageButtonOffset.Offset -= 0.025;
+                                                        NextSpeechLanguageButtonOffset.Offset -= 0.025;
                                                         break;
 
                                                     case false:
@@ -471,6 +477,9 @@ namespace Eva_5._0
                                                         NextModelButtonOffset.Offset += 0.025;
                                                         ModelTempLabelOffset.Offset += 0.01;
                                                         ModelTempOffset.Offset += 0.01;
+                                                        SpeechLanguagelOffset.Offset += 0.01;
+                                                        PreviousSpeechLanguageButtonOffset.Offset += 0.025;
+                                                        NextSpeechLanguageButtonOffset.Offset += 0.025;
                                                         break;
 
                                                     case false:
@@ -726,6 +735,24 @@ namespace Eva_5._0
         {
             Commands_Main_Window commands = new Commands_Main_Window(openSpeech);
             commands.ShowDialog();
+        }
+
+        private async void PreviousLanguage(object sender, RoutedEventArgs e)
+        {
+            if (SpeechLanguageDisplay.Text == "en-US")
+            {
+                SpeechLanguageDisplay.Text = "en-GB";
+                await Settings.Set_Speech_Language_Settings(Settings.SpeechLanguage.en_GB);
+            }
+        }
+
+        private async void NextLanguage(object sender, RoutedEventArgs e)
+        {
+            if (SpeechLanguageDisplay.Text == "en-GB")
+            {
+                SpeechLanguageDisplay.Text = "en-US";
+                await Settings.Set_Speech_Language_Settings(Settings.SpeechLanguage.en_US);
+            }
         }
 
         ~SettingsWindow()

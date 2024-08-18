@@ -221,17 +221,36 @@ namespace Eva_5._0
         {
             try
             {
-                await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:speech"));
-
                 await player.Play_Sound(Sound_Player.Sounds.ErrorSoundEffect);
 
-                ErrorContext.Inlines.Add("The English language pack is ");
-                ErrorContext.Inlines.Add("not detected on your system. \n");
-                ErrorContext.Inlines.Add("Go to Settings  ->  Time & Language  ->  Language.\n");
-                ErrorContext.Inlines.Add("Under the 'Preferred Languages' section press the \n");
-                ErrorContext.Inlines.Add("'Add a language' button and download the 'en-US'\n");
-                ErrorContext.Inlines.Add("or the 'en-GB' language pack. You must restart\n");
-                ErrorContext.Inlines.Add("your computer afterwards.");
+                await Application.Current.Dispatcher.Invoke(async () =>
+                {
+                    if (App.Get_Windows_Version() == "Windows 10")
+                    {
+                        await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:speech"));
+
+                        ErrorContext.Inlines.Add("The English language pack is ");
+                        ErrorContext.Inlines.Add("not detected on your system. \n");
+                        ErrorContext.Inlines.Add("Go to Settings  ->  Time & Language  ->  Language.\n");
+                        ErrorContext.Inlines.Add("Under the 'Preferred Languages' section press the \n");
+                        ErrorContext.Inlines.Add("'Add a language' button and download the 'en-US'\n");
+                        ErrorContext.Inlines.Add("or the 'en-GB' language pack. You must restart\n");
+                        ErrorContext.Inlines.Add("your computer afterwards.");
+                    }
+                    else
+                    {
+                        await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:regionlanguage"));
+
+                        ErrorContext.Inlines.Add("The English language pack is ");
+                        ErrorContext.Inlines.Add("not detected on your system. \n");
+                        ErrorContext.Inlines.Add("Go to Settings  ->  Time & Language  ->  Language & Region.\n");
+                        ErrorContext.Inlines.Add("Under the 'Preferred Languages' section press the \n");
+                        ErrorContext.Inlines.Add("'Add a language' button and download the 'en-US'\n");
+                        ErrorContext.Inlines.Add("or the 'en-GB' language pack. You must restart\n");
+                        ErrorContext.Inlines.Add("your computer afterwards.");
+                    }
+                });
+
             }
             catch { }
         }

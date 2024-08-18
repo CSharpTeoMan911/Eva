@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Graphics.Printing;
+using static Eva_5._0.Commands_Customisation;
 
 namespace Eva_5._0
 {
@@ -26,6 +28,11 @@ namespace Eva_5._0
     {
         private static readonly string settings_file_name = "application_settings.json";
 
+        public enum SpeechLanguage
+        {
+            en_US,
+            en_GB
+        }
 
 
 
@@ -259,6 +266,10 @@ namespace Eva_5._0
             return (await Load_Settings_File()).Synthesis_On;
         }
 
+        public static async Task<string> Get_Speech_Language_Settings()
+        {
+            return (await Load_Settings_File()).Online_Speech_Recognition_Language;
+        }
 
         public static async Task<bool> Set_Sound_Settings(bool Option)
         {
@@ -276,6 +287,22 @@ namespace Eva_5._0
             return (await Update_Settings_File(settings_File));
         }
 
+        public static async Task<bool> Set_Speech_Language_Settings(SpeechLanguage language)
+        {
+            Settings_File settings_File = await Load_Settings_File();
+
+            switch (language)
+            {
+                case SpeechLanguage.en_US:
+                    settings_File.Online_Speech_Recognition_Language = "en-US";
+                    break;
+                case SpeechLanguage.en_GB:
+                    settings_File.Online_Speech_Recognition_Language = "en-GB";
+                    break;
+            }
+
+            return (await Update_Settings_File(settings_File));
+        }
 
         public static async Task<string> Get_Chat_GPT_Api_Key()
         {
