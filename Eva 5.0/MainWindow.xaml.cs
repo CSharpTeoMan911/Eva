@@ -1134,15 +1134,11 @@ namespace Eva_5._0
 
         ~MainWindow()
         {
-            System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-
             async void Execute()
             {
                 await Wake_Word_Engine.Stop_The_Wake_Word_Engine();
             }
             Execute();
-
-            GC.Collect(2, GCCollectionMode.Forced);
         }
 
         private void Open_ChatGPT_Query_Window(object sender, RoutedEventArgs e)
