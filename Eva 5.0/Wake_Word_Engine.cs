@@ -48,7 +48,6 @@ namespace Eva_5._0
         // 2) INSTALL THE PIP PACKAGES: "Vosk", "PyAudio", AND "sounddevice" USING THE 
         //    COMMAND: /path/to/Eva 5.0.exe/python.exe -m pip install [ PACKAGE NAME ]
 
-        private static System.Diagnostics.Stopwatch counter = new System.Diagnostics.Stopwatch();
         private static ConcurrentQueue<Process> wake_word_processes = new ConcurrentQueue<Process>();
 
         private static int wake_word_engines_loaded;
@@ -58,9 +57,9 @@ namespace Eva_5._0
         private static string wake_word = "listen";
         private static bool Wake_Word_Started = false;
 
-        // 1000 (milliseconds) * 60 (seconds) * 5 (minutes) =  300000 (5 minutes in milliseconds)
-        private static int wake_word_engine_reset_time = 300000;
-
+        // Variable that sets in how many minutes the wake word engine is reset
+        private static int wake_word_engine_reset_time = 10;
+        public static DateTime resetTime;
 
         public static void Start_The_Wake_Word_Engine()
         {
@@ -72,6 +71,8 @@ namespace Eva_5._0
 
             try
             {
+                DateTime.Now.AddMinutes(wake_word_engine_reset_time);
+
                 System.Threading.Thread thread = new System.Threading.Thread(() => { Wake_Word_Detector(Initiate_Wake_Word_Engine()); })
                 {
                     Priority = System.Threading.ThreadPriority.Highest,
@@ -86,8 +87,6 @@ namespace Eva_5._0
                 wake_word_management_timer.Elapsed += Wake_word_management_timer_Elapsed;
                 wake_word_management_timer.Interval = 10;
                 wake_word_management_timer.Start();
-
-                counter.Start();
             }
             catch { }
 
@@ -111,7 +110,7 @@ namespace Eva_5._0
                     {
                         if (App.Application_Error_Shutdown == false)
                         {
-                            if (counter.ElapsedMilliseconds >= wake_word_engine_reset_time)
+                            if (resetTime - DateTime.Now >= TimeSpan.FromMinutes(wake_word_engine_reset_time))
                             {
                                 if (wake_word_engines_loaded == 1)
                                 {
@@ -128,7 +127,7 @@ namespace Eva_5._0
                                         wake_word_processes?.TryDequeue(out process);
                                         process?.Kill();
                                         wake_word_engines_loaded--;
-                                        counter?.Restart();
+                                        resetTime = DateTime.Now;
                                     }
                                 }
                             }
@@ -197,12 +196,9 @@ namespace Eva_5._0
 
             try
             {
-                // RESET THE TIMER AND STOP THE PROCESSES THROUGH THE OBJECTS AS A BACKUP METHOD
+                // STOP THE PROCESSES THROUGH THE OBJECTS AS A BACKUP METHOD
                 //
                 // [ START ]
-
-                counter?.Stop();
-                counter?.Reset();
 
                 Wake_Word_Started = false;
 
@@ -459,7 +455,7 @@ namespace Eva_5._0
                                             {
                                                 if (stdout_value == wake_word_engine_loaded)
                                                 {
-                                                    counter.Restart();
+                                                    resetTime = DateTime.Now;
                                                     wake_word_engines_loaded++;
                                                 }
                                                 else if (stdout_value == cancel_wake_word)
