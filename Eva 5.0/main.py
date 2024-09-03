@@ -16,9 +16,6 @@ stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, fr
 stream.start_stream()
 
 wake_word_engine_loaded = False
-buffer = bytes()
-
-start = float(0)
 
 
 def wake_word_engine_operation():
@@ -40,29 +37,21 @@ def wake_word_engine_thread_management():
     # CREDIT TO https://buddhi-ashen-dev.vercel.app/posts/offline-speech-recognition
 
     global wake_word_engine_loaded
-    global buffer
-    global start
 
     try:
         # READ FROM THE AUDIO DATA STREAM A 800 FRAMES PER CYCLE
         data = stream.read(800, False)
-        buffer += data
         if wake_word_engine_loaded is False:
             sys.stdout.write("[ loaded ]")
             sys.stdout.flush()
             wake_word_engine_loaded = True
 
-            time.time()
-
-        if time.time() - start  > 0.8:
-            # RETRIEVE THE AUDIO WAVEFORM DATA AND PERFORM SPEECH TO TEXT CONVERSION
-            if recognizer.AcceptWaveform(buffer):
-                keyword_spotter(recognizer.Result())
-                keyword_spotter(recognizer.FinalResult())
-            else:
-                keyword_spotter(recognizer.PartialResult())
-            buffer = bytes()
-            start = time.time()
+        # RETRIEVE THE AUDIO WAVEFORM DATA AND PERFORM SPEECH TO TEXT CONVERSION
+        if recognizer.AcceptWaveform(data):
+            keyword_spotter(recognizer.Result())
+            keyword_spotter(recognizer.FinalResult())
+        else:
+            keyword_spotter(recognizer.PartialResult())
     except KeyboardInterrupt:
         sys.exit(0)
 
