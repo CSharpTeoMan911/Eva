@@ -430,8 +430,18 @@ namespace Eva_5._0
                     gpt_model_buffer = current_model;
                 }
 
-                // GET THE ENCODING THAT THE SELECTED MODEL USES
-                GptEncoding encoding = GptEncoding.GetEncodingForModel(current_model);
+
+                GptEncoding encoding = null;
+                try
+                {
+                    // GET THE ENCODING THAT THE SELECTED MODEL USES
+                    encoding = GptEncoding.GetEncodingForModel(current_model);
+                }
+                catch 
+                {
+                    // IF AN ERROR OCCURS, USE THE STANDARD GPT3.5 TOKENIZER ENCODING
+                    encoding = GptEncoding.GetEncoding("cl100k_base");
+                }
 
                 // GET THE NUMBER OF TOKENS THAT THE INPUT CONTAINS
                 // IN ACCORDANCE WITH THE SELECTED MODEL AND ITS
