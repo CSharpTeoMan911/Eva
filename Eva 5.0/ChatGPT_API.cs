@@ -170,7 +170,7 @@ namespace Eva_5._0
                     {
                         case true:
                             request.model = "gpt-3.5-turbo";
-                            Get_Available_Gpt_Models();
+                            await Get_Available_Gpt_Models();
                             break;
                         case false:
                             request.model = selected_model;
