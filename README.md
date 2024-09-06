@@ -382,7 +382,8 @@ Eva is open source and free to use. You can find extra informations on the [**Wi
 
 ![Eva_Capture2116139740](https://user-images.githubusercontent.com/87245086/201439583-33776568-07bb-4217-842b-1506c87b6428.jpg)
 
-![Eva_Capture1481952206](https://user-images.githubusercontent.com/87245086/201439590-21d8f883-b1db-4dac-87da-a5839317fa07.jpg)
+![Eva_Capture657687740](https://github.com/user-attachments/assets/1f21763a-8d11-4d50-b8b5-9620c161262b)
+
 
 <br>
 <br>
