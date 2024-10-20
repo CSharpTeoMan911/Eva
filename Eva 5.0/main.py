@@ -6,7 +6,7 @@ import pyaudio
 import sys
 import time
 
-confidence_threshold = 0.85
+confidence_threshold = 0.95
 
 # LOAD THE VOSK SPEECH RECOGNITION MODEL FROM THE APPLICATION'S DIRECTORY
 model = Model(model_path=os.getcwd() + "\\" + "vosk-model-en-us-daanzu-20200905-lgraph", lang="en-us")
@@ -22,6 +22,7 @@ stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, fr
 stream.start_stream()
 
 wake_word_engine_loaded = False
+interrupt = False
 
 
 def wake_word_engine_operation():
@@ -68,10 +69,15 @@ def keyword_spotter(sentence):
     # STDOUT STREAM
 
     global confidence_threshold
+    global interrupt
+
     j_obj = json.loads(sentence)
 
     try:
         for key in j_obj:
+            if interrupt is True:
+                interrupt = False
+                break
             if key == "result":
                 if "stop listening" in j_obj["text"]:
                     stop_found = True
@@ -82,10 +88,14 @@ def keyword_spotter(sentence):
                             stop_found = False
                         elif word["word"] == "listening" and word["conf"] >= confidence_threshold and stop_found is True:
                             sys.stdout.write("stop listening")
+                            interrupt = True
+                            break
                 elif "listen" in j_obj["text"]:
                     for word in j_obj["result"]:
                         if word["word"] == "listen" and word["conf"] >= confidence_threshold:
                             sys.stdout.write("listen")
+                            interrupt = True
+                            break
             elif key == "partial_result":
                 if "stop listening" in j_obj["partial"]:
                     stop_found = True
@@ -96,10 +106,14 @@ def keyword_spotter(sentence):
                             stop_found = False
                         elif word["word"] == "listening" and word["conf"] >= confidence_threshold and stop_found is True:
                             sys.stdout.write("stop listening")
+                            interrupt = True
+                            break
                 elif "listen" in j_obj["partial"]:
                     for word in j_obj["partial_result"]:
                         if word["word"] == "listen" and word["conf"] >= confidence_threshold:
                             sys.stdout.write("listen")
+                            interrupt = True
+                            break
         sys.stdout.flush()
     except KeyboardInterrupt:
         sys.exit(0)
