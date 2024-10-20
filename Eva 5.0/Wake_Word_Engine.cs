@@ -58,7 +58,7 @@ namespace Eva_5._0
         private static bool Wake_Word_Started = false;
 
         // Variable that sets in how many minutes the wake word engine is reset
-        private static int wake_word_engine_reset_time = 10;
+        private static int wake_word_engine_reset_time = 5;
         public static DateTime resetTime;
 
         public static void Start_The_Wake_Word_Engine()
@@ -177,7 +177,7 @@ namespace Eva_5._0
             wake_word_process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
             wake_word_process.StartInfo.FileName = Environment.CurrentDirectory + "\\python.exe";
             wake_word_process.StartInfo.RedirectStandardOutput = true;
-            wake_word_process.StartInfo.RedirectStandardError = true;
+            wake_word_process.StartInfo.RedirectStandardError = false;
             wake_word_process.StartInfo.CreateNoWindow = true;
             wake_word_process.StartInfo.UseShellExecute = false;
             wake_word_process.StartInfo.Arguments = "main.py";
