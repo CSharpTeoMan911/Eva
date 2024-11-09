@@ -4,8 +4,15 @@ import pyaudio
 import sys
 import time
 
+
+model = None
+
 # LOAD THE VOSK SPEECH RECOGNITION MODEL FROM THE APPLICATION'S DIRECTORY
-model = Model(model_path=os.getcwd() + "\\" + "vosk-model-en-us-daanzu-20200905-lgraph", lang="en-us")
+if str(sys.argv[1]) == "0":
+    model = Model(model_path=os.getcwd() + "\\" + "model 1", lang="en-us")
+else:
+    model = Model(model_path=os.getcwd() + "\\" + "model 2", lang="en-us")
+
 
 # INITIATE KALDI SPEECH RECOGNIZER INSTANCE USING THE VOSK MODEL AND A FREQUENCY OF 16000 HZ
 recognizer = KaldiRecognizer(model, 16000)
