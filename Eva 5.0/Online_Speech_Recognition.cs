@@ -35,6 +35,17 @@ namespace Eva_5._0
                                                                                                           "form-filling", 
                                                                                                           "form");
 
+        private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Web_Search_Recognition_Constraint = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(
+                                                                                                  Windows.Media.SpeechRecognition.SpeechRecognitionScenario.WebSearch,
+                                                                                                  "web-search",
+                                                                                                  "web");
+
+
+        private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Dictation_Constraint = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(
+                                                                                                  Windows.Media.SpeechRecognition.SpeechRecognitionScenario.Dictation,
+                                                                                                  "dictation",
+                                                                                                  "dict");
+
 
 
 
@@ -112,6 +123,8 @@ namespace Eva_5._0
                 // SET THE CONSTRAINTS OF THE SPEECH RECOGNITION ENGINE TO USE THE "form-filling" CONFIGURATION
                 Form_Filling_Constraint.Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Default;
                 OnlineSpeechRecognition.Constraints.Add(Form_Filling_Constraint);
+                OnlineSpeechRecognition.Constraints.Add(Web_Search_Recognition_Constraint);
+                OnlineSpeechRecognition.Constraints.Add(Dictation_Constraint);
 
                 Windows.Media.SpeechRecognition.SpeechRecognitionCompilationResult ConstraintsCompilation = await OnlineSpeechRecognition.CompileConstraintsAsync();
 

@@ -56,6 +56,7 @@ namespace Eva_5._0
         private static string cancel_wake_word = "stop listening";
         private static string wake_word = "listen";
         private static bool Wake_Word_Started = false;
+        private static string model = "0";
 
         // Variable that sets in how many minutes the wake word engine is reset
         private static int wake_word_engine_reset_time = 5;
@@ -110,7 +111,7 @@ namespace Eva_5._0
                     {
                         if (App.Application_Error_Shutdown == false)
                         {
-                            if (resetTime - DateTime.Now >= TimeSpan.FromMinutes(wake_word_engine_reset_time))
+                            if (DateTime.Now - resetTime >= TimeSpan.FromMinutes(wake_word_engine_reset_time))
                             {
                                 if (wake_word_engines_loaded == 1)
                                 {
@@ -177,10 +178,11 @@ namespace Eva_5._0
             wake_word_process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
             wake_word_process.StartInfo.FileName = Environment.CurrentDirectory + "\\python.exe";
             wake_word_process.StartInfo.RedirectStandardOutput = true;
-            wake_word_process.StartInfo.RedirectStandardError = false;
+            wake_word_process.StartInfo.RedirectStandardError = true;
             wake_word_process.StartInfo.CreateNoWindow = true;
             wake_word_process.StartInfo.UseShellExecute = false;
-            wake_word_process.StartInfo.Arguments = "main.py";
+            wake_word_process.StartInfo.Arguments = new StringBuilder("main.py ").Append(model).ToString();
+            SwitchModel();
             wake_word_process.Start();
 
             wake_word_processes.Enqueue(wake_word_process);
@@ -189,6 +191,15 @@ namespace Eva_5._0
 
             // [ END ]
         }
+
+        private static void SwitchModel()
+        {
+            if (model == "0")
+                model = "1";
+            else
+                model = "0";
+        }
+
 
         public static Task<bool> Stop_The_Wake_Word_Engine()
         {
