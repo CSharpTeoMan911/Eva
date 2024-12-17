@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.AllJoyn;
@@ -56,6 +57,12 @@ namespace Eva_5._0
         }
 
 
+        public static async Task<string> GetSettingsFilePath()
+        {
+            if (! System.IO.File.Exists(settings_file_name) == true)
+                await Create_Settings_File(new Settings_File());
+            return new StringBuilder("\"").Append(Environment.CurrentDirectory).Append("\\").Append(settings_file_name).Append("\"").ToString();
+        }
 
 
 

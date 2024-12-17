@@ -188,13 +188,14 @@ namespace Eva_5._0
             // [ BEGIN ]
 
             System.Diagnostics.Process wake_word_process = new System.Diagnostics.Process();
-            wake_word_process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            wake_word_process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
             wake_word_process.StartInfo.FileName = Environment.CurrentDirectory + "\\python.exe";
             wake_word_process.StartInfo.CreateNoWindow = true;
             wake_word_process.StartInfo.UseShellExecute = false;
-            wake_word_process.StartInfo.Arguments = new StringBuilder("main.py ").Append(model).Append(" ").Append((await Settings.Get_Vosk_Sensitivity_Settings()).ToString()).ToString();
-            SwitchModel();
+            wake_word_process.StartInfo.Arguments = new StringBuilder("main.py ").Append(model).Append(" ").Append((await Settings.GetSettingsFilePath()).ToString()).ToString();
             wake_word_process.Start();
+
+            SwitchModel();
 
             wake_word_processes.Enqueue(wake_word_process);
 

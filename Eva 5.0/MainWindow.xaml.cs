@@ -1053,7 +1053,7 @@ namespace Eva_5._0
                         if (App.SettingsWindowOpen == false)
                         {
                             App.SettingsWindowOpen = true;
-                            SettingsWindow SettingWindowObject = new SettingsWindow(new SettingsWindow.OpenSpeech(SpeechOn), new SettingsWindow.CloseSpeech(SpeechOff));
+                            SettingsWindow SettingWindowObject = new SettingsWindow(new SettingsWindow.OpenSpeech(SpeechOn));
                             SettingWindowObject.Show();
                         }
 

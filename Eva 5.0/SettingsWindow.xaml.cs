@@ -61,9 +61,7 @@ namespace Eva_5._0
         private static SettingsWindow CurrentInstance;
 
         public delegate Task<bool> OpenSpeech();
-        public delegate Task<bool> CloseSpeech();
         private OpenSpeech openSpeech;
-        private CloseSpeech closeSpeech;
 
         public SettingsWindow()
         {
@@ -71,10 +69,9 @@ namespace Eva_5._0
             InitializeComponent();
         }
 
-        public SettingsWindow(OpenSpeech openSpeech_, CloseSpeech closeSpeech_)
+        public SettingsWindow(OpenSpeech openSpeech_)
         {
             openSpeech = openSpeech_;
-            closeSpeech = closeSpeech_;
             CurrentInstance = this;
             InitializeComponent();
         }
@@ -275,23 +272,18 @@ namespace Eva_5._0
                                             catch { }
                                         }
 
+
+
                                         if (TempChanged == true)
                                         {
-                                            if (Sensitivity != await Settings.Get_Current_Model_Temperature())
-                                            {
-                                                TempChanged = false;
-                                                await Settings.Set_Current_Model_Temperature(Temp);
-                                            }
+                                            TempChanged = false;
+                                            await Settings.Set_Current_Model_Temperature(Temp);
                                         }
 
                                         if(VoskSensitivityChanged == true)
                                         {
-                                            if(Sensitivity != await Settings.Get_Vosk_Sensitivity_Settings())
-                                            {
-                                                VoskSensitivityChanged = false;
-                                                await closeSpeech.Invoke();
-                                                await Settings.Set_Vosk_Sensitivity_Settings(Sensitivity);
-                                            }
+                                            VoskSensitivityChanged = false;
+                                            await Settings.Set_Vosk_Sensitivity_Settings(Sensitivity);
                                         }
                                         break;
 
@@ -595,7 +587,6 @@ namespace Eva_5._0
 
                     if (Application.Current.MainWindow != null)
                     {
-
                         await Settings.Set_Synthesis_Settings(true);
 
                         SynthesisSoundOnButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
@@ -603,7 +594,6 @@ namespace Eva_5._0
 
                         SynthesisMuteButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF1B70C3");
                         SynthesisSoundButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-
                     }
 
                 }
