@@ -4,15 +4,19 @@ import pyaudio
 import sys
 import json
 import socket
+import time
 
 connection = socket.socket(family=socket.AddressFamily.AF_INET, type=socket.SocketKind.SOCK_STREAM)
 connection.connect(("127.0.0.1", 6000))
+connection.settimeout(None)
+
+start = 0
 
 confidence_threshold = float(sys.argv[2]) / 10
 
 # INITIATE PYAUDIO OBJECT, LISTEN TO THE DEFAULT MIC ON 1 CHANNEL, WITH A RATE OF 16000 HZ AND A BUFFER OF 1600 FRAMES
 mic = pyaudio.PyAudio()
-stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=800)
+stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=8000)
 stream.start_stream()
 
 # LOAD THE VOSK SPEECH RECOGNITION MODEL FROM THE APPLICATION'S DIRECTORY
@@ -24,7 +28,7 @@ else:
 
 # INITIATE KALDI SPEECH RECOGNIZER INSTANCE USING THE VOSK MODEL AND A FREQUENCY OF 16000 HZ
 recognizer = KaldiRecognizer(model, 16000)
-recognizer.SetGrammar('["listen", "stop listening", "[unk]"]')
+recognizer.SetGrammar('["listen", "stop", "listening", "[unk]"]')
 recognizer.SetWords(True)
 recognizer.SetPartialWords(True)
 
@@ -45,8 +49,6 @@ def wake_word_engine_operation():
 
 
 def wake_word_engine_process():
-    data = stream.read(800, False)
-
     ##############################################
     # VOSK SPEECH-TO-TEXT SPEECH LANGUAGE MODEL  #
     # USING KALDI SPEECH-TO-TEXT ENGINE          #
@@ -55,18 +57,25 @@ def wake_word_engine_process():
     # CREDIT TO https://buddhi-ashen-dev.vercel.app/posts/offline-speech-recognition
 
     global wake_word_engine_loaded
+    global start
+
+    data = stream.read(6000, False)
 
     try:
-        if wake_word_engine_loaded is False:
-            socket_messaging("[ loaded ]")
-            wake_word_engine_loaded = True
+        try:
+            if wake_word_engine_loaded is False:
+                socket_messaging("[ loaded ]")
+                wake_word_engine_loaded = True
+                start = time.time()
 
-        # RETRIEVE THE AUDIO WAVEFORM DATA AND PERFORM SPEECH TO TEXT CONVERSION
-        if recognizer.AcceptWaveform(data):
-            keyword_spotter(recognizer.Result())
-            keyword_spotter(recognizer.FinalResult())
-        else:
-            keyword_spotter(recognizer.PartialResult())
+            # RETRIEVE THE AUDIO WAVEFORM DATA AND PERFORM SPEECH TO TEXT CONVERSION
+            if recognizer.AcceptWaveform(data):
+                keyword_spotter(recognizer.Result())
+                keyword_spotter(recognizer.FinalResult())
+            else:
+                keyword_spotter(recognizer.PartialResult())
+        except Exception as e:
+            print(e)
     except KeyboardInterrupt:
         sys.exit(0)
 

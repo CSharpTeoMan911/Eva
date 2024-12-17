@@ -5,6 +5,7 @@ using System.Windows.Media;
 using System.Linq;
 using System.Threading.Tasks;
 using static Eva_5._0.SettingsWindow;
+using System.Speech.Synthesis;
 
 namespace Eva_5._0
 {
@@ -58,8 +59,11 @@ namespace Eva_5._0
         private float Sensitivity;
 
         private static SettingsWindow CurrentInstance;
+
         public delegate Task<bool> OpenSpeech();
+        public delegate Task<bool> CloseSpeech();
         private OpenSpeech openSpeech;
+        private CloseSpeech closeSpeech;
 
         public SettingsWindow()
         {
@@ -67,9 +71,10 @@ namespace Eva_5._0
             InitializeComponent();
         }
 
-        public SettingsWindow(OpenSpeech openSpeech_)
+        public SettingsWindow(OpenSpeech openSpeech_, CloseSpeech closeSpeech_)
         {
             openSpeech = openSpeech_;
+            closeSpeech = closeSpeech_;
             CurrentInstance = this;
             InitializeComponent();
         }
@@ -272,14 +277,21 @@ namespace Eva_5._0
 
                                         if (TempChanged == true)
                                         {
-                                            TempChanged = false;
-                                            await Settings.Set_Current_Model_Temperature(Temp);
+                                            if (Sensitivity != await Settings.Get_Current_Model_Temperature())
+                                            {
+                                                TempChanged = false;
+                                                await Settings.Set_Current_Model_Temperature(Temp);
+                                            }
                                         }
 
                                         if(VoskSensitivityChanged == true)
                                         {
-                                            VoskSensitivityChanged = false;
-                                            await Settings.Set_Vosk_Sensitivity_Settings(Sensitivity);
+                                            if(Sensitivity != await Settings.Get_Vosk_Sensitivity_Settings())
+                                            {
+                                                VoskSensitivityChanged = false;
+                                                await closeSpeech.Invoke();
+                                                await Settings.Set_Vosk_Sensitivity_Settings(Sensitivity);
+                                            }
                                         }
                                         break;
 

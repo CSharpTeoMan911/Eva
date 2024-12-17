@@ -10,6 +10,7 @@ using static Eva_5._0.Online_Speech_Recognition;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Threading;
+using Windows.Devices.AllJoyn;
 
 namespace Eva_5._0
 {
@@ -159,7 +160,6 @@ namespace Eva_5._0
 
             InitializeComponent();
         }
-
 
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
@@ -1053,7 +1053,7 @@ namespace Eva_5._0
                         if (App.SettingsWindowOpen == false)
                         {
                             App.SettingsWindowOpen = true;
-                            SettingsWindow SettingWindowObject = new SettingsWindow(new SettingsWindow.OpenSpeech(SpeechOn));
+                            SettingsWindow SettingWindowObject = new SettingsWindow(new SettingsWindow.OpenSpeech(SpeechOn), new SettingsWindow.CloseSpeech(SpeechOff));
                             SettingWindowObject.Show();
                         }
 

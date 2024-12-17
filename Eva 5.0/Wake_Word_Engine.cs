@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
+using System.Collections.Generic;
 
 namespace Eva_5._0
 {
@@ -54,7 +55,7 @@ namespace Eva_5._0
         // Named pipe server object with an "In" direction. This means that this pipe can only receive messages
         private static Socket wake_word_engine_connection = null;
 
-        private static ConcurrentQueue<Process> wake_word_processes = new ConcurrentQueue<Process>();
+        private static Queue<Process> wake_word_processes = new Queue<Process>();
 
         private static int wake_word_engines_loaded;
 
@@ -80,7 +81,8 @@ namespace Eva_5._0
             {
                 wake_word_engine_connection = new Socket(SocketType.Stream, ProtocolType.Tcp);
                 wake_word_engine_connection.Bind(new IPEndPoint(IPAddress.Loopback, 6000));
-
+                wake_word_engine_connection.ReceiveTimeout = -1;
+                wake_word_engine_connection.SendTimeout = -1;
 
 
                 DateTime.Now.AddMinutes(wake_word_engine_reset_time);
@@ -136,7 +138,7 @@ namespace Eva_5._0
                                     Process process = null;
                                     if (wake_word_processes.Count == 2)
                                     {
-                                        wake_word_processes?.TryDequeue(out process);
+                                        process = wake_word_processes?.Dequeue();
                                         process?.Kill();
                                         wake_word_engines_loaded--;
                                         resetTime = DateTime.Now;
@@ -225,7 +227,7 @@ namespace Eva_5._0
                 Process process = null;
                 while (wake_word_processes.Count > 0)
                 {
-                    wake_word_processes?.TryDequeue(out process);
+                    process = wake_word_processes?.Dequeue();
                     process?.Kill();
                 }
 
@@ -441,11 +443,12 @@ namespace Eva_5._0
 
         private static async void Wake_Word_Detector(Process python)
         {
-            wake_word_engine_connection.Listen(1000);
-            Socket client = await wake_word_engine_connection.AcceptAsync();
-
             try
             {
+                wake_word_engine_connection.Listen(1);
+                Socket client = await wake_word_engine_connection.AcceptAsync();
+                NetworkStream client_connection = new NetworkStream(client, true);
+
                 while (Wake_Word_Started == true)
                 {
                     if (MainWindowIsClosing == false)
@@ -457,49 +460,54 @@ namespace Eva_5._0
                                 if (python.HasExited == false)
                                 {
 
-                                    
-
-                                    // READ THE DATA ON THE STOUT STREAM OF THE "Python" process
-                                    byte[] buffer = new byte[1024];
-                                    int bytes_read = client.Receive(buffer, buffer.Length, SocketFlags.None);
-                                    string pipe_message_value = Encoding.UTF8.GetString(buffer, 0, bytes_read);
-
-                                    // LOCK THE "Online_Speech_Recogniser_Listening" OBJECT ON THE STACK 
-                                    // IN ORDER TO BLOCK OTHER THREADS FROM MODIFYING IT
-                                    //
-                                    // [ BEGIN ]
-
-                                    lock (Online_Speech_Recogniser_Listening)
+                                    if(client_connection.CanRead == true)
                                     {
-                                        lock (Wake_Word_Detected)
+                                        // READ THE DATA ON THE STOUT STREAM OF THE "Python" process
+                                        byte[] buffer = new byte[1024];
+                                        int bytes_read = await client_connection.ReadAsync(buffer, 0, buffer.Length);
+
+                                        if (bytes_read > 0)
                                         {
-                                            if (Proc.tasks_running == 0)
+                                            string pipe_message_value = Encoding.UTF8.GetString(buffer, 0, bytes_read);
+
+                                            // LOCK THE "Online_Speech_Recogniser_Listening" OBJECT ON THE STACK 
+                                            // IN ORDER TO BLOCK OTHER THREADS FROM MODIFYING IT
+                                            //
+                                            // [ BEGIN ]
+
+                                            lock (Online_Speech_Recogniser_Listening)
                                             {
-                                                if (pipe_message_value == wake_word_engine_loaded)
+                                                lock (Wake_Word_Detected)
                                                 {
-                                                    resetTime = DateTime.Now;
-                                                    wake_word_engines_loaded++;
-                                                }
-                                                else if (pipe_message_value == cancel_wake_word)
-                                                {
-                                                    if (Online_Speech_Recogniser_Listening == "true")
+                                                    if (Proc.tasks_running == 0)
                                                     {
-                                                        Online_Speech_Recogniser_Listening = "false";
-                                                        Online_Speech_Recognition.Close_Speech_Recognition_Interface();
-                                                    }
-                                                }
-                                                else if (pipe_message_value == wake_word)
-                                                {
-                                                    if (Online_Speech_Recogniser_Listening == "false")
-                                                    {
-                                                        Wake_Word_Detected = "true";
+                                                        if (pipe_message_value == wake_word_engine_loaded)
+                                                        {
+                                                            resetTime = DateTime.Now;
+                                                            wake_word_engines_loaded++;
+                                                        }
+                                                        else if (pipe_message_value == cancel_wake_word)
+                                                        {
+                                                            if (Online_Speech_Recogniser_Listening == "true")
+                                                            {
+                                                                Online_Speech_Recogniser_Listening = "false";
+                                                                Online_Speech_Recognition.Close_Speech_Recognition_Interface();
+                                                            }
+                                                        }
+                                                        else if (pipe_message_value == wake_word)
+                                                        {
+                                                            if (Online_Speech_Recogniser_Listening == "false")
+                                                            {
+                                                                Wake_Word_Detected = "true";
+                                                            }
+                                                        }
                                                     }
                                                 }
                                             }
+
+                                            // [ END ]
                                         }
                                     }
-
-                                    // [ END ]
                                 }
                                 else
                                 {
@@ -520,6 +528,9 @@ namespace Eva_5._0
                         break;
                     }
                 }
+
+                client.Dispose();
+                client_connection.Dispose();
             }
             catch
             {
@@ -527,7 +538,6 @@ namespace Eva_5._0
             }
             finally
             {
-                client.Dispose();
                 wake_word_engine_connection?.Close();
                 wake_word_engine_connection?.Dispose();
             }
