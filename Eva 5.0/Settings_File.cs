@@ -12,7 +12,7 @@ namespace Eva_5._0
         //    settings_File.Open_AI_Chat_GPT_Key = String.Empty;
         //    settings_File.ModelTemperature = 5;
         //    settings_File.Vosk_Sensitivity = 8;
-        public float Vosk_Sensitivity { get; set; } = 8.2f;
+        public float Vosk_Sensitivity { get; set; } = 8.4f;
         public bool Sound_On { get; set; } = true;
         public bool Synthesis_On { get; set; } 
         public string Gpt_Model { get; set; }

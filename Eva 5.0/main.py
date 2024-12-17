@@ -24,7 +24,7 @@ else:
 
 # INITIATE KALDI SPEECH RECOGNIZER INSTANCE USING THE VOSK MODEL AND A FREQUENCY OF 16000 HZ
 recognizer = KaldiRecognizer(model, 16000)
-recognizer.SetGrammar('["listen", "stop listening"]')
+recognizer.SetGrammar('["listen", "stop listening", "[unk]"]')
 recognizer.SetWords(True)
 recognizer.SetPartialWords(True)
 
