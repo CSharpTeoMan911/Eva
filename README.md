@@ -8,8 +8,11 @@
 
 <br>
 
-* Eva can now excute custom commands made by the user. Visit this [link](https://github.com/CSharpTeoMan911/Eva/wiki/Commands-customisation) for detailed instructions
-* Eva can now become invisible. Say 'Listen', then say either 'visible' or 'invisible' to make the window invisible or visible accordingly.
+* Greatly improved the wake word engine's accuracy
+* Greatly reduced the wake word engine's CPU consumption
+* Added the option to customise the degree of accuracy of the wake word engine
+![image](https://github.com/user-attachments/assets/d85d8d8c-7864-4f5d-84e6-f4532d43cbd5)
+
 
 <br>
 <br>
