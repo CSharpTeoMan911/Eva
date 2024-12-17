@@ -100,7 +100,7 @@ namespace Eva_5._0
                 wake_word_management_timer.Interval = 10;
                 wake_word_management_timer.Start();
             }
-            catch(Exception E) { Debug.WriteLine(E.Message); }
+            catch { }
 
             // [ END ]
         }
@@ -506,9 +506,8 @@ namespace Eva_5._0
                                     break;
                                 }
                             }
-                            catch (Exception E)
+                            catch
                             {
-                                System.Diagnostics.Debug.WriteLine(E.Message);
                             }
                         }
                         else
