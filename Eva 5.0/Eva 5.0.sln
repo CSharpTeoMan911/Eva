@@ -5,7 +5,7 @@ VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eva 5.0", "Eva 5.0.csproj", "{0E255796-9D90-4F37-B02A-D903B243772B}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Eva", "..\Eva\Eva.vdproj", "{5FDC3DC0-5BB8-40C3-A778-2E4A5E39394F}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Eva", "..\Eva\Eva.vdproj", "{7C8A2164-5CFF-409A-91CA-4C42562C4B56}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,12 +29,12 @@ Global
 		{0E255796-9D90-4F37-B02A-D903B243772B}.Release|x64.Build.0 = Release|x64
 		{0E255796-9D90-4F37-B02A-D903B243772B}.Release|x86.ActiveCfg = Release|x86
 		{0E255796-9D90-4F37-B02A-D903B243772B}.Release|x86.Build.0 = Release|x86
-		{5FDC3DC0-5BB8-40C3-A778-2E4A5E39394F}.Debug|Any CPU.ActiveCfg = Debug
-		{5FDC3DC0-5BB8-40C3-A778-2E4A5E39394F}.Debug|x64.ActiveCfg = Debug
-		{5FDC3DC0-5BB8-40C3-A778-2E4A5E39394F}.Debug|x86.ActiveCfg = Debug
-		{5FDC3DC0-5BB8-40C3-A778-2E4A5E39394F}.Release|Any CPU.ActiveCfg = Release
-		{5FDC3DC0-5BB8-40C3-A778-2E4A5E39394F}.Release|x64.ActiveCfg = Release
-		{5FDC3DC0-5BB8-40C3-A778-2E4A5E39394F}.Release|x86.ActiveCfg = Release
+		{7C8A2164-5CFF-409A-91CA-4C42562C4B56}.Debug|Any CPU.ActiveCfg = Debug
+		{7C8A2164-5CFF-409A-91CA-4C42562C4B56}.Debug|x64.ActiveCfg = Debug
+		{7C8A2164-5CFF-409A-91CA-4C42562C4B56}.Debug|x86.ActiveCfg = Debug
+		{7C8A2164-5CFF-409A-91CA-4C42562C4B56}.Release|Any CPU.ActiveCfg = Release
+		{7C8A2164-5CFF-409A-91CA-4C42562C4B56}.Release|x64.ActiveCfg = Release
+		{7C8A2164-5CFF-409A-91CA-4C42562C4B56}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,22 +1,19 @@
+import json
+
 from vosk import Model, KaldiRecognizer
 import os
 import pyaudio
 import sys
-import json
-import socket
+import asyncio
+import noisereduce
+import numpy as np
+import time
 
-connection = socket.socket(family=socket.AddressFamily.AF_INET, type=socket.SocketKind.SOCK_STREAM)
-connection.connect(("127.0.0.1", 6000))
+confidence_threshold = 0.85
 
-confidence_threshold = float(sys.argv[2]) / 10
-
-# INITIATE PYAUDIO OBJECT, LISTEN TO THE DEFAULT MIC ON 1 CHANNEL, WITH A RATE OF 16000 HZ AND A BUFFER OF 1600 FRAMES
-mic = pyaudio.PyAudio()
-stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=800)
-stream.start_stream()
+model = None
 
 # LOAD THE VOSK SPEECH RECOGNITION MODEL FROM THE APPLICATION'S DIRECTORY
-model = None
 if str(sys.argv[1]) == "0":
     model = Model(model_path=os.getcwd() + "\\" + "model 1", lang="en-us")
 else:
@@ -24,29 +21,36 @@ else:
 
 # INITIATE KALDI SPEECH RECOGNIZER INSTANCE USING THE VOSK MODEL AND A FREQUENCY OF 16000 HZ
 recognizer = KaldiRecognizer(model, 16000)
-recognizer.SetGrammar('["listen", "stop listening"]')
+recognizer.SetGrammar('["listen", "hey listen", "stop listening", "[unk]"]')
 recognizer.SetWords(True)
 recognizer.SetPartialWords(True)
 
+# INITIATE PYAUDIO OBJECT, LISTEN TO THE DEFAULT MIC ON 1 CHANNEL, WITH A RATE OF 16000 HZ AND A BUFFER OF 1600 FRAMES
+mic = pyaudio.PyAudio()
+stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=1600)
+stream.start_stream()
+
 wake_word_engine_loaded = False
 
-
-def socket_messaging(message):
-    global connection
-    connection.send(message.encode("utf-8"))
+binary_data = bytearray()
 
 
-def wake_word_engine_operation():
+async def wake_word_engine_operation():
+    global binary_data
+    start = time.time()
     try:
         while True:
-            wake_word_engine_process()
+            binary_data += bytearray(stream.read(800, False))
+            if (time.time() - start) >= 0.5:
+                _binary_data = binary_data.copy()
+                binary_data.clear()
+                await wake_word_engine_thread_management(bytes(_binary_data))
+                start = time.time()
     except KeyboardInterrupt:
         sys.exit(0)
 
 
-def wake_word_engine_process():
-    data = stream.read(800, False)
-
+async def wake_word_engine_thread_management(data):
     ##############################################
     # VOSK SPEECH-TO-TEXT SPEECH LANGUAGE MODEL  #
     # USING KALDI SPEECH-TO-TEXT ENGINE          #
@@ -57,27 +61,36 @@ def wake_word_engine_process():
     global wake_word_engine_loaded
 
     try:
+        n_frames = len(data) / 2
+
+        np_data = np.frombuffer(data, dtype=np.int16)
+        np_data = np.reshape(np_data, newshape=(1, int(n_frames)))
+        red_np_data = noisereduce.reduce_noise(y=np_data, sr=16000)
+        data = red_np_data.tobytes()
+
         if wake_word_engine_loaded is False:
-            socket_messaging("[ loaded ]")
+            sys.stdout.write("[ loaded ]")
+            sys.stdout.flush()
             wake_word_engine_loaded = True
 
         # RETRIEVE THE AUDIO WAVEFORM DATA AND PERFORM SPEECH TO TEXT CONVERSION
         if recognizer.AcceptWaveform(data):
-            keyword_spotter(recognizer.Result())
-            keyword_spotter(recognizer.FinalResult())
+            await keyword_spotter(recognizer.Result())
+            await keyword_spotter(recognizer.FinalResult())
         else:
-            keyword_spotter(recognizer.PartialResult())
+            await keyword_spotter(recognizer.PartialResult())
     except KeyboardInterrupt:
         sys.exit(0)
 
 
-def keyword_spotter(sentence):
+async def keyword_spotter(sentence):
     # IF THE RECOGNIZED PHRASE CONTAINS "listen" PRINT 'listen' ON THE STDOUT STREAM,
     # ELSE IF THE PHRASE CONTAINS 'stop listening' PRINT 'stop listening' ON THE
     # STDOUT STREAM
 
     global confidence_threshold
     j_obj = json.loads(sentence)
+
     try:
         for key in j_obj:
             if key == "result":
@@ -90,11 +103,11 @@ def keyword_spotter(sentence):
                             stop_found = False
                         elif word["word"] == "listening" and word[
                             "conf"] >= confidence_threshold and stop_found is True:
-                            socket_messaging("stop listening")
+                            sys.stdout.write("stop listening")
                 elif "listen" in j_obj["text"]:
                     for word in j_obj["result"]:
                         if word["word"] == "listen" and word["conf"] >= confidence_threshold:
-                            socket_messaging("listen")
+                            sys.stdout.write("listen")
             elif key == "partial_result":
                 if "stop listening" in j_obj["partial"]:
                     stop_found = True
@@ -105,14 +118,15 @@ def keyword_spotter(sentence):
                             stop_found = False
                         elif word["word"] == "listening" and word[
                             "conf"] >= confidence_threshold and stop_found is True:
-                            socket_messaging("stop listening")
+                            sys.stdout.write("stop listening")
                 elif "listen" in j_obj["partial"]:
                     for word in j_obj["partial_result"]:
                         if word["word"] == "listen" and word["conf"] >= confidence_threshold:
-                            socket_messaging("listen")
+                            sys.stdout.write("listen")
+        sys.stdout.flush()
     except KeyboardInterrupt:
         sys.exit(0)
 
 
 if __name__ == '__main__':
-    wake_word_engine_operation()
+    asyncio.run(wake_word_engine_operation())

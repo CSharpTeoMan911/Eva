@@ -34,7 +34,7 @@ namespace Eva_5._0
     public partial class SettingsWindow : Window
     {
         private System.Timers.Timer AnimationAndFunctionalityTimer;
-        private System.Timers.Timer TemperatureChangedTimer;
+        private System.Timers.Timer ValuesChangedTimer;
 
         private static int current_model_index;
 
@@ -53,6 +53,9 @@ namespace Eva_5._0
 
         private bool TempChanged;
         private int Temp;
+
+        private bool VoskSensitivityChanged;
+        private float Sensitivity;
 
         private static SettingsWindow CurrentInstance;
         public delegate Task<bool> OpenSpeech();
@@ -142,16 +145,17 @@ namespace Eva_5._0
         {
             LoadCurrentModel();
             LoadTemperature();
+            LoadSensitivity();
 
             AnimationAndFunctionalityTimer = new System.Timers.Timer();
             AnimationAndFunctionalityTimer.Elapsed += AnimationAndFunctionalityTimer_Elapsed;
             AnimationAndFunctionalityTimer.Interval = 10;
             AnimationAndFunctionalityTimer.Start();
 
-            TemperatureChangedTimer = new System.Timers.Timer();
-            TemperatureChangedTimer.Elapsed += TemperatureChangedTimer_Elapsed;
-            TemperatureChangedTimer.Interval = 100;
-            TemperatureChangedTimer.Start();
+            ValuesChangedTimer = new System.Timers.Timer();
+            ValuesChangedTimer.Elapsed += ValuesChangedTimer_Elapsed; ;
+            ValuesChangedTimer.Interval = 100;
+            ValuesChangedTimer.Start();
 
             this.Topmost = true;
 
@@ -210,7 +214,7 @@ namespace Eva_5._0
             SpeechLanguageDisplay.Text = SpeechLanguage;
         }
 
-        private void TemperatureChangedTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void ValuesChangedTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             switch (WindowIsClosing)
             {
@@ -238,7 +242,7 @@ namespace Eva_5._0
 
                         case false:
 
-                            Application.Current.Dispatcher.Invoke(async() =>
+                            Application.Current.Dispatcher.Invoke(async () =>
                             {
                                 switch (Application.Current.MainWindow == null)
                                 {
@@ -270,6 +274,12 @@ namespace Eva_5._0
                                         {
                                             TempChanged = false;
                                             await Settings.Set_Current_Model_Temperature(Temp);
+                                        }
+
+                                        if(VoskSensitivityChanged == true)
+                                        {
+                                            VoskSensitivityChanged = false;
+                                            await Settings.Set_Vosk_Sensitivity_Settings(Sensitivity);
                                         }
                                         break;
 
@@ -439,7 +449,9 @@ namespace Eva_5._0
                                                         PreviousModelButtonOffset.Offset -= 0.025;
                                                         NextModelButtonOffset.Offset -= 0.025;
                                                         ModelTempLabelOffset.Offset -= 0.01;
+                                                        SensitivityTitleOffset.Offset -= 0.01;
                                                         ModelTempOffset.Offset -= 0.01;
+                                                        SensitivityOffset.Offset -= 0.01;
                                                         SpeechLanguagelOffset.Offset -= 0.01;
                                                         PreviousSpeechLanguageButtonOffset.Offset -= 0.025;
                                                         NextSpeechLanguageButtonOffset.Offset -= 0.025;
@@ -476,7 +488,9 @@ namespace Eva_5._0
                                                         PreviousModelButtonOffset.Offset += 0.025;
                                                         NextModelButtonOffset.Offset += 0.025;
                                                         ModelTempLabelOffset.Offset += 0.01;
+                                                        SensitivityTitleOffset.Offset += 0.01;
                                                         ModelTempOffset.Offset += 0.01;
+                                                        SensitivityOffset.Offset += 0.01;
                                                         SpeechLanguagelOffset.Offset += 0.01;
                                                         PreviousSpeechLanguageButtonOffset.Offset += 0.025;
                                                         NextSpeechLanguageButtonOffset.Offset += 0.025;
@@ -548,6 +562,15 @@ namespace Eva_5._0
                 }
 
             }
+        }
+
+        private void SensitivityChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            float value = (float)(e.NewValue * 10);
+            SensitivityeDisplay.Text = value + "%";
+
+            Sensitivity = (float)e.NewValue;
+            VoskSensitivityChanged = true;
         }
 
         private async void SynthesisSoundOn(object sender, RoutedEventArgs e)
@@ -729,6 +752,13 @@ namespace Eva_5._0
             int temp = await Settings.Get_Current_Model_Temperature();
             TemperatureSelector.Value = temp;
             TemperatureDisplay.Text = (temp * 10) + "%";
+        }
+
+        private async void LoadSensitivity()
+        {
+            float sensitivity = await Settings.Get_Vosk_Sensitivity_Settings();
+            SensitivitySelector.Value = sensitivity;
+            SensitivityeDisplay.Text = (sensitivity * 10) + "%";
         }
 
         private void SetCommands(object sender, RoutedEventArgs e)

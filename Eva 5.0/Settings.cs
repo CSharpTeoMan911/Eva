@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Devices.AllJoyn;
 using Windows.Graphics.Printing;
 using static Eva_5._0.Commands_Customisation;
 
@@ -84,9 +85,7 @@ namespace Eva_5._0
             // [ BEGIN ]
 
             Settings_File settings_File = new Settings_File();
-            settings_File.Sound_On = true;
-            settings_File.Open_AI_Chat_GPT_Key = String.Empty;
-            settings_File.ModelTemperature = 5;
+
             // [ END ]
 
 
@@ -255,6 +254,11 @@ namespace Eva_5._0
         //
         // [ BEGIN ]
 
+        public static async Task<float> Get_Vosk_Sensitivity_Settings()
+        {
+            return (await Load_Settings_File()).Vosk_Sensitivity;
+        }
+
         public static async Task<bool> Get_Sound_Settings()
         {
             return (await Load_Settings_File()).Sound_On;
@@ -269,6 +273,14 @@ namespace Eva_5._0
         public static async Task<string> Get_Speech_Language_Settings()
         {
             return (await Load_Settings_File()).Online_Speech_Recognition_Language;
+        }
+
+        public static async Task<bool> Set_Vosk_Sensitivity_Settings(float sensitivity)
+        {
+            Settings_File settings_File = await Load_Settings_File();
+            settings_File.Vosk_Sensitivity = sensitivity;
+
+            return (await Update_Settings_File(settings_File));
         }
 
         public static async Task<bool> Set_Sound_Settings(bool Option)
