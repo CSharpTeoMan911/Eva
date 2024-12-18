@@ -66,7 +66,7 @@ namespace Eva_5._0
         private static string model = "0";
 
         // Variable that sets in how many minutes the wake word engine is reset
-        private static int wake_word_engine_reset_time = 3;
+        private static int wake_word_engine_reset_time = 7;
         public static DateTime resetTime;
 
         public static void Start_The_Wake_Word_Engine()
@@ -188,7 +188,7 @@ namespace Eva_5._0
             // [ BEGIN ]
 
             System.Diagnostics.Process wake_word_process = new System.Diagnostics.Process();
-            wake_word_process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+            wake_word_process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
             wake_word_process.StartInfo.FileName = Environment.CurrentDirectory + "\\python.exe";
             wake_word_process.StartInfo.CreateNoWindow = true;
             wake_word_process.StartInfo.UseShellExecute = false;
@@ -469,7 +469,7 @@ namespace Eva_5._0
 
                                         if (bytes_read > 0)
                                         {
-                                            string pipe_message_value = Encoding.UTF8.GetString(buffer, 0, bytes_read);
+                                            string socket_message_value = Encoding.UTF8.GetString(buffer, 0, bytes_read);
 
                                             // LOCK THE "Online_Speech_Recogniser_Listening" OBJECT ON THE STACK 
                                             // IN ORDER TO BLOCK OTHER THREADS FROM MODIFYING IT
@@ -482,12 +482,12 @@ namespace Eva_5._0
                                                 {
                                                     if (Proc.tasks_running == 0)
                                                     {
-                                                        if (pipe_message_value == wake_word_engine_loaded)
+                                                        if (socket_message_value == wake_word_engine_loaded)
                                                         {
                                                             resetTime = DateTime.Now;
                                                             wake_word_engines_loaded++;
                                                         }
-                                                        else if (pipe_message_value == cancel_wake_word)
+                                                        else if (socket_message_value == cancel_wake_word)
                                                         {
                                                             if (Online_Speech_Recogniser_Listening == "true")
                                                             {
@@ -495,7 +495,7 @@ namespace Eva_5._0
                                                                 Online_Speech_Recognition.Close_Speech_Recognition_Interface();
                                                             }
                                                         }
-                                                        else if (pipe_message_value == wake_word)
+                                                        else if (socket_message_value == wake_word)
                                                         {
                                                             if (Online_Speech_Recogniser_Listening == "false")
                                                             {
