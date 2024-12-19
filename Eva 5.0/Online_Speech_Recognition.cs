@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -100,8 +101,10 @@ namespace Eva_5._0
                 // ENSURE THAT THE ONLINE SPEECH RECOGNITION INTERFACE IS CLOSED
                 await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
 
+                DateTime current = DateTime.Now;
+
                 // SET THE SPEECH RECOGNITION TIMEOUT AND SPEECH RECOGNITION VARIABLES AS THE CURRENT TIME
-                online_speech_recognition_timeout = DateTime.Now;
+                online_speech_recognition_timeout = current;
                 Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.Now;
 
 
@@ -130,8 +133,18 @@ namespace Eva_5._0
                         OnlineSpeechRecognition.ContinuousRecognitionSession.Completed += ContinuousRecognitionSession_Completed;
                         OnlineSpeechRecognition.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
 
-                        await OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionMode.PauseOnRecognition);
-                        await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache);
+
+                        // WAIT FOR THE ONLINE SPEECH RECOGNITION INTERFACE TO LOAD
+                        while (Get_Recogniser_Interfaces().Length == 0 && (DateTime.Now - current).TotalSeconds < 5);
+                        Thread.Sleep(100);
+
+                        // IF THE ONLINE SPEECH RECOGNITION INTERFACE IS LOADED, START THE ONLINE SPEECH RECOGNITION SESSION
+                        if (Get_Recogniser_Interfaces().Length > 0)
+                        {
+                            await OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionMode.PauseOnRecognition);
+                            await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache);
+                        }
+
                         break;
 
                     case false:
