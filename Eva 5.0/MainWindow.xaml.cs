@@ -530,7 +530,7 @@ namespace Eva_5._0
                                                 case "false":
                                                     lock (Initiated)
                                                     {
-                                                        Initiated = "true";
+                                                        Initiated = "false";
                                                     }
 
                                                     target_value = 1000;
