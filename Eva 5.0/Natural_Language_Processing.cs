@@ -1,5 +1,6 @@
 ﻿using System;
 using System.CodeDom;
+using System.Diagnostics.Eventing.Reader;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -120,284 +121,147 @@ namespace Eva_5._0
                     break;
 
                 case false:
-                    switch (Result.IndexOf("please open ") == 0)
+                    if (Result.IndexOf("please open ") == 0)
                     {
-                        case true:
-
-                            await PostProcessing("please open [Application]", Result);
-                            break;
-
-                        case false:
-
-                            switch (Result.IndexOf("open ") == 0)
-                            {
-                                case true:
-
-                                    switch (Result.LastIndexOf(" please") + " please".Length - 1 == Result.Length - 1)
-                                    {
-                                        case true:
-
-                                            await PostProcessing("open [Application] please", Result);
-                                            break;
-
-                                        case false:
-
-                                            switch (Result.LastIndexOf(" now") + " now".Length - 1 == Result.Length - 1)
-                                            {
-                                                case true:
-
-                                                    await PostProcessing("open [Application] now", Result);
-                                                    break;
-
-                                                case false:
-
-                                                    await PostProcessing("open [Application]", Result);
-                                                    break;
-                                            }
-
-                                            break;
-                                    }
-                                    break;
-                            }
-                            break;
+                        await PostProcessing("please open [Application]", Result);
                     }
-
-
-
-                    switch (Result.IndexOf("please close ") == 0)
+                    else if (Result.IndexOf("open ") == 0)
                     {
-                        case true:
-
-                            await PostProcessing("please close [Application]", Result);
-                            break;
-
-                        case false:
-
-                            switch (Result.IndexOf("close ") == 0)
-                            {
-                                case true:
-
-                                    switch (Result.LastIndexOf(" please") + " please".Length - 1 == Result.Length - 1)
-                                    {
-                                        case true:
-
-                                            await PostProcessing("close [Application] please", Result);
-                                            break;
-
-                                        case false:
-
-                                            switch (Result.LastIndexOf(" now") + " now".Length - 1 == Result.Length - 1)
-                                            {
-                                                case true:
-
-                                                    await PostProcessing("close [Application] now", Result);
-                                                    break;
-
-                                                case false:
-
-                                                    await PostProcessing("close [Application]", Result);
-                                                    break;
-                                            }
-
-                                            break;
-                                    }
-                                    break;
-                            }
-                            break;
-                    }
-
-
-
-
-                    switch (Result.IndexOf("please search on ") == 0)
-                    {
-                        case true:
-
-                            await PostProcessing("please search on [Web Application Keyword] [Content]", Result);
-                            break;
-
-                        case false:
-
-                            switch ((Result.IndexOf("please search ") == 0) && (Result.Contains(" on ") == true))
-                            {
-                                case true:
-
-                                    await PostProcessing("please search [Content] on [Web Application Keyword]", Result);
-                                    break;
-
-                                case false:
-
-                                    switch (Result.IndexOf("search on ") == 0)
-                                    {
-                                        case true:
-
-                                            await PostProcessing("search on [Web Application Keyword] [Content]", Result);
-                                            break;
-
-                                        case false:
-
-                                            if ((Result.IndexOf("search ") == 0) && (Result.Contains(" on ") == true))
-                                            {
-                                                await PostProcessing("search [Content] on [Web Application Keyword]", Result);
-                                            }
-                                            break;
-                                    }
-                                    break;
-                            }
-                            break;
-                    }
-
-
-
-
-
-                    switch (Result.IndexOf("set a ") == 0)
-                    {
-                        case true:
-
-                            switch (Result.IndexOf(" timer") == Result.Length - 6)
-                            {
-                                case true:
-
-                                    await PostProcessing("set a [Timer Interval] timer", Result);
-                                    break;
-
-
-                                case false:
-
-                                    switch (Result.IndexOf(" please") == Result.Length - 7)
-                                    {
-                                        case true:
-
-                                            if (Result.IndexOf(" timer ") == Result.Length - 13)
-                                            {
-                                                await PostProcessing("set a [Timer Interval] timer please", Result);
-                                            }
-                                            break;
-                                    }
-                                    break;
-                            }
-                            break;
-
-
-
-                        case false:
-                            switch (Result.IndexOf("please set a ") == 0)
-                            {
-                                case true:
-                                    if (Result.IndexOf(" timer") == Result.Length - 6)
-                                    {
-                                        await PostProcessing("please set a [Timer Interval] timer", Result);
-                                    }
-                                    break;
-                            }
-                            break;
-                    }
-
-
-
-                    if (Result.IndexOf("set ") != 0)
-                    {
-                        if (Result.IndexOf(' ') == 3)
+                        if (Result.LastIndexOf(" please") + " please".Length - 1 == Result.Length - 1)
                         {
-                            switch (Result.IndexOf('g') == 0)
+                            await PostProcessing("open [Application] please", Result);
+                        }
+                        else if (Result.LastIndexOf(" now") + " now".Length - 1 == Result.Length - 1)
+                        {
+                            await PostProcessing("open [Application] now", Result);
+                        }
+                        else
+                        {
+                            await PostProcessing("open [Application]", Result);
+                        }
+                    }
+                    else if (Result.IndexOf("please close ") == 0)
+                    {
+                        await PostProcessing("please close [Application]", Result);
+                    }
+                    else if (Result.IndexOf("close ") == 0)
+                    {
+                        if (Result.LastIndexOf(" please") + " please".Length - 1 == Result.Length - 1)
+                        {
+                            await PostProcessing("close [Application] please", Result);
+                        }
+                        else if (Result.LastIndexOf(" now") + " now".Length - 1 == Result.Length - 1)
+                        {
+                            await PostProcessing("close [Application] now", Result);
+                        }
+                        else
+                        {
+                            await PostProcessing("close [Application]", Result);
+                        }
+                    }
+                    else if (Result.IndexOf("please search on ") == 0)
+                    {
+                        await PostProcessing("please search on [Web Application Keyword] [Content]", Result);
+                    }
+                    else if ((Result.IndexOf("please search ") == 0) && (Result.Contains(" on ") == true))
+                    {
+                        await PostProcessing("please search [Content] on [Web Application Keyword]", Result);
+                    }
+                    else if (Result.IndexOf("search on ") == 0)
+                    {
+                        await PostProcessing("search on [Web Application Keyword] [Content]", Result);
+                    }
+                    else if ((Result.IndexOf("search ") == 0) && (Result.Contains(" on ") == true))
+                    {
+                        await PostProcessing("search [Content] on [Web Application Keyword]", Result);
+                    }
+                    else if (Result.IndexOf("set a ") == 0)
+                    {
+                        if (Result.IndexOf(" timer") == Result.Length - 6)
+                        {
+                            await PostProcessing("set a [Timer Interval] timer", Result);
+                        }
+                        else if (Result.IndexOf(" please") == Result.Length - 7)
+                        {
+                            if (Result.IndexOf(" timer ") == Result.Length - 13)
                             {
-                                case true:
-                                    await PostProcessing("chatgpt [ ChatGPT Query ]", Result);
-                                    break;
-
-
-                                case false:
-                                    switch (Result.IndexOf('p') == 1)
-                                    {
-                                        case true:
-                                            await PostProcessing("chatgpt [ ChatGPT Query ]", Result);
-                                            break;
-
-
-                                        case false:
-                                            if (Result.IndexOf('t') == 2)
-                                            {
-                                                await PostProcessing("chatgpt [ ChatGPT Query ]", Result);
-                                            }
-                                            break;
-                                    }
-                                    break;
+                                await PostProcessing("set a [Timer Interval] timer please", Result);
                             }
                         }
                     }
+                    else if(Result.IndexOf("set an ") == 0)
+                    {
+                        if (Result.IndexOf(" timer") == Result.Length - 6)
+                        {
+                            await PostProcessing("set an [Timer Interval] timer", Result);
+                        }
+                        else if (Result.IndexOf(" please") == Result.Length - 7)
+                        {
+                            if (Result.IndexOf(" timer ") == Result.Length - 13)
+                            {
+                                await PostProcessing("set an [Timer Interval] timer please", Result);
+                            }
+                        }
+                    }
+                    else if (Result.IndexOf("please set a ") == 0)
+                    {
+                        if (Result.IndexOf(" timer") == Result.Length - 6)
+                        {
+                            await PostProcessing("please set a [Timer Interval] timer", Result);
+                        }
+                    }
+                    else if (Result.IndexOf("please set an ") == 0)
+                    {
+                        if (Result.IndexOf(" timer") == Result.Length - 6)
+                        {
+                            await PostProcessing("please set a [Timer Interval] timer", Result);
+                        }
+                    }
+                    else if (Result.IndexOf("gpt ") == 0)
+                    {
+                        await PostProcessing("chatgpt [ ChatGPT Query ]", Result);
+                    }
+                    else
+                    {
+                        // COMMANDS THAT DO NOT REQUIRE A SECOND TOKENIZATION. THESE COMMANDS ARE COMMANDS THAT DO NOT HAVE
+                        // EXTRA VARIABLES THAT REQUIRE CONTENT PROCESSING AND THE MEANING AND CONTENTS OF THE COMMAND
+                        // ARE EXPLICIT
 
+
+                        // SCREENSHOT PROCESS
+                        //[ BEGIN ]
+
+                        if (Result.IndexOf("take screenshot") == 0)
+                        {
+                            await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                        }
+                        else if (Result.IndexOf("take a screenshot") == 0)
+                        {
+                            await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                        }
+                        else if (Result.IndexOf("take a screenshot please") == 0)
+                        {
+                            await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                        }
+                        else if (Result.IndexOf("please take a screenshot") == 0)
+                        {
+                            await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                        }
+                        else if (Result.IndexOf("screenshot") == 0)
+                        {
+                            await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                        }
+
+                        //[ END ]
+                    }
+
+                    break;
 
                     // [ END ]
 
-
-
-
-
-
-                    // COMMANDS THAT DO NOT REQUIRE A SECOND TOKENIZATION. THESE COMMANDS ARE COMMANDS THAT DO NOT HAVE
-                    // EXTRA VARIABLES THAT REQUIRE CONTENT PROCESSING AND THE MEANING AND CONTENTS OF THE COMMAND
-                    // ARE EXPLICIT
-                    //
-                    //[ BEGIN ]
-
-
-                    // SCREENSHOT PROCESS
-                    //[ BEGIN ]
-
-                    switch (Result.IndexOf("take screenshot") == 0)
-                    {
-                        case true:
-                            await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
-                            break;
-
-                        case false:
-
-                            switch (Result.IndexOf("take a screenshot") == 0)
-                            {
-                                case true:
-                                    await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
-                                    break;
-
-                                case false:
-
-                                    switch (Result.IndexOf("take a screenshot please") == 0)
-                                    {
-                                        case true:
-                                            await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
-                                            break;
-
-                                        case false:
-
-                                            switch (Result.IndexOf("please take a screenshot") == 0)
-                                            {
-                                                case true:
-                                                    await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
-                                                    break;
-
-                                                case false:
-
-                                                    if (Result.IndexOf("screenshot") == 0)
-                                                    {
-                                                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
-                                                    }
-                                                    break;
-                                            }
-                                            break;
-                                    }
-                                    break;
-                            }
-                            break;
-                    }
-
-                        //[ END ]
-
-
-                    //[ END ]
-                    break;
             }
 
- 
+
 
         ChatGptMode:
         End:
@@ -614,6 +478,14 @@ namespace Eva_5._0
                     }
                     break;
 
+                case "set an [Timer Interval] timer":
+                    timer_set = await Timer_Time_Selector(Sentence, time_interval, "set an ".Length - 1);
+
+                    if (timer_set == true)
+                    {
+                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
+                    }
+                    break;
 
                 case "set a [Timer Interval] timer please":
                     timer_set = await Timer_Time_Selector(Sentence, time_interval, "set a ".Length - 1);
@@ -624,8 +496,26 @@ namespace Eva_5._0
                     }
                     break;
 
+                case "set an [Timer Interval] timer please":
+                    timer_set = await Timer_Time_Selector(Sentence, time_interval, "set an ".Length - 1);
+
+                    if (timer_set == true)
+                    {
+                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
+                    }
+                    break;
+
                 case "please set a [Timer Interval] timer":
                     timer_set = await Timer_Time_Selector(Sentence, time_interval, "please set a ".Length - 1);
+
+                    if (timer_set == true)
+                    {
+                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
+                    }
+                    break;
+
+                case "please set an [Timer Interval] timer":
+                    timer_set = await Timer_Time_Selector(Sentence, time_interval, "please set an ".Length - 1);
 
                     if (timer_set == true)
                     {

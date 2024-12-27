@@ -36,9 +36,8 @@ namespace Eva_5._0
         //
         //
         //
-        // 1) YOU MUST HAVE A PYTHON VIRTUAL ENVIRONMENT WITHIN THE EVA APPLICATION'S DIRECTORY
-        // ( WHERE THE "Eva 5.0.exe" EXECUTABLE IS LOCATED ). IN ORDER TO DO THIS YOU HAVE MULTIPLE 
-        // OPTIONS:
+        // 1) YOU MUST HAVE A PYTHON VIRTUAL ENVIRONMENT OR AN EMBEDDED STANDALONE DOWNLOAD WITHIN THE EVA APPLICATION'S DIRECTORY
+        // ( WHERE THE "Eva 5.0.exe" EXECUTABLE IS LOCATED ). IN ORDER TO DO THIS YOU HAVE MULTIPLE OPTIONS:
         //
         // - USE THE COMMAND "python3 -m venv /path/to/Eva 5.0.exe"
         //
@@ -46,6 +45,7 @@ namespace Eva_5._0
         //
         // - COPY AN ALREADY EXISTING VIRTUAL ENVIRONMET WHERE "Eva 5.0.exe" EXECUTABLE IS LOCATED.
         //
+        // - COPY AN ALREADY EXISTING PYTHON DOWNLOAD WHERE "Eva 5.0.exe" EXECUTABLE IS LOCATED.
         //
         // 
         // 2) INSTALL THE PIP PACKAGES: "Vosk", "PyAudio", AND "sounddevice" USING THE 
@@ -69,8 +69,8 @@ namespace Eva_5._0
 
         public static void Start_The_Wake_Word_Engine()
         {
-            // INITIATE 2 WAKE WORD ENGINE PROCESSES ON DIFFERENT THREADS FOR CPU LOAD DISTRIBUTION PURPOSES
-            // AND ALSO TO PREVENT THE LOCKING OF THE CALLING THREAD. AFTER THE WAKE WORD ENGINE PROCESSES
+            // INITIATE A WAKE WORD ENGINE PROCESS ON A DIFFERENT THREAD FOR CPU LOAD DISTRIBUTION PURPOSES
+            // AND ALSO TO PREVENT THE LOCKING OF THE CALLING THREAD. AFTER THE WAKE WORD ENGINE PROCESS
             // STARTED, INITIATE A TIMER THAT PRVENTS WAKE WORD ENGINE LOCK.
             //
             // [ BEGIN ]
@@ -118,8 +118,8 @@ namespace Eva_5._0
 
         private static async void Wake_word_management_timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            // RESET ONE OF THE PROCESSES EVERY 5 SECONDS, AFTER BOTH PROCESSES LOADED, BY CLOSING AND STARTING THE PROCESS.
-            // THIS IS DONE TO PREVENT WAKE WORD ENGINE LOCK.
+            // RESET THE WAKE WORD ENGINE PROCESS ONCE EVERY 10 MINUTES. THIS IS DONE TO PREVENT WAKE WORD ENGINE LOCK,
+            // AND ALSO TO PREVENT THE OVERFLOW OF THE DATA BUFFER USED BY THE ENGINE TO STORE THE AUDIO DATA
             //
             // [ START ]
 
@@ -192,31 +192,37 @@ namespace Eva_5._0
 
         private static async Task Initiate_Wake_Word_Engine()
         {
-            // INITIATE THE WAKE WORD ENGINE USING THE VIRTUAL ENVIRONMENT WITHIN THE DIRECTORY
-            // WHERE WHERE "Eva 5.0.exe" EXECUTABLE IS LOCATED. THE PROCESS WILL NOT CREATE ANY
-            // WINDOW AND IT WILL BE STARTED AS A CHILD PROCESSES OF THE "Eva 5.0.exe" PROCESS.
-            //
-            // [ BEGIN ]
+            try
+            {
+                // INITIATE THE WAKE WORD ENGINE USING THE VIRTUAL ENVIRONMENT WITHIN THE DIRECTORY
+                // WHERE WHERE "Eva 5.0.exe" EXECUTABLE IS LOCATED. THE PROCESS WILL NOT CREATE ANY
+                // WINDOW AND IT WILL BE STARTED AS A CHILD PROCESSES OF THE "Eva 5.0.exe" PROCESS.
+                // ALSO,INITIATE A SOCKET THROUGH WHICH THE PYTHON PROCESS AND THE MAIN APPLICATION
+                // WILL COMMUNICATE WAKE WORD ENGINE RELATED EVENTS.
+                //
+                // [ BEGIN ]
 
 
-            Socket server = model == "0" ? wake_word_sockets.Item1 : wake_word_sockets.Item2;
-            int port = model == "0" ? 6000 : 7000;
+                Socket server = model == "0" ? wake_word_sockets.Item1 : wake_word_sockets.Item2;
+                int port = model == "0" ? 6000 : 7000;
 
-            System.Diagnostics.Process wake_word_process = new System.Diagnostics.Process();
-            wake_word_process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-            wake_word_process.StartInfo.FileName = Environment.CurrentDirectory + "\\python.exe";
-            wake_word_process.StartInfo.CreateNoWindow = true;
-            wake_word_process.StartInfo.UseShellExecute = false;
-            wake_word_process.StartInfo.Arguments = new StringBuilder("main.py ").Append(model).Append(" ").Append((await Settings.GetSettingsFilePath()).ToString()).Append(" ").Append(port.ToString()).ToString();
-            wake_word_process.Start();
+                System.Diagnostics.Process wake_word_process = new System.Diagnostics.Process();
+                wake_word_process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                wake_word_process.StartInfo.FileName = Environment.CurrentDirectory + "\\python.exe";
+                wake_word_process.StartInfo.CreateNoWindow = true;
+                wake_word_process.StartInfo.UseShellExecute = false;
+                wake_word_process.StartInfo.Arguments = new StringBuilder("main.py ").Append(model).Append(" ").Append((await Settings.GetSettingsFilePath()).ToString()).Append(" ").Append(port.ToString()).ToString();
+                wake_word_process.Start();
 
-            SwitchModel();
+                SwitchModel();
 
-            wake_word_processes.Enqueue(wake_word_process);
+                wake_word_processes.Enqueue(wake_word_process);
 
-            await Wake_Word_Detector(wake_word_process, server);
+                await Wake_Word_Detector(wake_word_process, server);
 
-            // [ END ]
+                // [ END ]
+            }
+            catch { }
         }
 
 
@@ -481,7 +487,7 @@ namespace Eva_5._0
 
                                     if(client_connection.CanRead == true)
                                     {
-                                        // READ THE DATA ON THE STOUT STREAM OF THE "Python" process
+                                        // READ THE DATA RECEIVED FROM THE SOCKET CONNECTION OF THE "Python" PROCESS ASYNCHRONOUSLY.
                                         byte[] buffer = new byte[1024];
                                         int bytes_read = await client_connection.ReadAsync(buffer, 0, buffer.Length);
 
@@ -533,13 +539,7 @@ namespace Eva_5._0
                                     break;
                                 }
                             }
-                            catch (Exception E)
-                            {
-                                System.Diagnostics.Debug.WriteLine(E.Message);
-                            }
-                            finally
-                            {
-                            }
+                            catch { }
                         }
                         else
                         {
@@ -554,10 +554,7 @@ namespace Eva_5._0
 
                 client_connection?.Dispose();
             }
-            catch(Exception E) 
-            {
-                System.Diagnostics.Debug.WriteLine(E.Message);
-            }
+            catch { }
 
         }
 
