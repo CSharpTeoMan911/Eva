@@ -8,10 +8,9 @@ import time
 import asyncio
 
 config = sys.argv[2]
+port = sys.argv[3]
 
-connection = socket.socket(family=socket.AddressFamily.AF_INET, type=socket.SocketKind.SOCK_STREAM)
-connection.connect(("127.0.0.1", 6000))
-connection.settimeout(None)
+connection = None
 
 # INITIATE PYAUDIO OBJECT, LISTEN TO THE DEFAULT MIC ON 1 CHANNEL, WITH A RATE OF 16000 HZ AND A BUFFER OF 1600 FRAMES
 mic = pyaudio.PyAudio()
@@ -35,17 +34,27 @@ wake_word_engine_loaded = False
 
 
 async def get_confidence() -> int:
-    confidence_threshold = 1
-    if os.path.exists(config) is True:
-        with open(config, "r") as f:
-            config_obj = json.loads(s=f.read())
-            confidence_threshold = float(config_obj["Vosk_Sensitivity"]) / 10
+    confidence_threshold = 0.85
+    try:
+        if os.path.exists(config) is True:
+            with open(config, "r") as f:
+                config_obj = json.loads(s=f.read())
+                confidence_threshold = float(config_obj["Vosk_Sensitivity"]) / 10
+    except Exception:
+        pass
     return confidence_threshold
 
 
 async def socket_messaging(message):
     global connection
-    connection.send(message.encode("utf-8"))
+    try:
+        if connection is None:
+            connection = socket.socket(family=socket.AddressFamily.AF_INET, type=socket.SocketKind.SOCK_STREAM)
+            connection.connect(("127.0.0.1", int(port)))
+            connection.settimeout(None)
+        connection.send(message.encode("utf-8"))
+    except Exception:
+        pass
 
 
 async def wake_word_engine_operation():
