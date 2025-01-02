@@ -45,14 +45,19 @@ namespace Eva_5._0
         // OTHERWISE THE APPLICATION CAN CRASH.
         private static void Ensure_Access_To_The_Settings_File()
         {
-            if(System.IO.File.Exists(settings_file_name) == true)
+            string full_path = new StringBuilder(Environment.CurrentDirectory).Append("\\").Append(settings_file_name).ToString();
+
+            if(System.IO.File.Exists(full_path) == true)
             {
                 System.Security.AccessControl.FileSecurity settings_file_security = System.IO.File.GetAccessControl(settings_file_name);
+
                 settings_file_security.AddAccessRule(new System.Security.AccessControl.FileSystemAccessRule(System.Security.Principal.WindowsIdentity.GetCurrent().Name, System.Security.AccessControl.FileSystemRights.Write, System.Security.AccessControl.AccessControlType.Allow));
                 settings_file_security.AddAccessRule(new System.Security.AccessControl.FileSystemAccessRule(System.Security.Principal.WindowsIdentity.GetCurrent().Name, System.Security.AccessControl.FileSystemRights.Read, System.Security.AccessControl.AccessControlType.Allow));
                 settings_file_security.AddAccessRule(new System.Security.AccessControl.FileSystemAccessRule(System.Security.Principal.WindowsIdentity.GetCurrent().Name, System.Security.AccessControl.FileSystemRights.Delete, System.Security.AccessControl.AccessControlType.Allow));
+                settings_file_security.AddAccessRule(new System.Security.AccessControl.FileSystemAccessRule(System.Security.Principal.WindowsIdentity.GetCurrent().Name, System.Security.AccessControl.FileSystemRights.WriteData, System.Security.AccessControl.AccessControlType.Allow));
+                settings_file_security.AddAccessRule(new System.Security.AccessControl.FileSystemAccessRule(System.Security.Principal.WindowsIdentity.GetCurrent().Name, System.Security.AccessControl.FileSystemRights.ReadData, System.Security.AccessControl.AccessControlType.Allow));
 
-                System.IO.File.SetAccessControl(settings_file_name, settings_file_security);
+                System.IO.File.SetAccessControl(full_path, settings_file_security);
             }
         }
 

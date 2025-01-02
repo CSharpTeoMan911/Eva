@@ -67,6 +67,7 @@ namespace Eva_5._0
         {
             // 'HttpClient' OBJECT NEEDED TO SEND HTTP REQUESTS TO THE OPENAI SERVER.
             System.Net.Http.HttpClient api_client = new System.Net.Http.HttpClient();
+            api_client.Timeout = TimeSpan.FromSeconds(10);
 
             // 'HttpResponseMessage' OBJECT NEEDED TO GET THE RESPONSE OF THE HTTP GET QUERY
             System.Net.Http.HttpResponseMessage response = null;
@@ -98,19 +99,19 @@ namespace Eva_5._0
                 // CLEAN THE DATA WITHIN THE EXTRACTED HTTP PAYLOAD BY ELIMINATING NON-GPT MODELS
                 // AND VISION BASED MODELS
 
-                if(models.data != null)
+                if (models.data != null)
+                {
+                    gpt_models.Clear();
                     for (int i = 0; i < models.data.Count; i++)
                     {
                         string current_model = models.data.ElementAt(i).id;
 
                         if (current_model.Contains("gpt") == true)
-                        {
-                            if (current_model.Contains("vision") == false)
-                            {
-                                gpt_models.Add(current_model);
-                            }
-                        }
+                            if (current_model.Contains("voice") == false)
+                                if (current_model.Contains("vision") == false)
+                                    gpt_models.Add(current_model);
                     }
+                }
             }
             catch
             {

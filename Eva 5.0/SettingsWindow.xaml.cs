@@ -686,6 +686,9 @@ namespace Eva_5._0
 
         private async void PreviousModel(object sender, RoutedEventArgs e)
         {
+            if (ChatGPT_API.gpt_models.Count == 0)
+                await ChatGPT_API.Get_Available_Gpt_Models();
+
             if (ChatGPT_API.gpt_models.Count > 0)
             {
                 if (current_model_index > 0)
@@ -702,6 +705,9 @@ namespace Eva_5._0
         {
             await Application.Current.Dispatcher.InvokeAsync(async() =>
             {
+                if (ChatGPT_API.gpt_models.Count == 0)
+                    await ChatGPT_API.Get_Available_Gpt_Models();
+
                 if (ChatGPT_API.gpt_models.Count > 0)
                 {
                     string current_model = await Settings.Get_Current_Chat_GPT__Model();
@@ -728,6 +734,9 @@ namespace Eva_5._0
 
         private async void NextModel(object sender, RoutedEventArgs e)
         {
+            if(ChatGPT_API.gpt_models.Count == 0)
+                await ChatGPT_API.Get_Available_Gpt_Models();
+
             if (ChatGPT_API.gpt_models.Count > 0)
             {
                 if (current_model_index < ChatGPT_API.gpt_models.Count - 1)
