@@ -119,10 +119,10 @@ namespace Eva_5._0
                 {
                     case true:
                         OnlineSpeechRecognition.StateChanged += OnlineSpeechRecognition_StateChanged;
-                        OnlineSpeechRecognition.ContinuousRecognitionSession.AutoStopSilenceTimeout = TimeSpan.FromSeconds(9);
-                        OnlineSpeechRecognition.Timeouts.EndSilenceTimeout = TimeSpan.FromSeconds(9);
-                        OnlineSpeechRecognition.Timeouts.InitialSilenceTimeout = TimeSpan.FromSeconds(9);
-                        OnlineSpeechRecognition.Timeouts.BabbleTimeout = TimeSpan.FromSeconds(9);
+                        OnlineSpeechRecognition.ContinuousRecognitionSession.AutoStopSilenceTimeout = TimeSpan.FromSeconds(4);
+                        OnlineSpeechRecognition.Timeouts.EndSilenceTimeout = TimeSpan.FromSeconds(4);
+                        OnlineSpeechRecognition.Timeouts.InitialSilenceTimeout = TimeSpan.FromSeconds(4);
+                        OnlineSpeechRecognition.Timeouts.BabbleTimeout = TimeSpan.FromSeconds(4);
                         OnlineSpeechRecognition.HypothesisGenerated += OnlineSpeechRecognition_HypothesisGenerated;
                         OnlineSpeechRecognition.RecognitionQualityDegrading += OnlineSpeechRecognition_RecognitionQualityDegrading;
                         OnlineSpeechRecognition.ContinuousRecognitionSession.Completed += ContinuousRecognitionSession_Completed;

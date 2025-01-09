@@ -68,6 +68,8 @@ namespace Eva_5._0
             if (CommandTest == true)
                 goto End;
 
+
+
             // THE FIRST TOKENIZATION IS INITIATED. THE FIRST TOKENIZATION IS RESPONSIBLE FOR PARAMETER ASSOCIATION WITH THEIR RESPECTIVE COMMAND FORMATS
             // FOR EXAMPLE IF YOU SAY "SEARCH ROBOTS ARE COOL ON YOUTUBE" THE FIRST TOKENIZATION WILL ASSOCIATE THE COMMAND WITH THE 
             // "SEARCH [ CONTENT ] ON [ WEB APPLICATION ] COMMAND FORMAT BASED ON THE POSITION OF THE KEYWORD "SEARCH" WITHIN THE
@@ -76,8 +78,11 @@ namespace Eva_5._0
             //
             // [ BEGIN ]
 
-
-            if (Result == "invisible")
+            if (Result == "stop listening")
+            {
+                goto End;
+            }
+            else if (Result == "invisible")
             {
                 MainWindow.invisibility_mode = true;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTActivationSoundEffect);

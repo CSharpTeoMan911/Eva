@@ -703,33 +703,32 @@ namespace Eva_5._0
 
         private async void LoadCurrentModel()
         {
-            await Application.Current.Dispatcher.InvokeAsync(async() =>
+            if (ChatGPT_API.gpt_models.Count == 0)
+                await ChatGPT_API.Get_Available_Gpt_Models();
+
+            if (ChatGPT_API.gpt_models.Count > 0)
             {
-                if (ChatGPT_API.gpt_models.Count == 0)
-                    await ChatGPT_API.Get_Available_Gpt_Models();
+                string current_model = await Settings.Get_Current_Chat_GPT__Model();
+                int model_index = ChatGPT_API.gpt_models.IndexOf(current_model);
 
-                if (ChatGPT_API.gpt_models.Count > 0)
+                if (model_index != -1)
                 {
-                    string current_model = await Settings.Get_Current_Chat_GPT__Model();
-                    int model_index = ChatGPT_API.gpt_models.IndexOf(current_model);
-
-                    if (model_index != -1)
-                    {
-                        current_model_index = model_index;
-                        GptModelDisplay.Text = ChatGPT_API.gpt_models.ElementAt(current_model_index);
-                    }
-                    else
-                    {
-                        GptModelDisplay.Text = ChatGPT_API.gpt_models.ElementAt(0);
-                        await Settings.Set_Current_Chat_GPT__Model(ChatGPT_API.gpt_models.First());
-                    }
+                    current_model_index = model_index;
+                    GptModelDisplay.Text = ChatGPT_API.gpt_models.ElementAt(current_model_index);
                 }
-            });
+                else
+                {
+                    GptModelDisplay.Text = ChatGPT_API.gpt_models.ElementAt(0);
+                    await Settings.Set_Current_Chat_GPT__Model(ChatGPT_API.gpt_models.First());
+                }
+            }
         }
 
         public static void ReloadCurrentModel()
         {
-            CurrentInstance.LoadCurrentModel();
+            Application.Current.Dispatcher.InvokeAsync(() => {
+                CurrentInstance.LoadCurrentModel();
+            });
         }
 
         private async void NextModel(object sender, RoutedEventArgs e)
