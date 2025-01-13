@@ -27,8 +27,10 @@ namespace Eva_5._0
         }
 
         [STAThread]
-        public static async Task<bool> Synthesis(Action action, string? content, string? app)
+        public static async Task Synthesis(Action action, string? content, string? app)
         {
+            SpeechSynthesisStream stream = null;
+
             try
             {
                 foreach (VoiceInformation voice in SpeechSynthesizer.AllVoices)
@@ -63,13 +65,18 @@ namespace Eva_5._0
                     }
 
 
-                    SpeechSynthesisStream stream = await synthesizer.SynthesizeTextToStreamAsync(synthesis_builder.ToString());
+                    stream = await synthesizer.SynthesizeTextToStreamAsync(synthesis_builder.ToString());
                     await A_p_l____And____P_r_o_c.sound_player.Play_Synthesis(stream.AsStream());
                 }
             }
-            catch { }
+            catch
+            {
 
-            return true;
+            }
+            finally
+            {
+                stream?.Dispose();
+            }
         }
     }
 }

@@ -127,9 +127,9 @@ namespace Eva_5._0
 
             public class Proc_Mitigator : Proc
             {
-                internal static async Task<bool> Process_Initialisation<Content>(string process_type, string application, Content content)
+                internal static async Task Process_Initialisation<Content>(string process_type, string application, Content content)
                 {
-                    return await ProcInitialisation<Content>(process_type, application, content);
+                     await ProcInitialisation<Content>(process_type, application, content);
                 }
             }
         }

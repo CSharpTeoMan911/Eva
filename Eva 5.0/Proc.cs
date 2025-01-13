@@ -59,7 +59,7 @@ namespace Eva_5._0
         // INT THAT IS MONITORING THE AMOUNT OF TASKS THAT ARE CURRENTLY RUNNING
         public static int tasks_running;
 
-        protected static async Task<bool> ProcInitialisation<Content>(string process_type, string application, Content content)
+        protected static async Task ProcInitialisation<Content>(string process_type, string application, Content content)
         {
             // IF THE AMOUNT OF TASKS CURRENTLY RUNNING IS '0'
             if (tasks_running == 0)
@@ -93,18 +93,16 @@ namespace Eva_5._0
                 // DECREMENT THE AMOUNT OF TASKS CURRENTLY RUNNING BY '1'
                 Interlocked.Decrement(ref tasks_running);
             }
-
-            return true;
         }
 
 
-        private static async Task<bool> OnlineProcesses(string WebApplication, string SearchContent)
+        private static async Task OnlineProcesses(string WebApplication, string SearchContent)
         {
             string Process = String.Empty;
 
             try
             {
-                _= await SpeechSynthesis.Synthesis(SpeechSynthesis.Action.Searching, SearchContent, WebApplication);
+                await SpeechSynthesis.Synthesis(SpeechSynthesis.Action.Searching, SearchContent, WebApplication);
 
                 commands.W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryGetValue(WebApplication, out Process);
 
@@ -137,13 +135,9 @@ namespace Eva_5._0
 
             }
             catch { }
-
-
-
-            return true;
         }
 
-        private static async Task<bool> SystemProcesses(string Application, string Process)
+        private static async Task SystemProcesses(string Application, string Process)
         {
             string application_executable_name = String.Empty;
             bool Application_Executable_Name_Retrieval_Result = commands.A_p_l_Name__And__A_p_l___E_x__Name.TryGetValue(Application, out application_executable_name);
@@ -283,8 +277,6 @@ namespace Eva_5._0
                     }
                     break;
             }
-
-            return true;
         }
 
 
@@ -314,7 +306,7 @@ namespace Eva_5._0
         }
 
 
-        private async static Task<bool> TimerProcess(System.Collections.Concurrent.ConcurrentDictionary<string, int> Timer_Time_Intervals)
+        private async static Task TimerProcess(System.Collections.Concurrent.ConcurrentDictionary<string, int> Timer_Time_Intervals)
         {
             try
             {
@@ -347,15 +339,10 @@ namespace Eva_5._0
 
             }
             catch { }
-
-
-           
-
-            return true;
         }
 
 
-        private static Task<bool> ChatGPT_API_Interface(string input)
+        private static Task ChatGPT_API_Interface(string input)
         {
             
             Application.Current.Dispatcher.Invoke(async() =>
@@ -368,9 +355,9 @@ namespace Eva_5._0
                 await sound_player.Play_Sound(Sound_Player.Sounds.AppExecutionSoundEffect);
                 await App.chatGPT_Response_Window.Update_Conversation(input);
             });
-            
 
-            return Task.FromResult(true);
+
+            return Task.CompletedTask;
         }
 
 

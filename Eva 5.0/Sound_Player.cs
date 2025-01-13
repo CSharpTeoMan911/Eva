@@ -34,7 +34,7 @@ namespace Eva_5._0.Properties
             ChatGPTDeactivationSoundEffect
         }
 
-        public async Task<bool> Play_Sound(Sounds sound)
+        public async Task Play_Sound(Sounds sound)
         {
             bool SoundOrOff = await Eva_5._0.Settings.Get_Sound_Settings();
 
@@ -98,11 +98,9 @@ namespace Eva_5._0.Properties
                         break;
                 }
             }
-
-            return true;
         }
 
-        public async Task<bool> Play_Synthesis(Stream stream)
+        public async Task Play_Synthesis(Stream stream)
         {
             bool SoundOrOff = await Eva_5._0.Settings.Get_Sound_Settings();
             bool Sythesis_On = await Eva_5._0.Settings.Get_Synthesis_Settings();
@@ -115,11 +113,9 @@ namespace Eva_5._0.Properties
                     SpeechSynthesisStream.PlaySync();
                 }
             }
-
-            return true;
         }
 
-        public Task<bool> Stop_Alarm()
+        public Task Stop_Alarm()
         {
             try
             {
@@ -127,11 +123,11 @@ namespace Eva_5._0.Properties
             }
             catch { }
 
-            return Task.FromResult(true);
+            return Task.CompletedTask;
         }
 
 
-        public Task<bool> Dispose_Sound_Effects()
+        public Task Dispose_Sound_Effects()
         {
             AppExecutionSoundEffect?.Dispose();
             AppTerminationSoundEffect?.Dispose();
@@ -141,7 +137,7 @@ namespace Eva_5._0.Properties
             AppActivationSoundEffect?.Dispose();
             ChatGPTNotificationSoundEffect?.Dispose();
 
-            return Task.FromResult(true);
+            return Task.CompletedTask;
         }
     }
 }

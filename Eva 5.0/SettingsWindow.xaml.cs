@@ -145,7 +145,7 @@ namespace Eva_5._0
 
         private async void SettingsWindowLoaded(object sender, RoutedEventArgs e)
         {
-            LoadCurrentModel();
+            await LoadCurrentModel();
             LoadTemperature();
             LoadSensitivity();
 
@@ -701,7 +701,7 @@ namespace Eva_5._0
             }
         }
 
-        private async void LoadCurrentModel()
+        private async Task LoadCurrentModel()
         {
             if (ChatGPT_API.gpt_models.Count == 0)
                 await ChatGPT_API.Get_Available_Gpt_Models();
@@ -726,8 +726,8 @@ namespace Eva_5._0
 
         public static void ReloadCurrentModel()
         {
-            Application.Current.Dispatcher.InvokeAsync(() => {
-                CurrentInstance.LoadCurrentModel();
+            Application.Current?.Dispatcher?.InvokeAsync(async() => {
+                await CurrentInstance.LoadCurrentModel();
             });
         }
 
