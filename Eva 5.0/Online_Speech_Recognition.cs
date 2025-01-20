@@ -51,8 +51,6 @@ namespace Eva_5._0
             Online_Speech_Recognition_Interface_Shutdown
         }
 
-
-
         public static void Online_Speech_Recognition_Session_Creation_And_Initiation()
         {
 
@@ -118,20 +116,19 @@ namespace Eva_5._0
                 switch (ConstraintsCompilation.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
                 {
                     case true:
-                        OnlineSpeechRecognition.StateChanged += OnlineSpeechRecognition_StateChanged;
                         OnlineSpeechRecognition.ContinuousRecognitionSession.AutoStopSilenceTimeout = TimeSpan.FromSeconds(4);
                         OnlineSpeechRecognition.Timeouts.EndSilenceTimeout = TimeSpan.FromSeconds(4);
                         OnlineSpeechRecognition.Timeouts.InitialSilenceTimeout = TimeSpan.FromSeconds(4);
                         OnlineSpeechRecognition.Timeouts.BabbleTimeout = TimeSpan.FromSeconds(4);
+
+                        OnlineSpeechRecognition.StateChanged += OnlineSpeechRecognition_StateChanged;
                         OnlineSpeechRecognition.HypothesisGenerated += OnlineSpeechRecognition_HypothesisGenerated;
-                        OnlineSpeechRecognition.RecognitionQualityDegrading += OnlineSpeechRecognition_RecognitionQualityDegrading;
                         OnlineSpeechRecognition.ContinuousRecognitionSession.Completed += ContinuousRecognitionSession_Completed;
+                        OnlineSpeechRecognition.RecognitionQualityDegrading += OnlineSpeechRecognition_RecognitionQualityDegrading;
                         OnlineSpeechRecognition.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
 
                         await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache);
                         await OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionMode.PauseOnRecognition);
-                        await OnlineSpeechRecognition.ContinuousRecognitionSession.PauseAsync();
-                        OnlineSpeechRecognition.ContinuousRecognitionSession.Resume();
                         break;
 
                     case false:
