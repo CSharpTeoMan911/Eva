@@ -300,7 +300,7 @@ namespace Eva_5._0
                                             // IF THE INTERVAL OF TIME BETWEEN THE CURRENT TIME AND THE TIME WHEN THE ONLINE SPEECH RECOGNITION ENGINE EXCEEDS THE 
                                             // AMOUNT OF SECONDS SET FOR THE SET ONLINE SPEECH RECOGNITION DELAY, MAKE THE APPLICATION MAIN WINDOW'S
                                             // CIRCULAR STATUS INDICATOR BLUE
-                                            if (((TimeSpan)(DateTime.Now - Online_Speech_Recogniser_Activation_Delay_Detector)).TotalSeconds > Online_Speech_Recogniser_Activation_Delay)
+                                            if (((TimeSpan)(DateTime.UtcNow - Online_Speech_Recogniser_Activation_Delay_Detector)).TotalSeconds > Online_Speech_Recogniser_Activation_Delay)
                                             {
                                                 switch (chatgpt_mode_enabled)
                                                 {
@@ -456,7 +456,7 @@ namespace Eva_5._0
                                                     // IF THE TIMEOUT FOR THE ONLINE SPEECH RECOGNITION ENGINE SPEECH TO TEXT OPERATION IS NOT NULL
                                                     if (online_speech_recognition_timeout != null)
                                                     {
-                                                        switch (((TimeSpan)(DateTime.Now - online_speech_recognition_timeout)).TotalMilliseconds >= 20000)
+                                                        switch (((TimeSpan)(DateTime.UtcNow - online_speech_recognition_timeout)).TotalMilliseconds >= 20000)
                                                         {
                                                             // IF THE DIFFERENCE BETWEEN THE CURRENT TIME AND THE TIME WHEN THE ONLINE SPEECH RECOGNITION ENGINE
                                                             // BEGAN THE SPEECH TO TEXT OPERATION IS GREATER THAN 20 SECONDS ADUJUST THE GUI TO DISPLAY THAT
@@ -487,7 +487,7 @@ namespace Eva_5._0
 
                                                                 // IF THE DIFFERENCE BETWEEN THE CURRENT TIME AND THE TIME WHEN THE ONLINE SPEECH RECOGNITION ENGINE STARTED
                                                                 // ITS OPERATION IS GREATER OR EQUAL THAN THE CURRENT TARGET VALUE
-                                                                if (((TimeSpan)(DateTime.Now - online_speech_recognition_timeout)).TotalMilliseconds >= target_value - 300)
+                                                                if (((TimeSpan)(DateTime.UtcNow - online_speech_recognition_timeout)).TotalMilliseconds >= target_value - 300)
                                                                 {
                                                                     // IF THE TARGET VALUE IS SMALLER OR EQUAL THAN 20 SECONDS
                                                                     // DECREMENT THE GUI INPUT INTERVAL COUNTDOWN TIMER VALUE
@@ -1118,7 +1118,7 @@ namespace Eva_5._0
             {
                 return Task.FromResult(true);
             }
-            else if (((TimeSpan)(DateTime.Now - Online_Speech_Recogniser_Activation_Delay_Detector)).TotalSeconds > Online_Speech_Recogniser_Activation_Delay)
+            else if (((TimeSpan)(DateTime.UtcNow - Online_Speech_Recogniser_Activation_Delay_Detector)).TotalSeconds > Online_Speech_Recogniser_Activation_Delay)
             {
                 return Task.FromResult(true);
             }

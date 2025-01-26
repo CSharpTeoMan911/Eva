@@ -78,7 +78,7 @@ namespace Eva_5._0
             try
             {
                 wake_word_engines_loaded = 0;
-                resetTime = DateTime.Now;
+                resetTime = DateTime.UtcNow;
 
                 Socket connection_1 = new Socket(SocketType.Stream, ProtocolType.Tcp)
                 {
@@ -133,7 +133,7 @@ namespace Eva_5._0
                     {
                         if (App.Application_Error_Shutdown == false)
                         {
-                            if (DateTime.Now - resetTime >= TimeSpan.FromMinutes(wake_word_engine_reset_time))
+                            if (DateTime.UtcNow - resetTime >= TimeSpan.FromMinutes(wake_word_engine_reset_time))
                             {
                                 if (wake_word_engines_loaded == 1)
                                 {
@@ -152,7 +152,7 @@ namespace Eva_5._0
                                     process = wake_word_processes?.Dequeue();
                                     process?.Kill();
                                     wake_word_engines_loaded--;
-                                    resetTime = DateTime.Now;
+                                    resetTime = DateTime.UtcNow;
                                 }
                             }
                         }
@@ -211,7 +211,7 @@ namespace Eva_5._0
                 wake_word_process.StartInfo.FileName = Environment.CurrentDirectory + "\\python.exe";
                 wake_word_process.StartInfo.CreateNoWindow = true;
                 wake_word_process.StartInfo.UseShellExecute = false;
-                wake_word_process.StartInfo.Arguments = new StringBuilder("main.py ").Append(model).Append(" ").Append((await Settings.GetSettingsFilePath()).ToString()).Append(" ").Append(port.ToString()).ToString();
+                wake_word_process.StartInfo.Arguments = new StringBuilder("main.py ").Append(model).Append(' ').Append((await Settings.GetSettingsFilePath()).ToString()).Append(' ').Append(port.ToString()).ToString();
                 wake_word_process.Start();
 
                 SwitchModel();
@@ -508,7 +508,7 @@ namespace Eva_5._0
                                                     {
                                                         if (socket_message_value == wake_word_engine_loaded)
                                                         {
-                                                            resetTime = DateTime.Now;
+                                                            resetTime = DateTime.UtcNow;
                                                             wake_word_engines_loaded++;
                                                         }
                                                         else if (socket_message_value == cancel_wake_word)

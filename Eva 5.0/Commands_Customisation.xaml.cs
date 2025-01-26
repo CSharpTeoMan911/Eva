@@ -45,7 +45,7 @@ namespace Eva_5._0
 
         public Commands_Customisation(Option option, SettingsWindow.OpenSpeech openSpeech_)
         {
-            timeout = DateTime.Now.AddMilliseconds(-2000);
+            timeout = DateTime.UtcNow.AddMilliseconds(-2000);
             selected_option = option;
             InitializeComponent();
             this.openSpeech = openSpeech_;
@@ -202,12 +202,12 @@ namespace Eva_5._0
 
         private async void Remove_Click(object sender, RoutedEventArgs e, TextBox key, Border current_item)
         {
-            if ((DateTime.Now - timeout).TotalMilliseconds >= 1000)
+            if ((DateTime.UtcNow - timeout).TotalMilliseconds >= 1000)
                 if (file_manipulation_init == false)
                 {
                     file_manipulation_init = true;
 
-                    timeout = DateTime.Now;
+                    timeout = DateTime.UtcNow;
 
                     string previous_command = String.Empty;
                     controls_command.TryGetValue(key, out previous_command);
@@ -263,7 +263,7 @@ namespace Eva_5._0
             key.Text = key.Text.ToLower().Trim();
             value.Text = value.Text.Trim();
 
-            if ((DateTime.Now - timeout).TotalMilliseconds >= 1000)
+            if ((DateTime.UtcNow - timeout).TotalMilliseconds >= 1000)
                 if (file_manipulation_init == false)
                 {
                     file_manipulation_init = true;
@@ -314,7 +314,7 @@ namespace Eva_5._0
             key.Text = key.Text.ToLower().Trim();
             value.Text = value.Text.Trim();
 
-            if ((DateTime.Now - timeout).TotalMilliseconds >= 1000)
+            if ((DateTime.UtcNow - timeout).TotalMilliseconds >= 1000)
                 if (file_manipulation_init == false)
                 {
                     file_manipulation_init = true;
@@ -502,7 +502,7 @@ namespace Eva_5._0
 
         private async void Reset_Commands(object sender, RoutedEventArgs e)
         {
-            if ((DateTime.Now - timeout).TotalMilliseconds >= 1000)
+            if ((DateTime.UtcNow - timeout).TotalMilliseconds >= 1000)
                 if (file_manipulation_init == false)
                 {
                     file_manipulation_init = true;
@@ -521,7 +521,7 @@ namespace Eva_5._0
                             clone = A_p_l____And____P_r_o_c.commands.W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name;
                             break;
                     }
-                    timeout = DateTime.Now;
+                    timeout = DateTime.UtcNow;
                     await UpdateCommands();
 
                     Main_Content.Children.Clear();

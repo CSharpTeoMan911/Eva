@@ -99,8 +99,8 @@ namespace Eva_5._0
                 await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
 
                 // SET THE SPEECH RECOGNITION TIMEOUT AND SPEECH RECOGNITION VARIABLES AS THE CURRENT TIME
-                online_speech_recognition_timeout = DateTime.Now;
-                Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.Now;
+                online_speech_recognition_timeout = DateTime.UtcNow;
+                Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.UtcNow;
 
 
                 // INITIATE THE SPEECH RECOGNITION ENGINE
@@ -116,10 +116,10 @@ namespace Eva_5._0
                 switch (ConstraintsCompilation.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
                 {
                     case true:
-                        OnlineSpeechRecognition.ContinuousRecognitionSession.AutoStopSilenceTimeout = TimeSpan.FromSeconds(4);
-                        OnlineSpeechRecognition.Timeouts.EndSilenceTimeout = TimeSpan.FromSeconds(4);
-                        OnlineSpeechRecognition.Timeouts.InitialSilenceTimeout = TimeSpan.FromSeconds(4);
-                        OnlineSpeechRecognition.Timeouts.BabbleTimeout = TimeSpan.FromSeconds(4);
+                        OnlineSpeechRecognition.ContinuousRecognitionSession.AutoStopSilenceTimeout = TimeSpan.FromSeconds(7);
+                        OnlineSpeechRecognition.Timeouts.EndSilenceTimeout = TimeSpan.FromSeconds(7);
+                        OnlineSpeechRecognition.Timeouts.InitialSilenceTimeout = TimeSpan.FromSeconds(7);
+                        OnlineSpeechRecognition.Timeouts.BabbleTimeout = TimeSpan.FromSeconds(7);
 
                         OnlineSpeechRecognition.StateChanged += OnlineSpeechRecognition_StateChanged;
                         OnlineSpeechRecognition.HypothesisGenerated += OnlineSpeechRecognition_HypothesisGenerated;
@@ -209,7 +209,7 @@ namespace Eva_5._0
             lock (Online_Speech_Recogniser_Listening)
             {
                 Online_Speech_Recogniser_Listening = "false";
-                Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.Now;
+                Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.UtcNow;
             }
         }
 
@@ -218,7 +218,7 @@ namespace Eva_5._0
             lock (Online_Speech_Recogniser_Listening)
             {
                 Online_Speech_Recogniser_Listening = "false";
-                Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.Now;
+                Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.UtcNow;
             }
 
             Close_Speech_Recognition_Interface();
@@ -233,13 +233,13 @@ namespace Eva_5._0
                     if (Speech_Detected == "false")
                     {
                         Speech_Detected = "true";
-                        Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.Now;
+                        Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.UtcNow;
 
                         lock (Initiated)
                         {
                             if (Initiated == "false")
                             {
-                                online_speech_recognition_timeout = DateTime.Now;
+                                online_speech_recognition_timeout = DateTime.UtcNow;
                                 Initiated = "true";
                             }
                         }

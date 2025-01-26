@@ -10,11 +10,13 @@ import asyncio
 config = sys.argv[2]
 port = sys.argv[3]
 
+initial_frames = 0
+
 connection = None
 
 # INITIATE PYAUDIO OBJECT, LISTEN TO THE DEFAULT MIC ON 1 CHANNEL, WITH A RATE OF 16000 HZ AND A BUFFER OF 1600 FRAMES
 mic = pyaudio.PyAudio()
-stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=2000)
+stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=3000)
 stream.start_stream()
 
 # LOAD THE VOSK SPEECH RECOGNITION MODEL FROM THE APPLICATION'S DIRECTORY
@@ -30,7 +32,6 @@ recognizer.SetGrammar('["listen", "stop", "listening", "[unk]"]')
 recognizer.SetWords(True)
 recognizer.SetPartialWords(True)
 
-wake_word_engine_loaded = False
 
 
 async def get_confidence() -> int:
@@ -73,15 +74,18 @@ async def wake_word_engine_process():
 
     # CREDIT TO https://buddhi-ashen-dev.vercel.app/posts/offline-speech-recognition
 
-    global wake_word_engine_loaded
+    global initial_frames
 
     # READ 1000 FRAMES FOR EACH ITERATION (1000 * 2 = 2000 bytes)
-    data = stream.read(1000, False)
+    data = stream.read(1500, False)
+
+    if initial_frames < 3:
+        initial_frames += 1
 
     try:
-        if wake_word_engine_loaded is False:
+        if initial_frames == 3:
             await socket_messaging("[ loaded ]")
-            wake_word_engine_loaded = True
+            initial_frames += 1
 
         # RETRIEVE THE AUDIO WAVEFORM DATA AND PERFORM SPEECH TO TEXT CONVERSION
         if recognizer.AcceptWaveform(data):

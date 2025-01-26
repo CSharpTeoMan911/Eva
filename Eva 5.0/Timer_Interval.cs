@@ -36,7 +36,7 @@ namespace Eva_5._0
 
             try
             {
-                TimeSpan calculated_remaining_time = hh_mm_ss_mls___Event - DateTime.Now;
+                TimeSpan calculated_remaining_time = hh_mm_ss_mls___Event - DateTime.UtcNow;
 
 
                 if ((int)calculated_remaining_time.TotalMilliseconds <= 0)
@@ -95,7 +95,7 @@ namespace Eva_5._0
                 {
                     int total_milliseconds_interval = total_interval_seconds_pool * 1000;
 
-                    hh_mm_ss_mls___Event = DateTime.Now.AddMilliseconds(total_milliseconds_interval);
+                    hh_mm_ss_mls___Event = DateTime.UtcNow.AddMilliseconds(total_milliseconds_interval);
 
                     _isTimer = true;
                 }
@@ -112,7 +112,7 @@ namespace Eva_5._0
 
         public static Task<Tuple<int, int, int>> Get_Time_Interval()
         {
-            TimeSpan calculated_remaining_time = hh_mm_ss_mls___Event - DateTime.Now;
+            TimeSpan calculated_remaining_time = hh_mm_ss_mls___Event - DateTime.UtcNow;
 
             return Task.FromResult(new Tuple<int, int, int>((int)calculated_remaining_time.Hours, (int)calculated_remaining_time.Minutes, (int)calculated_remaining_time.Seconds));
         }
