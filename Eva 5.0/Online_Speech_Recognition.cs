@@ -77,7 +77,7 @@ namespace Eva_5._0
                                     await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppActivationSoundEffect);
                                     Initiate_The_Online_Speech_Recognition_Engine();
                                 });
-                                ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
+                                ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.MTA);
                                 ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
                                 ParallelProcessing.IsBackground = false;
                                 ParallelProcessing.Start();
@@ -95,6 +95,8 @@ namespace Eva_5._0
         {
             try
             {
+                int compilation_retries = 10;
+
                 // ENSURE THAT THE ONLINE SPEECH RECOGNITION INTERFACE IS CLOSED
                 await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
 
@@ -111,7 +113,10 @@ namespace Eva_5._0
                 Form_Filling_Constraint.Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Default;
                 OnlineSpeechRecognition.Constraints.Add(Form_Filling_Constraint);
 
+
+            ContraintCompilation:
                 Windows.Media.SpeechRecognition.SpeechRecognitionCompilationResult ConstraintsCompilation = await OnlineSpeechRecognition.CompileConstraintsAsync();
+                ConstraintsCompilation = await OnlineSpeechRecognition.CompileConstraintsAsync();
 
                 switch (ConstraintsCompilation.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
                 {
@@ -133,7 +138,13 @@ namespace Eva_5._0
                         break;
 
                     case false:
-                        Close_Speech_Recognition_Interface();
+                        if (compilation_retries > 0)
+                        {
+                            compilation_retries--;
+                            goto ContraintCompilation;
+                        }
+                        else
+                            Close_Speech_Recognition_Interface();
                         break;
                 }
             }
