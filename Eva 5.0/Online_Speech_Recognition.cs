@@ -77,7 +77,7 @@ namespace Eva_5._0
                                     await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppActivationSoundEffect);
                                     Initiate_The_Online_Speech_Recognition_Engine();
                                 });
-                                ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.MTA);
+                                ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
                                 ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
                                 ParallelProcessing.IsBackground = false;
                                 ParallelProcessing.Start();
@@ -116,7 +116,6 @@ namespace Eva_5._0
 
             ContraintCompilation:
                 Windows.Media.SpeechRecognition.SpeechRecognitionCompilationResult ConstraintsCompilation = await OnlineSpeechRecognition.CompileConstraintsAsync();
-                ConstraintsCompilation = await OnlineSpeechRecognition.CompileConstraintsAsync();
 
                 switch (ConstraintsCompilation.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
                 {
@@ -134,7 +133,6 @@ namespace Eva_5._0
 
                         await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache);
                         await OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionMode.PauseOnRecognition);
-                        await OnlineSpeechRecognition.ContinuousRecognitionSession.PauseAsync();
                         break;
 
                     case false:
@@ -257,7 +255,8 @@ namespace Eva_5._0
                     }
                 }
             }
-            else if (sender.State == Windows.Media.SpeechRecognition.SpeechRecognizerState.Paused)
+
+            if (sender.State == Windows.Media.SpeechRecognition.SpeechRecognizerState.Paused)
             {
                 sender?.ContinuousRecognitionSession?.Resume();
             }
