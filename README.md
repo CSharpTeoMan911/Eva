@@ -4,102 +4,103 @@
 <br>
 <br>
 
-## MAJOR PATCH
+## 🔄 Changelog
+📌 Latest Version: v7.0.3
+* 🆕 Greatly improved the wake word engine's accuracy
+* 🐞 Greatly reduced the wake word engine's CPU consumption
+* 🔧 Added the option to customise the degree of accuracy of the wake word engine
 
-<br>
-
-* Greatly improved the wake word engine's accuracy
-* Greatly reduced the wake word engine's CPU consumption
-* Added the option to customise the degree of accuracy of the wake word engine
 ![image](https://github.com/user-attachments/assets/d85d8d8c-7864-4f5d-84e6-f4532d43cbd5)
 
+<br>
+<br>
+
+## 📥 Download
+* ➡️ Download Eva from SourceForge: https://sourceforge.net/projects/eva-ai/
+* ➡️ Download Eva from Github: https://github.com/CSharpTeoMan911/Eva/releases/tag/Release
 
 <br>
 <br>
 
-## DOWNLOAD
-
-<br>
-
-Download Eva from SourceForge: https://sourceforge.net/projects/eva-ai/
-<br>
-Download Eva from Github: https://github.com/CSharpTeoMan911/Eva/releases/tag/Release
+## 🛠️ Developer support
+* For instructions about how to set up the environment for developent, how to add the resources needed by the application, and how to add the necessary libraries and SDK's : https://github.com/CSharpTeoMan911/Eva/wiki/Visual-Studio-configuration-and-operational-prerequisites
 
 <br>
 <br>
 
-## DEVELOPER SUPPORT
-
-<br>
-
-For instructions about how to set up the environment for developent, how to add the resources needed by the application, and how to add the necessary libraries and SDK's : https://github.com/CSharpTeoMan911/Eva/wiki/Visual-Studio-configuration-and-operational-prerequisites
-
-<br>
-<br>
-<br>
-<br>
-
-## About
+## About ❓
+* Eva is an A.I. assistant that has the purpose of helping users multi-task. It also has the use of helping people with mental and phisical disabilities. All the commands to be executed are given to Eva through voice commmands.
 
 <br> 
 
-Eva is an A.I. assistant that has the purpose of helping users multi-task. It also has the use of helping people with mental and phisical disabilities. All the commands to be executed are given to Eva through voice commmands.
+## 💻 Technologies
+* The Eva's core technologies are the **Vosk** In-proc speech recognition engine, the **Microsoft online speech recognition engine**, the **.NET framework**, **Windows Presentation Foundation** (**WPF**), and the **Universal Windows Platforms** (**UWP**). 
 
-<br> 
+* 🖥️🎙️ [Vosk Speech Recognition Engine](https://github.com/alphacep/vosk-api) 
 
-## Technologies
+* 🤖🧠 [Speech recognition model](https://github.com/daanzu/kaldi-active-grammar/blob/master/docs/models.md)
 
-<br>
-
-The Eva's core technologies are the Vosk In-proc speech recognition engine, the Microsoft online speech recognition engine, the .NET framework, Windows Presentation Foundation ( WPF ), and the Universal Windows Platforms ( UWP ). 
-
-<br>
-
-Vosk: https://github.com/alphacep/vosk-api
-
-Speech recognition model: https://github.com/daanzu/kaldi-active-grammar/blob/master/docs/models.md
-
-UWP Speech Recognition: https://learn.microsoft.com/en-us/uwp/api/windows.media.speechrecognition.speechrecognizer?view=winrt-22621
+* 🖥️🎙️ [UWP Speech Recognition Engine](https://learn.microsoft.com/en-us/uwp/api/windows.media.speechrecognition.speechrecognizer?view=winrt-22621)
 
 <br>
 <br>
 
-### Speech recognition infrastructure
-_______________________________________
-
-<br>
-
+### 🗣️💻⚙️🌐📡 Speech recognition infrastructure
+___________________________________________________
 
 ![Speech system flowchart](https://user-images.githubusercontent.com/87245086/234708319-0ad38208-afe3-460c-9066-224704151b20.png)
 
 
 <br>
 
-The Vosk speech recogniser is listening permanently, if the listening function is activated. Once it recognises the word "Listen" or "Hey listen", the online speech recognition engine is activated. The online speech recognition engine has the role of extracting commands and their content.
+* The Vosk speech recogniser is listening permanently, if the listening function is activated. Once it recognises the word "Listen" or "Hey listen", the online speech recognition engine is activated. The online speech recognition engine has the role of extracting commands and their content.
 
 <br>
 <br>
 
-### Natural Language Understanding
-____________________________________
+### 🧠💬📖⚙️ Natural Language Understanding (NLU) in Eva
+____________________________________________________________
 
-<br>
+Eva utilizes Natural Language Understanding (NLU) in two key ways: speech recognition and contextual command/content extraction. These two components are powered by Vosk and Windows Online Speech Recognition engines for speech recognition, and a custom-built command and content extraction engine that I developed.
 
-Eva uses natural language processing in two ways, and these are speech recognition and contextual command and content extraction. Both, Vosk and Windows Online Speech Recognition engines use natural language processing in order to extract the words from any audio medium, and these features are built into both of the engines. 
+1) **Speech Recognition with NLU:**
+* Both Vosk and Windows Online Speech Recognition use NLU to convert spoken words from any audio medium into text. These engines are responsible for interpreting and transcribing the user's voice.
 
-<br>
+3) **Contextual Command & Content Extraction:**
+* Eva understands commands and extracts relevant content based on user input. This is done by processing commands through the following steps:
 
-The contextual command and content extraction natural language understanding engine is built into the application in order for Eva to understand the commands given by the user and their content, and this command and content extraction natural language understanding engine is built by me. The application's natural language understanding engine is doing this by following a set of procedures. Firstly, it is doing some tokenization in order to understand what process it has to execute and what extra parameters must be extracted from the input, in order to execute the command. This is done by analysing the input and by searching for some keywords that have to be at a certain index within the sentence. For example, if the command given is "open chrome", because the word ***open*** is the first word, the natural language understanding engine categorised the command as a process in which a certain application is opened. If the command given is "search leopard 1 tank blueprint on google", because the first word is search, the tokenisation is pointing to the parameter related to web search command. If the tokenization did not match the sentence with any parameter, then no process will be executed. 
+#### The NLU Process in Eva:
+1) **Tokenization: Understanding the Command Type:**
 
-<br>
+* The first step in processing a user command is tokenization. This process breaks down the sentence into individual components to identify the command's action and any additional parameters that need to be extracted.
+* Example:
+"open chrome" – The first word ("open") signals that the command is to open an application (in this case, "chrome").
+"search leopard 1 tank blueprint on google" – The first word ("search") indicates that the action is a web search.
+* If the command doesn’t match any known patterns, no action is taken.
 
-A second tokenisation is performed, after the process type had been identified. When the process type had been identified, accordingly with the process type patern, if any secondary parameters are required by the process type, these will be extracted accordingly. For example, if the command "search black shoes of amazon" had been entered, the patern of this command is "search [ CONTENT ] on [ WEB APPLICATION ]". This means that the natural language understanding engine has to search for a web application and for the content to be searched on that web application. Then accordingly to the process patern, the natural language understanding engine knows that the content to be searched on the web application is between the words "search" and "on", and it knows that the web application keyword is every word after the word "on". If the second tokenization did not detect the correct variables format, then no process will be executed. 
+2) **Secondary Tokenization: Extracting Parameters:**
 
-<br>
+* Once the command type (action) is identified, a secondary tokenization occurs to extract any secondary parameters.
+* Example:
+"search black shoes on amazon" – The system identifies that the content to search for is "black shoes" and the web application is "amazon".
+* If the second tokenization fails to identify valid parameters, no action is taken.
+ 
+3) **Third Tokenization: Variable Extraction and Validation:**
 
-A third tokenisation is performed in order to extract the variables content. This tokenisation is using the indexes of the variables detected in the second tokenisation, extracts the variables, and verifies the extracted variables against a list of valid variables. Once the variables are validated, the processes associated with the variables are extracted and set to be executed accordingly. If the third tokenization did not detect any valid values for the detected variables, then no process will be executed. 
+* A third round of tokenization is used to extract variables (like search content or website names) based on the previous steps.
+* These variables are then validated against a predefined list of valid values (e.g., valid websites or search keywords).
+* Once validated, the relevant processes are executed based on the user's command.
+If no valid variables are found, no process is triggered.
 
-<br>
+#### How This Works:
+* Tokenization helps Eva break down the input into smaller parts, identifying the core action (open, search, etc.) and the necessary details (content, application, etc.).
+* If each step of the tokenization process identifies and validates the necessary components, Eva proceeds to execute the desired action (e.g., opening an app or performing a web search).
+* If any tokenization step fails (e.g., if the required content or application is missing), no action is taken.
+
+#### Why This is Important:
+* Precision and Accuracy: By using multiple tokenization steps, Eva ensures that the correct processes are executed based on the user's exact intent.
+* Flexibility: Eva can handle various types of commands (e.g., opening apps, searching the web) by adjusting to different formats of user input.
+* User Experience: This process ensures that even with a wide variety of potential commands, Eva can respond accurately and intuitively.
 
 
 ![302436808-cbed89ab-0788-4fcf-976d-bb694cdb888f](https://github.com/CSharpTeoMan911/Eva/assets/87245086/bf68529e-295f-4300-9b8f-15959da55643)
@@ -107,7 +108,7 @@ A third tokenisation is performed in order to extract the variables content. Thi
 <br>
 
 
-#### Natural Language Understanding Engine Time Complexities
+#### ⏱️📊 Natural Language Understanding Engine Time Complexities
 __________________________________________________________
 
 <br>
@@ -122,7 +123,7 @@ The time complexity of the natural language understanding engine is in ***O(n)**
 <br>
 <br>
 
-# Gradient fluctuation formula
+# ∇🔺📉 Gradient fluctuation formula
 <br>
 
 ![Gradient fluctuation](https://user-images.githubusercontent.com/87245086/234971684-804bca17-440c-44d4-84e2-dd3a73a240d8.png)
@@ -135,33 +136,44 @@ The time complexity of the natural language understanding engine is in ***O(n)**
 
 <br>
 
-Eva uses an algorithm developed by me in order for the application to have those beautiful graphical user interface effects. This algorithm functions by increasing the offset of the gradient by using a sumation that is incrementing the value of the gradient until it reaches a threshold value. When the threshold value is reached, a sumation is used to decrement the value of the gradient until it reaches its original value. This gradient fluctuation formula can also be interpreted as two linear functions that are instantiated when each function's threshold value has to be reached. The aforementioned functions are y = x + v and y = x - v respectively, where y is the resulting gradient value, x is the current gradient value, and v is the value to be added or substracted from the current gradient value, and where x, y, and v
-are greater than zero.
+Eva uses a unique algorithm developed by me to create stunning graphical user interface effects. This algorithm controls the gradient fluctuation used to produce smooth, dynamic animations. The effect is achieved by manipulating the gradient value incrementally, creating fluid transitions between different states of the GUI.
+
+## How the Algorithm Works:
+The gradient fluctuation formula functions by increasing the offset of the gradient via an incremental sum. This incrementally increases the gradient value until a certain threshold is reached, at which point it decreases the gradient back to its original value, creating a smooth oscillation.
+
+This fluctuation can be represented as two linear functions:
+
+1) Increasing the Gradient (Smooth Animation Start):
+When the animation begins, the formula y = x + v is used, where x is the current gradient value, y is the resulting gradient value, and v is the value added to the gradient to increment it. This continues until the threshold for the desired animation effect is reached.
+
+2) Decreasing the Gradient (Smooth Animation End):
+After reaching the threshold, the formula y = x - v is applied. The gradient value is decremented by v back to its original value, creating a smooth, flowing animation effect. This ensures that the animation ends as smoothly as it started.
+
+## Formula Breakdown:
+* y = x + v (Increasing the gradient value for a smooth animation start)
+* y = x - v (Decreasing the gradient value for a smooth animation finish)
+* Where:
+* x = Current gradient value
+* y = Resulting gradient value
+* v = Increment/Decrement value
+* All values x, y, and v are greater than zero.
+  
+This algorithm allows Eva to create smooth, beautiful animations with fluid transitions, adding a polished feel to the application’s graphical interface.
 <br>
 <br>
 <br>
 
 
-# Installation
+# 📋 Usage
 
-<br>
+To give commands to Eva, simply say the word "Listen" or "Hey listen" followed by your desired command. For example:
 
-Go to the ***DOWNLOAD*** section within the Eva's README.md page and click on the link.
+1) Say "Hey listen" or "Listen" to activate Eva.
+2) Then say "Search robots are cool on Google" to initiate a web search.
 
-<br>
+<br/>
 
-![Eva_Capture733714694](https://user-images.githubusercontent.com/87245086/213866622-d3982009-8c14-4772-8958-a12f979806fd.jpg)
-
-
-<br>
-<br>
-
-
-# Usage
-
-<br>
-
-In order to give commands to Eva say the word "Listen" or "Hey listen" followed by the desired command. For example, say "Hey listen", then after Eva is activated, say "search robots are cool on Google". You can find detailed instructions about commands and the command paterns and troubleshooting within the instruction manual of Eva.
+You can find detailed instructions on command patterns and troubleshooting in the Eva instruction manual.
 
 <br>
 
@@ -177,19 +189,20 @@ In order to give commands to Eva say the word "Listen" or "Hey listen" followed 
 
 <br>
 
-# Command customisation
+# ⚙️ Command Customization
 
 ![Eva_Capture2072297579](https://github.com/CSharpTeoMan911/Eva/assets/87245086/6076ec7e-f28c-46fc-8ed2-1f2cfc1e6ff8)
 
-Add, remove, and modify commands as you desire. For detailed instruction regarding command customisation, go to the Wiki page https://github.com/CSharpTeoMan911/Eva/wiki/Commands-customisation 
+* Add, remove, and modify commands as you desire. For detailed instruction regarding command customisation, go to the Wiki page https://github.com/CSharpTeoMan911/Eva/wiki/Commands-customisation 
 
 <br>
 
-# What Eva can do?
+# 🤖 What Eva Can Do?
 
 <br>
 
-## It can give commands to ChatGPT
+## 🗣️ Give Commands to ChatGPT
+* Eva can communicate with ChatGPT and process your requests for intelligent, conversational replies.
 
 <br>
 
@@ -201,8 +214,8 @@ Add, remove, and modify commands as you desire. For detailed instruction regardi
 
 <br>
 
-## It can set a timer
-
+## ⏲️ Set a Timer
+* Eva can set timers for you, whether it’s for cooking, work breaks, or other tasks!
 <br>
 
 ![Eva_Capture503136236](https://user-images.githubusercontent.com/87245086/201438495-856d831c-6ea7-432e-a510-fbcb47de5b86.jpg)
@@ -211,7 +224,8 @@ Add, remove, and modify commands as you desire. For detailed instruction regardi
 
 <br>
 
-## It can take screenshots
+## 📸 Take Screenshots
+* Need to capture your screen? Eva can take screenshots on demand.
 
 <br>
 
@@ -219,7 +233,8 @@ Add, remove, and modify commands as you desire. For detailed instruction regardi
 
 <br>
 
-## It can search on Google
+## 🌐 Search on Google
+* Eva can search Google for anything!
 
 <br>
 
@@ -227,15 +242,17 @@ Add, remove, and modify commands as you desire. For detailed instruction regardi
 
 <br>
 
-## It can search on Google News
-
+## 📰 Search on Google News
+* Stay up to date with the latest news using Google News search.
+  
 <br>
 
 ![Eva_Capture1332318160](https://user-images.githubusercontent.com/87245086/201438689-1bfeb4fa-5d98-4953-a5ac-351152ec5724.jpg)
 
 <br>
 
-## It can search on Google Images
+## 🖼️ Search on Google Images
+* Eva can search for images across the web on Google Images.
 
 <br>
 
@@ -243,7 +260,8 @@ Add, remove, and modify commands as you desire. For detailed instruction regardi
 
 <br>
 
-## It can search on eBay
+## 🛒 Search on eBay
+* Want to find something on eBay? Eva has you covered.
 
 <br>
 
@@ -251,15 +269,17 @@ Add, remove, and modify commands as you desire. For detailed instruction regardi
 
 <br>
 
-## It can search on Amazon
-
+## 🛍️ Search on Amazon
+* Shop for anything on Amazon with Eva.
+  
 <br>
 
 ![Eva_Capture759505394](https://user-images.githubusercontent.com/87245086/201438812-776be9a4-1aea-45f1-b27d-b6dc1150f32d.jpg)
 
 <br>
 
-## It can search on Wikipedia
+## 📚 Search on Wikipedia
+* Need information? Eva can search Wikipedia for you.
 
 <br>
 
@@ -267,15 +287,17 @@ Add, remove, and modify commands as you desire. For detailed instruction regardi
 
 <br>
 
-## It can search on Netflix
-
+## 📺 Search on Netflix
+* Eva can also search Netflix for shows or movies.
+  
 <br>
 
 ![Eva_Capture2144580495](https://user-images.githubusercontent.com/87245086/201479457-2f1c0609-9c41-4481-8142-30f6db61528a.jpg)
 
 <br>
 
-## It can search on Reddit
+## 🔴 Search on Reddit
+* Eva can find discussions, threads, and more on Reddit.
 
 <br>
 
@@ -283,7 +305,8 @@ Add, remove, and modify commands as you desire. For detailed instruction regardi
 
 <br>
 
-## It can search on Facebook
+## 📘 Search on Facebook
+* Find posts and content on Facebook through Eva.
 
 <br>
 
@@ -291,7 +314,8 @@ Add, remove, and modify commands as you desire. For detailed instruction regardi
 
 <br>
 
-## It can search on Instagram
+## 📸 Search on Instagram
+* Search Instagram for images, posts, and more.
 
 <br>
 
@@ -299,7 +323,8 @@ Add, remove, and modify commands as you desire. For detailed instruction regardi
 
 <br>
 
-## It can search on Gmail
+## 📧 Search on Gmail
+* Need to check your Gmail? Eva can search through it for you.
 
 <br>
 
@@ -307,7 +332,8 @@ Add, remove, and modify commands as you desire. For detailed instruction regardi
 
 <br>
 
-## It can search on Twitter
+## 🐦 Search on Twitter
+* Eva can search through Twitter for tweets and hashtags.
 
 <br>
 
@@ -315,7 +341,8 @@ Add, remove, and modify commands as you desire. For detailed instruction regardi
 
 <br>
 
-## It can search on Pinterest
+## 📌 Search on Pinterest
+* Find pins and boards on Pinterest with Eva.
 
 <br>
 
@@ -323,7 +350,8 @@ Add, remove, and modify commands as you desire. For detailed instruction regardi
 
 <br>
 
-## It can search on LinkedIn
+## 💼 Search on LinkedIn
+* Eva can search for professional content on LinkedIn.
 
 <br>
 
@@ -331,7 +359,8 @@ Add, remove, and modify commands as you desire. For detailed instruction regardi
 
 <br>
 
-## It can search on Github
+## 🧑‍💻 Search on Github
+* Developers rejoice! Eva can search GitHub repositories and issues.
 
 <br>
 
@@ -339,7 +368,8 @@ Add, remove, and modify commands as you desire. For detailed instruction regardi
 
 <br>
 
-## It can search on Unsplash
+## 📸 Search on Unsplash
+* Looking for high-quality images? Eva can find them on Unsplash.
 
 <br>
 
@@ -347,7 +377,8 @@ Add, remove, and modify commands as you desire. For detailed instruction regardi
 
 <br>
 
-## It can search on Stackoverflow
+## 💻 Search on Stack Overflow
+* Get answers to coding questions from Stack Overflow.
 
 <br>
 
@@ -355,7 +386,8 @@ Add, remove, and modify commands as you desire. For detailed instruction regardi
 
 <br>
 
-## It can open and close the operating system's settings
+## ⚙️ Open and Close System Settings
+* Eva can manage your system settings for you.
 
 <br>
 
@@ -363,7 +395,8 @@ Add, remove, and modify commands as you desire. For detailed instruction regardi
 
 <br>
 
-## It can open and close multiple applications, such as chrome, firefox, notepad, chrome, visual studio code . . .
+## 💻 Open and Close Applications
+* Eva can open and close multiple applications, such as Chrome, Firefox, Notepad, Visual Studio Code, and more.
 
 <br>
 
