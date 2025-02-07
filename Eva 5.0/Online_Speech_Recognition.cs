@@ -95,7 +95,8 @@ namespace Eva_5._0
         {
             try
             {
-                int compilation_retries = 10;
+
+                DateTime start = DateTime.UtcNow;
 
                 // ENSURE THAT THE ONLINE SPEECH RECOGNITION INTERFACE IS CLOSED
                 await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
@@ -108,13 +109,15 @@ namespace Eva_5._0
                 // INITIATE THE SPEECH RECOGNITION ENGINE
                 OnlineSpeechRecognition = new Windows.Media.SpeechRecognition.SpeechRecognizer(new Windows.Globalization.Language(await Settings.Get_Speech_Language_Settings()));
 
+                // Wait for engine to spool
+                while ((DateTime.UtcNow - start).TotalMilliseconds <= 500)
+
 
                 // SET THE CONSTRAINTS OF THE SPEECH RECOGNITION ENGINE TO USE THE "form-filling" CONFIGURATION
                 Form_Filling_Constraint.Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Default;
                 OnlineSpeechRecognition.Constraints.Add(Form_Filling_Constraint);
 
 
-            ContraintCompilation:
                 Windows.Media.SpeechRecognition.SpeechRecognitionCompilationResult ConstraintsCompilation = await OnlineSpeechRecognition.CompileConstraintsAsync();
 
                 switch (ConstraintsCompilation.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
@@ -132,17 +135,13 @@ namespace Eva_5._0
                         OnlineSpeechRecognition.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
 
                         await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache);
-                        await OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionMode.Default);
+                        await OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionMode.PauseOnRecognition);
+
+
                         break;
 
                     case false:
-                        if (compilation_retries > 0)
-                        {
-                            compilation_retries--;
-                            goto ContraintCompilation;
-                        }
-                        else
-                            Close_Speech_Recognition_Interface();
+                        Close_Speech_Recognition_Interface();
                         break;
                 }
             }
