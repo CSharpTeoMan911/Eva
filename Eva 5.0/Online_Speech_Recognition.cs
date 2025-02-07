@@ -132,10 +132,7 @@ namespace Eva_5._0
                         OnlineSpeechRecognition.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
 
                         await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache);
-                        await OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionMode.PauseOnRecognition);
-
-                        await OnlineSpeechRecognition.ContinuousRecognitionSession.PauseAsync();
-                        OnlineSpeechRecognition.ContinuousRecognitionSession.Resume();
+                        await OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionMode.Default);
                         break;
 
                     case false:

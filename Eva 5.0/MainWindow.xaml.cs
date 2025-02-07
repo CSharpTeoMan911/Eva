@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -8,9 +6,7 @@ using System.Windows.Media;
 
 using static Eva_5._0.Online_Speech_Recognition;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
 using System.Threading;
-using Windows.Devices.AllJoyn;
 
 namespace Eva_5._0
 {
@@ -73,7 +69,7 @@ namespace Eva_5._0
         // BEGIN
 
         protected static DateTime? Online_Speech_Recogniser_Activation_Delay_Detector = null;
-        private static readonly double Online_Speech_Recogniser_Activation_Delay = 2.4;
+        private static readonly double Online_Speech_Recogniser_Activation_Delay = 2.9;
 
         // END
 
