@@ -76,11 +76,7 @@ namespace Eva_5._0
 
 
 
-        private System.Threading.Thread ParallelProcessing;
-
         private System.Timers.Timer AnimationAndFunctionalityTimer;
-
-        private System.Timers.Timer SpeechRecognitionInterfaceControlTimer;
 
 
 
@@ -172,20 +168,12 @@ namespace Eva_5._0
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
 
-
             InitialRotatorWidth = Rotator.ActualWidth;
-
-
 
             AnimationAndFunctionalityTimer = new System.Timers.Timer();
             AnimationAndFunctionalityTimer.Elapsed += AnimationAndFunctionalityTimer_Elapsed;
             AnimationAndFunctionalityTimer.Interval = 45;
             AnimationAndFunctionalityTimer.Start();
-
-            SpeechRecognitionInterfaceControlTimer = new System.Timers.Timer();
-            SpeechRecognitionInterfaceControlTimer.Elapsed += SpeechRecognitionInterfaceControlTimer_Elapsed;
-            SpeechRecognitionInterfaceControlTimer.Interval = 1000;
-            SpeechRecognitionInterfaceControlTimer.Start();
         }
 
         private async void CurrentDomain_ProcessExit(object sender, EventArgs e)
@@ -432,7 +420,7 @@ namespace Eva_5._0
                                                                         async void Shutdown()
                                                                         {
                                                                             Close_Speech_Recognition_Interface();
-                                                                            await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
+                                                                            await OS_Online_Speech_Recognition_Interface_Shutdown();
                                                                         }
                                                                         Shutdown();
                                                                     }
@@ -742,24 +730,6 @@ namespace Eva_5._0
             }
         }
 
-        private void SpeechRecognitionInterfaceControlTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            lock (Online_Speech_Recogniser_Listening)
-            {
-                lock (Wake_Word_Detected)
-                {
-                    // IF THE ONLINE SPEECH RECOGNITION ENGINE IS NOT LISTENING,
-                    // ENSURE THAT THE INTERFACE OF THE ONLINE SPEECH
-                    // RECOGNITION IS CLOSED
-                    async void Inactivity_Shutdown()
-                    {
-                        await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
-                    }
-                    Inactivity_Shutdown();
-                }
-            }
-        }
-
         private async void MainWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             MainWindowIsClosing = true;
@@ -773,16 +743,7 @@ namespace Eva_5._0
                 }
                 catch { }
 
-                try
-                {
-                    SpeechRecognitionInterfaceControlTimer?.Close();
-                    SpeechRecognitionInterfaceControlTimer?.Dispose();
-                }
-                catch { }
-
                 BeginExecutionAnimation = null;
-
-                ParallelProcessing = null;
 
 
                 await Wake_Word_Engine.Stop_The_Wake_Word_Engine();

@@ -1,5 +1,6 @@
 ﻿using Eva_5._0.Properties;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -28,7 +29,8 @@ namespace Eva_5._0
 
     internal class Online_Speech_Recognition : MainWindow
     {
-        private static Windows.Media.SpeechRecognition.SpeechRecognizer OnlineSpeechRecognition;
+        #nullable enable
+        private static Windows.Media.SpeechRecognition.SpeechRecognizer? OnlineSpeechRecognition;
 
         private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Form_Filling_Constraint = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(
                                                                                                           Windows.Media.SpeechRecognition.SpeechRecognitionScenario.FormFilling,
@@ -43,12 +45,6 @@ namespace Eva_5._0
             Online_Speech_Recognition_Access_Denied,
             Microphone_Access_Denied,
             Language_Not_Supported
-        }
-
-        public enum Online_Speech_Recognition_Interface_Operation
-        {
-            Online_Speech_Recognition_Interface_Clear_Cache,
-            Online_Speech_Recognition_Interface_Shutdown
         }
 
         public static void Online_Speech_Recognition_Session_Creation_And_Initiation()
@@ -99,7 +95,7 @@ namespace Eva_5._0
                 DateTime start = DateTime.UtcNow;
 
                 // ENSURE THAT THE ONLINE SPEECH RECOGNITION INTERFACE IS CLOSED
-                await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown);
+                await OS_Online_Speech_Recognition_Interface_Shutdown();
 
                 // SET THE SPEECH RECOGNITION TIMEOUT AND SPEECH RECOGNITION VARIABLES AS THE CURRENT TIME
                 online_speech_recognition_timeout = DateTime.UtcNow;
@@ -109,12 +105,9 @@ namespace Eva_5._0
                 // INITIATE THE SPEECH RECOGNITION ENGINE
                 OnlineSpeechRecognition = new Windows.Media.SpeechRecognition.SpeechRecognizer(new Windows.Globalization.Language(await Settings.Get_Speech_Language_Settings()));
 
-                // Wait for engine to spool
-                while ((DateTime.UtcNow - start).TotalMilliseconds <= 500)
-
 
                 // SET THE CONSTRAINTS OF THE SPEECH RECOGNITION ENGINE TO USE THE "form-filling" CONFIGURATION
-                Form_Filling_Constraint.Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Default;
+                Form_Filling_Constraint.Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Max;
                 OnlineSpeechRecognition.Constraints.Add(Form_Filling_Constraint);
 
 
@@ -134,10 +127,7 @@ namespace Eva_5._0
                         OnlineSpeechRecognition.RecognitionQualityDegrading += OnlineSpeechRecognition_RecognitionQualityDegrading;
                         OnlineSpeechRecognition.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
 
-                        await OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache);
                         await OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionMode.PauseOnRecognition);
-
-
                         break;
 
                     case false:
@@ -262,7 +252,7 @@ namespace Eva_5._0
 
             lock (Online_Speech_Recogniser_State)
             {
-                Online_Speech_Recogniser_State = sender.State.ToString();
+                Online_Speech_Recogniser_State = sender?.State.ToString();
             }
         }
 
@@ -302,11 +292,10 @@ namespace Eva_5._0
         }
 
 
-        public static async void Close_Speech_Recognition_Interface()
+        public static void Close_Speech_Recognition_Interface()
         {
             try
             {
-                await OnlineSpeechRecognition?.ContinuousRecognitionSession?.StopAsync();
                 OnlineSpeechRecognition?.Dispose();
             }
             catch { }
@@ -327,60 +316,40 @@ namespace Eva_5._0
         }
 
 
-        public static Task<bool> OS_Online_Speech_Recognition_Interface_Shutdown_Or_Refresh(Online_Speech_Recognition_Interface_Operation operation)
+        public static Task<bool> OS_Online_Speech_Recognition_Interface_Shutdown()
         {
             try
             {
-                switch (operation)
+                lock (Online_Speech_Recogniser_Listening)
                 {
-                    case Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Clear_Cache:
-                        // CLEAR THE CACHE OF THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS ("SpeechRuntime.exe")
-                        //
-                        // BEGIN
-
-                        foreach (Process online_speech_recognition_interface in Get_Recogniser_Interfaces())
+                    lock (Wake_Word_Detected)
+                    {
+                        if (Online_Speech_Recogniser_Listening == "false" && Wake_Word_Detected == "false")
                         {
-                            online_speech_recognition_interface.Refresh();
-                        }
-
-                        // END
-                        break;
-
-
-
-                    case Online_Speech_Recognition_Interface_Operation.Online_Speech_Recognition_Interface_Shutdown:
-                        lock (Online_Speech_Recogniser_Listening)
-                        {
-                            lock (Wake_Word_Detected)
+                            while (Get_Recogniser_Interfaces().Count() > 0)
                             {
-                                if (Online_Speech_Recogniser_Listening == "false" && Wake_Word_Detected == "false")
-                                {
-                                    if (Get_Recogniser_Interfaces().Count() > 0)
-                                    {
-                                        // SHUT DOWN THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS ("SpeechRuntime.exe")
-                                        //
-                                        // BEGIN
+                                // SHUT DOWN THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS ("SpeechRuntime.exe")
+                                //
+                                // BEGIN
 
-                                        // DISPOSE THE ONLINE SPEECH RECOGNITION INTERFACE OBJECT
-                                        Close_Speech_Recognition_Interface();
+                                // DISPOSE THE ONLINE SPEECH RECOGNITION INTERFACE OBJECT
+                                Close_Speech_Recognition_Interface();
 
 
-                                        // TERMINATE THE WINDOWS OS ONLINE SPEECH RECOGNITION INTERFACE USING
-                                        // THE OS' SHELL TO ENSURE THAT THE PROCESS WAS TERMINATED
-                                        Process force_kill_speech_recognition_interface = new Process();
-                                        force_kill_speech_recognition_interface.StartInfo.FileName = "powershell.exe";
-                                        force_kill_speech_recognition_interface.StartInfo.Arguments = "Stop-Process -Name \"SpeechRuntime\" -Force";
-                                        force_kill_speech_recognition_interface.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                                        force_kill_speech_recognition_interface.StartInfo.CreateNoWindow = true;
-                                        force_kill_speech_recognition_interface.StartInfo.UseShellExecute = false;
-                                        force_kill_speech_recognition_interface.Start();
+                                // TERMINATE THE WINDOWS OS ONLINE SPEECH RECOGNITION INTERFACE USING
+                                // THE OS' SHELL TO ENSURE THAT THE PROCESS WAS TERMINATED
+                                Process force_kill_speech_recognition_interface = new Process();
+                                force_kill_speech_recognition_interface.StartInfo.FileName = "powershell.exe";
+                                force_kill_speech_recognition_interface.StartInfo.Arguments = "Stop-Process -Name \"SpeechRuntime\" -Force";
+                                force_kill_speech_recognition_interface.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                                force_kill_speech_recognition_interface.StartInfo.CreateNoWindow = true;
+                                force_kill_speech_recognition_interface.StartInfo.UseShellExecute = false;
+                                force_kill_speech_recognition_interface.Start();
 
-                                        // END
-                                    }
-                                }
+                                // END
                             }
                         }
-                        break;
+                    }
                 }
             }
             catch
