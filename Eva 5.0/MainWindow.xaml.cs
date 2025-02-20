@@ -40,7 +40,7 @@ namespace Eva_5._0
 
         private bool Cropped = true;
 
-        public static bool? invisibility_mode;
+        public static bool invisibility_mode;
 
 
         // COLORS FOR THE CIRCULAR INDICATOR FOR EACH OPERATIONAL MODE (CHATBOT MODE AND NORMAL MODE)
@@ -221,12 +221,11 @@ namespace Eva_5._0
                                 {
                                     this.Height = 0;
                                     this.Width = 0;
-                                    invisibility_mode = null;
                                 }
                                 else
                                 {
                                     Crop_Or_UnCrop();
-                                    invisibility_mode = null;
+                                    invisibility_mode = false;
                                 }
 
 
@@ -466,7 +465,7 @@ namespace Eva_5._0
                                 // IF THE APPLICATION'S TIMER WAS SET, CHANGE THE COLOR OF THE TIMER BUTTON
                                 // TO BLUE AND PERIODICALLY CALCULATE THE TIMER'S INTERVAL TO DETERMINE
                                 // IF THE TIMER REACHED ITS TERMINAL VALUE
-                                if (Timer_Interval._isTimer == true)
+                                if (Timer_Interval.IsTimer() == true)
                                 {
                                     OpenTimerMenuButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
                                     OpenTimerMenuButtonNotOffset.Color = (Color)ColorConverter.ConvertFromString("#FF11497F");

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Eva_5._0"
         mc:Ignorable="d"
-        Title="Settings" Height="580" Width="380" WindowStyle="None" AllowsTransparency="True" Opacity="0.98" Loaded="SettingsWindowLoaded" Closing="WindowClosing" Icon="Images/Eva icon.png" Topmost="True">
+        Title="Settings" Height="620" Width="410" WindowStyle="None" AllowsTransparency="True" Opacity="0.98" Loaded="SettingsWindowLoaded" Closing="WindowClosing" Icon="Images/Eva icon.png" Topmost="True">
 
     <!--/////////////////////////////////////////////////////////////////////////////
         ///                                                                       ///
@@ -25,7 +25,7 @@
 
 
     <Window.Clip>
-        <RectangleGeometry Rect="0, 0, 380, 580" RadiusX="20" RadiusY="20"/>
+        <RectangleGeometry Rect="0, 0, 410, 620" RadiusX="20" RadiusY="20"/>
     </Window.Clip>
 
 
@@ -236,7 +236,7 @@
                             </Button.Foreground>
                         </Button>
 
-                        <TextBox x:Name="SpeechLanguageDisplay" BorderThickness="0" Width="40" Height="18" IsReadOnly="True" FontFamily="Consolas" FontWeight="Bold" TextAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap">
+                        <TextBox x:Name="SpeechLanguageDisplay" BorderThickness="0" Width="40" Height="18" IsReadOnly="True" FontFamily="Consolas" FontWeight="Bold" TextAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap">
                             <TextBox.Background>
                                 <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
                                     <GradientStop Color="#FF7BBFD8" x:Name="CurrentSpeechLanguageOffset" Offset="1"/>
@@ -249,6 +249,50 @@
                             <Button.Foreground>
                                 <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
                                     <GradientStop Color="#FF7BBFD8" x:Name="NextSpeechLanguageButtonOffset" Offset="1"/>
+                                    <GradientStop Color="#FF1B70C3"/>
+                                </LinearGradientBrush>
+                            </Button.Foreground>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,15,0,0" Orientation="Horizontal">
+                    <TextBlock Margin="0,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontFamily="Corbel Light" Text="Recognition Mode">
+                        <TextBlock.Foreground>
+                            <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
+                                <GradientStop Color="#FF7BBFD8" x:Name="SpeechOperationOffset" Offset="1"/>
+                                <GradientStop Color="#FF1B70C3"/>
+                            </LinearGradientBrush>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+
+                    <StackPanel Width="133" Height="20" Background="Black" Orientation="Horizontal">
+                        <StackPanel.Clip>
+                            <RectangleGeometry Rect="0,0,133,20" RadiusX="3" RadiusY="3"/>
+                        </StackPanel.Clip>
+
+                        <Button x:Name="PreviousSpeechOperation" Background="Black" BorderBrush="Transparent" FontSize="11" FontFamily="Segoe MDL2 Assets" Content="&#xEDD9;" Click="PreviousOperation" Style="{StaticResource MyButtonStyle}">
+                            <Button.Foreground>
+                                <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
+                                    <GradientStop Color="#FF7BBFD8" x:Name="PreviousSpeechOperationButtonOffset" Offset="1"/>
+                                    <GradientStop Color="#FF1B70C3"/>
+                                </LinearGradientBrush>
+                            </Button.Foreground>
+                        </Button>
+
+                        <TextBox x:Name="SpeechOperationDisplay" BorderThickness="0" Width="90" Height="20" IsReadOnly="True" FontFamily="Consolas" FontWeight="Bold" TextAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap">
+                            <TextBox.Background>
+                                <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
+                                    <GradientStop Color="#FF7BBFD8" x:Name="CurrentSpeechOperationOffset" Offset="1"/>
+                                    <GradientStop Color="#FF1B70C3"/>
+                                </LinearGradientBrush>
+                            </TextBox.Background>
+                        </TextBox>
+
+                        <Button x:Name="NextSpeechOperation" Background="Black" BorderBrush="Transparent" Margin="0,0,0,0" FontSize="11" FontFamily="Segoe MDL2 Assets" Content="&#xEDDA;" Click="NextOperation" Style="{StaticResource MyButtonStyle}">
+                            <Button.Foreground>
+                                <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
+                                    <GradientStop Color="#FF7BBFD8" x:Name="NextSpeechOperationButtonOffset" Offset="1"/>
                                     <GradientStop Color="#FF1B70C3"/>
                                 </LinearGradientBrush>
                             </Button.Foreground>
@@ -324,7 +368,7 @@
                             </Button.Foreground>
                         </Button>
 
-                        <TextBox x:Name="GptModelDisplay" BorderThickness="0" Width="100" Height="30" IsReadOnly="True" FontFamily="Consolas" FontWeight="Bold" VerticalAlignment="Center" TextWrapping="Wrap">
+                        <TextBox x:Name="GptModelDisplay" BorderThickness="0" Width="100" Height="30" IsReadOnly="True" FontFamily="Consolas" FontWeight="Bold" VerticalContentAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap">
                             <TextBox.Background>
                                 <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
                                     <GradientStop Color="#FF7BBFD8" x:Name="CurrentGPTModelOffset" Offset="1"/>

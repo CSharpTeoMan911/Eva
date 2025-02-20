@@ -9,7 +9,7 @@ namespace Eva_5._0
 {
     internal class StringFormatting
     {
-        public static string whitespace = " ";
+        private static string whitespace = " ";
 
         public static string Format(StringBuilder builder)
         {

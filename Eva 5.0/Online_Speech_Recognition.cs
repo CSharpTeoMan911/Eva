@@ -29,23 +29,26 @@ namespace Eva_5._0
 
     internal class Online_Speech_Recognition : MainWindow
     {
-        #nullable enable
+#nullable enable
         private static Windows.Media.SpeechRecognition.SpeechRecognizer? OnlineSpeechRecognition;
 
-        private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Form_Filling_Constraint = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(
-                                                                                                          Windows.Media.SpeechRecognition.SpeechRecognitionScenario.FormFilling,
-                                                                                                          "form-filling",
-                                                                                                          "form");
+        private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Form_Filling_Constraint = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.FormFilling, "form-filling", "form")
+        {
+            IsEnabled = true,
+            Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Max
+        };
 
-        private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Web_Search_Constraint = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(
-                                                                                                  Windows.Media.SpeechRecognition.SpeechRecognitionScenario.WebSearch,
-                                                                                                  "web-search",
-                                                                                                  "web");
+        private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Web_Search_Constraint = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.WebSearch, "web-search", "web")
+        {
+            IsEnabled = true,
+            Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Max
+        };
 
-        private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Dictation_Constraint = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(
-                                                                                                  Windows.Media.SpeechRecognition.SpeechRecognitionScenario.FormFilling,
-                                                                                                  "dictation",
-                                                                                                  "dict");
+        private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Dictation_Constraint = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.FormFilling, "dictation", "dict")
+        {
+            IsEnabled = true,
+            Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Max
+        };
 
 
 
@@ -77,7 +80,8 @@ namespace Eva_5._0
                             {
                                 Online_Speech_Recogniser_Listening = "true";
 
-                                Task.Run(async() => {
+                                Task.Run(async () =>
+                                {
                                     await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppActivationSoundEffect);
                                     Initiate_The_Online_Speech_Recognition_Engine();
                                 });
@@ -109,14 +113,19 @@ namespace Eva_5._0
                 // INITIATE THE SPEECH RECOGNITION ENGINE
                 OnlineSpeechRecognition = new Windows.Media.SpeechRecognition.SpeechRecognizer(new Windows.Globalization.Language(await Settings.Get_Speech_Language_Settings()));
 
-
-                // SET THE CONSTRAINTS OF THE SPEECH RECOGNITION ENGINE TO USE THE "form-filling" CONFIGURATION
-                Form_Filling_Constraint.Probability = Windows.Media.SpeechRecognition.SpeechRecognitionConstraintProbability.Max;
-                Form_Filling_Constraint.IsEnabled = true;
-
                 OnlineSpeechRecognition.Constraints.Clear();
-                OnlineSpeechRecognition.Constraints.Add(Form_Filling_Constraint);
-
+                switch (await Settings.Get_Speech_Operation_Settings())
+                {
+                    case A_p_l____And____P_r_o_c.SpeechRecognitionOperation.FormFilling:
+                        OnlineSpeechRecognition.Constraints.Add(Form_Filling_Constraint);
+                        break;
+                    case A_p_l____And____P_r_o_c.SpeechRecognitionOperation.Dictation:
+                        OnlineSpeechRecognition.Constraints.Add(Dictation_Constraint);
+                        break;
+                    case A_p_l____And____P_r_o_c.SpeechRecognitionOperation.WebSearch:
+                        OnlineSpeechRecognition.Constraints.Add(Web_Search_Constraint);
+                        break;
+                }
 
                 Windows.Media.SpeechRecognition.SpeechRecognitionCompilationResult ConstraintsCompilation = await OnlineSpeechRecognition.CompileConstraintsAsync();
 

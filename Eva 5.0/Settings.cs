@@ -255,6 +255,11 @@ namespace Eva_5._0
             return (await Load_Settings_File()).Online_Speech_Recognition_Language;
         }
 
+        public static async Task<A_p_l____And____P_r_o_c.SpeechRecognitionOperation> Get_Speech_Operation_Settings()
+        {
+            return (await Load_Settings_File()).Operation;
+        }
+
         public static async Task Set_Vosk_Sensitivity_Settings(float sensitivity)
         {
             Settings_File settings_File = await Load_Settings_File();
@@ -288,6 +293,13 @@ namespace Eva_5._0
             else
                 settings_File.Online_Speech_Recognition_Language = "en-GB";
 
+            await Update_Settings_File(settings_File);
+        }
+
+        public static async Task Set_Speech_Operation_Settings(A_p_l____And____P_r_o_c.SpeechRecognitionOperation operation)
+        {
+            Settings_File settings_File = await Load_Settings_File();
+            settings_File.Operation = operation;
             await Update_Settings_File(settings_File);
         }
 

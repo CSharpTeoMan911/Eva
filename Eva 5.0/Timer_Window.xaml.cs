@@ -203,7 +203,7 @@ namespace Eva_5._0
                                 }
 
 
-                                if (Timer_Interval._isTimer == true)
+                                if (Timer_Interval.IsTimer() == true)
                                 {
 
                                     Tuple<int, int, int> received_timer_interval = Timer_Interval.Get_Time_Interval();

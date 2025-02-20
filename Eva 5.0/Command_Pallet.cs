@@ -8,7 +8,7 @@ namespace Eva_5._0
 {
     internal class Command_Pallet
     {
-        public static readonly string commands_file_name = "commands_pallet.json";
+        private static readonly string commands_file_name = "commands_pallet.json";
 
 
         public enum ResetType

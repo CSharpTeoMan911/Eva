@@ -25,9 +25,9 @@ namespace Eva_5._0
     internal class Timer_Interval
     {
 
-        public static bool _isTimer = false;
+        private static bool _isTimer = false;
 
-        public static DateTime hh_mm_ss_mls___Event;
+        private static DateTime hh_mm_ss_mls___Event;
 
 
 
@@ -96,6 +96,8 @@ namespace Eva_5._0
             TimeSpan calculated_remaining_time = hh_mm_ss_mls___Event - DateTime.UtcNow;
             return new Tuple<int, int, int>((int)calculated_remaining_time.Hours, (int)calculated_remaining_time.Minutes, (int)calculated_remaining_time.Seconds);
         }
+
+        public static bool IsTimer() => _isTimer;
 
         public static void Cancel_Time_Interval() => _isTimer = false;
     }
