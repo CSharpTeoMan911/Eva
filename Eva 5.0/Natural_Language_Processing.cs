@@ -54,7 +54,7 @@ namespace Eva_5._0
         private static StringBuilder WordBuffer_StringBuilder = new StringBuilder();
 
 
-        public static async Task<bool> PreProcessing(string Result)
+        public static async void PreProcessing(string Result)
         {
             Sentence_StringBuilder.Clear();
             Application_StringBuilder.Clear();
@@ -119,154 +119,146 @@ namespace Eva_5._0
                 goto ChatGptMode;
             }
 
-            switch (MainWindow.chatgpt_mode_enabled)
+            if (MainWindow.chatgpt_mode_enabled == true)
             {
-                case true:
-                    await PostProcessing("chatgpt [ ChatGPT Query ]", Result);
-                    break;
-
-                case false:
-                    if (Result.IndexOf("please open ") == 0)
+                PostProcessing("chatgpt [ ChatGPT Query ]", Result);
+            }
+            else
+            {
+                if (Result.IndexOf("please open ") == 0)
+                {
+                    PostProcessing("please open [Application]", Result);
+                }
+                else if (Result.IndexOf("open ") == 0)
+                {
+                    if (Result.LastIndexOf(" please") + " please".Length - 1 == Result.Length - 1)
                     {
-                        await PostProcessing("please open [Application]", Result);
+                        PostProcessing("open [Application] please", Result);
                     }
-                    else if (Result.IndexOf("open ") == 0)
+                    else if (Result.LastIndexOf(" now") + " now".Length - 1 == Result.Length - 1)
                     {
-                        if (Result.LastIndexOf(" please") + " please".Length - 1 == Result.Length - 1)
-                        {
-                            await PostProcessing("open [Application] please", Result);
-                        }
-                        else if (Result.LastIndexOf(" now") + " now".Length - 1 == Result.Length - 1)
-                        {
-                            await PostProcessing("open [Application] now", Result);
-                        }
-                        else
-                        {
-                            await PostProcessing("open [Application]", Result);
-                        }
-                    }
-                    else if (Result.IndexOf("please close ") == 0)
-                    {
-                        await PostProcessing("please close [Application]", Result);
-                    }
-                    else if (Result.IndexOf("close ") == 0)
-                    {
-                        if (Result.LastIndexOf(" please") + " please".Length - 1 == Result.Length - 1)
-                        {
-                            await PostProcessing("close [Application] please", Result);
-                        }
-                        else if (Result.LastIndexOf(" now") + " now".Length - 1 == Result.Length - 1)
-                        {
-                            await PostProcessing("close [Application] now", Result);
-                        }
-                        else
-                        {
-                            await PostProcessing("close [Application]", Result);
-                        }
-                    }
-                    else if (Result.IndexOf("please search on ") == 0)
-                    {
-                        await PostProcessing("please search on [Web Application Keyword] [Content]", Result);
-                    }
-                    else if ((Result.IndexOf("please search ") == 0) && (Result.Contains(" on ") == true))
-                    {
-                        await PostProcessing("please search [Content] on [Web Application Keyword]", Result);
-                    }
-                    else if (Result.IndexOf("search on ") == 0)
-                    {
-                        await PostProcessing("search on [Web Application Keyword] [Content]", Result);
-                    }
-                    else if ((Result.IndexOf("search ") == 0) && (Result.Contains(" on ") == true))
-                    {
-                        await PostProcessing("search [Content] on [Web Application Keyword]", Result);
-                    }
-                    else if (Result.IndexOf("set a ") == 0)
-                    {
-                        if (Result.IndexOf(" timer") == Result.Length - 6)
-                        {
-                            await PostProcessing("set a [Timer Interval] timer", Result);
-                        }
-                        else if (Result.IndexOf(" please") == Result.Length - 7)
-                        {
-                            if (Result.IndexOf(" timer ") == Result.Length - 13)
-                            {
-                                await PostProcessing("set a [Timer Interval] timer please", Result);
-                            }
-                        }
-                    }
-                    else if(Result.IndexOf("set an ") == 0)
-                    {
-                        if (Result.IndexOf(" timer") == Result.Length - 6)
-                        {
-                            await PostProcessing("set an [Timer Interval] timer", Result);
-                        }
-                        else if (Result.IndexOf(" please") == Result.Length - 7)
-                        {
-                            if (Result.IndexOf(" timer ") == Result.Length - 13)
-                            {
-                                await PostProcessing("set an [Timer Interval] timer please", Result);
-                            }
-                        }
-                    }
-                    else if (Result.IndexOf("please set a ") == 0)
-                    {
-                        if (Result.IndexOf(" timer") == Result.Length - 6)
-                        {
-                            await PostProcessing("please set a [Timer Interval] timer", Result);
-                        }
-                    }
-                    else if (Result.IndexOf("please set an ") == 0)
-                    {
-                        if (Result.IndexOf(" timer") == Result.Length - 6)
-                        {
-                            await PostProcessing("please set a [Timer Interval] timer", Result);
-                        }
-                    }
-                    else if (Result.IndexOf("gpt ") == 0)
-                    {
-                        await PostProcessing("chatgpt [ ChatGPT Query ]", Result);
+                        PostProcessing("open [Application] now", Result);
                     }
                     else
                     {
-                        // COMMANDS THAT DO NOT REQUIRE A SECOND TOKENIZATION. THESE COMMANDS ARE COMMANDS THAT DO NOT HAVE
-                        // EXTRA VARIABLES THAT REQUIRE CONTENT PROCESSING AND THE MEANING AND CONTENTS OF THE COMMAND
-                        // ARE EXPLICIT
+                        PostProcessing("open [Application]", Result);
+                    }
+                }
+                else if (Result.IndexOf("please close ") == 0)
+                {
+                    PostProcessing("please close [Application]", Result);
+                }
+                else if (Result.IndexOf("close ") == 0)
+                {
+                    if (Result.LastIndexOf(" please") + " please".Length - 1 == Result.Length - 1)
+                    {
+                        PostProcessing("close [Application] please", Result);
+                    }
+                    else if (Result.LastIndexOf(" now") + " now".Length - 1 == Result.Length - 1)
+                    {
+                        PostProcessing("close [Application] now", Result);
+                    }
+                    else
+                    {
+                        PostProcessing("close [Application]", Result);
+                    }
+                }
+                else if (Result.IndexOf("please search on ") == 0)
+                {
+                    PostProcessing("please search on [Web Application Keyword] [Content]", Result);
+                }
+                else if ((Result.IndexOf("please search ") == 0) && (Result.Contains(" on ") == true))
+                {
+                    PostProcessing("please search [Content] on [Web Application Keyword]", Result);
+                }
+                else if (Result.IndexOf("search on ") == 0)
+                {
+                    PostProcessing("search on [Web Application Keyword] [Content]", Result);
+                }
+                else if ((Result.IndexOf("search ") == 0) && (Result.Contains(" on ") == true))
+                {
+                    PostProcessing("search [Content] on [Web Application Keyword]", Result);
+                }
+                else if (Result.IndexOf("set a ") == 0)
+                {
+                    if (Result.IndexOf(" timer") == Result.Length - 6)
+                    {
+                        PostProcessing("set a [Timer Interval] timer", Result);
+                    }
+                    else if (Result.IndexOf(" please") == Result.Length - 7)
+                    {
+                        if (Result.IndexOf(" timer ") == Result.Length - 13)
+                        {
+                            PostProcessing("set a [Timer Interval] timer please", Result);
+                        }
+                    }
+                }
+                else if (Result.IndexOf("set an ") == 0)
+                {
+                    if (Result.IndexOf(" timer") == Result.Length - 6)
+                    {
+                        PostProcessing("set an [Timer Interval] timer", Result);
+                    }
+                    else if (Result.IndexOf(" please") == Result.Length - 7)
+                    {
+                        if (Result.IndexOf(" timer ") == Result.Length - 13)
+                        {
+                            PostProcessing("set an [Timer Interval] timer please", Result);
+                        }
+                    }
+                }
+                else if (Result.IndexOf("please set a ") == 0)
+                {
+                    if (Result.IndexOf(" timer") == Result.Length - 6)
+                    {
+                        PostProcessing("please set a [Timer Interval] timer", Result);
+                    }
+                }
+                else if (Result.IndexOf("please set an ") == 0)
+                {
+                    if (Result.IndexOf(" timer") == Result.Length - 6)
+                    {
+                        PostProcessing("please set a [Timer Interval] timer", Result);
+                    }
+                }
+                else if (Result.IndexOf("gpt ") == 0)
+                {
+                    PostProcessing("chatgpt [ ChatGPT Query ]", Result);
+                }
+                else
+                {
+                    // COMMANDS THAT DO NOT REQUIRE A SECOND TOKENIZATION. THESE COMMANDS ARE COMMANDS THAT DO NOT HAVE
+                    // EXTRA VARIABLES THAT REQUIRE CONTENT PROCESSING AND THE MEANING AND CONTENTS OF THE COMMAND
+                    // ARE EXPLICIT
 
 
-                        // SCREENSHOT PROCESS
-                        //[ BEGIN ]
+                    // SCREENSHOT PROCESS
+                    //[ BEGIN ]
 
-                        if (Result.IndexOf("take screenshot") == 0)
-                        {
-                            await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
-                        }
-                        else if (Result.IndexOf("take a screenshot") == 0)
-                        {
-                            await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
-                        }
-                        else if (Result.IndexOf("take a screenshot please") == 0)
-                        {
-                            await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
-                        }
-                        else if (Result.IndexOf("please take a screenshot") == 0)
-                        {
-                            await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
-                        }
-                        else if (Result.IndexOf("screenshot") == 0)
-                        {
-                            await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
-                        }
-
-                        //[ END ]
+                    if (Result.IndexOf("take screenshot") == 0)
+                    {
+                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                    }
+                    else if (Result.IndexOf("take a screenshot") == 0)
+                    {
+                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                    }
+                    else if (Result.IndexOf("take a screenshot please") == 0)
+                    {
+                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                    }
+                    else if (Result.IndexOf("please take a screenshot") == 0)
+                    {
+                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                    }
+                    else if (Result.IndexOf("screenshot") == 0)
+                    {
+                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
                     }
 
-                    break;
-
-                    // [ END ]
-
+                    //[ END ]
+                }
             }
-
-
 
         ChatGptMode:
         End:
@@ -275,13 +267,11 @@ namespace Eva_5._0
             WebApplication_StringBuilder.Clear();
             WebApplicationSearchContent_StringBuilder.Clear();
             WordBuffer_StringBuilder.Clear();
-
-            return true;
         }
 
 
 
-        private static async Task<bool> PostProcessing(string Param, string Sentence)
+        private static void PostProcessing(string Param, string Sentence)
         {
             // THE SECOND TOKENIZATION IS INITIATED. HERE THE CONTEXTUAL NATURAL LANGUAGE PROCESSING TAKES PLACE. THE KEYWORDS RELATED TO THE COMMAND FORMATS DETECTED ARE TOKENIZED.
             // THE KEYWORDS FOR OPERATIONS, APPLICATIONS AND THE CONTENT FOR WEB SEARCH FUNCTIONS OR THE TIMER FUNCTION ARE EXTRACTED FROM THE SENTENCE.
@@ -298,7 +288,6 @@ namespace Eva_5._0
 
             string Application = String.Empty;
             string WebApplicationSearchContent = String.Empty;
-            bool timer_set = false;
 
             System.Collections.Concurrent.ConcurrentDictionary<string, int> time_interval = new System.Collections.Concurrent.ConcurrentDictionary<string, int>();
 
@@ -306,37 +295,37 @@ namespace Eva_5._0
             switch (Param)
             {
                 case "please open [Application]":
-                    Application = await System_Application_Selector("please open ".Length - 1, Sentence_StringBuilder.ToString());
-                    if(Application != String.Empty)
+                    Application = System_Application_Selector("please open ".Length - 1, Sentence_StringBuilder.ToString());
+                    if (Application != String.Empty)
                     {
-                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
+                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
                     }
                     Application_StringBuilder.Clear();
                     break;
 
                 case "open [Application] please":
-                    Application = await System_Application_Selector("open ".Length - 1, Sentence_StringBuilder.ToString());
-                    if(Application != String.Empty)
+                    Application = System_Application_Selector("open ".Length - 1, Sentence_StringBuilder.ToString());
+                    if (Application != String.Empty)
                     {
-                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
+                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
                     }
                     Application_StringBuilder.Clear();
                     break;
 
                 case "open [Application] now":
-                    Application = await System_Application_Selector("open ".Length - 1, Sentence_StringBuilder.ToString());
+                    Application = System_Application_Selector("open ".Length - 1, Sentence_StringBuilder.ToString());
                     if (Application != String.Empty)
                     {
-                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
+                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
                     }
                     Application_StringBuilder.Clear();
                     break;
 
                 case "open [Application]":
-                    Application = await System_Application_Selector("open ".Length - 1, Sentence_StringBuilder.ToString());
+                    Application = System_Application_Selector("open ".Length - 1, Sentence_StringBuilder.ToString());
                     if (Application != String.Empty)
                     {
-                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
+                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
                     }
                     Application_StringBuilder.Clear();
                     break;
@@ -345,44 +334,44 @@ namespace Eva_5._0
 
 
                 case "please close [Application]":
-                    Application = await System_Process_Selector("please close ".Length - 1, Sentence_StringBuilder.ToString());
+                    Application = System_Process_Selector("please close ".Length - 1, Sentence_StringBuilder.ToString());
 
-                    if(Application != String.Empty)
+                    if (Application != String.Empty)
                     {
-                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
+                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
                     }
                     Application_StringBuilder.Clear();
                     break;
 
                 case "close [Application] please":
 
-                    Application = await System_Process_Selector("close ".Length - 1, Sentence_StringBuilder.ToString());
+                    Application = System_Process_Selector("close ".Length - 1, Sentence_StringBuilder.ToString());
 
                     if (Application != String.Empty)
                     {
-                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
+                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
                     }
                     Application_StringBuilder.Clear();
                     break;
 
                 case "close [Application] now":
 
-                    Application = await System_Process_Selector("close ".Length - 1, Sentence_StringBuilder.ToString());
+                    Application = System_Process_Selector("close ".Length - 1, Sentence_StringBuilder.ToString());
 
                     if (Application != String.Empty)
                     {
-                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
+                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
                     }
                     Application_StringBuilder.Clear();
                     break;
 
                 case "close [Application]":
 
-                    Application = await System_Process_Selector("close ".Length - 1, Sentence_StringBuilder.ToString());
+                    Application = System_Process_Selector("close ".Length - 1, Sentence_StringBuilder.ToString());
 
                     if (Application != String.Empty)
                     {
-                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
+                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
                     }
                     Application_StringBuilder.Clear();
                     break;
@@ -392,9 +381,9 @@ namespace Eva_5._0
 
                 case "please search [Content] on [Web Application Keyword]":
 
-                    Application = await Web_Application_Selector(Sentence.LastIndexOf(" on ") + " on ".Length - 1, Sentence_StringBuilder.ToString());
+                    Application = Web_Application_Selector(Sentence.LastIndexOf(" on ") + " on ".Length - 1, Sentence_StringBuilder.ToString());
 
-                    if(Application != String.Empty)
+                    if (Application != String.Empty)
                     {
                         for (int Index = "please search".Length; Index < Sentence.LastIndexOf(" on "); Index++)
                         {
@@ -402,15 +391,15 @@ namespace Eva_5._0
                         }
 
                         WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString();
-                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
+                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
                     }
                     break;
 
                 case "please search on [Web Application Keyword] [Content]":
 
-                    Application = await Web_Application_Selector(Sentence.LastIndexOf(" on ") + " on ".Length - 1, Sentence_StringBuilder.ToString());
+                    Application = Web_Application_Selector(Sentence.LastIndexOf(" on ") + " on ".Length - 1, Sentence_StringBuilder.ToString());
 
-                    if(Application != String.Empty)
+                    if (Application != String.Empty)
                     {
                         for (int Index = "please search on ".Length + Application.Length; Index <= Sentence.Length - 1; Index++)
                         {
@@ -418,15 +407,15 @@ namespace Eva_5._0
                         }
 
                         WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString().Trim();
-                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
+                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
                     }
                     break;
 
                 case "search on [Web Application Keyword] [Content]":
 
-                    Application = await Web_Application_Selector("search on ".Length - 1, Sentence);
+                    Application = Web_Application_Selector("search on ".Length - 1, Sentence);
 
-                    if(Application != String.Empty)
+                    if (Application != String.Empty)
                     {
                         for (int Index = "search on ".Length + Application.Length; Index <= Sentence.Length - 1; Index++)
                         {
@@ -434,110 +423,82 @@ namespace Eva_5._0
                         }
 
                         WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString().Trim();
-                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
+                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
                     }
                     break;
 
                 case "search [Content] on [Web Application Keyword]":
 
-                    Application = await Web_Application_Selector(Sentence.LastIndexOf(" on ") + " on ".Length - 1, Sentence_StringBuilder.ToString());
+                    Application = Web_Application_Selector(Sentence.LastIndexOf(" on ") + " on ".Length - 1, Sentence_StringBuilder.ToString());
 
-                    if(Application != String.Empty)
+                    if (Application != String.Empty)
                     {
                         for (int Index = 7; Index < Sentence.LastIndexOf(" on "); Index++)
                         {
                             WebApplicationSearchContent_StringBuilder.Append(Sentence[Index]);
                         }
 
-                       
+
                         WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString().Trim();
-                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
+                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
                     }
                     break;
 
                 case "chatgpt [ ChatGPT Query ]":
-
-                    switch(MainWindow.chatgpt_mode_enabled)
+                    if (MainWindow.chatgpt_mode_enabled == true)
                     {
-                        case true:
-                            WebApplicationSearchContent = Sentence;
-                            break;
-                        case false:
-                            for (int Index = "gpt".Length; Index < Sentence.Length; Index++)
-                            {
-                                WebApplicationSearchContent_StringBuilder.Append(Sentence[Index]);
-                            }
-
-                            WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString();
-                            break;
+                        WebApplicationSearchContent = Sentence;
                     }
-                    await Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("ChatGPT Process", Application, WebApplicationSearchContent);
+                    else
+                    {
+                        for (int Index = "gpt".Length; Index < Sentence.Length; Index++)
+                        {
+                            WebApplicationSearchContent_StringBuilder.Append(Sentence[Index]);
+                        }
+
+                        WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString();
+                    }
+                    Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("ChatGPT Process", Application, WebApplicationSearchContent);
                     break;
 
                 case "set a [Timer Interval] timer":
-                    timer_set = await Timer_Time_Selector(Sentence, time_interval, "set a ".Length - 1);
-
-                    if(timer_set == true)
-                    {
-                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
-                    }
+                    Timer_Time_Selector(Sentence, time_interval, "set a ".Length - 1);
+                    Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
                     break;
 
                 case "set an [Timer Interval] timer":
-                    timer_set = await Timer_Time_Selector(Sentence, time_interval, "set an ".Length - 1);
-
-                    if (timer_set == true)
-                    {
-                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
-                    }
+                    Timer_Time_Selector(Sentence, time_interval, "set an ".Length - 1);
+                    Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
                     break;
 
                 case "set a [Timer Interval] timer please":
-                    timer_set = await Timer_Time_Selector(Sentence, time_interval, "set a ".Length - 1);
-
-                    if (timer_set == true)
-                    {
-                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
-                    }
+                    Timer_Time_Selector(Sentence, time_interval, "set a ".Length - 1);
+                    Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
                     break;
 
                 case "set an [Timer Interval] timer please":
-                    timer_set = await Timer_Time_Selector(Sentence, time_interval, "set an ".Length - 1);
-
-                    if (timer_set == true)
-                    {
-                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
-                    }
+                    Timer_Time_Selector(Sentence, time_interval, "set an ".Length - 1);
+                    Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
                     break;
 
                 case "please set a [Timer Interval] timer":
-                    timer_set = await Timer_Time_Selector(Sentence, time_interval, "please set a ".Length - 1);
-
-                    if (timer_set == true)
-                    {
-                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
-                    }
+                    Timer_Time_Selector(Sentence, time_interval, "please set a ".Length - 1);
+                    Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
                     break;
 
                 case "please set an [Timer Interval] timer":
-                    timer_set = await Timer_Time_Selector(Sentence, time_interval, "please set an ".Length - 1);
-
-                    if (timer_set == true)
-                    {
-                        await Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
-                    }
+                    Timer_Time_Selector(Sentence, time_interval, "please set an ".Length - 1);
+                    Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
                     break;
             }
 
             // [ END ]
-
-            return true;
         }
 
 
 
 
-        private static Task<bool> Timer_Time_Selector(string Sentence, System.Collections.Concurrent.ConcurrentDictionary<string, int> time_interval, int start_index)
+        private static void Timer_Time_Selector(string Sentence, System.Collections.Concurrent.ConcurrentDictionary<string, int> time_interval, int start_index)
         {
             // WHEN A TIMER IS SET THE TIME VARIABLES FROM THE SENTECE MUST BE EXTRACTED. THE SECOND TOKENIZATION WILL EXTRACTS WHERE
             // THE POSITION OF THESE TIME VARIALBLES WILL BE WITHIN THE SENTENCE AND PASS THE SENTENCE AND INDEX WHERE THESE TIME
@@ -724,11 +685,9 @@ namespace Eva_5._0
             }
 
             // [ END ]
-
-            return Task.FromResult(true);
         }
 
-        private static Task<string> System_Application_Selector(int start_index, string Sentence)
+        private static string System_Application_Selector(int start_index, string Sentence)
         {
             System.Collections.Generic.Stack<string> Token_Buffer_List = new System.Collections.Generic.Stack<string>();
             string Token_Buffer;
@@ -758,15 +717,15 @@ namespace Eva_5._0
 
             if(Token_Buffer_List.Count > 0)
             {
-                return Task.FromResult(Token_Buffer_List.Pop());
+                return Token_Buffer_List.Pop();
             }
             else
             {
-                return Task.FromResult(String.Empty);
+                return String.Empty;
             }
         }
 
-        private static Task<string> System_Process_Selector(int start_index, string Sentence)
+        private static string System_Process_Selector(int start_index, string Sentence)
         {
             System.Collections.Generic.Stack<string> Token_Buffer_List = new System.Collections.Generic.Stack<string>();
             string Token_Buffer;
@@ -796,15 +755,15 @@ namespace Eva_5._0
 
             if (Token_Buffer_List.Count > 0)
             {
-                return Task.FromResult(Token_Buffer_List.Pop());
+                return Token_Buffer_List.Pop();
             }
             else
             {
-                return Task.FromResult(String.Empty);
+                return String.Empty;
             }
         }
 
-        private static Task<string> Web_Application_Selector(int start_index, string Sentence)
+        private static string Web_Application_Selector(int start_index, string Sentence)
         {
             // THE SECOND TOKENIZATION IDENTIFIES WHERE THE POSITION OF THE WEB APPLICATION KEYWORD IS WITHIN THE SENTENCE
             // PASSES THE SENTENCE AND THE WEB APPLICATION'S DETECTED KEYWORD INDEX TO THIS METHOD. THIS METHOD WILL THEN 
@@ -852,11 +811,11 @@ namespace Eva_5._0
 
             if (Token_Buffer_List.Count > 0)
             {
-                return Task.FromResult(Token_Buffer_List.Pop());
+                return Token_Buffer_List.Pop();
             }
             else
             {
-                return Task.FromResult(String.Empty);
+                return String.Empty;
             }
         }
 

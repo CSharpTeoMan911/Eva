@@ -183,78 +183,62 @@ namespace Eva_5._0
         // ANIMATION TIMER
         private void Animation_Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (WindowIsClosing == false)
+            try
             {
-
-                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                if (WindowIsClosing == false)
                 {
-
-                    Application.Current.Dispatcher.Invoke(() =>
+                    if (Application.Current.Dispatcher.HasShutdownStarted == false)
                     {
-                        if (Application.Current.MainWindow != null)
+                        Application.Current.Dispatcher.Invoke(() =>
                         {
-                            if (App.Application_Error_Shutdown)
+                            if (Application.Current.MainWindow != null)
                             {
-                                try
+                                if (App.Application_Error_Shutdown)
                                 {
-                                    if (Animation_Timer != null)
+                                    Animation_Timer?.Stop();
+                                    this.Close();
+                                }
+
+                                if (SwitchOffset == true)
+                                {
+                                    if (OffsetArithmetic > 0)
                                     {
-                                        Animation_Timer.Stop();
-                                        this.Close();
+                                        OffsetArithmetic--;
+                                        CloseButtonOffset.Offset += 0.01;
+                                        ChatGPTApiKeyOffset.Offset += 0.01;
+                                        ChatGptApiTextBoxOffset.Offset += 0.01;
+                                        WindowOffset.Offset += 0.01;
+                                        SetChatGptApiButtonOffset.Offset += 0.01;
+                                    }
+                                    else
+                                    {
+                                        SwitchOffset = false;
                                     }
                                 }
-                                catch { }
-                            }
-
-                            switch (SwitchOffset)
-                            {
-                                case true:
-
-                                    switch (OffsetArithmetic > 0)
+                                else
+                                {
+                                    if (OffsetArithmetic < 80)
                                     {
-                                        case true:
-                                            OffsetArithmetic--;
-                                            CloseButtonOffset.Offset += 0.01;
-                                            ChatGPTApiKeyOffset.Offset += 0.01;
-                                            ChatGptApiTextBoxOffset.Offset += 0.01;
-                                            WindowOffset.Offset += 0.01;
-                                            SetChatGptApiButtonOffset.Offset += 0.01;
-                                            break;
-
-                                        case false:
-                                            SwitchOffset = false;
-                                            break;
+                                        OffsetArithmetic++;
+                                        CloseButtonOffset.Offset -= 0.01;
+                                        ChatGPTApiKeyOffset.Offset -= 0.01;
+                                        ChatGptApiTextBoxOffset.Offset -= 0.01;
+                                        WindowOffset.Offset -= 0.01;
+                                        SetChatGptApiButtonOffset.Offset -= 0.01;
                                     }
-
-                                    break;
-
-                                case false:
-
-                                    switch (OffsetArithmetic < 88)
+                                    else
                                     {
-                                        case true:
-                                            OffsetArithmetic++;
-                                            CloseButtonOffset.Offset -= 0.01;
-                                            ChatGPTApiKeyOffset.Offset -= 0.01;
-                                            ChatGptApiTextBoxOffset.Offset -= 0.01;
-                                            WindowOffset.Offset -= 0.01;
-                                            SetChatGptApiButtonOffset.Offset -= 0.01;
-                                            break;
-
-                                        case false:
-                                            SwitchOffset = true;
-                                            break;
+                                        SwitchOffset = true;
                                     }
-
-                                    break;
+                                }
                             }
+                        });
 
-                        }
-                    });
+                    }
 
                 }
-
             }
+            catch { }
         }
 
         // METHOD CALLED WHEN THE WINDOW IS CLOSING.

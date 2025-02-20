@@ -89,8 +89,6 @@ namespace Eva_5._0
 
         public static Command_Pallet_File commands = new Command_Pallet_File();
 
-        private readonly System.Threading.Thread ParallelProcessing;
-
         public readonly static Sound_Player sound_player = new Sound_Player();
 
         public static StringFormatting stringFormatting = new StringFormatting();
@@ -99,10 +97,7 @@ namespace Eva_5._0
         {
             public class Recycle_Bine_Cleanup_Implementor : Recycle_Bine_Cleanup
             {
-                internal static async Task<bool> Empty_Recycle_Bin_Implementor()
-                {
-                    return await Empty_Recycle_Bin();
-                }
+                internal static void Empty_Recycle_Bin_Implementor() => Empty_Recycle_Bin();
             }
 
             public class Begin_Application_Execution_Animation : MainWindow
@@ -118,19 +113,13 @@ namespace Eva_5._0
 
             public class Screen_Capture_Mechanism_Mitigator : Screen_Capture_Mechanism
             {
-                internal static async Task<bool> Screen_Capture_Initiator()
-                {
-                    return await Screen_Capture();
-                }
+                internal static async Task Screen_Capture_Initiator() => await Screen_Capture();
             }
 
 
             public class Proc_Mitigator : Proc
             {
-                internal static async Task Process_Initialisation<Content>(string process_type, string application, Content content)
-                {
-                     await ProcInitialisation<Content>(process_type, application, content);
-                }
+                internal static void Process_Initialisation<Content>(string process_type, string application, Content content) => ProcInitialisation<Content>(process_type, application, content);
             }
         }
 
@@ -142,35 +131,20 @@ namespace Eva_5._0
             new A_p_l____And____P_r_o_c(true);
         }
 
-
-
-
+        public enum SpeechRecognitionOperation
+        {
+            FormFilling,
+            Dictation,
+            WebSearch
+        }
 
         private A_p_l____And____P_r_o_c(bool initiate)
         {
-
             if(initiate == true)
-            {
-                ParallelProcessing = new System.Threading.Thread(async () =>
-                {
-
-                    // ADD KEY-VALUE PAIRS IN THE SPECIFIED FORMAT FOR EACH DICTIONARY OBJECT RESPECTING THE SPECIFIED API FROMAT
-                    //
-                    // [ BEGIN ]
-
-                    commands = await Command_Pallet.Get_Commands();
-
-                    // [ END ]
-
-                });
-
-                ParallelProcessing.SetApartmentState(System.Threading.ApartmentState.STA);
-                ParallelProcessing.Priority = System.Threading.ThreadPriority.Highest;
-                ParallelProcessing.IsBackground = false;
-                ParallelProcessing.Start();
-            }
-
+                InitiateCommands();
         }
+
+        public void InitiateCommands() => Task.Run(async() => { commands = await Command_Pallet.Get_Commands();});
     }
 }
 

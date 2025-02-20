@@ -63,7 +63,7 @@ namespace Eva_5._0
         }
 
 
-        public static async Task<bool> Get_Available_Gpt_Models()
+        public static async Task Get_Available_Gpt_Models()
         {
             // 'HttpClient' OBJECT NEEDED TO SEND HTTP REQUESTS TO THE OPENAI SERVER.
             System.Net.Http.HttpClient api_client = new System.Net.Http.HttpClient();
@@ -93,7 +93,7 @@ namespace Eva_5._0
 
                 // DESERIALISE AND STORE THE JSON RESULT INSIDE AN OBJECT
 
-                models models = await JsonSerialisation.JsonDeserialiser<models>(response_string);
+                models models = JsonSerialisation.JsonDeserialiser<models>(response_string);
 
 
                 // CLEAN THE DATA WITHIN THE EXTRACTED HTTP PAYLOAD BY ELIMINATING NON-GPT MODELS
@@ -109,7 +109,8 @@ namespace Eva_5._0
                         if (current_model.Contains("gpt") == true)
                             if (current_model.Contains("voice") == false)
                                 if (current_model.Contains("vision") == false)
-                                    gpt_models.Add(current_model);
+                                    if (current_model.Contains("audio") == false)
+                                        gpt_models.Add(current_model);
                     }
                 }
             }
@@ -122,8 +123,6 @@ namespace Eva_5._0
                 api_client?.Dispose();
                 response?.Dispose();
             }
-
-            return true;
         }
 
         public static async Task<Tuple<Type, string>> Initiate_Chat_GPT(string input)
@@ -156,6 +155,7 @@ namespace Eva_5._0
                     api_key_StringBuilder.Append(await Settings.Get_Chat_GPT_Api_Key());
 
 
+
                     api_client.DefaultRequestHeaders.Add("Authorization", api_key_StringBuilder.ToString());
 
 
@@ -167,15 +167,14 @@ namespace Eva_5._0
 
                     request request = new request();
 
-                    switch(selected_model == null)
+                    if (selected_model == null)
                     {
-                        case true:
-                            request.model = "gpt-3.5-turbo";
-                            await Get_Available_Gpt_Models();
-                            break;
-                        case false:
-                            request.model = selected_model;
-                            break;
+                        request.model = "gpt-3.5-turbo";
+                        await Get_Available_Gpt_Models();
+                    }
+                    else
+                    {
+                        request.model = selected_model;
                     }
 
                     request.messages = cached_conversation.ToArray();
@@ -194,7 +193,9 @@ namespace Eva_5._0
 
                         try
                         {
-                            JObject json_response = await JsonSerialisation.JsonDeserialiser<JObject>(await response.Content.ReadAsStringAsync());
+                            string r = await response.Content.ReadAsStringAsync();
+
+                            JObject json_response = JsonSerialisation.JsonDeserialiser<JObject>(r);
 
                             Tuple<Type, string> payload_processing_result = API_Payload_Processing(json_response);
 

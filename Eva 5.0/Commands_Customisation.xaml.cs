@@ -23,7 +23,6 @@ namespace Eva_5._0
     {
         private ConcurrentDictionary<string, string> clone = new ConcurrentDictionary<string, string>();
         private ConcurrentDictionary<TextBox, string> controls_command = new ConcurrentDictionary<TextBox, string>();
-        private DateTime timeout;
 
         private bool file_manipulation_init;
 
@@ -45,7 +44,6 @@ namespace Eva_5._0
 
         public Commands_Customisation(Option option, SettingsWindow.OpenSpeech openSpeech_)
         {
-            timeout = DateTime.UtcNow.AddMilliseconds(-2000);
             selected_option = option;
             InitializeComponent();
             this.openSpeech = openSpeech_;
@@ -61,12 +59,12 @@ namespace Eva_5._0
             this.Close();
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            LoadContents();
+            await LoadContents();
         }
 
-        private async void LoadContents()
+        private async Task LoadContents()
         {
             A_p_l____And____P_r_o_c.commands = await Command_Pallet.Get_Commands();
 
@@ -202,32 +200,30 @@ namespace Eva_5._0
 
         private async void Remove_Click(object sender, RoutedEventArgs e, TextBox key, Border current_item)
         {
-            if ((DateTime.UtcNow - timeout).TotalMilliseconds >= 1000)
-                if (file_manipulation_init == false)
-                {
-                    file_manipulation_init = true;
-
-                    timeout = DateTime.UtcNow;
-
-                    string previous_command = String.Empty;
-                    controls_command.TryGetValue(key, out previous_command);
+            if (file_manipulation_init == false)
+            {
+                file_manipulation_init = true;
 
 
-                    string value = String.Empty;
-                    clone.TryRemove(previous_command, out value);
+                string previous_command = String.Empty;
+                controls_command.TryGetValue(key, out previous_command);
 
-                    foreach (UIElement element in Main_Content.Children)
-                        if (((Border)element) == current_item)
-                        {
-                            Main_Content.BeginInit();
-                            Main_Content.Children.Remove(element);
-                            Main_Content.EndInit();
-                            Main_Content.UpdateLayout();
-                            break;
-                        }
-                    await UpdateCommands();
-                    file_manipulation_init = false;
-                }
+
+                string value = String.Empty;
+                clone.TryRemove(previous_command, out value);
+
+                foreach (UIElement element in Main_Content.Children)
+                    if (((Border)element) == current_item)
+                    {
+                        Main_Content.BeginInit();
+                        Main_Content.Children.Remove(element);
+                        Main_Content.EndInit();
+                        Main_Content.UpdateLayout();
+                        break;
+                    }
+                await UpdateCommands();
+                file_manipulation_init = false;
+            }
         }
 
         private void Reset_command_Click(object sender, RoutedEventArgs e, TextBox key, TextBox value, TextBox type)
@@ -263,50 +259,49 @@ namespace Eva_5._0
             key.Text = key.Text.ToLower().Trim();
             value.Text = value.Text.Trim();
 
-            if ((DateTime.UtcNow - timeout).TotalMilliseconds >= 1000)
-                if (file_manipulation_init == false)
+            if (file_manipulation_init == false)
+            {
+                file_manipulation_init = true;
+
+                string previous_value = String.Empty;
+                controls_command.TryGetValue(key, out previous_value);
+
+                string command_content = String.Empty;
+                clone.TryGetValue(key.Text, out command_content);
+
+                StringBuilder content_builder = new StringBuilder(type.Text);
+                content_builder.Append(" = ");
+                content_builder.Append(value.Text);
+
+                if (key.Text == String.Empty)
                 {
-                    file_manipulation_init = true;
-
-                    string previous_value = String.Empty;
-                    controls_command.TryGetValue(key, out previous_value);
-
-                    string command_content = String.Empty;
-                    clone.TryGetValue(key.Text, out command_content);
-
-                    StringBuilder content_builder = new StringBuilder(type.Text);
-                    content_builder.Append(" = ");
-                    content_builder.Append(value.Text);
-
-                    if (key.Text == String.Empty)
+                    key.Text = previous_value;
+                }
+                else
+                {
+                    if (key.Text == previous_value)
                     {
-                        key.Text = previous_value;
+                        clone.TryUpdate(key.Text, content_builder.ToString(), command_content);
                     }
                     else
                     {
-                        if (key.Text == previous_value)
+                        if (command_content != String.Empty && command_content != null)
                         {
-                            clone.TryUpdate(key.Text, content_builder.ToString(), command_content);
+                            key.Text = previous_value;
+                            MessageBox.Show("The key already exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                         else
                         {
-                            if (command_content != String.Empty && command_content != null)
-                            {
-                                key.Text = previous_value;
-                                MessageBox.Show("The key already exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                            }
-                            else
-                            {
-                                clone.TryRemove(previous_value, out command_content);
-                                clone.TryAdd(key.Text, content_builder.ToString());
-                                controls_command.TryUpdate(key, key.Text, previous_value);
-                            }
+                            clone.TryRemove(previous_value, out command_content);
+                            clone.TryAdd(key.Text, content_builder.ToString());
+                            controls_command.TryUpdate(key, key.Text, previous_value);
                         }
                     }
-
-                    await UpdateCommands();
-                    file_manipulation_init = false;
                 }
+
+                await UpdateCommands();
+                file_manipulation_init = false;
+            }
         }
 
         private async void Update_command_Click_Other(object sender, RoutedEventArgs e, TextBox key, TextBox value)
@@ -314,46 +309,45 @@ namespace Eva_5._0
             key.Text = key.Text.ToLower().Trim();
             value.Text = value.Text.Trim();
 
-            if ((DateTime.UtcNow - timeout).TotalMilliseconds >= 1000)
-                if (file_manipulation_init == false)
+            if (file_manipulation_init == false)
+            {
+                file_manipulation_init = true;
+
+                string previous_value = String.Empty;
+                controls_command.TryGetValue(key, out previous_value);
+
+                string command_content = String.Empty;
+                clone.TryGetValue(key.Text, out command_content);
+
+                if (key.Text == String.Empty)
                 {
-                    file_manipulation_init = true;
-
-                    string previous_value = String.Empty;
-                    controls_command.TryGetValue(key, out previous_value);
-
-                    string command_content = String.Empty;
-                    clone.TryGetValue(key.Text, out command_content);
-
-                    if (key.Text == String.Empty)
+                    key.Text = previous_value;
+                }
+                else
+                {
+                    if (key.Text == previous_value)
                     {
-                        key.Text = previous_value;
+                        clone.TryUpdate(key.Text, value.Text, command_content);
                     }
                     else
                     {
-                        if (key.Text == previous_value)
+                        if (command_content != String.Empty && command_content != null)
                         {
-                            clone.TryUpdate(key.Text, value.Text, command_content);
+                            key.Text = previous_value;
+                            MessageBox.Show("The key already exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                         else
                         {
-                            if (command_content != String.Empty && command_content != null)
-                            {
-                                key.Text = previous_value;
-                                MessageBox.Show("The key already exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                            }
-                            else
-                            {
-                                clone.TryRemove(previous_value, out command_content);
-                                clone.TryAdd(key.Text, value.Text);
-                                controls_command.TryUpdate(key, key.Text, previous_value);
-                            }
+                            clone.TryRemove(previous_value, out command_content);
+                            clone.TryAdd(key.Text, value.Text);
+                            controls_command.TryUpdate(key, key.Text, previous_value);
                         }
                     }
-
-                    await UpdateCommands();
-                    file_manipulation_init = false;
                 }
+
+                await UpdateCommands();
+                file_manipulation_init = false;
+            }
         }
 
 
@@ -461,7 +455,7 @@ namespace Eva_5._0
             }
         }
 
-        private async Task<bool> UpdateCommands()
+        private async Task UpdateCommands()
         {
             switch (selected_option)
             {
@@ -478,16 +472,16 @@ namespace Eva_5._0
                     await Command_Pallet.Set_Commands(A_p_l____And____P_r_o_c.commands);
                     break;
             }
-
-            return true;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            clone = null;
+            controls_command = null;
             GC.Collect(10);
         }
 
-        private async  void UpdateClone(ConcurrentDictionary<string, string> clone_)
+        private async void UpdateClone(ConcurrentDictionary<string, string> clone_)
         {
             clone = clone_;
             controls_command.Clear();
@@ -496,41 +490,34 @@ namespace Eva_5._0
 
             Main_Content.Children.Clear();
 
-            LoadContents();
+            await LoadContents();
             Main_Content.UpdateLayout();
         }
 
         private async void Reset_Commands(object sender, RoutedEventArgs e)
         {
-            if ((DateTime.UtcNow - timeout).TotalMilliseconds >= 1000)
-                if (file_manipulation_init == false)
+            if (file_manipulation_init == false)
+            {
+                file_manipulation_init = true;
+
+                await Command_Pallet.Reset_Commands(selected_option);
+
+                switch (selected_option)
                 {
-                    file_manipulation_init = true;
-
-                    await Command_Pallet.Reset_Commands(selected_option);
-
-                    switch (selected_option)
-                    {
-                        case Option.OpenApplications:
-                            clone = A_p_l____And____P_r_o_c.commands.A_p_l_Name__And__A_p_l___E_x__Name;
-                            break;
-                        case Option.CloseApplications:
-                            clone = A_p_l____And____P_r_o_c.commands.A_p_l_Name__And__A_p_l___P_r_o_c_Name;
-                            break;
-                        case Option.SearchContentOnWebApplications:
-                            clone = A_p_l____And____P_r_o_c.commands.W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name;
-                            break;
-                    }
-                    timeout = DateTime.UtcNow;
-                    await UpdateCommands();
-
-                    Main_Content.Children.Clear();
-
-                    LoadContents();
-                    Main_Content.UpdateLayout();
-
-                    file_manipulation_init = false;
+                    case Option.OpenApplications:
+                        clone = A_p_l____And____P_r_o_c.commands.A_p_l_Name__And__A_p_l___E_x__Name;
+                        break;
+                    case Option.CloseApplications:
+                        clone = A_p_l____And____P_r_o_c.commands.A_p_l_Name__And__A_p_l___P_r_o_c_Name;
+                        break;
+                    case Option.SearchContentOnWebApplications:
+                        clone = A_p_l____And____P_r_o_c.commands.W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name;
+                        break;
                 }
+                await UpdateCommands();
+                file_manipulation_init = false;
+                this.Close();
+            }
         }
 
         private void AddCommand(object sender, RoutedEventArgs e)

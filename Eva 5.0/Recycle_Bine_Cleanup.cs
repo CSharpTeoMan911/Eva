@@ -9,10 +9,9 @@ namespace Eva_5._0
         [DllImport("Shell32.dll")]
         private static extern int SHEmptyRecycleBin(IntPtr hwnd, string pszRootPath, int dwFlags);
 
-        protected static Task<bool> Empty_Recycle_Bin()
+        protected static void Empty_Recycle_Bin()
         {
             SHEmptyRecycleBin(IntPtr.Zero, null, 1);
-            return Task.FromResult(true);
         }
 
     }

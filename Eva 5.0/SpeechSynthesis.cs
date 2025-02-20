@@ -26,8 +26,7 @@ namespace Eva_5._0
             Taking
         }
 
-        [STAThread]
-        public static async Task Synthesis(Action action, string? content, string? app)
+        public static async Task Synthesis(Action action, string content, string app)
         {
             SpeechSynthesisStream stream = null;
 

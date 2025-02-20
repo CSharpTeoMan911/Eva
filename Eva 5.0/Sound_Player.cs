@@ -115,29 +115,29 @@ namespace Eva_5._0.Properties
             }
         }
 
-        public Task Stop_Alarm()
+        public void Stop_Alarm()
         {
             try
             {
-                Alarm_Sound_Effect.Stop();
+                Alarm_Sound_Effect?.Stop();
             }
             catch { }
-
-            return Task.CompletedTask;
         }
 
 
-        public Task Dispose_Sound_Effects()
+        public void Dispose_Sound_Effects()
         {
-            AppExecutionSoundEffect?.Dispose();
-            AppTerminationSoundEffect?.Dispose();
-            ScreenshotExecutionSoundEffect?.Dispose();
-            Alarm_Sound_Effect?.Dispose();
-            ErrorSoundEffect?.Dispose();
-            AppActivationSoundEffect?.Dispose();
-            ChatGPTNotificationSoundEffect?.Dispose();
-
-            return Task.CompletedTask;
+            try
+            {
+                AppExecutionSoundEffect?.Dispose();
+                AppTerminationSoundEffect?.Dispose();
+                ScreenshotExecutionSoundEffect?.Dispose();
+                Alarm_Sound_Effect?.Dispose();
+                ErrorSoundEffect?.Dispose();
+                AppActivationSoundEffect?.Dispose();
+                ChatGPTNotificationSoundEffect?.Dispose();
+            }
+            catch { }
         }
     }
 }

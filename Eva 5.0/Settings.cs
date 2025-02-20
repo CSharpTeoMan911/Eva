@@ -95,15 +95,10 @@ namespace Eva_5._0
             // WITH THESE DEFAULT VALUES.
             //
             // [ BEGIN ]
-
             Settings_File settings_File = new Settings_File();
-
             // [ END ]
-
-
             try
             {
-
                 if (System.IO.File.Exists(settings_file_name) == true)
                 {
                     // IF THE SETTINGS FILE EXISTS, A "FileStream" OBJECT IS CRATED
@@ -112,10 +107,7 @@ namespace Eva_5._0
                     //
                     // [ BEGIN ]
 
-
-                    System.IO.FileStream settings_file_stream = System.IO.File.OpenRead(settings_file_name);
-
-                    try
+                    using (System.IO.FileStream settings_file_stream = System.IO.File.OpenRead(settings_file_name))
                     {
                         // THE BINARY INFORMATION OF THE SETTINGS FILE IS READ IN A BUFFER
                         // AND THE BUFFER IS THEN CONVERTED IN A STRING IN ORDER TO BE 
@@ -123,22 +115,10 @@ namespace Eva_5._0
                         // FORMAT. 
                         //
                         // [ BEGIN ]
-
                         byte[] settings_file_binary = new byte[settings_file_stream.Length];
                         await settings_file_stream.ReadAsync(settings_file_binary, 0, settings_file_binary.Length);
-
-                        settings_File = await JsonSerialisation.JsonDeserialiser<Settings_File>(Encoding.UTF8.GetString(settings_file_binary));
-
+                        settings_File = JsonSerialisation.JsonDeserialiser<Settings_File>(Encoding.UTF8.GetString(settings_file_binary));
                         // [ END ]
-                    }
-                    catch
-                    {
-
-                    }
-                    finally
-                    {
-                        settings_file_stream?.Close();
-                        settings_file_stream?.Dispose();
                     }
 
                     // [ END ]
@@ -158,14 +138,17 @@ namespace Eva_5._0
                     // [ END ]
                 }
             }
-            catch { }
+            catch 
+            {
+
+            }
 
             return settings_File;
         }
 
 
 
-        private static async Task<bool> Update_Settings_File(Settings_File settings_File)
+        private static async Task Update_Settings_File(Settings_File settings_File)
         {
             // THE REQUIRED FILE ACCESS METHODS FOR THE SETTINGS FILE
             // ARE ENSURED BEFORE ANY DELETE OPERATION IS
@@ -194,12 +177,12 @@ namespace Eva_5._0
 
             }
             catch { }
-            return await Create_Settings_File(settings_File);
+            await Create_Settings_File(settings_File);
         }
 
 
 
-        private static async Task<bool> Create_Settings_File(Settings_File settings_File)
+        private static async Task Create_Settings_File(Settings_File settings_File)
         {
             // SERIALIZE THE "Settings_File" OBJECT IN A JSON FILE FORMAT
             // AND CONVERT THE SERIALIZED INFORMATION IN A BINARY FORMAT.
@@ -213,21 +196,10 @@ namespace Eva_5._0
             {
                 byte[] settings_file_binary = Encoding.UTF8.GetBytes(await JsonSerialisation.JsonSerialiser(settings_File));
 
-                System.IO.FileStream settings_file_stream = System.IO.File.Create(settings_file_name, settings_file_binary.Length, System.IO.FileOptions.Asynchronous);
-
-                try
+                using (System.IO.FileStream settings_file_stream = System.IO.File.Create(settings_file_name, settings_file_binary.Length, System.IO.FileOptions.Asynchronous))
                 {
                     await settings_file_stream.WriteAsync(settings_file_binary, 0, settings_file_binary.Length);
                     await settings_file_stream.FlushAsync();
-                }
-                catch
-                {
-
-                }
-                finally
-                {
-                    settings_file_stream?.Close();
-                    settings_file_stream?.Dispose();
                 }
             }
             catch { }
@@ -250,10 +222,6 @@ namespace Eva_5._0
             Ensure_Access_To_The_Settings_File();
 
             // [ END ]
-
-
-
-            return true;
         }
 
 
@@ -287,45 +255,40 @@ namespace Eva_5._0
             return (await Load_Settings_File()).Online_Speech_Recognition_Language;
         }
 
-        public static async Task<bool> Set_Vosk_Sensitivity_Settings(float sensitivity)
+        public static async Task Set_Vosk_Sensitivity_Settings(float sensitivity)
         {
             Settings_File settings_File = await Load_Settings_File();
             settings_File.Vosk_Sensitivity = sensitivity;
 
-            return (await Update_Settings_File(settings_File));
+            await Update_Settings_File(settings_File);
         }
 
-        public static async Task<bool> Set_Sound_Settings(bool Option)
+        public static async Task Set_Sound_Settings(bool Option)
         {
             Settings_File settings_File = await Load_Settings_File();
             settings_File.Sound_On = Option;
 
-            return (await Update_Settings_File(settings_File));
+            await Update_Settings_File(settings_File);
         }
 
-        public static async Task<bool> Set_Synthesis_Settings(bool Option)
+        public static async Task Set_Synthesis_Settings(bool Option)
         {
             Settings_File settings_File = await Load_Settings_File();
             settings_File.Synthesis_On = Option;
 
-            return (await Update_Settings_File(settings_File));
+            await Update_Settings_File(settings_File);
         }
 
-        public static async Task<bool> Set_Speech_Language_Settings(SpeechLanguage language)
+        public static async Task Set_Speech_Language_Settings(SpeechLanguage language)
         {
             Settings_File settings_File = await Load_Settings_File();
 
-            switch (language)
-            {
-                case SpeechLanguage.en_US:
-                    settings_File.Online_Speech_Recognition_Language = "en-US";
-                    break;
-                case SpeechLanguage.en_GB:
-                    settings_File.Online_Speech_Recognition_Language = "en-GB";
-                    break;
-            }
+            if (language == SpeechLanguage.en_US)
+                settings_File.Online_Speech_Recognition_Language = "en-US";
+            else
+                settings_File.Online_Speech_Recognition_Language = "en-GB";
 
-            return (await Update_Settings_File(settings_File));
+            await Update_Settings_File(settings_File);
         }
 
         public static async Task<string> Get_Chat_GPT_Api_Key()
@@ -334,12 +297,11 @@ namespace Eva_5._0
         }
 
 
-        public static async Task<bool> Set_Chat_GPT_Api_Key(string api_key)
+        public static async Task Set_Chat_GPT_Api_Key(string api_key)
         {
             Settings_File settings_File = await Load_Settings_File();
             settings_File.Open_AI_Chat_GPT_Key = api_key;
-
-            return (await Update_Settings_File(settings_File));
+            await Update_Settings_File(settings_File);
         }
 
 
@@ -349,12 +311,11 @@ namespace Eva_5._0
         }
 
 
-        public static async Task<bool> Set_Current_Chat_GPT__Model(string gpt_model)
+        public static async Task Set_Current_Chat_GPT__Model(string gpt_model)
         {
             Settings_File settings_File = await Load_Settings_File();
             settings_File.Gpt_Model = gpt_model;
-
-            return (await Update_Settings_File(settings_File));
+            await Update_Settings_File(settings_File);
         }
 
         public static async Task<int> Get_Current_Model_Temperature()
@@ -362,19 +323,14 @@ namespace Eva_5._0
             return (await Load_Settings_File()).ModelTemperature;
         }
 
-        public static async Task<bool> Set_Current_Model_Temperature(int temp)
+        public static async Task Set_Current_Model_Temperature(int temp)
         {
             Settings_File settings_File = await Load_Settings_File();
             settings_File.ModelTemperature = temp;
-
-            return (await Update_Settings_File(settings_File));
+            await Update_Settings_File(settings_File);
         }
 
         // [ END ]
-
-
-        ~Settings()
-        { }
     }
 
 }

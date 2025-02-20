@@ -318,19 +318,15 @@ namespace Eva_5._0
                     {
 
                         NormalisedOrMaximised++;
-
-                        switch (NormalisedOrMaximised)
+                        if (NormalisedOrMaximised == 1)
                         {
-                            case 1:
-                                this.WindowState = WindowState.Maximized;
-                                break;
-
-                            case 2:
-                                this.WindowState = WindowState.Normal;
-                                NormalisedOrMaximised = 0;
-                                break;
+                            this.WindowState = WindowState.Maximized;
                         }
-
+                        else
+                        {
+                            this.WindowState = WindowState.Normal;
+                            NormalisedOrMaximised = 0;
+                        }
                     }
 
                 }
@@ -391,179 +387,141 @@ namespace Eva_5._0
 
         private void AnimationTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-
-
-            switch (App.PermisissionWindowOpen)
+            try
             {
-                case false:
-                    try
+                if (App.PermisissionWindowOpen == false)
+                {
+                    AnimationTimer?.Stop();
+                }
+                else
+                {
+                    if (Application.Current.Dispatcher.HasShutdownStarted == true)
                     {
-                        AnimationTimer.Stop();
+                        AnimationTimer?.Stop();
                     }
-                    catch { }
-                    break;
-
-                case true:
-
-                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                    else
                     {
-                        case true:
-                            try
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+
+                            if (Application.Current.MainWindow == null)
                             {
-                                AnimationTimer.Stop();
+                                AnimationTimer?.Stop();
                             }
-                            catch { }
-                            break;
-
-                        case false:
-
-                            Application.Current.Dispatcher.Invoke(() =>
+                            else
                             {
-
-                                switch (Application.Current.MainWindow == null)
+                                if (SwitchWindowOffset == false)
                                 {
-                                    case true:
-                                        try
-                                        {
-                                            AnimationTimer.Stop();
-                                        }
-                                        catch { }
-                                        break;
-
-                                    case false:
-
-                                        switch (SwitchWindowOffset)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticWindowOffset <= 300)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticWindowOffset++;
-                                                        WindowOffset.Offset -= 0.0025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchWindowOffset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticWindowOffset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticWindowOffset--;
-                                                        WindowOffset.Offset += 0.0025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchWindowOffset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-
-                                        switch (SwitchSecondaryOffsets)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticSecodaryOffsets <= 100)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticSecodaryOffsets++;
-                                                        CloseButtonOffset.Offset += 0.025;
-                                                        NormaliseOrMaximiseButtonOffset.Offset += 0.025;
-                                                        MinimiseTheWindowOffset.Offset += 0.025;
-                                                        ErrorPageTitleOffset.Offset += 0.025;
-                                                        ErrorPageTitleContentOffset.Offset += 0.025;
-                                                        ErrorPageContentOffset.Offset += 0.025;
-                                                        break;
-                                                    case false:
-                                                        SwitchSecondaryOffsets = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticSecodaryOffsets > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticSecodaryOffsets--;
-                                                        CloseButtonOffset.Offset -= 0.025;
-                                                        NormaliseOrMaximiseButtonOffset.Offset -= 0.025;
-                                                        MinimiseTheWindowOffset.Offset -= 0.025;
-                                                        ErrorPageTitleOffset.Offset -= 0.025;
-                                                        ErrorPageTitleContentOffset.Offset -= 0.025;
-                                                        ErrorPageContentOffset.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchSecondaryOffsets = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-                                        ErrorPageTitleAnimation++;
-
-                                        switch (ErrorPageTitleAnimation)
-                                        {
-
-
-                                            case 25:
-                                                ErrorPageTitleContent.Text = "E";
-                                                break;
-
-                                            case 50:
-                                                ErrorPageTitleContent.Text = "Er";
-                                                break;
-
-                                            case 75:
-                                                ErrorPageTitleContent.Text = "Err";
-                                                break;
-
-                                            case 100:
-                                                ErrorPageTitleContent.Text = "Erro";
-                                                break;
-
-                                            case 125:
-                                                ErrorPageTitleContent.Text = "Error";
-                                                break;
-
-                                            case 150:
-                                                ErrorPageTitleContent.Text = "Error_";
-                                                break;
-
-                                            case 175:
-                                                ErrorPageTitleContent.Text = "Error";
-                                                break;
-
-                                            case 200:
-                                                ErrorPageTitleContent.Text = "Error_";
-                                                break;
-
-                                            case 225:
-                                                ErrorPageTitleContent.Text = "Error";
-                                                break;
-
-                                            case 250:
-                                                ErrorPageTitleContent.Text = String.Empty;
-                                                ErrorPageTitleAnimation = 0;
-                                                break;
-                                        }
-                                        break;
-
+                                    if (GradientArithmeticWindowOffset <= 300)
+                                    {
+                                        GradientArithmeticWindowOffset++;
+                                        WindowOffset.Offset -= 0.0025;
+                                    }
+                                    else
+                                    {
+                                        SwitchWindowOffset = true;
+                                    }
+                                }
+                                else
+                                {
+                                    if (GradientArithmeticWindowOffset > 0)
+                                    {
+                                        GradientArithmeticWindowOffset--;
+                                        WindowOffset.Offset += 0.0025;
+                                    }
+                                    else
+                                    {
+                                        SwitchWindowOffset = false;
+                                    }
                                 }
 
-                            });
-                            break;
+                                if (SwitchSecondaryOffsets == false)
+                                {
+                                    if (GradientArithmeticSecodaryOffsets <= 100)
+                                    {
+                                        GradientArithmeticSecodaryOffsets++;
+                                        CloseButtonOffset.Offset += 0.025;
+                                        NormaliseOrMaximiseButtonOffset.Offset += 0.025;
+                                        MinimiseTheWindowOffset.Offset += 0.025;
+                                        ErrorPageTitleOffset.Offset += 0.025;
+                                        ErrorPageTitleContentOffset.Offset += 0.025;
+                                        ErrorPageContentOffset.Offset += 0.025;
+                                    }
+                                    else
+                                    {
+                                        SwitchSecondaryOffsets = true;
+                                    }
+                                }
+                                else
+                                {
+                                    if (GradientArithmeticSecodaryOffsets > 0)
+                                    {
+                                        GradientArithmeticSecodaryOffsets--;
+                                        CloseButtonOffset.Offset -= 0.025;
+                                        NormaliseOrMaximiseButtonOffset.Offset -= 0.025;
+                                        MinimiseTheWindowOffset.Offset -= 0.025;
+                                        ErrorPageTitleOffset.Offset -= 0.025;
+                                        ErrorPageTitleContentOffset.Offset -= 0.025;
+                                        ErrorPageContentOffset.Offset -= 0.025;
+                                    }
+                                    else
+                                    {
+                                        SwitchSecondaryOffsets = false;
+                                    }
+                                }
+
+
+                                ErrorPageTitleAnimation++;
+                                switch (ErrorPageTitleAnimation)
+                                {
+                                    case 25:
+                                        ErrorPageTitleContent.Text = "E";
+                                        break;
+
+                                    case 50:
+                                        ErrorPageTitleContent.Text = "Er";
+                                        break;
+
+                                    case 75:
+                                        ErrorPageTitleContent.Text = "Err";
+                                        break;
+
+                                    case 100:
+                                        ErrorPageTitleContent.Text = "Erro";
+                                        break;
+
+                                    case 125:
+                                        ErrorPageTitleContent.Text = "Error";
+                                        break;
+
+                                    case 150:
+                                        ErrorPageTitleContent.Text = "Error_";
+                                        break;
+
+                                    case 175:
+                                        ErrorPageTitleContent.Text = "Error";
+                                        break;
+
+                                    case 200:
+                                        ErrorPageTitleContent.Text = "Error_";
+                                        break;
+
+                                    case 225:
+                                        ErrorPageTitleContent.Text = "Error";
+                                        break;
+
+                                    case 250:
+                                        ErrorPageTitleContent.Text = String.Empty;
+                                        ErrorPageTitleAnimation = 0;
+                                        break;
+                                }
+                            }
+
+                        });
                     }
-                    break;
+                }
             }
+            catch { }
         }
 
         private void AnimationTimer_Disposed(object sender, EventArgs e)
@@ -571,13 +529,12 @@ namespace Eva_5._0
             TimerDisposed = true;
         }
 
-        private async void ErrorWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void ErrorWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             App.PermisissionWindowOpen = false;
-
             if(App.Application_Error_Shutdown == true)
             {
-                await Wake_Word_Engine.Stop_The_Wake_Word_Engine();
+                Wake_Word_Engine.Stop_The_Wake_Word_Engine();
                 Environment.Exit(0);
             }
         }

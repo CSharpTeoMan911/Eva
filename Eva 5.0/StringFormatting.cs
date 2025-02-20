@@ -11,7 +11,7 @@ namespace Eva_5._0
     {
         public static string whitespace = " ";
 
-        public static Task<string> Format(StringBuilder builder)
+        public static string Format(StringBuilder builder)
         {
             builder.Replace("\n", " new line ");
             List<char> processed = new List<char>();
@@ -29,10 +29,10 @@ namespace Eva_5._0
                             }
 
 
-            return Task.FromResult(builder.ToString());
+            return builder.ToString();
         }
 
-        public static Task<string> UrlEncode(StringBuilder builder)
+        public static string UrlEncode(StringBuilder builder)
         {
             StringBuilder return_value = new StringBuilder();
 
@@ -62,7 +62,7 @@ namespace Eva_5._0
                 }
             }
 
-            return Task.FromResult(return_value.ToString());
+            return return_value.ToString();
         }
     }
 }

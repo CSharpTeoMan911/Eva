@@ -45,8 +45,6 @@ namespace Eva_5._0
 
 
             File_Name_Generation:
-
-
                 string user_desktop_directory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
 
                 // FILE NAME GENERATION USING RANDOM NUMBERS
@@ -139,9 +137,7 @@ namespace Eva_5._0
                             try
                             {
                                 byte[] picture_binary_data = main_memory_stream.ToArray();
-
                                 await picture_file_writer.WriteAsync(picture_binary_data, 0, picture_binary_data.Length);
-
                                 await picture_file_writer.FlushAsync();
                             }
                             catch

@@ -60,7 +60,7 @@ namespace Eva_5._0
 
         private static SettingsWindow CurrentInstance;
 
-        public delegate Task<bool> OpenSpeech();
+        public delegate void OpenSpeech();
         private OpenSpeech openSpeech;
 
         public SettingsWindow()
@@ -143,376 +143,303 @@ namespace Eva_5._0
             }
         }
 
-        private async void SettingsWindowLoaded(object sender, RoutedEventArgs e)
+        private void SettingsWindowLoaded(object sender, RoutedEventArgs e)
         {
-            await LoadCurrentModel();
-            LoadTemperature();
-            LoadSensitivity();
-
-            AnimationAndFunctionalityTimer = new System.Timers.Timer();
-            AnimationAndFunctionalityTimer.Elapsed += AnimationAndFunctionalityTimer_Elapsed;
-            AnimationAndFunctionalityTimer.Interval = 10;
-            AnimationAndFunctionalityTimer.Start();
-
-            ValuesChangedTimer = new System.Timers.Timer();
-            ValuesChangedTimer.Elapsed += ValuesChangedTimer_Elapsed; ;
-            ValuesChangedTimer.Interval = 100;
-            ValuesChangedTimer.Start();
-
-            this.Topmost = true;
-
-
-            bool SoundOrOff = await Settings.Get_Sound_Settings();
-
-            switch (SoundOrOff)
+            Task.Run(async() =>
             {
-                case true:
-                    SoundOnButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
-                    SoundOffButton.Background = new SolidColorBrush(Colors.Transparent);
+                try
+                {
+                    LoadCurrentModel();
+                    LoadTemperature();
+                    LoadSensitivity();
 
-                    MuteButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF1B70C3");
-                    SoundButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                    AnimationAndFunctionalityTimer = new System.Timers.Timer();
+                    AnimationAndFunctionalityTimer.Elapsed += AnimationAndFunctionalityTimer_Elapsed;
+                    AnimationAndFunctionalityTimer.Interval = 10;
+                    AnimationAndFunctionalityTimer.Start();
 
-
-                    break;
-
-                case false:
-                    SoundOffButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
-                    SoundOnButton.Background = new SolidColorBrush(Colors.Transparent);
-
-                    SoundButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF1B70C3");
-                    MuteButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                    break;
-            }
+                    ValuesChangedTimer = new System.Timers.Timer();
+                    ValuesChangedTimer.Elapsed += ValuesChangedTimer_Elapsed;
+                    ValuesChangedTimer.Interval = 100;
+                    ValuesChangedTimer.Start();
 
 
+                    bool SoundOrOff = await Settings.Get_Sound_Settings();
+                    bool SythesisOnOrOff = await Settings.Get_Synthesis_Settings();
+                    string SpeechLanguage = await Settings.Get_Speech_Language_Settings();
 
-            bool SythesisOnOrOff = await Settings.Get_Synthesis_Settings();
+                    await Application.Current.Dispatcher.InvokeAsync(() =>
+                    {
+                        if (SoundOrOff == true)
+                        {
+                            SoundOnButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
+                            SoundOffButton.Background = new SolidColorBrush(Colors.Transparent);
 
+                            MuteButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF1B70C3");
+                            SoundButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                        }
+                        else
+                        {
+                            SoundOffButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
+                            SoundOnButton.Background = new SolidColorBrush(Colors.Transparent);
 
-            switch (SythesisOnOrOff)
-            {
-                case true:
-                    SynthesisSoundOnButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
-                    SynthesisSoundOffButton.Background = new SolidColorBrush(Colors.Transparent);
+                            SoundButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF1B70C3");
+                            MuteButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                        }
 
-                    SynthesisMuteButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF1B70C3");
-                    SynthesisSoundButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                        if (SythesisOnOrOff == true)
+                        {
+                            SynthesisSoundOnButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
+                            SynthesisSoundOffButton.Background = new SolidColorBrush(Colors.Transparent);
 
+                            SynthesisMuteButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF1B70C3");
+                            SynthesisSoundButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                        }
+                        else
+                        {
+                            SynthesisSoundOffButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
+                            SynthesisSoundOnButton.Background = new SolidColorBrush(Colors.Transparent);
 
-                    break;
+                            SynthesisSoundButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF1B70C3");
+                            SynthesisMuteButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                        }
 
-                case false:
-                    SynthesisSoundOffButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
-                    SynthesisSoundOnButton.Background = new SolidColorBrush(Colors.Transparent);
-
-                    SynthesisSoundButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF1B70C3");
-                    SynthesisMuteButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                    break;
-            }
-
-
-            string SpeechLanguage = await Settings.Get_Speech_Language_Settings();
-            SpeechLanguageDisplay.Text = SpeechLanguage;
+                        SpeechLanguageDisplay.Text = SpeechLanguage;
+                    });
+                }
+                catch { }
+            });
         }
 
         private void ValuesChangedTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            switch (WindowIsClosing)
+            try
             {
-
-                case true:
-                    try
+                if (WindowIsClosing == true)
+                {
+                    AnimationAndFunctionalityTimer?.Stop();
+                }
+                else
+                {
+                    if (Application.Current.Dispatcher.HasShutdownStarted == true)
                     {
-                        AnimationAndFunctionalityTimer.Stop();
+                        AnimationAndFunctionalityTimer?.Stop();
                     }
-                    catch { }
-                    break;
-
-                case false:
-
-                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                    else
                     {
-
-                        case true:
-                            try
+                        Application.Current.Dispatcher.Invoke(async () =>
+                        {
+                            if (Application.Current.MainWindow == null)
                             {
-                                AnimationAndFunctionalityTimer.Stop();
+                                AnimationAndFunctionalityTimer?.Stop();
                             }
-                            catch { }
-                            break;
-
-                        case false:
-
-                            Application.Current.Dispatcher.Invoke(async () =>
+                            else
                             {
-                                switch (Application.Current.MainWindow == null)
+                                if (App.Application_Error_Shutdown)
                                 {
-
-                                    case true:
-                                        try
-                                        {
-                                            AnimationAndFunctionalityTimer.Stop();
-                                        }
-                                        catch { }
-                                        break;
-
-                                    case false:
-
-                                        if (App.Application_Error_Shutdown)
-                                        {
-                                            try
-                                            {
-                                                if (AnimationAndFunctionalityTimer != null)
-                                                {
-                                                    AnimationAndFunctionalityTimer.Stop();
-                                                    this.Close();
-                                                }
-                                            }
-                                            catch { }
-                                        }
-
-
-
-                                        if (TempChanged == true)
-                                        {
-                                            TempChanged = false;
-                                            await Settings.Set_Current_Model_Temperature(Temp);
-                                        }
-
-                                        if(VoskSensitivityChanged == true)
-                                        {
-                                            VoskSensitivityChanged = false;
-                                            await Settings.Set_Vosk_Sensitivity_Settings(Sensitivity);
-                                        }
-                                        break;
-
+                                    if (AnimationAndFunctionalityTimer != null)
+                                    {
+                                        AnimationAndFunctionalityTimer.Stop();
+                                        this.Close();
+                                    }
                                 }
-                            });
-                            break;
+
+                                if (TempChanged == true)
+                                {
+                                    TempChanged = false;
+                                    await Settings.Set_Current_Model_Temperature(Temp);
+                                }
+
+                                if (VoskSensitivityChanged == true)
+                                {
+                                    VoskSensitivityChanged = false;
+                                    await Settings.Set_Vosk_Sensitivity_Settings(Sensitivity);
+                                }
+                            }
+                        });
                     }
-                    break;
+                }
+            }
+            catch (Exception E)
+            {
+                System.Diagnostics.Debug.WriteLine(E.Message);
             }
         }
 
         private void AnimationAndFunctionalityTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-
-            switch (WindowIsClosing)
+            try
             {
-
-                case true:
-                    try
+                if (WindowIsClosing == true)
+                {
+                    AnimationAndFunctionalityTimer?.Stop();
+                }
+                else
+                {
+                    if (Application.Current.Dispatcher.HasShutdownStarted == true)
                     {
-                        AnimationAndFunctionalityTimer.Stop();
+                        AnimationAndFunctionalityTimer?.Stop();
                     }
-                    catch { }
-                    break;
-
-                case false:
-
-                    switch (Application.Current.Dispatcher.HasShutdownStarted)
+                    else
                     {
-
-                        case true:
-                            try
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            if (Application.Current.MainWindow == null)
                             {
-                                AnimationAndFunctionalityTimer.Stop();
+                                AnimationAndFunctionalityTimer?.Stop();
                             }
-                            catch { }
-                            break;
-
-                        case false:
-
-                            Application.Current.Dispatcher.Invoke(() =>
+                            else
                             {
-                                switch (Application.Current.MainWindow == null)
+                                if (App.Application_Error_Shutdown)
                                 {
-
-                                    case true:
-                                        try
+                                    try
+                                    {
+                                        if (AnimationAndFunctionalityTimer != null)
                                         {
                                             AnimationAndFunctionalityTimer.Stop();
+                                            this.Close();
                                         }
-                                        catch { }
-                                        break;
-
-                                    case false:
-
-                                        if (App.Application_Error_Shutdown)
-                                        {
-                                            try
-                                            {
-                                                if (AnimationAndFunctionalityTimer != null)
-                                                {
-                                                    AnimationAndFunctionalityTimer.Stop();
-                                                    this.Close();
-                                                }
-                                            }
-                                            catch { }
-                                        }
-
-                                        switch (Wheel1Angle <= 360)
-                                        {
-                                            case true:
-
-                                                Wheel1Angle++;
-                                                break;
-
-                                            case false:
-                                                Wheel1Angle = 0;
-                                                break;
-                                        }
-
-                                        switch (Wheel2Angle <= 360)
-                                        {
-                                            case true:
-
-                                                Wheel2Angle++;
-                                                break;
-
-                                            case false:
-                                                Wheel2Angle = 0;
-                                                break;
-                                        }
-
-
-                                        RotateTransform Wheel1Rotate = new RotateTransform()
-                                        {
-                                            Angle = Wheel1Angle
-                                        };
-                                        
-
-                                        RotateTransform Wheel2Rotate = new RotateTransform
-                                        {
-                                            Angle = Wheel2Angle
-                                        };
-
-                                        Wheel1.RenderTransform = Wheel1Rotate;
-
-                                        Wheel2.RenderTransform = Wheel2Rotate;
-
-
-                                        switch (SwitchWindowOffset)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticWindowOffset <= 300)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticWindowOffset++;
-                                                        WindowOffset.Offset -= 0.0025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchWindowOffset = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticWindowOffset > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticWindowOffset--;
-                                                        WindowOffset.Offset += 0.0025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchWindowOffset = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-                                        switch (SwitchSecodaryOffsets)
-                                        {
-                                            case false:
-
-                                                switch (GradientArithmeticSecondaryOffsets <= 65)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticSecondaryOffsets++;
-                                                        CloseButtonOffset.Offset += 0.025;
-                                                        MinimiseTheWindowOffset.Offset += 0.025;
-                                                        MenuGear2Offset.Offset += 0.025;
-                                                        SettingTitleOffset.Offset -= 0.01;
-                                                        SynthesisSettingTitleOffset.Offset -= 0.01;
-                                                        SoundButtonOffset.Offset -= 0.025;
-                                                        MuteButtonOffset.Offset -= 0.025;
-                                                        SetCommandsButtonOffset.Offset -= 0.025;
-                                                        InstructionManualButtonOffset.Offset -= 0.025;
-                                                        SetChatGptApiButtonOffset.Offset -= 0.025;
-                                                        SynthesisSoundButtonOffset.Offset -= 0.025;
-                                                        SynthesisMuteButtonOffset.Offset -= 0.025;
-                                                        SetCommandsTitleOffset.Offset -= 0.01;
-                                                        InstructionManualTextBlockOffset.Offset -= 0.01;
-                                                        ChatGPTApiKeyOffset.Offset -= 0.01;
-                                                        GPTModelOffset.Offset -= 0.01;
-                                                        PreviousModelButtonOffset.Offset -= 0.025;
-                                                        NextModelButtonOffset.Offset -= 0.025;
-                                                        ModelTempLabelOffset.Offset -= 0.01;
-                                                        SensitivityTitleOffset.Offset -= 0.01;
-                                                        ModelTempOffset.Offset -= 0.01;
-                                                        SensitivityOffset.Offset -= 0.01;
-                                                        SpeechLanguagelOffset.Offset -= 0.01;
-                                                        PreviousSpeechLanguageButtonOffset.Offset -= 0.025;
-                                                        NextSpeechLanguageButtonOffset.Offset -= 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchSecodaryOffsets = true;
-                                                        break;
-                                                }
-                                                break;
-
-                                            case true:
-
-                                                switch (GradientArithmeticSecondaryOffsets > 0)
-                                                {
-                                                    case true:
-                                                        GradientArithmeticSecondaryOffsets--;
-                                                        CloseButtonOffset.Offset -= 0.025;
-                                                        MinimiseTheWindowOffset.Offset -= 0.025;
-                                                        MenuGear2Offset.Offset -= 0.025;
-                                                        SettingTitleOffset.Offset += 0.01;
-                                                        SynthesisSettingTitleOffset.Offset += 0.01;
-                                                        SoundButtonOffset.Offset += 0.025;
-                                                        MuteButtonOffset.Offset += 0.025;
-                                                        SetCommandsButtonOffset.Offset += 0.025;
-                                                        InstructionManualButtonOffset.Offset += 0.025;
-                                                        SynthesisSoundButtonOffset.Offset += 0.025;
-                                                        SetChatGptApiButtonOffset.Offset += 0.025;
-                                                        SynthesisMuteButtonOffset.Offset += 0.025;
-                                                        SetCommandsTitleOffset.Offset += 0.01;
-                                                        InstructionManualTextBlockOffset.Offset += 0.01;
-                                                        ChatGPTApiKeyOffset.Offset += 0.01;
-                                                        GPTModelOffset.Offset += 0.01;
-                                                        PreviousModelButtonOffset.Offset += 0.025;
-                                                        NextModelButtonOffset.Offset += 0.025;
-                                                        ModelTempLabelOffset.Offset += 0.01;
-                                                        SensitivityTitleOffset.Offset += 0.01;
-                                                        ModelTempOffset.Offset += 0.01;
-                                                        SensitivityOffset.Offset += 0.01;
-                                                        SpeechLanguagelOffset.Offset += 0.01;
-                                                        PreviousSpeechLanguageButtonOffset.Offset += 0.025;
-                                                        NextSpeechLanguageButtonOffset.Offset += 0.025;
-                                                        break;
-
-                                                    case false:
-                                                        SwitchSecodaryOffsets = false;
-                                                        break;
-                                                }
-                                                break;
-                                        }
-                                        break;
-
+                                    }
+                                    catch { }
                                 }
-                            });
-                            break;
+
+                                if (Wheel1Angle <= 360)
+                                {
+                                    Wheel1Angle++;
+                                }
+                                else
+                                {
+                                    Wheel1Angle = 0;
+                                }
+
+                                if (Wheel2Angle <= 360)
+                                {
+                                    Wheel2Angle++;
+                                }
+                                else
+                                {
+                                    Wheel2Angle = 0;
+                                }
+
+                                RotateTransform Wheel1Rotate = new RotateTransform()
+                                {
+                                    Angle = Wheel1Angle
+                                };
+
+                                RotateTransform Wheel2Rotate = new RotateTransform
+                                {
+                                    Angle = Wheel2Angle
+                                };
+
+                                Wheel1.RenderTransform = Wheel1Rotate;
+                                Wheel2.RenderTransform = Wheel2Rotate;
+
+
+                                if (SwitchWindowOffset == false)
+                                {
+                                    if (GradientArithmeticWindowOffset <= 300)
+                                    {
+                                        GradientArithmeticWindowOffset++;
+                                        WindowOffset.Offset -= 0.0025;
+                                    }
+                                    else
+                                    {
+                                        SwitchWindowOffset = true;
+                                    }
+                                }
+                                else
+                                {
+                                    if (GradientArithmeticWindowOffset > 0)
+                                    {
+                                        GradientArithmeticWindowOffset--;
+                                        WindowOffset.Offset += 0.0025;
+                                    }
+                                    else
+                                    {
+                                        SwitchWindowOffset = false;
+                                    }
+                                }
+
+                                if (SwitchSecodaryOffsets == false)
+                                {
+                                    if (GradientArithmeticSecondaryOffsets <= 65)
+                                    {
+                                        GradientArithmeticSecondaryOffsets++;
+                                        CloseButtonOffset.Offset += 0.025;
+                                        MinimiseTheWindowOffset.Offset += 0.025;
+                                        MenuGear2Offset.Offset += 0.025;
+                                        SettingTitleOffset.Offset -= 0.01;
+                                        SynthesisSettingTitleOffset.Offset -= 0.01;
+                                        SoundButtonOffset.Offset -= 0.025;
+                                        MuteButtonOffset.Offset -= 0.025;
+                                        SetCommandsButtonOffset.Offset -= 0.025;
+                                        InstructionManualButtonOffset.Offset -= 0.025;
+                                        SetChatGptApiButtonOffset.Offset -= 0.025;
+                                        SynthesisSoundButtonOffset.Offset -= 0.025;
+                                        SynthesisMuteButtonOffset.Offset -= 0.025;
+                                        SetCommandsTitleOffset.Offset -= 0.01;
+                                        InstructionManualTextBlockOffset.Offset -= 0.01;
+                                        ChatGPTApiKeyOffset.Offset -= 0.01;
+                                        GPTModelOffset.Offset -= 0.01;
+                                        PreviousModelButtonOffset.Offset -= 0.025;
+                                        NextModelButtonOffset.Offset -= 0.025;
+                                        ModelTempLabelOffset.Offset -= 0.01;
+                                        SensitivityTitleOffset.Offset -= 0.01;
+                                        ModelTempOffset.Offset -= 0.01;
+                                        SensitivityOffset.Offset -= 0.01;
+                                        SpeechLanguagelOffset.Offset -= 0.01;
+                                        PreviousSpeechLanguageButtonOffset.Offset -= 0.025;
+                                        NextSpeechLanguageButtonOffset.Offset -= 0.025;
+                                    }
+                                    else
+                                    {
+                                        SwitchSecodaryOffsets = true;
+                                    }
+                                }
+                                else
+                                {
+                                    if (GradientArithmeticSecondaryOffsets > 0)
+                                    {
+                                        GradientArithmeticSecondaryOffsets--;
+                                        CloseButtonOffset.Offset -= 0.025;
+                                        MinimiseTheWindowOffset.Offset -= 0.025;
+                                        MenuGear2Offset.Offset -= 0.025;
+                                        SettingTitleOffset.Offset += 0.01;
+                                        SynthesisSettingTitleOffset.Offset += 0.01;
+                                        SoundButtonOffset.Offset += 0.025;
+                                        MuteButtonOffset.Offset += 0.025;
+                                        SetCommandsButtonOffset.Offset += 0.025;
+                                        InstructionManualButtonOffset.Offset += 0.025;
+                                        SynthesisSoundButtonOffset.Offset += 0.025;
+                                        SetChatGptApiButtonOffset.Offset += 0.025;
+                                        SynthesisMuteButtonOffset.Offset += 0.025;
+                                        SetCommandsTitleOffset.Offset += 0.01;
+                                        InstructionManualTextBlockOffset.Offset += 0.01;
+                                        ChatGPTApiKeyOffset.Offset += 0.01;
+                                        GPTModelOffset.Offset += 0.01;
+                                        PreviousModelButtonOffset.Offset += 0.025;
+                                        NextModelButtonOffset.Offset += 0.025;
+                                        ModelTempLabelOffset.Offset += 0.01;
+                                        SensitivityTitleOffset.Offset += 0.01;
+                                        ModelTempOffset.Offset += 0.01;
+                                        SensitivityOffset.Offset += 0.01;
+                                        SpeechLanguagelOffset.Offset += 0.01;
+                                        PreviousSpeechLanguageButtonOffset.Offset += 0.025;
+                                        NextSpeechLanguageButtonOffset.Offset += 0.025;
+                                    }
+                                    else
+                                    {
+                                        SwitchSecodaryOffsets = false;
+                                    }
+                                }
+                            }
+                        });
                     }
-                    break;
+                }
+            }
+            catch (Exception E)
+            {
+                System.Diagnostics.Debug.WriteLine(E.Message);
             }
         }
 
@@ -701,7 +628,7 @@ namespace Eva_5._0
             }
         }
 
-        private async Task LoadCurrentModel()
+        private async void LoadCurrentModel()
         {
             if (ChatGPT_API.gpt_models.Count == 0)
                 await ChatGPT_API.Get_Available_Gpt_Models();
@@ -714,11 +641,17 @@ namespace Eva_5._0
                 if (model_index != -1)
                 {
                     current_model_index = model_index;
-                    GptModelDisplay.Text = ChatGPT_API.gpt_models.ElementAt(current_model_index);
+                    await Application.Current.Dispatcher.InvokeAsync(() =>
+                    {
+                        GptModelDisplay.Text = ChatGPT_API.gpt_models.ElementAt(current_model_index);
+                    });
                 }
                 else
                 {
-                    GptModelDisplay.Text = ChatGPT_API.gpt_models.ElementAt(0);
+                    await Application.Current.Dispatcher.InvokeAsync(() =>
+                    {
+                        GptModelDisplay.Text = ChatGPT_API.gpt_models.ElementAt(0);
+                    });
                     await Settings.Set_Current_Chat_GPT__Model(ChatGPT_API.gpt_models.First());
                 }
             }
@@ -726,8 +659,8 @@ namespace Eva_5._0
 
         public static void ReloadCurrentModel()
         {
-            Application.Current?.Dispatcher?.InvokeAsync(async() => {
-                await CurrentInstance.LoadCurrentModel();
+            Application.Current?.Dispatcher?.InvokeAsync(() => {
+                CurrentInstance.LoadCurrentModel();
             });
         }
 
@@ -760,15 +693,21 @@ namespace Eva_5._0
         private async void LoadTemperature()
         {
             int temp = await Settings.Get_Current_Model_Temperature();
-            TemperatureSelector.Value = temp;
-            TemperatureDisplay.Text = (temp * 10) + "%";
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                TemperatureSelector.Value = temp;
+                TemperatureDisplay.Text = (temp * 10) + "%";
+            });
         }
 
         private async void LoadSensitivity()
         {
             float sensitivity = await Settings.Get_Vosk_Sensitivity_Settings();
-            SensitivitySelector.Value = sensitivity;
-            SensitivityeDisplay.Text = (sensitivity * 10) + "%";
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                SensitivitySelector.Value = sensitivity;
+                SensitivityeDisplay.Text = (sensitivity * 10) + "%";
+            });
         }
 
         private void SetCommands(object sender, RoutedEventArgs e)

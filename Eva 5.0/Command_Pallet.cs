@@ -22,7 +22,7 @@ namespace Eva_5._0
         // USER INCLUDE READ, WRITE, AND DELETE FUNCTIONALITIES TO THE SETTINGS FILE.
         // THE SETTINGS FILE MUST HAVE READ AND WRITE PERMISSIONS IN ORDER FOR THE 
         // APPLICATION TO ACCESS THE COMMANDS OTHERWISE THE APPLICATION CAN CRASH.
-        private static void Ensure_Access_To_The_Commands_File()
+        private static Task Ensure_Access_To_The_Commands_File()
         {
             if (System.IO.File.Exists(commands_file_name) == true)
             {
@@ -33,6 +33,8 @@ namespace Eva_5._0
 
                 System.IO.File.SetAccessControl(commands_file_name, settings_file_security);
             }
+
+            return Task.CompletedTask;
         }
 
 
@@ -49,7 +51,7 @@ namespace Eva_5._0
             //
             // [ BEGIN ]
 
-            Ensure_Access_To_The_Commands_File();
+            await Ensure_Access_To_The_Commands_File();
 
             // [ END ]
 
@@ -75,35 +77,16 @@ namespace Eva_5._0
                     //
                     // [ BEGIN ]
 
-
-                    System.IO.FileStream commands_file_stream = System.IO.File.OpenRead(commands_file_name);
-
-                    try
+                    using (System.IO.FileStream commands_file_stream = System.IO.File.OpenRead(commands_file_name))
                     {
                         // THE BINARY INFORMATION OF THE COMMANDS FILE IS READ IN A BUFFER
                         // AND THE BUFFER IS THEN CONVERTED IN A STRING IN ORDER TO BE 
                         // DE-SERIALIZED FROM THE JSON FILE FORMAT IN THE "Command_Pallet_File"
                         // FORMAT. 
-                        //
-                        // [ BEGIN ]
-
                         byte[] commands_file_binary = new byte[commands_file_stream.Length];
                         await commands_file_stream.ReadAsync(commands_file_binary, 0, commands_file_binary.Length);
-
-                        commands_File = await JsonSerialisation.JsonDeserialiser<Command_Pallet_File>(Encoding.UTF8.GetString(commands_file_binary));
-
-                        // [ END ]
+                        commands_File = JsonSerialisation.JsonDeserialiser<Command_Pallet_File>(Encoding.UTF8.GetString(commands_file_binary));
                     }
-                    catch
-                    {
-
-                    }
-                    finally
-                    {
-                        commands_file_stream?.Close();
-                        commands_file_stream?.Dispose();
-                    }
-
                     // [ END ]
                 }
                 else
@@ -116,7 +99,7 @@ namespace Eva_5._0
                     //
                     // [ BEGIN ]
 
-                    await Generate_Initial_Commands(commands_File);
+                    Generate_Initial_Commands(commands_File);
                     await Create_Commands_File(commands_File);
 
                     // [ END ]
@@ -128,22 +111,19 @@ namespace Eva_5._0
         }
 
 
-        public static async Task<bool> Generate_Initial_Commands(Command_Pallet_File commands)
+        public static void Generate_Initial_Commands(Command_Pallet_File commands)
         {
+            Add_A_p_l_Name__And__A_p_l___E_x__Name(commands);
 
-            await Add_A_p_l_Name__And__A_p_l___E_x__Name(commands);
+            Add_A_p_l_Name__And__A_p_l___P_r_o_c_Name(commands);
 
-            await Add_A_p_l_Name__And__A_p_l___P_r_o_c_Name(commands);
+            Add_W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name(commands);
 
-            await Add_W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name(commands);
-
-            await App_A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k(commands);
-
-            return true;
+            App_A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k(commands);
         }
 
 
-        private static Task<bool> Add_A_p_l_Name__And__A_p_l___E_x__Name(Command_Pallet_File commands)
+        private static void Add_A_p_l_Name__And__A_p_l___E_x__Name(Command_Pallet_File commands)
         {
             commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("chrome", "PRC = chrome.exe");
 
@@ -870,18 +850,11 @@ namespace Eva_5._0
                 commands.A_p_l_Name__And__A_p_l___E_x__Name.TryAdd("about settings", "URI = ms-settings:about");
 
             }
-
-
-
-
             ///// END ///////////// Settings //////////////
-
-
-            return Task.FromResult(true);
         }
 
 
-        private static Task<bool> Add_A_p_l_Name__And__A_p_l___P_r_o_c_Name(Command_Pallet_File commands)
+        private static void Add_A_p_l_Name__And__A_p_l___P_r_o_c_Name(Command_Pallet_File commands)
         {
 
 
@@ -950,11 +923,9 @@ namespace Eva_5._0
             commands.A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("disc cleanup", "cleanmgr");
 
             commands.A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryAdd("control panel", "Control Panel");
-
-            return Task.FromResult(true);
         }
 
-        private static Task<bool> Add_W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name(Command_Pallet_File commands)
+        private static void Add_W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name(Command_Pallet_File commands)
         {
             // WEB APPLICATIONS
             //
@@ -1003,11 +974,9 @@ namespace Eva_5._0
             commands.W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryAdd("stackoverflow", "https://stackoverflow.com/search?q=");
 
             // END
-
-            return Task.FromResult(true);
         }
 
-        private static Task<bool> App_A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k(Command_Pallet_File commands)
+        private static void App_A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k(Command_Pallet_File commands)
         {
             commands.A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryAdd("chrome", "https://www.google.co.uk/chrome/");
 
@@ -1048,11 +1017,9 @@ namespace Eva_5._0
             commands.A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryAdd("visual studio", "https://visualstudio.microsoft.com/vs/");
 
             commands.A_p_l__Name__And__A_p_l__Not_Found_Error__L_n_k.TryAdd("visual studio code", "https://code.visualstudio.com/download");
-
-            return Task.FromResult(true);
         }
 
-        private static async Task<bool> Update_Commands_File(Command_Pallet_File commands_File)
+        private static async Task Update_Commands_File(Command_Pallet_File commands_File)
         {
             // THE REQUIRED FILE ACCESS METHODS FOR THE COMMANDS FILE
             // ARE ENSURED BEFORE ANY DELETE OPERATION IS
@@ -1061,7 +1028,7 @@ namespace Eva_5._0
             //
             // [ BEGIN ]
 
-            Ensure_Access_To_The_Commands_File();
+            await Ensure_Access_To_The_Commands_File();
 
             // [ END ]
 
@@ -1078,15 +1045,14 @@ namespace Eva_5._0
                 }
 
                 // [ END ]
-
             }
             catch { }
-            return await Create_Commands_File(commands_File);
+            await Create_Commands_File(commands_File);
         }
 
 
 
-        private static async Task<bool> Create_Commands_File(Command_Pallet_File commands_File)
+        private static async Task Create_Commands_File(Command_Pallet_File commands_File)
         {
             // SERIALIZE THE "Command_Pallet_File" OBJECT IN A JSON FILE FORMAT
             // AND CONVERT THE SERIALIZED INFORMATION IN A BINARY FORMAT.
@@ -1100,21 +1066,10 @@ namespace Eva_5._0
             {
                 byte[] commands_file_binary = Encoding.UTF8.GetBytes(await JsonSerialisation.JsonSerialiser(commands_File));
 
-                System.IO.FileStream commands_file_stream = System.IO.File.Create(commands_file_name, commands_file_binary.Length, System.IO.FileOptions.Asynchronous);
-
-                try
+                using (System.IO.FileStream commands_file_stream = System.IO.File.Create(commands_file_name, commands_file_binary.Length, System.IO.FileOptions.Asynchronous))
                 {
                     await commands_file_stream.WriteAsync(commands_file_binary, 0, commands_file_binary.Length);
                     await commands_file_stream.FlushAsync();
-                }
-                catch
-                {
-
-                }
-                finally
-                {
-                    commands_file_stream?.Close();
-                    commands_file_stream?.Dispose();
                 }
             }
             catch { }
@@ -1134,13 +1089,9 @@ namespace Eva_5._0
             //
             // [ BEGIN ]
 
-            Ensure_Access_To_The_Commands_File();
+            await Ensure_Access_To_The_Commands_File();
 
             // [ END ]
-
-
-
-            return true;
         }
 
 
@@ -1150,38 +1101,30 @@ namespace Eva_5._0
         // [ BEGIN ]
 
         // GET THE CURRENT COMMANDS FILE
-        public static async Task<Command_Pallet_File> Get_Commands()
-        {
-            return await Load_Commands_File();
-        }
+        public static async Task<Command_Pallet_File> Get_Commands() => await Load_Commands_File();
 
         // UPDATE THE COMMANDS FILE
-        public static async Task<bool> Set_Commands(Command_Pallet_File commands_File)
-        {
-            return (await Update_Commands_File(commands_File));
-        }
+        public static async Task Set_Commands(Command_Pallet_File commands_File) => await Update_Commands_File(commands_File);
 
         // RESET THE COMMANDS FILE BY RESETING ONE OF THE COLLECTIONS TO THEIR DEFAULT VALUE AND UPDATE THE FILE
-        public static async Task<bool> Reset_Commands(Commands_Customisation.Option type)
+        public static async Task Reset_Commands(Commands_Customisation.Option type)
         {
             switch (type)
             {
                 case Commands_Customisation.Option.OpenApplications:
                     A_p_l____And____P_r_o_c.commands.A_p_l_Name__And__A_p_l___E_x__Name.Clear();
-                    await Add_A_p_l_Name__And__A_p_l___E_x__Name(A_p_l____And____P_r_o_c.commands);
+                    Add_A_p_l_Name__And__A_p_l___E_x__Name(A_p_l____And____P_r_o_c.commands);
                     break;
                 case Commands_Customisation.Option.CloseApplications:
                     A_p_l____And____P_r_o_c.commands.A_p_l_Name__And__A_p_l___P_r_o_c_Name.Clear();
-                    await Add_A_p_l_Name__And__A_p_l___P_r_o_c_Name(A_p_l____And____P_r_o_c.commands);
+                    Add_A_p_l_Name__And__A_p_l___P_r_o_c_Name(A_p_l____And____P_r_o_c.commands);
                     break;
                 case Commands_Customisation.Option.SearchContentOnWebApplications:
                     A_p_l____And____P_r_o_c.commands.W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.Clear();
-                    await Add_W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name(A_p_l____And____P_r_o_c.commands);
+                    Add_W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name(A_p_l____And____P_r_o_c.commands);
                     break;
             }
-
             await Update_Commands_File(A_p_l____And____P_r_o_c.commands);
-            return true;
         }
 
         // [ END ]

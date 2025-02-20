@@ -38,11 +38,11 @@ namespace Eva_5._0
         }
 
 
-        private async void Window_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        private void Window_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
             A_p_l____And____P_r_o_c.CommandTest = true;
             A_p_l____And____P_r_o_c.display_recognition_result = String.Empty;
-            await openSpeech.Invoke();
+            openSpeech.Invoke();
 
             System.Timers.Timer recognition_checkup = new System.Timers.Timer();
             recognition_checkup.Elapsed += Recognition_checkup_Elapsed;
@@ -247,46 +247,54 @@ namespace Eva_5._0
 
         private void Update_command_Click(object sender, System.Windows.RoutedEventArgs e, System.Windows.Controls.TextBox key, System.Windows.Controls.TextBox value, System.Windows.Controls.TextBox type)
         {
-            key.Text = key.Text.ToLower().Trim();
-            value.Text = value.Text.Trim();
-
-            string command_content = String.Empty;
-            clone.TryGetValue(key.Text, out command_content);
-
-            if (command_content != String.Empty && command_content != null)
+            try
             {
-                System.Windows.MessageBox.Show("The key already exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            else
-            {
-                StringBuilder content_builder = new StringBuilder(type.Text);
-                content_builder.Append(" = ");
-                content_builder.Append(value.Text);
+                key.Text = key.Text.ToLower().Trim();
+                value.Text = value.Text.Trim();
 
-                clone.TryAdd(key.Text, content_builder.ToString());
-                callback.Invoke(clone);
-                this.Close();
+                string command_content = String.Empty;
+                clone.TryGetValue(key.Text, out command_content);
+
+                if (command_content != String.Empty && command_content != null)
+                {
+                    System.Windows.MessageBox.Show("The key already exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                else
+                {
+                    StringBuilder content_builder = new StringBuilder(type.Text);
+                    content_builder.Append(" = ");
+                    content_builder.Append(value.Text);
+
+                    clone.TryAdd(key.Text, content_builder.ToString());
+                    callback.Invoke(clone);
+                    this.Close();
+                }
             }
+            catch  { }
         }
 
         private void Update_command_Click_Other(object sender, System.Windows.RoutedEventArgs e, System.Windows.Controls.TextBox key, System.Windows.Controls.TextBox value)
         {
-            key.Text = key.Text.ToLower().Trim();
-            value.Text = value.Text.Trim();
-
-            string command_content = String.Empty;
-            clone.TryGetValue(key.Text, out command_content);
-
-            if (command_content != String.Empty && command_content != null)
+            try
             {
-                System.Windows.MessageBox.Show("The key already exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                key.Text = key.Text.ToLower().Trim();
+                value.Text = value.Text.Trim();
+
+                string command_content = String.Empty;
+                clone.TryGetValue(key.Text, out command_content);
+
+                if (command_content != String.Empty && command_content != null)
+                {
+                    System.Windows.MessageBox.Show("The key already exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                else
+                {
+                    clone.TryAdd(key.Text, value.Text);
+                    callback.Invoke(clone);
+                    this.Close();
+                }
             }
-            else
-            {
-                clone.TryAdd(key.Text, value.Text);
-                callback.Invoke(clone);
-                this.Close();
-            }
+            catch { }
         }
 
 

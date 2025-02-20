@@ -96,13 +96,7 @@ namespace Eva_5._0
 
                 wake_word_sockets = new Tuple<Socket, Socket>(connection_1, connection_2);
 
-                System.Threading.Thread thread = new System.Threading.Thread(async() => { await Initiate_Wake_Word_Engine(); })
-                {
-                    Priority = System.Threading.ThreadPriority.Highest,
-                    IsBackground = false,
-                };
-                thread.SetApartmentState(System.Threading.ApartmentState.STA);
-                thread.Start();
+                Task.Run(Initiate_Wake_Word_Engine);
 
                 Wake_Word_Started = true;
 
@@ -116,7 +110,7 @@ namespace Eva_5._0
             // [ END ]
         }
 
-        private static async void Wake_word_management_timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private static void Wake_word_management_timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             // RESET THE WAKE WORD ENGINE PROCESS ONCE EVERY 10 MINUTES. THIS IS DONE TO PREVENT WAKE WORD ENGINE LOCK,
             // AND ALSO TO PREVENT THE OVERFLOW OF THE DATA BUFFER USED BY THE ENGINE TO STORE THE AUDIO DATA
@@ -139,7 +133,7 @@ namespace Eva_5._0
                                 {
                                     if (wake_word_processes.Count == 1)
                                     {
-                                        await Initiate_Wake_Word_Engine();
+                                        Initiate_Wake_Word_Engine();
                                     }
                                 }
                             }
@@ -190,7 +184,7 @@ namespace Eva_5._0
         }
 
 
-        private static async Task Initiate_Wake_Word_Engine()
+        private static async void Initiate_Wake_Word_Engine()
         {
             try
             {
@@ -211,7 +205,7 @@ namespace Eva_5._0
                 wake_word_process.StartInfo.FileName = Environment.CurrentDirectory + "\\python.exe";
                 wake_word_process.StartInfo.CreateNoWindow = true;
                 wake_word_process.StartInfo.UseShellExecute = false;
-                wake_word_process.StartInfo.Arguments = new StringBuilder("main.py ").Append(model).Append(' ').Append((await Settings.GetSettingsFilePath()).ToString()).Append(' ').Append(port.ToString()).ToString();
+                wake_word_process.StartInfo.Arguments = new StringBuilder("main.py ").Append(model).Append(' ').Append((Settings.GetSettingsFilePath()).ToString()).Append(' ').Append(port.ToString()).ToString();
                 wake_word_process.Start();
 
                 SwitchModel();
@@ -235,7 +229,7 @@ namespace Eva_5._0
         }
 
 
-        public static Task<bool> Stop_The_Wake_Word_Engine()
+        public static bool Stop_The_Wake_Word_Engine()
         {
 
 
@@ -455,11 +449,11 @@ namespace Eva_5._0
                     // [ END ]
                 }
 
-                return Task.FromResult(true);
+                return true;
             }
             catch
             {
-                return Task.FromResult(false);
+                return false;
             }
         }
 
@@ -471,21 +465,19 @@ namespace Eva_5._0
             {
                 wake_word_engine_connection.Listen(1);
                 Socket client = await wake_word_engine_connection.AcceptAsync();
-                NetworkStream client_connection = new NetworkStream(client, true);
-
-                while (Wake_Word_Started == true)
+                using (NetworkStream client_connection = new NetworkStream(client, true))
                 {
-
-                    if (MainWindowIsClosing == false)
+                    while (Wake_Word_Started == true)
                     {
-                        if (App.Application_Error_Shutdown == false)
+
+                        if (MainWindowIsClosing == false)
                         {
-                            try
+                            if (App.Application_Error_Shutdown == false)
                             {
                                 if (python.HasExited == false)
                                 {
 
-                                    if(client_connection.CanRead == true)
+                                    if (client_connection.CanRead == true)
                                     {
                                         // READ THE DATA RECEIVED FROM THE SOCKET CONNECTION OF THE "Python" PROCESS ASYNCHRONOUSLY.
                                         byte[] buffer = new byte[1024];
@@ -539,20 +531,17 @@ namespace Eva_5._0
                                     break;
                                 }
                             }
-                            catch { }
+                            else
+                            {
+                                break;
+                            }
                         }
                         else
                         {
                             break;
                         }
                     }
-                    else
-                    {
-                        break;
-                    }
                 }
-
-                client_connection?.Dispose();
             }
             catch { }
 

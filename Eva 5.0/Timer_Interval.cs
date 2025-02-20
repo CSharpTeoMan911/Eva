@@ -31,34 +31,27 @@ namespace Eva_5._0
 
 
 
-        public static Task<bool> Calculate_Time_Interval_Left()
+        public static bool Calculate_Time_Interval_Left()
         {
-
             try
             {
                 TimeSpan calculated_remaining_time = hh_mm_ss_mls___Event - DateTime.UtcNow;
-
-
                 if ((int)calculated_remaining_time.TotalMilliseconds <= 0)
                 {
                     _isTimer = false;
-
-                    return Task.FromResult(true);
+                    return true;
                 }
-
             }
             catch { }
 
-
-
-            return Task.FromResult(false);
+            return false;
         }
 
 
 
 
 
-        public static Task<bool> Set_Time_Interval<Hours, Minutes, Seconds>(Hours hours, Minutes minutes, Seconds seconds)
+        public static void Set_Time_Interval<Hours, Minutes, Seconds>(Hours hours, Minutes minutes, Seconds seconds)
         {
             try
             {
@@ -88,42 +81,22 @@ namespace Eva_5._0
                     total_interval_seconds_pool += Seconds_Parameter;
                 }
 
-
-
-
                 if (total_interval_seconds_pool != 0)
                 {
                     int total_milliseconds_interval = total_interval_seconds_pool * 1000;
-
                     hh_mm_ss_mls___Event = DateTime.UtcNow.AddMilliseconds(total_milliseconds_interval);
-
                     _isTimer = true;
                 }
-
-
             }
             catch { }
-
-            return Task.FromResult(true);
         }
 
-
-
-
-        public static Task<Tuple<int, int, int>> Get_Time_Interval()
+        public static Tuple<int, int, int> Get_Time_Interval()
         {
             TimeSpan calculated_remaining_time = hh_mm_ss_mls___Event - DateTime.UtcNow;
-
-            return Task.FromResult(new Tuple<int, int, int>((int)calculated_remaining_time.Hours, (int)calculated_remaining_time.Minutes, (int)calculated_remaining_time.Seconds));
+            return new Tuple<int, int, int>((int)calculated_remaining_time.Hours, (int)calculated_remaining_time.Minutes, (int)calculated_remaining_time.Seconds);
         }
 
-
-        public static Task<bool> Cancel_Time_Interval()
-        {
-            _isTimer = false;
-
-            return Task.FromResult(true);
-        }
-
+        public static void Cancel_Time_Interval() => _isTimer = false;
     }
 }

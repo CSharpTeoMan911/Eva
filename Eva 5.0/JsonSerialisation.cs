@@ -17,7 +17,7 @@ namespace Eva_5._0
             ContractResolver = contractResolver
         };
 
-        public static Task<ReturnType> JsonDeserialiser<ReturnType>(string json)
+        public static ReturnType JsonDeserialiser<ReturnType>(string json)
         {
             ReturnType return_item = default;
 
@@ -29,13 +29,12 @@ namespace Eva_5._0
                     {
                         return_item = serializer.Deserialize<ReturnType>(reader);
                     }
-
                     sr?.Dispose();
                 }
             }
             catch { }
 
-            return Task.FromResult((ReturnType)(object)return_item);
+            return (ReturnType)(object)return_item;
         }
 
 
@@ -53,7 +52,6 @@ namespace Eva_5._0
                         serializer.Serialize(writer, item);
                         return_item = tw.ToString();
                     }
-
                     tw?.Dispose();
                 }
             }

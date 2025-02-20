@@ -8,11 +8,8 @@ namespace Eva_5._0
 {
     internal class Settings_File
     {
-        //settings_File.Sound_On = true;
-        //    settings_File.Open_AI_Chat_GPT_Key = String.Empty;
-        //    settings_File.ModelTemperature = 5;
-        //    settings_File.Vosk_Sensitivity = 8;
         public float Vosk_Sensitivity { get; set; } = 8.4f;
+        public A_p_l____And____P_r_o_c.SpeechRecognitionOperation Operation { get; set; } = A_p_l____And____P_r_o_c.SpeechRecognitionOperation.FormFilling;
         public bool Sound_On { get; set; } = true;
         public bool Synthesis_On { get; set; } 
         public string Gpt_Model { get; set; }

@@ -108,30 +108,20 @@ namespace Eva_5._0
             await ChatGPT_API.Get_Available_Gpt_Models();
         }
 
-        protected override async void OnExit(ExitEventArgs e)
+        protected override void OnExit(ExitEventArgs e)
         {
             base.OnExit(e);
-
-
 
             // Dispose static resources
             //
             // [ BEGIN ]
-
-            await A_p_l____And____P_r_o_c.sound_player.Dispose_Sound_Effects();
-
+            A_p_l____And____P_r_o_c.sound_player.Dispose_Sound_Effects();
             // [ END ]
-
-
-
-
 
             // ENSURE THAT ALL SUB-PROCESSES AND PROCESSES RELATED TO THIS APPLICATION ARE TERMINATED
             //
             // [ BEGIN ]
-
             Wake_Word_Engine_Mitigator.Wake_Word_Engine_Stop();
-
             // [ END ]
         }
 

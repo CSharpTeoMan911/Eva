@@ -40,9 +40,9 @@ namespace Eva_5._0
             InitializeComponent();
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            ChatGPT_API.Get_Available_Gpt_Models();
+            await ChatGPT_API.Get_Available_Gpt_Models();
             App.ChatGPTResponseWindowOpened = true;
 
             Animation_Timer = new System.Timers.Timer();
@@ -108,44 +108,33 @@ namespace Eva_5._0
                                 Loading_TextBlock.RenderTransform = Rotate;
                             }
 
-
-                            switch (SwitchOffset)
+                            if (SwitchOffset == true)
                             {
-                                case true:
-
-                                    switch (OffsetArithmetic > 0)
-                                    {
-                                        case true:
-                                            OffsetArithmetic--;
-                                            CloseButtonOffset.Offset += 0.003;
-                                            ResponseTextBoxOffset.Offset += 0.003;
-                                            WindowOffset.Offset += 0.003;
-                                            break;
-
-                                        case false:
-                                            SwitchOffset = false;
-                                            break;
-                                    }
-
-                                    break;
-
-                                case false:
-
-                                    switch (OffsetArithmetic < 300)
-                                    {
-                                        case true:
-                                            OffsetArithmetic++;
-                                            CloseButtonOffset.Offset -= 0.003;
-                                            ResponseTextBoxOffset.Offset += 0.003;
-                                            WindowOffset.Offset -= 0.003;
-                                            break;
-
-                                        case false:
-                                            SwitchOffset = true;
-                                            break;
-                                    }
-
-                                    break;
+                                if (OffsetArithmetic > 0)
+                                {
+                                    OffsetArithmetic--;
+                                    CloseButtonOffset.Offset += 0.003;
+                                    ResponseTextBoxOffset.Offset += 0.003;
+                                    WindowOffset.Offset += 0.003;
+                                }
+                                else
+                                {
+                                    SwitchOffset = false;
+                                }
+                            }
+                            else
+                            {
+                                if (OffsetArithmetic < 300)
+                                {
+                                    OffsetArithmetic++;
+                                    CloseButtonOffset.Offset -= 0.003;
+                                    ResponseTextBoxOffset.Offset += 0.003;
+                                    WindowOffset.Offset -= 0.003;
+                                }
+                                else
+                                {
+                                    SwitchOffset = true;
+                                }
                             }
                         }
                         else
@@ -184,22 +173,18 @@ namespace Eva_5._0
         }
 
 
-        public async Task<bool> Update_Conversation(string input)
+        public async void Update_Conversation(string input)
         {
             if (WindowIsClosing == false)
             {
+                Response_Loading = true;
+                Tuple<Type, string> result = await ChatGPT_API.Initiate_Chat_GPT(input);
 
-                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                await Application.Current.Dispatcher.InvokeAsync(async () =>
                 {
-
-                    if (Application.Current.MainWindow != null)
+                    if (Application.Current.Dispatcher.HasShutdownStarted == false)
                     {
-                        Response_Loading = true;
-
-                        Tuple<Type, string> result = await ChatGPT_API.Initiate_Chat_GPT(input);
-
-
-                        await Application.Current.Dispatcher.Invoke(async () =>
+                        if (Application.Current.MainWindow != null)
                         {
                             if (WindowIsClosing == false)
                             {
@@ -253,16 +238,12 @@ namespace Eva_5._0
                                     }
                                 }
                             }
-                        });
 
-                        Response_Loading = false;
+                            Response_Loading = false;
+                        }
                     }
-
-                }
-
+                });
             }
-
-            return true;
         }
 
 
@@ -336,13 +317,13 @@ namespace Eva_5._0
             }
         }
 
-        private async void Update_Conversation_And_UI()
+        private void Update_Conversation_And_UI()
         {
             string input = InputTextBox.Text;
             InputTextBox.IsEnabled = false;
             InputTextBox.Clear();
             InputTextBox.Text = InputTextBox.Text.Remove(0, InputTextBox.MaxLength);
-            await Update_Conversation(input);
+            Update_Conversation(input);
             InputTextBox.IsEnabled = true;
         }
 
@@ -353,40 +334,36 @@ namespace Eva_5._0
             FormattedText formattedText = new FormattedText(InputTextBox.Text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface("Consolas"), 16,Brushes.Black);
             #pragma warning restore CS0618 // Type or member is obsolete
 
-            switch (formattedText.Width > InputTextBox.Width - 3)
+            if (formattedText.Width > InputTextBox.Width - 3)
             {
-                case true:
-                    this.Height = 500;
-                    System.Windows.Controls.Grid.SetRow(ResponseTextBox, 0);
+                this.Height = 500;
+                System.Windows.Controls.Grid.SetRow(ResponseTextBox, 0);
 
-                    Window_Geometry.Rect = new Rect(0, 0, 450, 500);
-                    System.Windows.Controls.Grid.SetRow(Input_Stackpanel, 6);
+                Window_Geometry.Rect = new Rect(0, 0, 450, 500);
+                System.Windows.Controls.Grid.SetRow(Input_Stackpanel, 6);
 
-                    InputTextBox.Height = 120;
-                    InputTextBox.Margin = new Thickness(0, 30, 0, 0);
-                    InputTextBox_Geometry.Rect = new Rect(0, 0, 370, 120);
+                InputTextBox.Height = 120;
+                InputTextBox.Margin = new Thickness(0, 30, 0, 0);
+                InputTextBox_Geometry.Rect = new Rect(0, 0, 370, 120);
 
-                    Input_Button.Margin = new Thickness(0, 30, 0, 0);
-                    break;
-                case false:
-                    this.Height = 350;
-                    System.Windows.Controls.Grid.SetRow(ResponseTextBox, 1);
+                Input_Button.Margin = new Thickness(0, 30, 0, 0);
+            }
+            else
+            {
+                this.Height = 350;
+                System.Windows.Controls.Grid.SetRow(ResponseTextBox, 1);
 
-                    Window_Geometry.Rect = new Rect(0, 0, 450, 350);
-                    System.Windows.Controls.Grid.SetRow(Input_Stackpanel, 7);
+                Window_Geometry.Rect = new Rect(0, 0, 450, 350);
+                System.Windows.Controls.Grid.SetRow(Input_Stackpanel, 7);
 
-                    InputTextBox.Height = 30;
-                    InputTextBox.Margin = new Thickness(0, 10, 0, 0);
-                    InputTextBox_Geometry.Rect = new Rect(0, 0, 370, 30);
+                InputTextBox.Height = 30;
+                InputTextBox.Margin = new Thickness(0, 10, 0, 0);
+                InputTextBox_Geometry.Rect = new Rect(0, 0, 370, 30);
 
-                    Input_Button.Margin = new Thickness(10, 10, 0, 0);
-                    break;
+                Input_Button.Margin = new Thickness(10, 10, 0, 0);
             }
         }
 
-        private void Get_Last_Response_Line()
-        {
-            ResponseTextBox.ScrollToLine(ResponseTextBox.LineCount - 1);
-        }
+        private void Get_Last_Response_Line() => ResponseTextBox.ScrollToLine(ResponseTextBox.LineCount - 1);
     }
 }
