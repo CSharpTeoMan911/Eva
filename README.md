@@ -5,12 +5,14 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.0.3
+📌 Latest Version: v7.0.4
+* 🆕 Added option to select the online speech recognition mode (e.g. Web search, Form filling, Dictation)
 * 🆕 Greatly improved the wake word engine's accuracy
+* 🐞 Fixed bugs regarding the command customisation function
 * 🐞 Greatly reduced the wake word engine's CPU consumption
 * 🔧 Added the option to customise the degree of accuracy of the wake word engine
 
-![image](https://github.com/user-attachments/assets/d85d8d8c-7864-4f5d-84e6-f4532d43cbd5)
+![Settings](https://github.com/user-attachments/assets/c54cddc4-38e5-414e-a487-77c61a85805f)
 
 <br>
 <br>
