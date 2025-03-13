@@ -68,24 +68,22 @@ namespace Eva_5._0
             // [ BEGIN ]
             // 
 
-            lock (Online_Speech_Recogniser_Listening)
+            lock (Online_Speech_Recogniser_Disabled)
             {
-                lock (Online_Speech_Recogniser_Disabled)
+                lock (Window_Minimised)
                 {
-                    lock (Window_Minimised)
+                    if (Online_Speech_Recogniser_Disabled == "false")
                     {
-                        if (Online_Speech_Recogniser_Disabled == "false")
+                        if (Window_Minimised == "false")
                         {
-                            if (Window_Minimised == "false")
-                            {
-                                Online_Speech_Recogniser_Listening = "true";
+                            Online_Speech_Recogniser_Listening = "true";
 
-                                Task.Run(async () =>
-                                {
-                                    await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppActivationSoundEffect);
-                                    Initiate_The_Online_Speech_Recognition_Engine();
-                                });
-                            }
+                            // Run the online speech recognition operation on a run-time managed thread-pool thread
+                            Task.Run(async () =>
+                            {
+                                await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppActivationSoundEffect);
+                                Initiate_The_Online_Speech_Recognition_Engine();
+                            });
                         }
                     }
                 }
@@ -112,7 +110,6 @@ namespace Eva_5._0
 
                 // INITIATE THE SPEECH RECOGNITION ENGINE
                 OnlineSpeechRecognition = new Windows.Media.SpeechRecognition.SpeechRecognizer(new Windows.Globalization.Language(await Settings.Get_Speech_Language_Settings()));
-
                 OnlineSpeechRecognition.Constraints.Clear();
                 switch (await Settings.Get_Speech_Operation_Settings())
                 {
@@ -128,6 +125,18 @@ namespace Eva_5._0
                 }
 
                 Windows.Media.SpeechRecognition.SpeechRecognitionCompilationResult ConstraintsCompilation = await OnlineSpeechRecognition.CompileConstraintsAsync();
+                
+                // Spool the engine after the constraints are compiled to enable its
+                // operation after all its internal processes finished
+                System.Threading.Thread.Sleep(300);
+
+                // After the spooling operation finished signal that
+                // the speech recognition engine is listening
+                lock (Online_Speech_Recogniser_Listening)
+                {
+                    Online_Speech_Recogniser_Listening = "true";
+                }
+
 
                 if (ConstraintsCompilation.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
                 {
