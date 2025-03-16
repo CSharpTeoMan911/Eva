@@ -61,35 +61,22 @@ namespace Eva_5._0
 
         public static void Online_Speech_Recognition_Session_Creation_And_Initiation()
         {
-
-            // Initiate the online speech recognizer on another thread and lock multiple objects in memory
-            // in order to block other threads from modifying them
-            //
-            // [ BEGIN ]
-            // 
+            bool operational = false;
 
             lock (Online_Speech_Recogniser_Disabled)
             {
                 lock (Window_Minimised)
                 {
-                    if (Online_Speech_Recogniser_Disabled == "false")
+                    lock (Online_Speech_Recogniser_Listening)
                     {
-                        if (Window_Minimised == "false")
-                        {
-                            Online_Speech_Recogniser_Listening = "true";
-
-                            // Run the online speech recognition operation on a run-time managed thread-pool thread
-                            Task.Run(async () =>
-                            {
-                                await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppActivationSoundEffect);
-                                Initiate_The_Online_Speech_Recognition_Engine();
-                            });
-                        }
+                        if (Online_Speech_Recogniser_Disabled == "false" && Online_Speech_Recogniser_Listening == "false" && Window_Minimised == "false")
+                            operational = true;
                     }
                 }
             }
-
-            // [ END ]
+            
+            if (operational == true)
+                Initiate_The_Online_Speech_Recognition_Engine();
         }
 
 
@@ -110,6 +97,7 @@ namespace Eva_5._0
 
                 // INITIATE THE SPEECH RECOGNITION ENGINE
                 OnlineSpeechRecognition = new Windows.Media.SpeechRecognition.SpeechRecognizer(new Windows.Globalization.Language(await Settings.Get_Speech_Language_Settings()));
+
                 OnlineSpeechRecognition.Constraints.Clear();
                 switch (await Settings.Get_Speech_Operation_Settings())
                 {
@@ -125,18 +113,15 @@ namespace Eva_5._0
                 }
 
                 Windows.Media.SpeechRecognition.SpeechRecognitionCompilationResult ConstraintsCompilation = await OnlineSpeechRecognition.CompileConstraintsAsync();
-                
-                // Spool the engine after the constraints are compiled to enable its
-                // operation after all its internal processes finished
-                System.Threading.Thread.Sleep(300);
 
-                // After the spooling operation finished signal that
-                // the speech recognition engine is listening
+                // Spool the engine after the its is booted so
+                // its internal processes finished
+                System.Threading.Thread.Sleep(400);
+
                 lock (Online_Speech_Recogniser_Listening)
-                {
                     Online_Speech_Recogniser_Listening = "true";
-                }
 
+                await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppActivationSoundEffect);
 
                 if (ConstraintsCompilation.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
                 {
@@ -195,21 +180,27 @@ namespace Eva_5._0
                 }
                 else
                 {
+                    bool disabled = false;
                     lock (Online_Speech_Recogniser_Disabled)
                     {
                         lock (Window_Minimised)
                         {
                             if (Window_Minimised == "true" || Online_Speech_Recogniser_Disabled == "true")
                             {
-                                Close_Speech_Recognition_Interface();
-                            }
-                            else
-                            {
-                                Close_Speech_Recognition_Interface();
-                                string Result = args.Result.Text.ToLower();
-                                Natural_Language_Processing.PreProcessing(StringFormatting.Format(new StringBuilder(Result, Result.Length)));
+                                disabled = true;
                             }
                         }
+                    }
+
+                    if (disabled == true)
+                    {
+                        Close_Speech_Recognition_Interface();
+                    }
+                    else
+                    {
+                        Close_Speech_Recognition_Interface();
+                        string Result = args.Result.Text.ToLower();
+                        Natural_Language_Processing.PreProcessing(StringFormatting.RemoveNewLine(new StringBuilder(Result, Result.Length)));
                     }
                 }
             }

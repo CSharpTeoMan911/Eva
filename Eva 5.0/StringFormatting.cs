@@ -9,28 +9,7 @@ namespace Eva_5._0
 {
     internal class StringFormatting
     {
-        private static string whitespace = " ";
-
-        public static string Format(StringBuilder builder)
-        {
-            builder.Replace("\n", " new line ");
-            List<char> processed = new List<char>();
-
-            for (int i = 0; i < builder.Length; i++)
-                if (char.IsLetter(builder[i]) == false)
-                    if (char.IsNumber(builder[i]) == false)
-                        if (char.IsWhiteSpace(builder[i]) == false)
-                            if (processed.Contains(builder[i]) == false)
-                            {
-                                processed.Add(builder[i]);
-                                string original = builder[i].ToString();
-                                builder.Replace(original, new StringBuilder(whitespace).Append(original).ToString());
-                                i += 2;
-                            }
-
-
-            return builder.ToString();
-        }
+        public static string RemoveNewLine(StringBuilder builder) => builder.Replace("\n", " new line ").ToString();
 
         public static string UrlEncode(StringBuilder builder)
         {

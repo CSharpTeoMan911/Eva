@@ -236,7 +236,6 @@ namespace Eva_5._0
                                 // IF THE CALCULATED ONLINE SPEECH RECOGNITION ACTIVATION DELAY INTERVAL IS NOT NULL
                                 if (Online_Speech_Recogniser_Activation_Delay_Detector != null)
                                 {
-
                                     // IF THE INTERVAL OF TIME BETWEEN THE CURRENT TIME AND THE TIME WHEN THE ONLINE SPEECH RECOGNITION ENGINE EXCEEDS THE 
                                     // AMOUNT OF SECONDS SET FOR THE SET ONLINE SPEECH RECOGNITION DELAY, MAKE THE APPLICATION MAIN WINDOW'S
                                     // CIRCULAR STATUS INDICATOR BLUE
