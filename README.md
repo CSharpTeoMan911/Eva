@@ -5,8 +5,10 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.0.6
+📌 Latest Version: v7.0.7
 * 🆕 Added speech recognition engine spooling for increased stability and accuracy
+* 🆕 Improved the implementation if the engine spooling
+* 🐞 Fixed UI thread-locking issue
 
 ![Settings](https://github.com/user-attachments/assets/c54cddc4-38e5-414e-a487-77c61a85805f)
 
