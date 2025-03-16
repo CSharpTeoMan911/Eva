@@ -5,9 +5,8 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.0.5
-* 🆕 Added option to select the online speech recognition mode (e.g. Web search, Form filling, Dictation)
-* 🐞 Fixed bugs regarding the command customisation function
+📌 Latest Version: v7.0.6
+* 🆕 Added speech recognition engine spooling for increased stability and accuracy
 
 ![Settings](https://github.com/user-attachments/assets/c54cddc4-38e5-414e-a487-77c61a85805f)
 
