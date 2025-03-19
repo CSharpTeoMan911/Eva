@@ -116,7 +116,8 @@ namespace Eva_5._0
 
                 // Spool the engine after the its is booted so
                 // its internal processes finished
-                System.Threading.Thread.Sleep(400);
+                DateTime spool_start = DateTime.UtcNow;
+                while ((DateTime.UtcNow - spool_start).TotalMilliseconds >= 450);
 
                 lock (Online_Speech_Recogniser_Listening)
                     Online_Speech_Recogniser_Listening = "true";

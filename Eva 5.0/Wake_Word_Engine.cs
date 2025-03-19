@@ -138,10 +138,11 @@ namespace Eva_5._0
                                 }
                             }
 
-                            if (wake_word_engines_loaded == 2)
+                            if (wake_word_engines_loaded >= 2)
                             {
                                 Process process = null;
-                                if (wake_word_processes.Count == 2)
+
+                                while (wake_word_processes.Count > 1)
                                 {
                                     process = wake_word_processes?.Dequeue();
                                     process?.Kill();
