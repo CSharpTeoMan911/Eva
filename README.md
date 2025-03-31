@@ -1,6 +1,5 @@
 # Eva
 
-
 <br>
 <br>
 
@@ -28,6 +27,8 @@
 
 ## About ❓
 * Eva is an A.I. assistant that has the purpose of helping users multi-task. It also has the use of helping people with mental and phisical disabilities. All the commands to be executed are given to Eva through voice commmands.
+
+https://github.com/user-attachments/assets/294ea835-7d7c-4568-9578-da16f195cb2c
 
 <br> 
 
