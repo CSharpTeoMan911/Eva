@@ -153,26 +153,6 @@ namespace Eva_5._0
             InitializeComponent();
         }
 
-        private void AppFocus()
-        {
-            Task.Run(() =>
-            {
-                while (MainWindowIsClosing == false)
-                {
-                    if (Application.Current.Dispatcher.HasShutdownStarted == false)
-                    {
-                        Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            if (Application.Current.MainWindow != null)
-                            {
-                                // KEEP THE MAIN WINDOW AS TOPMOST WINDOW (THE ONLINE SPEECH RECOGNITION ENGINE WORKS ONLY IF THE APPLICATION'S WINDOW IS ACTIVE)
-                                Application.Current.MainWindow.Topmost = true;
-                            }
-                        });
-                    }
-                }
-            });
-        }
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
@@ -185,7 +165,7 @@ namespace Eva_5._0
 
             // [ END ]
 
-            AppFocus();
+
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
 
@@ -219,6 +199,8 @@ namespace Eva_5._0
                     }
                     else
                     {
+                        // KEEP THE MAIN WINDOW AS TOPMOST WINDOW (THE ONLINE SPEECH RECOGNITION ENGINE WORKS ONLY IF THE APPLICATION'S WINDOW IS ACTIVE)
+                        Application.Current.MainWindow.Topmost = true;
 
                         // COMPONENT THAT MANIPULATES THE SPEECH RECOGNITION ENABLE/DISABLE BUTTON'S TIMEOUT
                         if (Button_Timeout > 0)
