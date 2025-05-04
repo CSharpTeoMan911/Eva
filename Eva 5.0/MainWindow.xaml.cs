@@ -199,8 +199,6 @@ namespace Eva_5._0
                     }
                     else
                     {
-                        // KEEP THE MAIN WINDOW AS TOPMOST WINDOW (THE ONLINE SPEECH RECOGNITION ENGINE WORKS ONLY IF THE APPLICATION'S WINDOW IS ACTIVE)
-                        Application.Current.MainWindow.Topmost = true;
 
                         // COMPONENT THAT MANIPULATES THE SPEECH RECOGNITION ENABLE/DISABLE BUTTON'S TIMEOUT
                         if (Button_Timeout > 0)
@@ -220,6 +218,9 @@ namespace Eva_5._0
                             }
                             else
                             {
+                                // KEEP THE MAIN WINDOW AS TOPMOST WINDOW (THE ONLINE SPEECH RECOGNITION ENGINE WORKS ONLY IF THE APPLICATION'S WINDOW IS ACTIVE)
+                                Application.Current.MainWindow.Topmost = true;
+
                                 if (invisibility_mode == true)
                                 {
                                     this.Height = 0;
