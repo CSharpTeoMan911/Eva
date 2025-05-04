@@ -1,14 +1,11 @@
 # Eva
 
-
 <br>
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.0.7
-* 🆕 Added speech recognition engine spooling for increased stability and accuracy
-* 🆕 Improved the implementation if the engine spooling
-* 🐞 Fixed UI thread-locking issue
+📌 Latest Version: v7.0.8
+* 🐞 Fixed bug that created multiple wake word engine instances
 
 ![Settings](https://github.com/user-attachments/assets/c54cddc4-38e5-414e-a487-77c61a85805f)
 
@@ -30,6 +27,8 @@
 
 ## About ❓
 * Eva is an A.I. assistant that has the purpose of helping users multi-task. It also has the use of helping people with mental and phisical disabilities. All the commands to be executed are given to Eva through voice commmands.
+
+https://github.com/user-attachments/assets/294ea835-7d7c-4568-9578-da16f195cb2c
 
 <br> 
 
