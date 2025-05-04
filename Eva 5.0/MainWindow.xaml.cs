@@ -153,6 +153,26 @@ namespace Eva_5._0
             InitializeComponent();
         }
 
+        private void AppFocus()
+        {
+            Task.Run(() =>
+            {
+                while (MainWindowIsClosing == false)
+                {
+                    if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                    {
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            if (Application.Current.MainWindow != null)
+                            {
+                                // KEEP THE MAIN WINDOW AS TOPMOST WINDOW (THE ONLINE SPEECH RECOGNITION ENGINE WORKS ONLY IF THE APPLICATION'S WINDOW IS ACTIVE)
+                                Application.Current.MainWindow.Topmost = true;
+                            }
+                        });
+                    }
+                }
+            });
+        }
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
@@ -165,6 +185,7 @@ namespace Eva_5._0
 
             // [ END ]
 
+            AppFocus();
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
 
@@ -227,10 +248,6 @@ namespace Eva_5._0
                                     Crop_Or_UnCrop();
                                     invisibility_mode = false;
                                 }
-
-
-                                // KEEP THE MAIN WINDOW AS TOPMOST WINDOW (THE ONLINE SPEECH RECOGNITION ENGINE WORKS ONLY IF THE APPLICATION'S WINDOW IS ACTIVE)
-                                Application.Current.MainWindow.Topmost = true;
 
 
                                 // IF THE CALCULATED ONLINE SPEECH RECOGNITION ACTIVATION DELAY INTERVAL IS NOT NULL
@@ -964,14 +981,6 @@ namespace Eva_5._0
             }
         }
 
-
-
-        ~MainWindow()
-        {
-            void Execute() => Wake_Word_Engine.Stop_The_Wake_Word_Engine();
-            Execute();
-        }
-
         private void Open_ChatGPT_Query_Window(object sender, RoutedEventArgs e)
         {
             if (App.ChatGPTResponseWindowOpened == false)
@@ -979,6 +988,11 @@ namespace Eva_5._0
                 App.chatGPT_Response_Window = new ChatGPT_Response_Window();
                 App.chatGPT_Response_Window.Show();
             }
+        }
+
+        ~MainWindow()
+        {
+            Wake_Word_Engine.Stop_The_Wake_Word_Engine();
         }
     }
 }
