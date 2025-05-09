@@ -4,8 +4,9 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.0.8
-* 🐞 Fixed bug that created multiple wake word engine instances
+📌 Latest Version: v7.0.9
+* 🐞 Fixed bug regarding the wake word engine sensitivity setup
+* 🆕 Added online speech recognition timeout setting
 
 ![Settings](https://github.com/user-attachments/assets/c54cddc4-38e5-414e-a487-77c61a85805f)
 
