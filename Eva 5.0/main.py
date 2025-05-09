@@ -44,16 +44,15 @@ async def get_confidence() -> int:
 
 
 async def pipe_messaging(message):
-    print(message)
     start = time.time()
     while time.time() - start < 10:
         try:
-            with open(r"\\.\pipe\eva_wake_word", "w") as pipe:
+            with open(r"\\.\pipe\eva_wake_word_engine", "w") as pipe:
                 pipe.write(message)
                 pipe.flush()
             break
-        except Exception as e:
-            print(e)
+        except Exception:
+            pass
 
 
 async def wake_word_engine_operation():

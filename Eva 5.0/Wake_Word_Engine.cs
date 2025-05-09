@@ -457,9 +457,9 @@ namespace Eva_5._0
 
                 while (Wake_Word_Started == true)
                 {
-                    using (namedPipe = new NamedPipeServerStream("eva_wake_word", PipeDirection.In, 1, PipeTransmissionMode.Message, PipeOptions.Asynchronous))
+                    using (namedPipe = new NamedPipeServerStream("eva_wake_word_engine", PipeDirection.In, 1, PipeTransmissionMode.Message, PipeOptions.Asynchronous))
                     {
-                        await namedPipe.WaitForConnectionAsync(pipeCancellationToken);
+                        await namedPipe?.WaitForConnectionAsync(pipeCancellationToken);
 
                         if (MainWindowIsClosing == false)
                         {
@@ -470,7 +470,7 @@ namespace Eva_5._0
 
                                     // READ THE DATA RECEIVED FROM THE NAMED PIPE CONNECTION OF THE "Python" PROCESS ASYNCHRONOUSLY.
                                     byte[] buffer = new byte[1024];
-                                    int bytes_read = await namedPipe.ReadAsync(buffer, 0, buffer.Length);
+                                    int bytes_read = await namedPipe?.ReadAsync(buffer, 0, buffer.Length);
 
                                     if (bytes_read > 0)
                                     {
@@ -530,6 +530,7 @@ namespace Eva_5._0
                         }
 
                         namedPipe?.Disconnect();
+                        namedPipe?.Dispose();
                     }
                 }
             }
