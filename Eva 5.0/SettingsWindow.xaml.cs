@@ -167,6 +167,8 @@ namespace Eva_5._0
                     bool SoundOrOff = await Settings.Get_Sound_Settings();
                     bool SythesisOnOrOff = await Settings.Get_Synthesis_Settings();
                     string SpeechLanguage = await Settings.Get_Speech_Language_Settings();
+                    int Timeout = await Settings.Get_Speech_Timeout_Settings();
+
                     A_p_l____And____P_r_o_c.SpeechRecognitionOperation operation = await Settings.Get_Speech_Operation_Settings();
 
                     await Application.Current.Dispatcher.InvokeAsync(() =>
@@ -219,6 +221,7 @@ namespace Eva_5._0
                         }
 
                         SpeechLanguageDisplay.Text = SpeechLanguage;
+                        SpeechOperationTimeout.Text = Timeout.ToString();
                     });
                 }
                 catch { }
@@ -784,6 +787,28 @@ namespace Eva_5._0
             }
 
             await Settings.Set_Speech_Operation_Settings(operation);
+        }
+
+        private async void PreviousTimeout(object sender, RoutedEventArgs e)
+        {
+            int Timeout = Convert.ToInt32(SpeechOperationTimeout.Text);
+            if (Timeout > 1)
+            {
+                Timeout--;
+                SpeechOperationTimeout.Text = Timeout.ToString();
+                await Settings.Set_Speech_Timeout_Settings(Timeout);
+            }
+        }
+
+        private async void NextTimeout(object sender, RoutedEventArgs e)
+        {
+            int Timeout = Convert.ToInt32(SpeechOperationTimeout.Text);
+            if (Timeout < 7)
+            {
+                Timeout++;
+                SpeechOperationTimeout.Text = Timeout.ToString();
+                await Settings.Set_Speech_Timeout_Settings(Timeout);
+            }
         }
 
         ~SettingsWindow()

@@ -8,11 +8,8 @@ import time
 import asyncio
 
 config = sys.argv[2]
-port = sys.argv[3]
 
 initial_frames = 0
-
-connection = None
 
 # INITIATE PYAUDIO OBJECT, LISTEN TO THE DEFAULT MIC ON 1 CHANNEL, WITH A RATE OF 16000 HZ AND A BUFFER OF 1600 FRAMES
 mic = pyaudio.PyAudio()
@@ -46,16 +43,17 @@ async def get_confidence() -> int:
     return confidence_threshold
 
 
-async def socket_messaging(message):
-    global connection
-    try:
-        if connection is None:
-            connection = socket.socket(family=socket.AddressFamily.AF_INET, type=socket.SocketKind.SOCK_STREAM)
-            connection.connect(("127.0.0.1", int(port)))
-            connection.settimeout(None)
-        connection.send(message.encode("utf-8"))
-    except Exception:
-        pass
+async def pipe_messaging(message):
+    print(message)
+    start = time.time()
+    while time.time() - start < 10:
+        try:
+            with open(r"\\.\pipe\eva_wake_word", "w") as pipe:
+                pipe.write(message)
+                pipe.flush()
+            break
+        except Exception as e:
+            print(e)
 
 
 async def wake_word_engine_operation():
@@ -84,7 +82,7 @@ async def wake_word_engine_process():
 
     try:
         if initial_frames == 3:
-            await socket_messaging("[ loaded ]")
+            await pipe_messaging("[ loaded ]")
             initial_frames += 1
 
         # RETRIEVE THE AUDIO WAVEFORM DATA AND PERFORM SPEECH TO TEXT CONVERSION
@@ -115,12 +113,12 @@ async def keyword_spotter(sentence):
                         stop_found = False
                     elif word["word"] == "listening" and word[
                         "conf"] >= confidence_threshold and stop_found is True:
-                        await socket_messaging("stop listening")
+                        await pipe_messaging("stop listening")
                         break
             elif "listen" in j_obj["text"]:
                 for word in j_obj["result"]:
                     if word["word"] == "listen" and word["conf"] >= confidence_threshold:
-                        await socket_messaging("listen")
+                        await pipe_messaging("listen")
                         break
         elif "partial_result" in j_obj:
             if "stop listening" in j_obj["partial"]:
@@ -132,12 +130,12 @@ async def keyword_spotter(sentence):
                         stop_found = False
                     elif word["word"] == "listening" and word[
                         "conf"] >= confidence_threshold and stop_found is True:
-                        await socket_messaging("stop listening")
+                        await pipe_messaging("stop listening")
                         break
             elif "listen" in j_obj["partial"]:
                 for word in j_obj["partial_result"]:
                     if word["word"] == "listen" and word["conf"] >= confidence_threshold:
-                        await socket_messaging("listen")
+                        await pipe_messaging("listen")
                         break
     except KeyboardInterrupt:
         sys.exit(0)

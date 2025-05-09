@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.Devices.AllJoyn;
-using Windows.Graphics.Printing;
 using static Eva_5._0.Commands_Customisation;
 
 namespace Eva_5._0
@@ -234,6 +231,11 @@ namespace Eva_5._0
         //
         // [ BEGIN ]
 
+        public static async Task<int> Get_Speech_Timeout_Settings()
+        {
+            return (await Load_Settings_File()).Timeout;
+        }
+
         public static async Task<float> Get_Vosk_Sensitivity_Settings()
         {
             return (await Load_Settings_File()).Vosk_Sensitivity;
@@ -258,6 +260,14 @@ namespace Eva_5._0
         public static async Task<A_p_l____And____P_r_o_c.SpeechRecognitionOperation> Get_Speech_Operation_Settings()
         {
             return (await Load_Settings_File()).Operation;
+        }
+
+        public static async Task Set_Speech_Timeout_Settings(int timeout)
+        {
+            Settings_File settings_File = await Load_Settings_File();
+            settings_File.Timeout = timeout;
+
+            await Update_Settings_File(settings_File);
         }
 
         public static async Task Set_Vosk_Sensitivity_Settings(float sensitivity)

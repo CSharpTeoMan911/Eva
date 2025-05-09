@@ -84,7 +84,6 @@ namespace Eva_5._0
         {
             try
             {
-
                 DateTime start = DateTime.UtcNow;
 
                 // ENSURE THAT THE ONLINE SPEECH RECOGNITION INTERFACE IS CLOSED
@@ -126,10 +125,12 @@ namespace Eva_5._0
 
                 if (ConstraintsCompilation.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
                 {
-                    OnlineSpeechRecognition.ContinuousRecognitionSession.AutoStopSilenceTimeout = TimeSpan.FromSeconds(7);
-                    OnlineSpeechRecognition.Timeouts.EndSilenceTimeout = TimeSpan.FromSeconds(7);
-                    OnlineSpeechRecognition.Timeouts.InitialSilenceTimeout = TimeSpan.FromSeconds(7);
-                    OnlineSpeechRecognition.Timeouts.BabbleTimeout = TimeSpan.FromSeconds(7);
+                    int Timeout = await Settings.Get_Speech_Timeout_Settings();
+
+                    OnlineSpeechRecognition.ContinuousRecognitionSession.AutoStopSilenceTimeout = TimeSpan.FromSeconds(Timeout);
+                    OnlineSpeechRecognition.Timeouts.EndSilenceTimeout = TimeSpan.FromSeconds(Timeout);
+                    OnlineSpeechRecognition.Timeouts.InitialSilenceTimeout = TimeSpan.FromSeconds(Timeout);
+                    OnlineSpeechRecognition.Timeouts.BabbleTimeout = TimeSpan.FromSeconds(Timeout);
 
                     OnlineSpeechRecognition.StateChanged += OnlineSpeechRecognition_StateChanged;
                     OnlineSpeechRecognition.HypothesisGenerated += OnlineSpeechRecognition_HypothesisGenerated;

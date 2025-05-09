@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
 using System.Collections.Generic;
+using System.IO.Pipes;
+using System.Threading;
 
 namespace Eva_5._0
 {
@@ -52,7 +54,6 @@ namespace Eva_5._0
         //    COMMAND: /path/to/Eva 5.0.exe/python.exe -m pip install [ PACKAGE NAME ]
 
         private static Queue<Process> wake_word_processes = new Queue<Process>();
-        private static Tuple<Socket, Socket> wake_word_sockets;
 
         private static int wake_word_engines_loaded;
 
@@ -67,6 +68,11 @@ namespace Eva_5._0
         private static int wake_word_engine_reset_time = 10;
         public static DateTime resetTime;
 
+        private static CancellationTokenSource pipeCancellationTokenSource;
+        private static CancellationToken pipeCancellationToken;
+
+        private static NamedPipeServerStream namedPipe;
+
         public static void Start_The_Wake_Word_Engine()
         {
             // INITIATE A WAKE WORD ENGINE PROCESS ON A DIFFERENT THREAD FOR CPU LOAD DISTRIBUTION PURPOSES
@@ -77,25 +83,13 @@ namespace Eva_5._0
 
             try
             {
+                pipeCancellationTokenSource = new CancellationTokenSource();
+                pipeCancellationToken = pipeCancellationTokenSource.Token;
+
                 wake_word_engines_loaded = 0;
                 resetTime = DateTime.UtcNow;
 
-                Socket connection_1 = new Socket(SocketType.Stream, ProtocolType.Tcp)
-                {
-                    ReceiveTimeout = -1,
-                    SendTimeout = -1
-                };
-                connection_1.Bind(new IPEndPoint(IPAddress.Loopback, 6000));
-
-                Socket connection_2 = new Socket(SocketType.Stream, ProtocolType.Tcp) 
-                {
-                    ReceiveTimeout = -1,
-                    SendTimeout = -1
-                };
-                connection_2.Bind(new IPEndPoint(IPAddress.Loopback, 7000));
-
-                wake_word_sockets = new Tuple<Socket, Socket>(connection_1, connection_2);
-
+                // INITIATE THE WAKE WORD ENGINE ON A THREAD-POOL THREAD
                 Task.Run(Initiate_Wake_Word_Engine);
 
                 Wake_Word_Started = true;
@@ -198,22 +192,20 @@ namespace Eva_5._0
                 // [ BEGIN ]
 
 
-                Socket server = model == "0" ? wake_word_sockets.Item1 : wake_word_sockets.Item2;
-                int port = model == "0" ? 6000 : 7000;
 
                 System.Diagnostics.Process wake_word_process = new System.Diagnostics.Process();
                 wake_word_process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                 wake_word_process.StartInfo.FileName = Environment.CurrentDirectory + "\\python.exe";
                 wake_word_process.StartInfo.CreateNoWindow = true;
                 wake_word_process.StartInfo.UseShellExecute = false;
-                wake_word_process.StartInfo.Arguments = new StringBuilder("main.py ").Append(model).Append(' ').Append((Settings.GetSettingsFilePath()).ToString()).Append(' ').Append(port.ToString()).ToString();
+                wake_word_process.StartInfo.Arguments = new StringBuilder("main.py ").Append(model).Append(' ').Append((await Settings.GetSettingsFilePath()).ToString()).ToString();
                 wake_word_process.Start();
 
                 SwitchModel();
 
                 wake_word_processes.Enqueue(wake_word_process);
 
-                await Wake_Word_Detector(wake_word_process, server);
+                await Wake_Word_Detector(wake_word_process);
 
                 // [ END ]
             }
@@ -232,15 +224,16 @@ namespace Eva_5._0
 
         public static bool Stop_The_Wake_Word_Engine()
         {
-
-
             try
             {
+
                 // STOP THE PROCESSES THROUGH THE OBJECTS AS A BACKUP METHOD
                 //
                 // [ START ]
 
                 Wake_Word_Started = false;
+
+                pipeCancellationTokenSource?.Cancel();
 
                 Process process = null;
                 while (wake_word_processes.Count > 0)
@@ -248,9 +241,6 @@ namespace Eva_5._0
                     process = wake_word_processes?.Dequeue();
                     process?.Kill();
                 }
-
-                wake_word_sockets?.Item1?.Dispose();
-                wake_word_sockets?.Item2?.Dispose();
 
                 // [ END ]
 
@@ -460,16 +450,16 @@ namespace Eva_5._0
 
 
 
-        private static async Task Wake_Word_Detector(Process python, Socket wake_word_engine_connection)
+        private static async Task Wake_Word_Detector(Process python)
         {
             try
             {
-                wake_word_engine_connection.Listen(1);
-                Socket client = await wake_word_engine_connection.AcceptAsync();
-                using (NetworkStream client_connection = new NetworkStream(client, true))
+
+                while (Wake_Word_Started == true)
                 {
-                    while (Wake_Word_Started == true)
+                    using (namedPipe = new NamedPipeServerStream("eva_wake_word", PipeDirection.In, 1, PipeTransmissionMode.Message, PipeOptions.Asynchronous))
                     {
+                        await namedPipe.WaitForConnectionAsync(pipeCancellationToken);
 
                         if (MainWindowIsClosing == false)
                         {
@@ -478,53 +468,50 @@ namespace Eva_5._0
                                 if (python.HasExited == false)
                                 {
 
-                                    if (client_connection.CanRead == true)
+                                    // READ THE DATA RECEIVED FROM THE NAMED PIPE CONNECTION OF THE "Python" PROCESS ASYNCHRONOUSLY.
+                                    byte[] buffer = new byte[1024];
+                                    int bytes_read = await namedPipe.ReadAsync(buffer, 0, buffer.Length);
+
+                                    if (bytes_read > 0)
                                     {
-                                        // READ THE DATA RECEIVED FROM THE SOCKET CONNECTION OF THE "Python" PROCESS ASYNCHRONOUSLY.
-                                        byte[] buffer = new byte[1024];
-                                        int bytes_read = await client_connection.ReadAsync(buffer, 0, buffer.Length);
+                                        string socket_message_value = Encoding.UTF8.GetString(buffer, 0, bytes_read);
 
-                                        if (bytes_read > 0)
+                                        // LOCK THE "Online_Speech_Recogniser_Listening" OBJECT ON THE STACK 
+                                        // IN ORDER TO BLOCK OTHER THREADS FROM MODIFYING IT
+                                        //
+                                        // [ BEGIN ]
+
+                                        lock (Online_Speech_Recogniser_Listening)
                                         {
-                                            string socket_message_value = Encoding.UTF8.GetString(buffer, 0, bytes_read);
-
-                                            // LOCK THE "Online_Speech_Recogniser_Listening" OBJECT ON THE STACK 
-                                            // IN ORDER TO BLOCK OTHER THREADS FROM MODIFYING IT
-                                            //
-                                            // [ BEGIN ]
-
-                                            lock (Online_Speech_Recogniser_Listening)
+                                            lock (Wake_Word_Detected)
                                             {
-                                                lock (Wake_Word_Detected)
+                                                if (Proc.tasks_running == 0)
                                                 {
-                                                    if (Proc.tasks_running == 0)
+                                                    if (socket_message_value == wake_word_engine_loaded)
                                                     {
-                                                        if (socket_message_value == wake_word_engine_loaded)
+                                                        resetTime = DateTime.UtcNow;
+                                                        wake_word_engines_loaded++;
+                                                    }
+                                                    else if (socket_message_value == cancel_wake_word)
+                                                    {
+                                                        if (Online_Speech_Recogniser_Listening == "true")
                                                         {
-                                                            resetTime = DateTime.UtcNow;
-                                                            wake_word_engines_loaded++;
+                                                            Online_Speech_Recogniser_Listening = "false";
+                                                            Online_Speech_Recognition.Close_Speech_Recognition_Interface();
                                                         }
-                                                        else if (socket_message_value == cancel_wake_word)
+                                                    }
+                                                    else if (socket_message_value == wake_word)
+                                                    {
+                                                        if (Online_Speech_Recogniser_Listening == "false")
                                                         {
-                                                            if (Online_Speech_Recogniser_Listening == "true")
-                                                            {
-                                                                Online_Speech_Recogniser_Listening = "false";
-                                                                Online_Speech_Recognition.Close_Speech_Recognition_Interface();
-                                                            }
-                                                        }
-                                                        else if (socket_message_value == wake_word)
-                                                        {
-                                                            if (Online_Speech_Recogniser_Listening == "false")
-                                                            {
-                                                                Wake_Word_Detected = "true";
-                                                            }
+                                                            Wake_Word_Detected = "true";
                                                         }
                                                     }
                                                 }
                                             }
-
-                                            // [ END ]
                                         }
+
+                                        // [ END ]
                                     }
                                 }
                                 else
@@ -541,6 +528,8 @@ namespace Eva_5._0
                         {
                             break;
                         }
+
+                        namedPipe?.Disconnect();
                     }
                 }
             }
