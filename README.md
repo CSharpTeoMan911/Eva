@@ -8,7 +8,7 @@
 * 🐞 Fixed bug regarding the wake word engine sensitivity setup
 * 🆕 Added online speech recognition timeout setting
 
-![Settings](https://github.com/user-attachments/assets/c54cddc4-38e5-414e-a487-77c61a85805f)
+![Settings](https://github.com/user-attachments/assets/59f8afcf-db1c-4e52-9ae4-f5034e235e94)
 
 <br>
 <br>
