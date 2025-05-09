@@ -80,7 +80,10 @@ namespace Eva_5._0
                     }
                 }
             }
-            catch { }
+            catch(Exception e) 
+            {
+                Debug.WriteLine(e.Message);
+            }
         }
 
 

@@ -828,7 +828,7 @@ namespace Eva_5._0
         }
 
 
-        private void SpeechOn()
+        private async void SpeechOn()
         {
             if (OnOff == 0)
             {
@@ -844,6 +844,11 @@ namespace Eva_5._0
                     SpeechRecognitionButton.Content = "\xE1D6";
                 });
 
+                if (await Settings.Get_Speech_Recognitom_Engine() == A_p_l____And____P_r_o_c.SpeechRecognitionEngine.Offline)
+                {
+                    OfflineSpeechRecognitonEngine.Offline_Speech_Recognition_Session_Creation_And_Initiation();
+                }
+
                 // START THE WAKE WORD ENGINE PROCESS
                 Wake_Word_Engine.Start_The_Wake_Word_Engine();
                 Interlocked.Increment(ref OnOff);
@@ -851,7 +856,7 @@ namespace Eva_5._0
         }
 
 
-        private void SpeechOff()
+        private async void SpeechOff()
         {
             if (OnOff == 1)
             {
@@ -866,6 +871,11 @@ namespace Eva_5._0
                 {
                     SpeechRecognitionButton.Content = "\xF781";
                 });
+
+                if (await Settings.Get_Speech_Recognitom_Engine() == A_p_l____And____P_r_o_c.SpeechRecognitionEngine.Offline)
+                {
+                    OfflineSpeechRecognitonEngine.Stop_The_Offline_Speech_Recognition_Engine();
+                }
 
                 OnOff = 0;
 
@@ -889,7 +899,7 @@ namespace Eva_5._0
                         if (App.SettingsWindowOpen == false)
                         {
                             App.SettingsWindowOpen = true;
-                            SettingsWindow SettingWindowObject = new SettingsWindow(new SettingsWindow.OpenSpeech(SpeechOn));
+                            SettingsWindow SettingWindowObject = new SettingsWindow(new SettingsWindow.OpenSpeech(SpeechOn), new SettingsWindow.CloseSpeech(SpeechOff));
                             SettingWindowObject.Show();
                         }
 

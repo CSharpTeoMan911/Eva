@@ -63,15 +63,19 @@ namespace Eva_5._0
         public delegate void OpenSpeech();
         private OpenSpeech openSpeech;
 
+        public delegate void CloseSpeech();
+        private CloseSpeech closeSpeech;
+
         public SettingsWindow()
         {
             CurrentInstance = this;
             InitializeComponent();
         }
 
-        public SettingsWindow(OpenSpeech openSpeech_)
+        public SettingsWindow(OpenSpeech openSpeech, CloseSpeech closeSpeech)
         {
-            openSpeech = openSpeech_;
+            this.openSpeech = openSpeech;
+            this.closeSpeech = closeSpeech;
             CurrentInstance = this;
             InitializeComponent();
         }
@@ -169,6 +173,8 @@ namespace Eva_5._0
                     string SpeechLanguage = await Settings.Get_Speech_Language_Settings();
                     int Timeout = await Settings.Get_Speech_Timeout_Settings();
 
+                    A_p_l____And____P_r_o_c.SpeechRecognitionEngine recognitionEngine = await Settings.Get_Speech_Recognitom_Engine();
+
                     A_p_l____And____P_r_o_c.SpeechRecognitionOperation operation = await Settings.Get_Speech_Operation_Settings();
 
                     await Application.Current.Dispatcher.InvokeAsync(() =>
@@ -222,6 +228,7 @@ namespace Eva_5._0
 
                         SpeechLanguageDisplay.Text = SpeechLanguage;
                         SpeechOperationTimeout.Text = Timeout.ToString();
+                        SttEngineDisplay.Text = recognitionEngine.ToString();
                     });
                 }
                 catch { }
@@ -817,6 +824,30 @@ namespace Eva_5._0
                 Timeout++;
                 SpeechOperationTimeout.Text = Timeout.ToString();
                 await Settings.Set_Speech_Timeout_Settings(Timeout);
+            }
+        }
+
+        private async void NextEngine(object sender, RoutedEventArgs e)
+        {
+            string engine_type = SttEngineDisplay.Text;
+
+            if (engine_type == "Online")
+            {
+                closeSpeech.Invoke();
+                SttEngineDisplay.Text = "Offline";
+                await Settings.Set_Speech_Recognitom_Engine(A_p_l____And____P_r_o_c.SpeechRecognitionEngine.Offline);
+            }
+        }
+
+        private async void PreviousEngine(object sender, RoutedEventArgs e)
+        {
+            string engine_type = SttEngineDisplay.Text;
+
+            if (engine_type == "Offline")
+            {
+                closeSpeech.Invoke();
+                SttEngineDisplay.Text = "Online";
+                await Settings.Set_Speech_Recognitom_Engine(A_p_l____And____P_r_o_c.SpeechRecognitionEngine.Online);
             }
         }
 

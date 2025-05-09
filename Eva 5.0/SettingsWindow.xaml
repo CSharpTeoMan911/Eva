@@ -271,7 +271,7 @@
                             <RectangleGeometry Rect="0,0,102.3,18" RadiusX="3" RadiusY="3"/>
                         </StackPanel.Clip>
 
-                        <Button x:Name="PreviousSttEngineButton" Background="Black" BorderBrush="Transparent" FontSize="11" FontFamily="Segoe MDL2 Assets" Content="&#xEDD9;" Click="PreviousLanguage" Style="{StaticResource MyButtonStyle}">
+                        <Button x:Name="PreviousSttEngineButton" Background="Black" BorderBrush="Transparent" FontSize="11" FontFamily="Segoe MDL2 Assets" Content="&#xEDD9;" Click="PreviousEngine" Style="{StaticResource MyButtonStyle}">
                             <Button.Foreground>
                                 <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
                                     <GradientStop Color="#FF7BBFD8" x:Name="PreviousSttEngineButtonOffset" Offset="1"/>
@@ -280,7 +280,7 @@
                             </Button.Foreground>
                         </Button>
 
-                        <TextBox x:Name="SttEngineDisplay" BorderThickness="0" Width="60" Height="18" IsReadOnly="True" FontFamily="Consolas" FontWeight="Bold" TextAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Text="Offline">
+                        <TextBox x:Name="SttEngineDisplay" BorderThickness="0" Width="60" Height="18" IsReadOnly="True" FontFamily="Consolas" FontWeight="Bold" TextAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap">
                             <TextBox.Background>
                                 <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
                                     <GradientStop Color="#FF7BBFD8" x:Name="CurrentSttEngineOffset" Offset="1"/>
@@ -289,7 +289,7 @@
                             </TextBox.Background>
                         </TextBox>
 
-                        <Button x:Name="NextSttEngineButton" Background="Black" BorderBrush="Transparent" Margin="0,0,0,0" FontSize="11" FontFamily="Segoe MDL2 Assets" Content="&#xEDDA;" Click="NextLanguage" Style="{StaticResource MyButtonStyle}">
+                        <Button x:Name="NextSttEngineButton" Background="Black" BorderBrush="Transparent" Margin="0,0,0,0" FontSize="11" FontFamily="Segoe MDL2 Assets" Content="&#xEDDA;" Click="NextEngine" Style="{StaticResource MyButtonStyle}">
                             <Button.Foreground>
                                 <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
                                     <GradientStop Color="#FF7BBFD8" x:Name="NextSttEngineButtonOffset" Offset="1"/>
