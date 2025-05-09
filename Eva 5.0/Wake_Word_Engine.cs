@@ -71,8 +71,6 @@ namespace Eva_5._0
         private static CancellationTokenSource pipeCancellationTokenSource;
         private static CancellationToken pipeCancellationToken;
 
-        private static NamedPipeServerStream namedPipe;
-
         public static void Start_The_Wake_Word_Engine()
         {
             // INITIATE A WAKE WORD ENGINE PROCESS ON A DIFFERENT THREAD FOR CPU LOAD DISTRIBUTION PURPOSES
@@ -454,10 +452,9 @@ namespace Eva_5._0
         {
             try
             {
-
-                while (Wake_Word_Started == true)
+                using (NamedPipeServerStream namedPipe = new NamedPipeServerStream("eva_wake_word_engine", PipeDirection.In, 5, PipeTransmissionMode.Message, PipeOptions.Asynchronous))
                 {
-                    using (namedPipe = new NamedPipeServerStream("eva_wake_word_engine", PipeDirection.In, 1, PipeTransmissionMode.Message, PipeOptions.Asynchronous))
+                    while (Wake_Word_Started == true)
                     {
                         await namedPipe?.WaitForConnectionAsync(pipeCancellationToken);
 
@@ -530,7 +527,6 @@ namespace Eva_5._0
                         }
 
                         namedPipe?.Disconnect();
-                        namedPipe?.Dispose();
                     }
                 }
             }
