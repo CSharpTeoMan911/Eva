@@ -138,6 +138,12 @@ namespace Eva_5._0
             WebSearch
         }
 
+        public enum SpeechRecognitionEngine
+        {
+            Online,
+            Offline
+        }
+
         private A_p_l____And____P_r_o_c(bool initiate)
         {
             if(initiate == true)

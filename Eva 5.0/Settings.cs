@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using static Eva_5._0.Commands_Customisation;
 
@@ -231,6 +232,11 @@ namespace Eva_5._0
         //
         // [ BEGIN ]
 
+        public static async Task<A_p_l____And____P_r_o_c.SpeechRecognitionEngine> Get_Speech_Recognitom_Engine()
+        {
+            return (await Load_Settings_File()).SpeechRecognitionEngine;
+        }
+
         public static async Task<int> Get_Speech_Timeout_Settings()
         {
             return (await Load_Settings_File()).Timeout;
@@ -260,6 +266,14 @@ namespace Eva_5._0
         public static async Task<A_p_l____And____P_r_o_c.SpeechRecognitionOperation> Get_Speech_Operation_Settings()
         {
             return (await Load_Settings_File()).Operation;
+        }
+
+        public static async Task Set_Speech_Recognitom_Engine(A_p_l____And____P_r_o_c.SpeechRecognitionEngine speechRecognitionEngine)
+        {
+            Settings_File settings_File = await Load_Settings_File();
+            settings_File.SpeechRecognitionEngine = speechRecognitionEngine;
+
+            await Update_Settings_File(settings_File);
         }
 
         public static async Task Set_Speech_Timeout_Settings(int timeout)

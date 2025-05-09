@@ -8,6 +8,7 @@ namespace Eva_5._0
 {
     internal class Settings_File
     {
+        public A_p_l____And____P_r_o_c.SpeechRecognitionEngine SpeechRecognitionEngine { get; set; } = A_p_l____And____P_r_o_c.SpeechRecognitionEngine.Online;
         public int Timeout {get;set;} = 4;
         public float Vosk_Sensitivity { get; set; } = 8.4f;
         public A_p_l____And____P_r_o_c.SpeechRecognitionOperation Operation { get; set; } = A_p_l____And____P_r_o_c.SpeechRecognitionOperation.FormFilling;
