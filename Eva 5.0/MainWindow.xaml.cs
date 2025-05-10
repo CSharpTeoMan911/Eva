@@ -867,10 +867,9 @@ namespace Eva_5._0
                     SpeechRecognitionButton.Content = "\xF781";
                 });
 
-                OnOff = 0;
-
                 // TEMINATE THE WAKE WORD ENGINE PROCESS
                 Wake_Word_Engine.Stop_The_Wake_Word_Engine();
+                Interlocked.Decrement(ref OnOff);
             }
         }
 

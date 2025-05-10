@@ -189,11 +189,9 @@ namespace Eva_5._0
                 //
                 // [ BEGIN ]
 
-
-
                 System.Diagnostics.Process wake_word_process = new System.Diagnostics.Process();
                 wake_word_process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                wake_word_process.StartInfo.FileName = Environment.CurrentDirectory + "\\python.exe";
+                wake_word_process.StartInfo.FileName = new StringBuilder(Environment.CurrentDirectory).Append(@"\python 3.12\python.exe").ToString();
                 wake_word_process.StartInfo.CreateNoWindow = true;
                 wake_word_process.StartInfo.UseShellExecute = false;
                 wake_word_process.StartInfo.Arguments = new StringBuilder("main.py ").Append(model).Append(' ').Append((await Settings.GetSettingsFilePath()).ToString()).ToString();
@@ -473,7 +471,7 @@ namespace Eva_5._0
                                     {
                                         string socket_message_value = Encoding.UTF8.GetString(buffer, 0, bytes_read);
 
-                                        // LOCK THE "Online_Speech_Recogniser_Listening" OBJECT ON THE STACK 
+                                        // LOCK THE "Online_Speech_Recogniser_Listening" OBJECT
                                         // IN ORDER TO BLOCK OTHER THREADS FROM MODIFYING IT
                                         //
                                         // [ BEGIN ]

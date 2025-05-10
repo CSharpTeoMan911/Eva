@@ -19,9 +19,9 @@ stream.start_stream()
 # LOAD THE VOSK SPEECH RECOGNITION MODEL FROM THE APPLICATION'S DIRECTORY
 model = None
 if str(sys.argv[1]) == "0":
-    model = Model(model_path=os.getcwd() + "\\" + "model 1", lang="en-us")
+    model = Model(model_path=os.path.join(os.getcwd(), "model 1"), lang="en-us")
 else:
-    model = Model(model_path=os.getcwd() + "\\" + "model 2", lang="en-us")
+    model = Model(model_path=os.path.join(os.getcwd(), "model 2"), lang="en-us")
 
 # INITIATE KALDI SPEECH RECOGNIZER INSTANCE USING THE VOSK MODEL AND A FREQUENCY OF 16000 HZ
 recognizer = KaldiRecognizer(model, 16000)
@@ -31,7 +31,7 @@ recognizer.SetPartialWords(True)
 
 
 
-async def get_confidence() -> int:
+async def get_confidence() -> float:
     confidence_threshold = 0.85
     try:
         if os.path.exists(config) is True:
@@ -43,7 +43,7 @@ async def get_confidence() -> int:
     return confidence_threshold
 
 
-async def pipe_messaging(message):
+async def pipe_messaging(message:str):
     start = time.time()
     while time.time() - start < 10:
         try:
@@ -73,7 +73,7 @@ async def wake_word_engine_process():
 
     global initial_frames
 
-    # READ 1000 FRAMES FOR EACH ITERATION (1000 * 2 = 2000 bytes)
+    # READ 1000 FRAMES FOR EACH ITERATION (1500 * 2 = 3000 bytes)
     data = stream.read(1500, False)
 
     if initial_frames < 3:
@@ -94,10 +94,9 @@ async def wake_word_engine_process():
         sys.exit(0)
 
 
-async def keyword_spotter(sentence):
-    # IF THE RECOGNIZED PHRASE CONTAINS "listen" PRINT 'listen' ON THE STDOUT STREAM,
-    # ELSE IF THE PHRASE CONTAINS 'stop listening' PRINT 'stop listening' ON THE
-    # STDOUT STREAM
+async def keyword_spotter(sentence:str):
+    # IF THE RECOGNIZED PHRASE CONTAINS "listen", SEND 'listen' OVER THE PIPE,
+    # IF THE PHRASE CONTAINS 'stop listening' SEND 'stop listening' ON THE PIPE
 
     confidence_threshold = await get_confidence()
     j_obj = json.loads(sentence)

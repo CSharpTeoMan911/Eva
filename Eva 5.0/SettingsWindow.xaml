@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Eva_5._0"
         mc:Ignorable="d"
-        Title="Settings" Height="680" Width="430" WindowStyle="None" AllowsTransparency="True" Opacity="0.98" Loaded="SettingsWindowLoaded" Closing="WindowClosing" Icon="Images/Eva icon.png" Topmost="True">
+        Title="Settings" Height="680" Width="450" WindowStyle="None" AllowsTransparency="True" Opacity="0.98" Loaded="SettingsWindowLoaded" Closing="WindowClosing" Icon="Images/Eva icon.png" Topmost="True">
 
     <!--/////////////////////////////////////////////////////////////////////////////
         ///                                                                       ///
@@ -25,7 +25,7 @@
 
 
     <Window.Clip>
-        <RectangleGeometry Rect="0, 0, 430, 680" RadiusX="20" RadiusY="20"/>
+        <RectangleGeometry Rect="0, 0, 450, 680" RadiusX="20" RadiusY="20"/>
     </Window.Clip>
 
 
@@ -94,7 +94,7 @@
             </Button>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Margin="0,0,0,0" Grid.RowSpan="2" Grid.Row="1" Grid.ColumnSpan="5" VerticalAlignment="Top" HorizontalAlignment="Center">
+        <StackPanel Orientation="Horizontal" Margin="0,50,0,0" Panel.ZIndex="-1" Grid.RowSpan="2" Grid.Row="0" Grid.ColumnSpan="5" VerticalAlignment="Top" HorizontalAlignment="Center">
 
             <TextBlock x:Name="Wheel1" FontFamily="Segoe MDL2 Assets" FontSize="90" Text="&#xF8B0;" RenderTransformOrigin="0.5, 0.5">
                 <TextBlock.Foreground>
@@ -116,7 +116,7 @@
         </StackPanel>
 
 
-        <StackPanel Grid.Row="2" Grid.ColumnSpan="6" VerticalAlignment="Center" Margin="0,40,0,0" Grid.RowSpan="7">
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="6" VerticalAlignment="Center" Margin="0,0,0,0" Grid.RowSpan="7">
 
             <StackPanel Margin="33,0,0,0" HorizontalAlignment="Center" Orientation="Vertical">
 
@@ -304,7 +304,7 @@
                     <TextBlock Margin="0,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontFamily="Corbel Light" Text="Recognition Timeout">
                         <TextBlock.Foreground>
                             <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
-                                <GradientStop Color="#FF7BBFD8" x:Name="SpeechTimeout" Offset="1"/>
+                                <GradientStop Color="#FF7BBFD8" x:Name="SpeechTimeoutOffset" Offset="1"/>
                                 <GradientStop Color="#FF1B70C3"/>
                             </LinearGradientBrush>
                         </TextBlock.Foreground>

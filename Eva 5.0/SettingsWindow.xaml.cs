@@ -408,6 +408,11 @@ namespace Eva_5._0
                                         PreviousSpeechOperationButtonOffset.Offset -= 0.025;
                                         CurrentSpeechOperationOffset.Offset -= 0.01;
                                         NextSpeechOperationButtonOffset.Offset -= 0.025;
+                                        SpeechTimeoutOffset.Offset -= 0.01;
+                                        CurrentSpeechTimeoutOffset.Offset -= 0.01;
+                                        NextSpeechTimeoutButtonOffset.Offset -= 0.025;
+                                        PreviousSpeechTimeoutButtonOffset.Offset -= 0.025;
+
                                     }
                                     else
                                     {
@@ -448,6 +453,10 @@ namespace Eva_5._0
                                         PreviousSpeechOperationButtonOffset.Offset += 0.025;
                                         CurrentSpeechOperationOffset.Offset += 0.01;
                                         NextSpeechOperationButtonOffset.Offset += 0.025;
+                                        SpeechTimeoutOffset.Offset += 0.01;
+                                        CurrentSpeechTimeoutOffset.Offset += 0.01;
+                                        NextSpeechTimeoutButtonOffset.Offset += 0.025;
+                                        PreviousSpeechTimeoutButtonOffset.Offset += 0.025;
                                     }
                                     else
                                     {
