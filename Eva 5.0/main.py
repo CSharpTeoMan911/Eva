@@ -3,9 +3,9 @@ import os
 import pyaudio
 import sys
 import json
-import socket
 import time
 import asyncio
+import aiofiles
 
 config = sys.argv[2]
 
@@ -35,8 +35,8 @@ async def get_confidence() -> float:
     confidence_threshold = 0.85
     try:
         if os.path.exists(config) is True:
-            with open(config, "r") as f:
-                config_obj = json.loads(s=f.read())
+            async with aiofiles.open(config, "r") as f:
+                config_obj = json.loads(s = await f.read())
                 confidence_threshold = float(config_obj["Vosk_Sensitivity"]) / 10
     except Exception:
         pass
@@ -47,9 +47,9 @@ async def pipe_messaging(message:str):
     start = time.time()
     while time.time() - start < 10:
         try:
-            with open(r"\\.\pipe\eva_wake_word_engine", "w") as pipe:
-                pipe.write(message)
-                pipe.flush()
+            async with aiofiles.open(r"\\.\pipe\eva_wake_word_engine", "w") as pipe:
+                await pipe.write(message)
+                await pipe.flush()
             break
         except Exception:
             pass
