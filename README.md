@@ -6,7 +6,8 @@
 ## 🔄 Changelog
 📌 Latest Version: v7.1.0
 * 🆕 Added asynchrounous file operations for the wake word engine for better performance
-* 🆕 Improved the Python runtime folder structure 
+* 🆕 Improved the Python runtime folder structure
+* 🆕 Added the option to set the speech recognition timeout
 
 ![Settings](https://github.com/user-attachments/assets/59f8afcf-db1c-4e52-9ae4-f5034e235e94)
 
