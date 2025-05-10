@@ -4,10 +4,11 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.0.8
-* 🐞 Fixed bug that created multiple wake word engine instances
+📌 Latest Version: v7.1.0
+* 🆕 Added asynchrounous file operations for the wake word engine for better performance
+* 🆕 Improved the Python runtime folder structure 
 
-![Settings](https://github.com/user-attachments/assets/c54cddc4-38e5-414e-a487-77c61a85805f)
+![Settings](https://github.com/user-attachments/assets/59f8afcf-db1c-4e52-9ae4-f5034e235e94)
 
 <br>
 <br>
