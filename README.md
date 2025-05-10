@@ -4,9 +4,9 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.0.9
-* 🐞 Fixed bug regarding the wake word engine sensitivity setup
-* 🆕 Added online speech recognition timeout setting
+📌 Latest Version: v7.1.0
+* 🆕 Added asynchrounous file operations for the wake word engine for better performance
+* 🆕 Improved the Python runtime folder structure 
 
 ![Settings](https://github.com/user-attachments/assets/59f8afcf-db1c-4e52-9ae4-f5034e235e94)
 
