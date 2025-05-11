@@ -114,11 +114,15 @@ __________________________________________________________
 
 <br>
 
-![TIME COMPLEXITY](https://user-images.githubusercontent.com/87245086/234992408-7ec94b0f-4b13-483a-8182-2a00b332d6af.png)
+![Time complexity](https://github.com/user-attachments/assets/996de477-159c-400c-adc5-3dc7d7b86f77)
 
 <br>
 
-The time complexity of the natural language understanding engine is in ***O(n)*** in the worst case and average case scenarios, and the time complexity ***O(n - ( n - (ci + 1) ))*** is in the best case scenario, where "ci" stands for current index where the engine could not match the input with any patern related to any process. Because the natural language understanding engine has 3 stages of tokenisation that are verifying if certain criterias are met within the given sentence, the natural language understanding engine will stop processing the information at the index where the sentence did not fulfil the specified criterias, depending at which tokenisation stage the natural language understanding engine the criterias are not satisfied, and thus the ***RAM*** memory resources and the ***CPU*** processing power are not wasted unnecessary.
+The time complexity of the natural language understanding engine is in ***O(n)*** in the worst case and average case scenarios, and the time complexity ***O(n - (ci + 1))*** is in the best case scenario, where "ci" stands for current index where the engine could not match the input with any patern related to any process. Because the natural language understanding engine has 3 stages of tokenisation that are verifying if certain criterias are met within the given sentence, the natural language understanding engine will stop processing the information at the index where the sentence did not fulfil the specified criterias, depending at which tokenisation stage the natural language understanding engine the criterias are not satisfied, and thus the ***RAM*** memory resources and the ***CPU*** processing power are not wasted unnecessary.
+
+#### Note 📝
+
+The previously mentioned formula results in the fact that the resulting best case is **O(1)**, and it was used like in other algorithms **(e.g. Boyer Moore algorithm, best case: **O(n/m)**)** to signify the underlying process through which the time complexity was achieved as well as highlighting the variations of the result **(e.g. O(1), O(2), O(3), etc.)**, which can be part of the same class **(e.g. O(1))**, but at a discreete level are different **(O(2) has two steps, whereas O(3) has three steps, but Big-O notation concludes that they are both part of the O(1) class)**.
 
 <br>
 <br>
@@ -151,13 +155,14 @@ When the animation begins, the formula y = x + v is used, where x is the current
 After reaching the threshold, the formula y = x - v is applied. The gradient value is decremented by v back to its original value, creating a smooth, flowing animation effect. This ensures that the animation ends as smoothly as it started.
 
 ## Formula Breakdown:
-* y = x + v (Increasing the gradient value for a smooth animation start)
-* y = x - v (Decreasing the gradient value for a smooth animation finish)
-* Where:
-* x = Current gradient value
-* y = Resulting gradient value
-* v = Increment/Decrement value
-* All values x, y, and v are greater than zero.
+* **y = x + v (Increasing the gradient value for a smooth animation start)**
+* **y = x - v (Decreasing the gradient value for a smooth animation finish)**
+
+#### Where:
+* **x = Current gradient value**
+* **y = Resulting gradient value**
+* **v = Increment/Decrement value**
+* **All values x, y, and v are greater than zero.**
   
 This algorithm allows Eva to create smooth, beautiful animations with fluid transitions, adding a polished feel to the application’s graphical interface.
 <br>
