@@ -155,13 +155,13 @@ When the animation begins, the formula y = x + v is used, where x is the current
 After reaching the threshold, the formula y = x - v is applied. The gradient value is decremented by v back to its original value, creating a smooth, flowing animation effect. This ensures that the animation ends as smoothly as it started.
 
 ## Formula Breakdown:
-* y = x + v (Increasing the gradient value for a smooth animation start)
-* y = x - v (Decreasing the gradient value for a smooth animation finish)
+* **y = x + v (Increasing the gradient value for a smooth animation start)**
+* **y = x - v (Decreasing the gradient value for a smooth animation finish)**
 * Where:
-* x = Current gradient value
-* y = Resulting gradient value
-* v = Increment/Decrement value
-* All values x, y, and v are greater than zero.
+* **x = Current gradient value**
+* **y = Resulting gradient value**
+* **v = Increment/Decrement value**
+* **All values x, y, and v are greater than zero.**
   
 This algorithm allows Eva to create smooth, beautiful animations with fluid transitions, adding a polished feel to the application’s graphical interface.
 <br>
