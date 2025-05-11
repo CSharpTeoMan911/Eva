@@ -122,7 +122,7 @@ The time complexity of the natural language understanding engine is in ***O(n)**
 
 #### Note 📝
 
-The previously mentioned formula results in the fact that the resulting best case is **O(1)**, and it was used like in other algorithms **(e.g. Boyer Moore algorithm, best case: **O(n/m)**)** to signify the underlying process through which the time complexity was acieved as well as highlighting the variations of the result (e.g. O(1), O(2), O(3), etc.), which can be part of the same class **(e.g. O(1))**, but at a discreete level are different **(O(2) has two steps, whereas O(3) has three steps, but Big-O notation concludes that they are both part of the O(1) class)**.
+The previously mentioned formula results in the fact that the resulting best case is **O(1)**, and it was used like in other algorithms **(e.g. Boyer Moore algorithm, best case: **O(n/m)**)** to signify the underlying process through which the time complexity was achieved as well as highlighting the variations of the result **(e.g. O(1), O(2), O(3), etc.)**, which can be part of the same class **(e.g. O(1))**, but at a discreete level are different **(O(2) has two steps, whereas O(3) has three steps, but Big-O notation concludes that they are both part of the O(1) class)**.
 
 <br>
 <br>
