@@ -157,7 +157,8 @@ After reaching the threshold, the formula y = x - v is applied. The gradient val
 ## Formula Breakdown:
 * **y = x + v (Increasing the gradient value for a smooth animation start)**
 * **y = x - v (Decreasing the gradient value for a smooth animation finish)**
-* Where:
+
+#### Where:
 * **x = Current gradient value**
 * **y = Resulting gradient value**
 * **v = Increment/Decrement value**
