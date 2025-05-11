@@ -154,23 +154,12 @@ namespace Eva_5._0
         }
 
 
-        private void PartialWindowFocus()
-        {
-            // KEEP THE MAIN WINDOW AS TOPMOST WINDOW (THE ONLINE SPEECH RECOGNITION ENGINE WORKS ONLY IF THE APPLICATION'S WINDOW IS ACTIVE)
-            Application.Current.MainWindow.Topmost = false;
-            Application.Current.MainWindow.Topmost = true;
-        }
-
-
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
             // Check the administartive rights with which the application session is running. If the application rights are the ones of administrator, the application will close.
             // This is done to prevent any security problems due to the fact that the application is operating at a low level within the operating system.
 
             // [ BEGIN ]
-
-
-            PartialWindowFocus();
 
             new Check_Role();
 
@@ -223,13 +212,14 @@ namespace Eva_5._0
                         // ARE MOVED ON THE UI THREAD VIA THE "Application.Current.Dispatcher.Invoke()" METHOD
                         await Application.Current.Dispatcher.InvokeAsync(() =>
                         {
+
                             if (Application.Current.MainWindow == null)
                             {
                                 AnimationAndFunctionalityTimer?.Stop();
                             }
                             else
                             {
-                                PartialWindowFocus();
+                                Application.Current.MainWindow.Topmost = true;
 
                                 if (invisibility_mode == true)
                                 {
