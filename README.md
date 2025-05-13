@@ -39,7 +39,7 @@ https://github.com/user-attachments/assets/294ea835-7d7c-4568-9578-da16f195cb2c
 
 * 🖥️🎙️ [Vosk Speech Recognition Engine](https://github.com/alphacep/vosk-api) 
 
-* 🤖🧠 [Speech recognition model](https://github.com/daanzu/kaldi-active-grammar/blob/master/docs/models.md)
+* 🤖🧠 [Speech recognition model](https://alphacephei.com/vosk/models)
 
 * 🖥️🎙️ [UWP Speech Recognition Engine](https://learn.microsoft.com/en-us/uwp/api/windows.media.speechrecognition.speechrecognizer?view=winrt-22621)
 
