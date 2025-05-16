@@ -219,8 +219,6 @@ namespace Eva_5._0
                             }
                             else
                             {
-                                Application.Current.MainWindow.Topmost = true;
-
                                 if (invisibility_mode == true)
                                 {
                                     this.Height = 0;
