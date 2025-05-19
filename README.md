@@ -5,7 +5,7 @@
 
 ## 🔄 Changelog
 📌 Latest Version: v7.1.2
-* 🆕 Fixed the issue caused by the bluetooth devices' speaker sleep function
+* 🐞 Fixed the issue caused by the bluetooth devices' speaker sleep function
 * 🆕 Added asynchrounous file operations for the wake word engine for better performance
 * 🆕 Improved the Python runtime folder structure
 * 🆕 Added the option to set the speech recognition timeout
