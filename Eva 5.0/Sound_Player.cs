@@ -11,6 +11,7 @@ namespace Eva_5._0.Properties
     public class Sound_Player
     {
         private System.Media.SoundPlayer SpeechSynthesisStream = new System.Media.SoundPlayer();
+        private System.Media.SoundPlayer BackgroundNoiseEffect = new System.Media.SoundPlayer("Sounds/White-Noise.wav");
         private System.Media.SoundPlayer AppExecutionSoundEffect = new System.Media.SoundPlayer("Sounds/App execution.wav");
         private System.Media.SoundPlayer AppTerminationSoundEffect = new System.Media.SoundPlayer("Sounds/App closing.wav");
         private System.Media.SoundPlayer ScreenshotExecutionSoundEffect = new System.Media.SoundPlayer("Sounds/Screenshot_Sound_Effect.wav");
@@ -23,6 +24,7 @@ namespace Eva_5._0.Properties
 
         public enum Sounds
         {
+            BackgroundNoiseEffect,
             AppExecutionSoundEffect,
             AppTerminationSoundEffect,
             ScreenshotExecutionSoundEffect,
@@ -42,6 +44,12 @@ namespace Eva_5._0.Properties
             {
                 switch(sound)
                 {
+                    case Sounds.BackgroundNoiseEffect:
+                        if (System.IO.File.Exists(@"Sounds/White-Noise.wav"))
+                        {
+                            BackgroundNoiseEffect.PlayLooping();
+                        }
+                        break;
                     case Sounds.AppExecutionSoundEffect:
                         if (System.IO.File.Exists(@"Sounds/App execution.wav"))
                         {

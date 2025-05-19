@@ -22,12 +22,7 @@ namespace Eva_5._0
 
     internal class Check_Role
     {
-        public Check_Role()
-        {
-            Check_User_Role();
-        }
-
-        private void Check_User_Role()
+        public static void Check_User_Role()
         {
             // GETS THE CURRENT USER ON THE CURRENT WINDOWS OS SESSION AND ITS PRIVILEDGE LEVEL
             System.Security.Principal.WindowsPrincipal role = new System.Security.Principal.WindowsPrincipal(System.Security.Principal.WindowsIdentity.GetCurrent());
