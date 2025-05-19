@@ -309,6 +309,7 @@ namespace Eva_5._0
             try
             {
                 OnlineSpeechRecognition?.Dispose();
+                OnlineSpeechRecognition = null;
             }
             catch { }
         }
