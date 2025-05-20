@@ -49,7 +49,7 @@ namespace Eva_5._0.Properties
         {
             // The audio '.wav' format is set to 16khz with an audio quality of 16 bit 
             // per cycle using a single channel, to ensure that no audio artifacts
-            // (crackle) is rendered. The format uses a single audio channel to 
+            // (crackle) are rendered. The format uses a single audio channel to 
             // ensure compatibility with mono and stereo audio devices.
             WaveFormat wave_format = new WaveFormat(25000, 16, 1);
 
