@@ -116,15 +116,14 @@ namespace Eva_5._0
                 // Spool the engine after the its is booted so
                 // its internal processes finished
                 DateTime spool_start = DateTime.UtcNow;
-                while ((DateTime.UtcNow - spool_start).TotalMilliseconds >= 450);
+                while ((DateTime.UtcNow - spool_start).TotalMilliseconds >= 600);
 
                 lock (Online_Speech_Recogniser_Listening)
                     Online_Speech_Recogniser_Listening = "true";
 
-                await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppActivationSoundEffect);
-
                 if (ConstraintsCompilation.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
                 {
+                    await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppActivationSoundEffect);
                     int Timeout = await Settings.Get_Speech_Timeout_Settings();
 
                     OnlineSpeechRecognition.ContinuousRecognitionSession.AutoStopSilenceTimeout = TimeSpan.FromSeconds(Timeout);
@@ -351,13 +350,15 @@ namespace Eva_5._0
 
                                 // TERMINATE THE WINDOWS OS ONLINE SPEECH RECOGNITION INTERFACE USING
                                 // THE OS' SHELL TO ENSURE THAT THE PROCESS WAS TERMINATED
-                                Process force_kill_speech_recognition_interface = new Process();
-                                force_kill_speech_recognition_interface.StartInfo.FileName = "powershell.exe";
-                                force_kill_speech_recognition_interface.StartInfo.Arguments = "Stop-Process -Name \"SpeechRuntime\" -Force";
-                                force_kill_speech_recognition_interface.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                                force_kill_speech_recognition_interface.StartInfo.CreateNoWindow = true;
-                                force_kill_speech_recognition_interface.StartInfo.UseShellExecute = false;
-                                force_kill_speech_recognition_interface.Start();
+                                using (Process force_kill_speech_recognition_interface = new Process())
+                                {
+                                    force_kill_speech_recognition_interface.StartInfo.FileName = "powershell.exe";
+                                    force_kill_speech_recognition_interface.StartInfo.Arguments = "Stop-Process -Name \"SpeechRuntime\" -Force";
+                                    force_kill_speech_recognition_interface.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                                    force_kill_speech_recognition_interface.StartInfo.CreateNoWindow = true;
+                                    force_kill_speech_recognition_interface.StartInfo.UseShellExecute = false;
+                                    force_kill_speech_recognition_interface.Start();
+                                }
 
                                 // END
                             }

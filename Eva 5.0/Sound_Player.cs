@@ -57,7 +57,6 @@ namespace Eva_5._0.Properties
 
             BufferedWaveProvider bufferedWave = new BufferedWaveProvider(wave_format);
             bufferedWave.AddSamples(audio, 0, audio.Length);
-
             wave_player.DeviceNumber = -1;
             wave_player.Init(bufferedWave);
             wave_player.Play();
