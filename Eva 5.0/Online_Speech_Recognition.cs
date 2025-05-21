@@ -113,11 +113,6 @@ namespace Eva_5._0
 
                 Windows.Media.SpeechRecognition.SpeechRecognitionCompilationResult ConstraintsCompilation = await OnlineSpeechRecognition.CompileConstraintsAsync();
 
-                // Spool the engine after the its is booted so
-                // its internal processes finished
-                DateTime spool_start = DateTime.UtcNow;
-                while ((DateTime.UtcNow - spool_start).TotalMilliseconds >= 600);
-
                 lock (Online_Speech_Recogniser_Listening)
                     Online_Speech_Recogniser_Listening = "true";
 
