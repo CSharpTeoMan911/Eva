@@ -8,7 +8,7 @@
 
 ## 🔄 Changelog
 📌 Latest Version: v7.1.4
-* 🐞 Fixed the issue caused by the bluetooth devices' speaker sleep function
+* 🐞 Removed STT sppoling
 * 🐞 Background noise audio pop caused by audio artifacts by switching to 16 bit audio
 * 🆕 Added asynchrounous file operations for the wake word engine for better performance
 * 🆕 Added the option to set the speech recognition timeout
