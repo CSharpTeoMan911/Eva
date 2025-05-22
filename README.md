@@ -7,7 +7,7 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.1.5
+📌 Latest Version: v7.1.6
 * 🆕 Re-implemented STT sppoling before any STT engine operation
 * 🐞 Background noise audio pop caused by audio artifacts by switching to 16 bit audio
 * 🆕 Added asynchrounous file operations for the wake word engine for better performance
