@@ -97,6 +97,9 @@ namespace Eva_5._0
                 // INITIATE THE SPEECH RECOGNITION ENGINE
                 OnlineSpeechRecognition = new Windows.Media.SpeechRecognition.SpeechRecognizer(new Windows.Globalization.Language(await Settings.Get_Speech_Language_Settings()));
 
+                // Spool the engine before compiling the contraints
+                while ((DateTime.UtcNow - start).TotalMilliseconds < 200);
+
                 OnlineSpeechRecognition.Constraints.Clear();
                 switch (await Settings.Get_Speech_Operation_Settings())
                 {
