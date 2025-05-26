@@ -13,7 +13,7 @@
 * 🆕 Added asynchrounous file operations for the wake word engine for better performance
 * 🆕 Added the option to set the speech recognition timeout
 
-![Settings](https://github.com/user-attachments/assets/bfd81350-21b2-4532-b28c-6bce9634817e)
+![Settings](https://github.com/user-attachments/assets/add286b1-5e11-4709-8c51-f938382eaa0f)
 
 <br>
 <br>
