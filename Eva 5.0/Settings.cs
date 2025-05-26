@@ -231,6 +231,11 @@ namespace Eva_5._0
         //
         // [ BEGIN ]
 
+        public static async Task<int> Get_Spooling_Time_Settings()
+        {
+            return (await Load_Settings_File()).SpoolingTime;
+        }
+
         public static async Task<int> Get_Speech_Timeout_Settings()
         {
             return (await Load_Settings_File()).Timeout;
@@ -246,7 +251,6 @@ namespace Eva_5._0
             return (await Load_Settings_File()).Sound_On;
         }
 
-
         public static async Task<bool> Get_Synthesis_Settings()
         {
             return (await Load_Settings_File()).Synthesis_On;
@@ -260,6 +264,13 @@ namespace Eva_5._0
         public static async Task<A_p_l____And____P_r_o_c.SpeechRecognitionOperation> Get_Speech_Operation_Settings()
         {
             return (await Load_Settings_File()).Operation;
+        }
+        public static async Task Set_Spooling_Time_Settings(int time)
+        {
+            Settings_File settings_File = await Load_Settings_File();
+            settings_File.SpoolingTime = time;
+
+            await Update_Settings_File(settings_File);
         }
 
         public static async Task Set_Speech_Timeout_Settings(int timeout)

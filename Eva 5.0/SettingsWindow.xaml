@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Eva_5._0"
         mc:Ignorable="d"
-        Title="Settings" Height="680" Width="450" WindowStyle="None" AllowsTransparency="True" Opacity="0.98" Loaded="SettingsWindowLoaded" Closing="WindowClosing" Icon="Images/Eva icon.png" Topmost="True">
+        Title="Settings" Height="690" Width="450" WindowStyle="None" AllowsTransparency="True" Opacity="0.98" Loaded="SettingsWindowLoaded" Closing="WindowClosing" Icon="Images/Eva icon.png" Topmost="True">
 
     <!--/////////////////////////////////////////////////////////////////////////////
         ///                                                                       ///
@@ -25,7 +25,7 @@
 
 
     <Window.Clip>
-        <RectangleGeometry Rect="0, 0, 450, 680" RadiusX="20" RadiusY="20"/>
+        <RectangleGeometry Rect="0, 0, 450, 690" RadiusX="20" RadiusY="20"/>
     </Window.Clip>
 
 
@@ -227,7 +227,7 @@
                             <RectangleGeometry Rect="0,0,82.3,18" RadiusX="3" RadiusY="3"/>
                         </StackPanel.Clip>
 
-                        <Button x:Name="PreviousSpeechLanguageButton" Background="Black" BorderBrush="Transparent" FontSize="11" FontFamily="Segoe MDL2 Assets" Content="&#xEDD9;" Click="PreviousLanguage" Style="{StaticResource MyButtonStyle}">
+                        <Button x:Name="PreviousSpeechLanguageButton" Background="Black" BorderBrush="Transparent" FontSize="11" FontFamily="Segoe MDL2 Assets" Content="&#xEDD9;" Click="DecreaseSpoolingTime" Style="{StaticResource MyButtonStyle}">
                             <Button.Foreground>
                                 <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
                                     <GradientStop Color="#FF7BBFD8" x:Name="PreviousSpeechLanguageButtonOffset" Offset="1"/>
@@ -245,7 +245,7 @@
                             </TextBox.Background>
                         </TextBox>
 
-                        <Button x:Name="NextSpeechLanguageButton" Background="Black" BorderBrush="Transparent" Margin="0,0,0,0" FontSize="11" FontFamily="Segoe MDL2 Assets" Content="&#xEDDA;" Click="NextLanguage" Style="{StaticResource MyButtonStyle}">
+                        <Button x:Name="NextSpeechLanguageButton" Background="Black" BorderBrush="Transparent" Margin="0,0,0,0" FontSize="11" FontFamily="Segoe MDL2 Assets" Content="&#xEDDA;" Click="IncreaseSpoolingTime" Style="{StaticResource MyButtonStyle}">
                             <Button.Foreground>
                                 <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
                                     <GradientStop Color="#FF7BBFD8" x:Name="NextSpeechLanguageButtonOffset" Offset="1"/>
@@ -337,6 +337,50 @@
                             <Button.Foreground>
                                 <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
                                     <GradientStop Color="#FF7BBFD8" x:Name="NextSpeechTimeoutButtonOffset" Offset="1"/>
+                                    <GradientStop Color="#FF1B70C3"/>
+                                </LinearGradientBrush>
+                            </Button.Foreground>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,15,0,0" Orientation="Horizontal">
+                    <TextBlock Margin="0,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontFamily="Corbel Light" Text="Spooling Timeout">
+                        <TextBlock.Foreground>
+                            <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
+                                <GradientStop Color="#FF7BBFD8" x:Name="SpeechSpoolingOffset" Offset="1"/>
+                                <GradientStop Color="#FF1B70C3"/>
+                            </LinearGradientBrush>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+
+                    <StackPanel Width="90" Height="20" Background="Black" Orientation="Horizontal">
+                        <StackPanel.Clip>
+                            <RectangleGeometry Rect="0,0,90,20" RadiusX="3" RadiusY="3"/>
+                        </StackPanel.Clip>
+
+                        <Button x:Name="PreviousSpeechSpoolingTimeout" Background="Black" BorderBrush="Transparent" FontSize="11" FontFamily="Segoe MDL2 Assets" Content="&#xEDD9;" Click="DecreaseSpoolingTime" Style="{StaticResource MyButtonStyle}">
+                            <Button.Foreground>
+                                <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
+                                    <GradientStop Color="#FF7BBFD8" x:Name="PreviousSpeechSpoolingButtonOffset" Offset="1"/>
+                                    <GradientStop Color="#FF1B70C3"/>
+                                </LinearGradientBrush>
+                            </Button.Foreground>
+                        </Button>
+
+                        <TextBox x:Name="SpeechSpoolingTimeout" BorderThickness="0" Width="48" Height="20" IsReadOnly="True" FontFamily="Consolas" FontWeight="Bold" TextAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap">
+                            <TextBox.Background>
+                                <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
+                                    <GradientStop Color="#FF7BBFD8" x:Name="CurrentSpeechSpoolingTimeoutOffset" Offset="1"/>
+                                    <GradientStop Color="#FF1B70C3"/>
+                                </LinearGradientBrush>
+                            </TextBox.Background>
+                        </TextBox>
+
+                        <Button x:Name="NextSpeechSpoolingTimeout" Background="Black" BorderBrush="Transparent" Margin="0,0,0,0" FontSize="11" FontFamily="Segoe MDL2 Assets" Content="&#xEDDA;" Click="IncreaseSpoolingTime" Style="{StaticResource MyButtonStyle}">
+                            <Button.Foreground>
+                                <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
+                                    <GradientStop Color="#FF7BBFD8" x:Name="NextSpeechSpoolingTimeoutButtonOffset" Offset="1"/>
                                     <GradientStop Color="#FF1B70C3"/>
                                 </LinearGradientBrush>
                             </Button.Foreground>

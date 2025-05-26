@@ -97,8 +97,6 @@ namespace Eva_5._0
                 // INITIATE THE SPEECH RECOGNITION ENGINE
                 OnlineSpeechRecognition = new Windows.Media.SpeechRecognition.SpeechRecognizer(new Windows.Globalization.Language(await Settings.Get_Speech_Language_Settings()));
 
-                // Spool the engine before compiling the contraints
-                while ((DateTime.UtcNow - start).TotalMilliseconds < 200);
 
                 OnlineSpeechRecognition.Constraints.Clear();
                 switch (await Settings.Get_Speech_Operation_Settings())
@@ -116,11 +114,16 @@ namespace Eva_5._0
 
                 Windows.Media.SpeechRecognition.SpeechRecognitionCompilationResult ConstraintsCompilation = await OnlineSpeechRecognition.CompileConstraintsAsync();
 
-                lock (Online_Speech_Recogniser_Listening)
-                    Online_Speech_Recogniser_Listening = "true";
+
 
                 if (ConstraintsCompilation.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
                 {
+                    // Spool the engine before compiling the contraints
+                    while ((DateTime.UtcNow - start).TotalMilliseconds < await Settings.Get_Spooling_Time_Settings());
+
+                    lock (Online_Speech_Recogniser_Listening) 
+                        Online_Speech_Recogniser_Listening = "true";
+
                     await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppActivationSoundEffect);
                     int Timeout = await Settings.Get_Speech_Timeout_Settings();
 
