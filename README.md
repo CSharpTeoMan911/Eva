@@ -7,8 +7,8 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.1.6
-* 🆕 Re-implemented STT sppoling before any STT engine operation
+📌 Latest Version: v7.1.7
+* 🆕 Added STT sppoling period setting option in the settings page  
 * 🐞 Background noise audio pop caused by audio artifacts by switching to 16 bit audio
 * 🆕 Added asynchrounous file operations for the wake word engine for better performance
 * 🆕 Added the option to set the speech recognition timeout
