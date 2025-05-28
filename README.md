@@ -7,7 +7,7 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.1.7
+📌 Latest Version: v7.1.8
 * 🆕 Added STT sppoling period setting option in the settings page  
 * 🐞 Retarded the UWP SDK package version
 * 🆕 Added asynchrounous file operations for the wake word engine for better performance
