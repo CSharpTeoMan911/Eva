@@ -59,7 +59,7 @@ namespace Eva_5._0
             Language_Not_Supported
         }
 
-        public static void Online_Speech_Recognition_Session_Creation_And_Initiation()
+        public static async void Online_Speech_Recognition_Session_Creation_And_Initiation()
         {
             bool operational = false;
 
@@ -74,13 +74,16 @@ namespace Eva_5._0
                     }
                 }
             }
-            
+
+            int Timeout = await Settings.Get_Speech_Timeout_Settings();
+            int SpoolingTimeout = await Settings.Get_Spooling_Time_Settings();
+
             if (operational == true)
-                Initiate_The_Online_Speech_Recognition_Engine();
+                Initiate_The_Online_Speech_Recognition_Engine(Timeout, SpoolingTimeout);
         }
 
 
-        private static async void Initiate_The_Online_Speech_Recognition_Engine()
+        private static async void Initiate_The_Online_Speech_Recognition_Engine(int Timeout, int SpoolingTimeout)
         {
             try
             {
@@ -114,18 +117,13 @@ namespace Eva_5._0
 
                 Windows.Media.SpeechRecognition.SpeechRecognitionCompilationResult ConstraintsCompilation = await OnlineSpeechRecognition.CompileConstraintsAsync();
 
-
-
                 if (ConstraintsCompilation.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
                 {
                     // Spool the engine before compiling the contraints
-                    while ((DateTime.UtcNow - start).TotalMilliseconds < await Settings.Get_Spooling_Time_Settings());
+                    while ((DateTime.UtcNow - start).TotalMilliseconds < SpoolingTimeout);
 
                     lock (Online_Speech_Recogniser_Listening) 
                         Online_Speech_Recogniser_Listening = "true";
-
-                    await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppActivationSoundEffect);
-                    int Timeout = await Settings.Get_Speech_Timeout_Settings();
 
                     OnlineSpeechRecognition.ContinuousRecognitionSession.AutoStopSilenceTimeout = TimeSpan.FromSeconds(Timeout);
                     OnlineSpeechRecognition.Timeouts.EndSilenceTimeout = TimeSpan.FromSeconds(Timeout);
@@ -139,6 +137,8 @@ namespace Eva_5._0
                     OnlineSpeechRecognition.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
 
                     await OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionMode.PauseOnRecognition);
+                    
+                    await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppActivationSoundEffect);
                 }
                 else
                 {
