@@ -7,10 +7,11 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.2.0
+📌 Latest Version: v7.2.1
 
 * 🆕 Added Online Speech Recognition Engine process cache removal mechanism
 * 🆕 Added COM object removal mechanism for the Online Speech Recognition Engine
+* 🆕 Added Online Speech Recognition Engine events unsubscription
 
 ![Settings](https://github.com/user-attachments/assets/add286b1-5e11-4709-8c51-f938382eaa0f)
 
