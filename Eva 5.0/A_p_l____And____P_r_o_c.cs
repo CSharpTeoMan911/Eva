@@ -100,6 +100,11 @@ namespace Eva_5._0
                 internal static void Empty_Recycle_Bin_Implementor() => Empty_Recycle_Bin();
             }
 
+            public class Process_Cache_Cleanup_Implementor : Process_Cache_Cleanup
+            {
+                internal static void Empty_Process_Cache_Implementor(IntPtr hwProc) => Empty_Recycle_Bin(hwProc);
+            }
+
             public class Begin_Application_Execution_Animation : MainWindow
             {
                 internal static void Start_The_Application_Execution_Animation()
