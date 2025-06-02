@@ -11,8 +11,8 @@ namespace Eva_5._0
 {
     internal class JsonSerialisation
     {
-        private static DefaultContractResolver contractResolver = new DefaultContractResolver();
-        private static JsonSerializer serializer = new JsonSerializer()
+        private static readonly DefaultContractResolver contractResolver = new DefaultContractResolver();
+        private static readonly JsonSerializer serializer = new JsonSerializer()
         {
             ContractResolver = contractResolver
         };
@@ -29,7 +29,6 @@ namespace Eva_5._0
                     {
                         return_item = serializer.Deserialize<ReturnType>(reader);
                     }
-                    sr?.Dispose();
                 }
             }
             catch { }
@@ -52,7 +51,6 @@ namespace Eva_5._0
                         serializer.Serialize(writer, item);
                         return_item = tw.ToString();
                     }
-                    tw?.Dispose();
                 }
             }
             catch { }

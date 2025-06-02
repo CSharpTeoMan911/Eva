@@ -313,6 +313,12 @@ namespace Eva_5._0
             {
                 if (OnlineSpeechRecognition != null)
                 {
+                    OnlineSpeechRecognition.StateChanged -= OnlineSpeechRecognition_StateChanged;
+                    OnlineSpeechRecognition.HypothesisGenerated -= OnlineSpeechRecognition_HypothesisGenerated;
+                    OnlineSpeechRecognition.ContinuousRecognitionSession.Completed -= ContinuousRecognitionSession_Completed;
+                    OnlineSpeechRecognition.RecognitionQualityDegrading -= OnlineSpeechRecognition_RecognitionQualityDegrading;
+                    OnlineSpeechRecognition.ContinuousRecognitionSession.ResultGenerated -= ContinuousRecognitionSession_ResultGenerated;
+
                     OnlineSpeechRecognition.Dispose();
                     int successful = Marshal.FinalReleaseComObject(OnlineSpeechRecognition);
                     OnlineSpeechRecognition = null;
@@ -347,7 +353,6 @@ namespace Eva_5._0
             {
                 if (Online_Speech_Recogniser_Listening == "true")
                 {
-
                     foreach (Process p in Get_Recogniser_Interfaces())
                     {
                         Proc.ClearProcessCache(p.Handle);

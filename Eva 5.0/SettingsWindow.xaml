@@ -227,7 +227,7 @@
                             <RectangleGeometry Rect="0,0,82.3,18" RadiusX="3" RadiusY="3"/>
                         </StackPanel.Clip>
 
-                        <Button x:Name="PreviousSpeechLanguageButton" Background="Black" BorderBrush="Transparent" FontSize="11" FontFamily="Segoe MDL2 Assets" Content="&#xEDD9;" Click="DecreaseSpoolingTime" Style="{StaticResource MyButtonStyle}">
+                        <Button x:Name="PreviousSpeechLanguageButton" Background="Black" BorderBrush="Transparent" FontSize="11" FontFamily="Segoe MDL2 Assets" Content="&#xEDD9;" Click="PreviousLanguage" Style="{StaticResource MyButtonStyle}" RenderTransformOrigin="-0.838,79.524">
                             <Button.Foreground>
                                 <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
                                     <GradientStop Color="#FF7BBFD8" x:Name="PreviousSpeechLanguageButtonOffset" Offset="1"/>
@@ -245,7 +245,7 @@
                             </TextBox.Background>
                         </TextBox>
 
-                        <Button x:Name="NextSpeechLanguageButton" Background="Black" BorderBrush="Transparent" Margin="0,0,0,0" FontSize="11" FontFamily="Segoe MDL2 Assets" Content="&#xEDDA;" Click="IncreaseSpoolingTime" Style="{StaticResource MyButtonStyle}">
+                        <Button x:Name="NextSpeechLanguageButton" Background="Black" BorderBrush="Transparent" Margin="0,0,0,0" FontSize="11" FontFamily="Segoe MDL2 Assets" Content="&#xEDDA;" Click="NextLanguage" Style="{StaticResource MyButtonStyle}">
                             <Button.Foreground>
                                 <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
                                     <GradientStop Color="#FF7BBFD8" x:Name="NextSpeechLanguageButtonOffset" Offset="1"/>
