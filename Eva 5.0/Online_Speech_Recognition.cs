@@ -314,7 +314,11 @@ namespace Eva_5._0
                 if (OnlineSpeechRecognition != null)
                 {
                     OnlineSpeechRecognition.Dispose();
+                    int successful = Marshal.FinalReleaseComObject(OnlineSpeechRecognition);
                     OnlineSpeechRecognition = null;
+
+                    GC.Collect(10, GCCollectionMode.Forced);
+                    GC.WaitForFullGCComplete();
                 }
             }
             catch { }
@@ -343,6 +347,7 @@ namespace Eva_5._0
             {
                 if (Online_Speech_Recogniser_Listening == "true")
                 {
+
                     foreach (Process p in Get_Recogniser_Interfaces())
                     {
                         Proc.ClearProcessCache(p.Handle);
