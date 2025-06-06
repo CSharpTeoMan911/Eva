@@ -323,9 +323,6 @@ namespace Eva_5._0
             await Eva_Functionalities.Screen_Capture_Mechanism_Mitigator.Screen_Capture_Initiator();
         }
 
-
-        public static void ClearProcessCache(IntPtr ptr) => Eva_Functionalities.Process_Cache_Cleanup_Implementor.Empty_Process_Cache_Implementor(ptr);
-
         ~Proc()
         {
             System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;

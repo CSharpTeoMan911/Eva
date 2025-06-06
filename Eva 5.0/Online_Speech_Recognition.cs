@@ -345,6 +345,9 @@ namespace Eva_5._0
         }
 
 
+        [DllImport("psapi.dll")]
+        private static extern int EmptyWorkingSet(IntPtr hwProc);
+
         // Removed the cached data in the online speech recognition engine because it may cause
         // undefined behaviour.
         private static void ClearOnlineSpeechRecognitionEngineCache()
@@ -353,10 +356,14 @@ namespace Eva_5._0
             {
                 if (Online_Speech_Recogniser_Listening == "true")
                 {
-                    foreach (Process p in Get_Recogniser_Interfaces())
+                    try
                     {
-                        Proc.ClearProcessCache(p.Handle);
+                        foreach (Process p in Get_Recogniser_Interfaces())
+                        {
+                            EmptyWorkingSet(p.Handle);
+                        }
                     }
+                    catch { }
                 }
             }
         }
