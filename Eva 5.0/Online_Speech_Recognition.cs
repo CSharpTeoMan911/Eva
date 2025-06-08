@@ -140,8 +140,6 @@ namespace Eva_5._0
                     await OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionMode.PauseOnRecognition);
                     
                     await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppActivationSoundEffect);
-
-                    ClearOnlineSpeechRecognitionEngineCache();
                 }
                 else
                 {
@@ -343,31 +341,6 @@ namespace Eva_5._0
 
             return interfaces;
         }
-
-
-        [DllImport("psapi.dll")]
-        private static extern int EmptyWorkingSet(IntPtr hwProc);
-
-        // Removed the cached data in the online speech recognition engine because it may cause
-        // undefined behaviour.
-        private static void ClearOnlineSpeechRecognitionEngineCache()
-        {
-            lock (Online_Speech_Recogniser_Listening)
-            {
-                if (Online_Speech_Recogniser_Listening == "true")
-                {
-                    try
-                    {
-                        foreach (Process p in Get_Recogniser_Interfaces())
-                        {
-                            EmptyWorkingSet(p.Handle);
-                        }
-                    }
-                    catch { }
-                }
-            }
-        }
-
 
         public static bool OS_Online_Speech_Recognition_Interface_Shutdown()
         {
