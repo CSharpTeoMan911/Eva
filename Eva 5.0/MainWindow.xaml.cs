@@ -7,6 +7,8 @@ using System.Windows.Media;
 using static Eva_5._0.Online_Speech_Recognition;
 using System.Windows.Controls;
 using System.Threading;
+using Microsoft.Win32;
+using System.Diagnostics;
 
 namespace Eva_5._0
 {
@@ -147,12 +149,18 @@ namespace Eva_5._0
 
         public MainWindow()
         {
+            SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
+
             for (int i = 20; i >= 0; i--)
                 Online_Speech_Recognition_Timeout_Timer_UI_Intervals.Add(i.ToString());
 
             InitializeComponent();
         }
 
+        private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
+        {
+            if(e.Mode == PowerModes.Resume) this.Activate();
+        }
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
