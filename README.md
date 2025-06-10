@@ -7,9 +7,9 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.2.2
+📌 Latest Version: v7.2.3
 
-* 🆕 Added Online Speech Recognition Engine process cache removal mechanism
+* 🆕 Removed Online Speech Recognition Engine process cache removal mechanism
 * 🆕 Added COM object removal mechanism for the Online Speech Recognition Engine
 * 🐞 Fixed small bug
 
