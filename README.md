@@ -7,11 +7,11 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.2.3
+📌 Latest Version: v7.2.4
 
 * 🆕 Removed Online Speech Recognition Engine process cache removal mechanism
 * 🆕 Added COM object removal mechanism for the Online Speech Recognition Engine
-* 🐞 Fixed small bug
+* 🐞 Fixed logical focus loss when the PC sleep mode starts
 
 ![Settings](https://github.com/user-attachments/assets/add286b1-5e11-4709-8c51-f938382eaa0f)
 
