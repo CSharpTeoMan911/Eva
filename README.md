@@ -7,8 +7,9 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.2.4
+📌 Latest Version: v7.2.5
 
+* 🆕 Added aggressive inlining for the app's core functions
 * 🆕 Removed Online Speech Recognition Engine process cache removal mechanism
 * 🆕 Added COM object removal mechanism for the Online Speech Recognition Engine
 * 🐞 Fixed logical focus loss when the PC sleep mode starts
