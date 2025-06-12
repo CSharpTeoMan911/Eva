@@ -1,5 +1,6 @@
 ﻿using Eva_5._0.Properties;
 using System;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,36 +30,10 @@ namespace Eva_5._0
         /////////////////////////////////////////////////////////////////////////////
 
 
-        /*
-         * 
-         * 
-         * 
-         * 
-         * ALL THE PROCESSES (ONLINE OR SYSTEM RELATED) ARE MULTITHREADED WITHIN AN ASYNCHRONOUS CALL STACK.
-         * 
-         * 
-         * 
-         * THIS WAS DONE IN ORDER TO ENSURE A SMOOTH OPERABILITY AND ALSO TO AVOID THE THREAD OVERLOAD OF ANY CPU CORE.
-         * 
-         * 
-         * 
-         * THE ASYNCHRONOUS CALL STACK OPERATES WITHIN THE APPLICATION'S DEFAULT THREAD POOL, WHICH ARE THREADS
-         * THAT DO NOT HAVE ANY PRESETTED VALUES OR PROPRIETIES, OCUPPY AN EQUAL AMMOUNT OF RESOURCES AND WHEN 
-         * ALL ARE FULL THE REMAINING TASKS WILL WAIT FOR A BACKGROUND THREAD FROM THE THREADPOOL TO FREE.
-         * 
-         * 
-         * THE SOUND EFFECTS OF THE APPLICATION'S RELATED SOUND EFFECTS FOR PROCESS EXECUTION AND/OR TERMINATION
-         * AND APPLICATION'S OPERATING SYSTEM SPECIFIC ERRORS ARE INCLUDED IN THE APPLICATION'S SOLUTION. PLEASE 
-         * COPY THEM IN THE APPLICATION'S DESIRED BIN FOLDER
-         * 
-         * 
-         * 
-         * 
-         */
-
         // INT THAT IS MONITORING THE AMOUNT OF TASKS THAT ARE CURRENTLY RUNNING
         public static int tasks_running;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected static void ProcInitialisation<Content>(string process_type, string application, Content content)
         {
             // IF THE AMOUNT OF TASKS CURRENTLY RUNNING IS '0'
@@ -95,7 +70,7 @@ namespace Eva_5._0
             }
         }
 
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static async void OnlineProcesses(string WebApplication, string SearchContent)
         {
             string Process = String.Empty;
@@ -128,6 +103,7 @@ namespace Eva_5._0
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static async void SystemProcesses(string Application, string Process)
         {
             string application_executable_name = String.Empty;
@@ -251,7 +227,7 @@ namespace Eva_5._0
             }
         }
 
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static async void MissingApplicationDownload(string application_not_found_error_link)
         {
             Eva_Functionalities.Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
@@ -271,7 +247,7 @@ namespace Eva_5._0
             await sound_player.Play_Sound(Sound_Player.Sounds.AppExecutionSoundEffect);
         }
 
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private async static void TimerProcess(System.Collections.Concurrent.ConcurrentDictionary<string, int> Timer_Time_Intervals)
         {
             try
@@ -296,7 +272,7 @@ namespace Eva_5._0
             catch { }
         }
 
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static async void ChatGPT_API_Interface(string input)
         {
             await Application.Current.Dispatcher.InvokeAsync(() =>
@@ -313,6 +289,7 @@ namespace Eva_5._0
         }
 
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static async void Screen_Capture()
         {
             await SpeechSynthesis.Synthesis(SpeechSynthesis.Action.Taking, null, "a screenshot");

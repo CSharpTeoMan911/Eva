@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -60,6 +61,7 @@ namespace Eva_5._0
             Language_Not_Supported
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async void Online_Speech_Recognition_Session_Creation_And_Initiation()
         {
             bool operational = false;

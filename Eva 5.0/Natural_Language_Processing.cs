@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom;
 using System.Diagnostics.Eventing.Reader;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -53,7 +54,7 @@ namespace Eva_5._0
         private static StringBuilder WebApplicationSearchContent_StringBuilder = new StringBuilder();
         private static StringBuilder WordBuffer_StringBuilder = new StringBuilder();
 
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async void PreProcessing(string Result)
         {
             Sentence_StringBuilder.Clear();
@@ -270,7 +271,7 @@ namespace Eva_5._0
         }
 
 
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void PostProcessing(string Param, string Sentence)
         {
             // THE SECOND TOKENIZATION IS INITIATED. HERE THE CONTEXTUAL NATURAL LANGUAGE PROCESSING TAKES PLACE. THE KEYWORDS RELATED TO THE COMMAND FORMATS DETECTED ARE TOKENIZED.
@@ -497,7 +498,7 @@ namespace Eva_5._0
 
 
 
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void Timer_Time_Selector(string Sentence, System.Collections.Concurrent.ConcurrentDictionary<string, int> time_interval, int start_index)
         {
             // WHEN A TIMER IS SET THE TIME VARIABLES FROM THE SENTECE MUST BE EXTRACTED. THE SECOND TOKENIZATION WILL EXTRACTS WHERE
@@ -687,6 +688,7 @@ namespace Eva_5._0
             // [ END ]
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static string System_Application_Selector(int start_index, string Sentence)
         {
             System.Collections.Generic.Stack<string> Token_Buffer_List = new System.Collections.Generic.Stack<string>();
@@ -725,6 +727,7 @@ namespace Eva_5._0
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static string System_Process_Selector(int start_index, string Sentence)
         {
             System.Collections.Generic.Stack<string> Token_Buffer_List = new System.Collections.Generic.Stack<string>();
@@ -763,6 +766,7 @@ namespace Eva_5._0
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static string Web_Application_Selector(int start_index, string Sentence)
         {
             // THE SECOND TOKENIZATION IDENTIFIES WHERE THE POSITION OF THE WEB APPLICATION KEYWORD IS WITHIN THE SENTENCE
