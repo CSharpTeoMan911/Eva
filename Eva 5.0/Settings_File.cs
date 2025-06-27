@@ -17,6 +17,6 @@ namespace Eva_5._0
         public int ModelTemperature { get; set; } = 5;
         public string Open_AI_Chat_GPT_Key { get; set; } = String.Empty;
         public string Online_Speech_Recognition_Language { get; set; } = "en-GB";
-        public int SpoolingTime { get; set; } = 600;
+        public int SpoolingTime { get; set; } = 550;
     }
 }

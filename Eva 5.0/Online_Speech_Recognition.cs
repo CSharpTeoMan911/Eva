@@ -79,14 +79,13 @@ namespace Eva_5._0
             }
 
             int Timeout = await Settings.Get_Speech_Timeout_Settings();
-            int SpoolingTimeout = await Settings.Get_Spooling_Time_Settings();
 
             if (operational == true)
-                Initiate_The_Online_Speech_Recognition_Engine(Timeout, SpoolingTimeout);
+                Initiate_The_Online_Speech_Recognition_Engine(Timeout);
         }
 
 
-        private static async void Initiate_The_Online_Speech_Recognition_Engine(int Timeout, int SpoolingTimeout)
+        private static async void Initiate_The_Online_Speech_Recognition_Engine(int Timeout)
         {
             try
             {
@@ -122,9 +121,6 @@ namespace Eva_5._0
 
                 if (ConstraintsCompilation.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
                 {
-                    // Spool the engine before compiling the contraints
-                    while ((DateTime.UtcNow - start).TotalMilliseconds < SpoolingTimeout);
-
                     lock (Online_Speech_Recogniser_Listening) 
                         Online_Speech_Recogniser_Listening = "true";
 
@@ -234,7 +230,30 @@ namespace Eva_5._0
                 Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.UtcNow;
             }
 
-            Close_Speech_Recognition_Interface();
+            lock (Online_Speech_Recogniser_Listening)
+            {
+                if (Online_Speech_Recogniser_Listening == "true")
+                {
+                    if (args.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.UserCanceled)
+                    {
+                        lock (Online_Speech_Recogniser_State)
+                        {
+                            if (Online_Speech_Recogniser_State == "Paused")
+                            {
+                                sender.Resume();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Close_Speech_Recognition_Interface();
+                    }
+                }
+                else
+                {
+                    Close_Speech_Recognition_Interface();
+                }
+            }
         }
 
         private static void OnlineSpeechRecognition_StateChanged(Windows.Media.SpeechRecognition.SpeechRecognizer sender, Windows.Media.SpeechRecognition.SpeechRecognizerStateChangedEventArgs args)

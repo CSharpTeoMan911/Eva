@@ -6,7 +6,7 @@
         xmlns:xrpb="http://XamlRadialProgressBar/DotNet"
         xmlns:local="clr-namespace:Eva_5._0"
         mc:Ignorable="d"
-        Title="Eva" Height="159" Width="260" Loaded="WindowLoaded" Closing="MainWindowClosing" ResizeMode="NoResize"  Opacity="0.94" AllowsTransparency="True" WindowStyle="None" Icon="Images/Eva icon.png" Topmost="True">
+        Title="Eva" Height="159" Width="260" Loaded="WindowLoaded" ShowInTaskbar="False" Closing="MainWindowClosing" ResizeMode="NoResize"  Opacity="0.94" AllowsTransparency="True" WindowStyle="None" Icon="Images/Eva icon.png" Topmost="True">
 
 
     <!--/////////////////////////////////////////////////////////////////////////////

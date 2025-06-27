@@ -168,7 +168,6 @@ namespace Eva_5._0
                     bool SythesisOnOrOff = await Settings.Get_Synthesis_Settings();
                     string SpeechLanguage = await Settings.Get_Speech_Language_Settings();
                     int Timeout = await Settings.Get_Speech_Timeout_Settings();
-                    int SpoolingTime = await Settings.Get_Spooling_Time_Settings();
 
                     A_p_l____And____P_r_o_c.SpeechRecognitionOperation operation = await Settings.Get_Speech_Operation_Settings();
 
@@ -223,7 +222,6 @@ namespace Eva_5._0
 
                         SpeechLanguageDisplay.Text = SpeechLanguage;
                         SpeechOperationTimeout.Text = Timeout.ToString();
-                        SpeechSpoolingTimeout.Text = SpoolingTime.ToString();
                     });
                 }
                 catch { }
@@ -414,12 +412,6 @@ namespace Eva_5._0
                                         CurrentSpeechTimeoutOffset.Offset -= 0.01;
                                         NextSpeechTimeoutButtonOffset.Offset -= 0.025;
                                         PreviousSpeechTimeoutButtonOffset.Offset -= 0.025;
-                                        SpeechSpoolingOffset.Offset -= 0.01;
-                                        PreviousSpeechSpoolingButtonOffset.Offset -= 0.025;
-                                        CurrentSpeechSpoolingTimeoutOffset.Offset -= 0.01;
-                                        NextSpeechSpoolingTimeoutButtonOffset.Offset -= 0.025;
-
-
                                     }
                                     else
                                     {
@@ -464,10 +456,6 @@ namespace Eva_5._0
                                         CurrentSpeechTimeoutOffset.Offset += 0.01;
                                         NextSpeechTimeoutButtonOffset.Offset += 0.025;
                                         PreviousSpeechTimeoutButtonOffset.Offset += 0.025;
-                                        SpeechSpoolingOffset.Offset += 0.01;
-                                        PreviousSpeechSpoolingButtonOffset.Offset += 0.025;
-                                        CurrentSpeechSpoolingTimeoutOffset.Offset += 0.01;
-                                        NextSpeechSpoolingTimeoutButtonOffset.Offset += 0.025;
                                     }
                                     else
                                     {
@@ -828,28 +816,6 @@ namespace Eva_5._0
                 Timeout++;
                 SpeechOperationTimeout.Text = Timeout.ToString();
                 await Settings.Set_Speech_Timeout_Settings(Timeout);
-            }
-        }
-
-        private async void DecreaseSpoolingTime(object sender, RoutedEventArgs e)
-        {
-            int Timeout = await Settings.Get_Spooling_Time_Settings();
-            if (Timeout > 0)
-            {
-                Timeout -= 100;
-                SpeechSpoolingTimeout.Text = Timeout.ToString();
-                await Settings.Set_Spooling_Time_Settings(Timeout);
-            }
-        }
-
-        private async void IncreaseSpoolingTime(object sender, RoutedEventArgs e)
-        {
-            int Timeout = await Settings.Get_Spooling_Time_Settings();
-            if (Timeout < 1000)
-            {
-                Timeout += 100;
-                SpeechSpoolingTimeout.Text = Timeout.ToString();
-                await Settings.Set_Spooling_Time_Settings(Timeout);
             }
         }
 

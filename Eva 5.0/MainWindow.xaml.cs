@@ -164,6 +164,8 @@ namespace Eva_5._0
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
+            this.ShowInTaskbar = false;
+
             // Check the administartive rights with which the application session is running. If the application rights are the ones of administrator, the application will close.
             // This is done to prevent any security problems due to the fact that the application is operating at a low level within the operating system.
 
