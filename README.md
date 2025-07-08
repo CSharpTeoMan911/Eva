@@ -7,8 +7,9 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.2.6
+📌 Latest Version: v7.2.7
 
+* 🆕 Made the app available in the taskbar on minimisation
 * 🆕 Added aggressive inlining for the app's core functions
 * 🆕 Removed STT engine spooling
 * 🆕 Added COM object removal mechanism for the Online Speech Recognition Engine
