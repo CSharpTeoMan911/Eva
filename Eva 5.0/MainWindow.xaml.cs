@@ -44,6 +44,9 @@ namespace Eva_5._0
 
         public static bool invisibility_mode;
 
+        public static bool bring_to_top;
+
+
 
         // COLORS FOR THE CIRCULAR INDICATOR FOR EACH OPERATIONAL MODE (CHATBOT MODE AND NORMAL MODE)
         //
@@ -230,15 +233,22 @@ namespace Eva_5._0
                             }
                             else
                             {
-                                if (invisibility_mode == true)
+
+                                switch(invisibility_mode)
                                 {
-                                    this.Height = 0;
-                                    this.Width = 0;
+                                    case true:
+                                        this.Height = 0;
+                                        this.Width = 0;
+                                        break;
+                                    case false:
+                                        Crop_Or_UnCrop();
+                                        break;
                                 }
-                                else
+
+                                if(bring_to_top)
                                 {
-                                    Crop_Or_UnCrop();
-                                    invisibility_mode = false;
+                                    this.Activate();
+                                    bring_to_top = false;
                                 }
 
 
@@ -288,10 +298,11 @@ namespace Eva_5._0
                                 // IF THE WINDOW STATE STATUS IS MINIMISED AS "false"
                                 if (Application.Current.MainWindow.WindowState == WindowState.Normal)
                                 {
+                                    if(!this.ShowInTaskbar) 
+                                        this.ShowInTaskbar = false;
+
                                     lock (Window_Minimised)
-                                    {
                                         Window_Minimised = "false";
-                                    }
                                 }
 
                                 lock (Wake_Word_Detected)
@@ -756,8 +767,9 @@ namespace Eva_5._0
 
                     if (Application.Current.MainWindow != null)
                     {
-
                         Application.Current.MainWindow.WindowState = WindowState.Minimized;
+
+                        this.ShowInTaskbar = true;
 
                         lock (Window_Minimised)
                         {

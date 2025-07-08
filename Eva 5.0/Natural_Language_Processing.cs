@@ -92,6 +92,7 @@ namespace Eva_5._0
             else if (Result == "visible")
             {
                 MainWindow.invisibility_mode = false;
+                MainWindow.bring_to_top = true;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTDeactivationSoundEffect);
                 goto ChatGptMode;
             }

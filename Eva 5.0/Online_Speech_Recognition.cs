@@ -136,7 +136,6 @@ namespace Eva_5._0
                     OnlineSpeechRecognition.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
 
                     await OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionMode.PauseOnRecognition);
-                    
                     await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppActivationSoundEffect);
                 }
                 else
@@ -228,36 +227,14 @@ namespace Eva_5._0
             {
                 Online_Speech_Recogniser_Listening = "false";
                 Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.UtcNow;
-            }
-
-            lock (Online_Speech_Recogniser_Listening)
-            {
-                if (Online_Speech_Recogniser_Listening == "true")
-                {
-                    if (args.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.UserCanceled)
-                    {
-                        lock (Online_Speech_Recogniser_State)
-                        {
-                            if (Online_Speech_Recogniser_State == "Paused")
-                            {
-                                sender.Resume();
-                            }
-                        }
-                    }
-                    else
-                    {
-                        Close_Speech_Recognition_Interface();
-                    }
-                }
-                else
-                {
-                    Close_Speech_Recognition_Interface();
-                }
+                Close_Speech_Recognition_Interface();
             }
         }
 
         private static void OnlineSpeechRecognition_StateChanged(Windows.Media.SpeechRecognition.SpeechRecognizer sender, Windows.Media.SpeechRecognition.SpeechRecognizerStateChangedEventArgs args)
         {
+            Debug.WriteLine($"SpeechRecognitionResultStatus: {sender.State}");
+
             if (sender.State == Windows.Media.SpeechRecognition.SpeechRecognizerState.SpeechDetected)
             {
                 lock (Speech_Detected)
