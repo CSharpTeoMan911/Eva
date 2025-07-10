@@ -298,11 +298,13 @@ namespace Eva_5._0
                                 // IF THE WINDOW STATE STATUS IS MINIMISED AS "false"
                                 if (Application.Current.MainWindow.WindowState == WindowState.Normal)
                                 {
-                                    if(!this.ShowInTaskbar) 
-                                        this.ShowInTaskbar = false;
-
                                     lock (Window_Minimised)
+                                    {
+                                        if (this.ShowInTaskbar) 
+                                            this.ShowInTaskbar = false;
+
                                         Window_Minimised = "false";
+                                    }
                                 }
 
                                 lock (Wake_Word_Detected)
@@ -767,9 +769,8 @@ namespace Eva_5._0
 
                     if (Application.Current.MainWindow != null)
                     {
-                        Application.Current.MainWindow.WindowState = WindowState.Minimized;
-
                         this.ShowInTaskbar = true;
+                        Application.Current.MainWindow.WindowState = WindowState.Minimized;
 
                         lock (Window_Minimised)
                         {
