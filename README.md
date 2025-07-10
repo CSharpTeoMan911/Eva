@@ -7,13 +7,12 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.2.7
+📌 Latest Version: v7.2.8
 
+* 🐞 Fixed the transition mechanism that adds and removes the window from the taskbar
+* 🐞 Fixed logical focus loss when the PC sleep mode starts
 * 🆕 Made the app available in the taskbar on minimisation
 * 🆕 Added aggressive inlining for the app's core functions
-* 🆕 Removed STT engine spooling
-* 🆕 Added COM object removal mechanism for the Online Speech Recognition Engine
-* 🐞 Fixed logical focus loss when the PC sleep mode starts
 
 ![Settings](https://github.com/user-attachments/assets/add286b1-5e11-4709-8c51-f938382eaa0f)
 
