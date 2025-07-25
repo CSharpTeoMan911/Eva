@@ -1,12 +1,10 @@
 ﻿using Eva_5._0.Properties;
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Eva_5._0
@@ -31,7 +29,7 @@ namespace Eva_5._0
 
     internal class Online_Speech_Recognition : MainWindow
     {
-#nullable enable
+        #nullable enable
         private static Windows.Media.SpeechRecognition.SpeechRecognizer? OnlineSpeechRecognition;
 
         private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Form_Filling_Constraint = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.FormFilling, "form-filling", "form")
@@ -53,7 +51,6 @@ namespace Eva_5._0
         };
 
 
-
         public enum Online_Speech_Recognition_Error_Type
         {
             Online_Speech_Recognition_Access_Denied,
@@ -61,7 +58,16 @@ namespace Eva_5._0
             Language_Not_Supported
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
+        [DllImport("psapi.dll")]
+        private static extern bool EmptyWorkingSet(IntPtr intPtr);
+        private static void ClearPagedMemoryCache()
+        {
+            foreach (Process p in Get_Recogniser_Interfaces())
+                EmptyWorkingSet(p.Handle);
+        }
+
+
         public static async void Online_Speech_Recognition_Session_Creation_And_Initiation()
         {
             bool operational = false;
@@ -121,8 +127,11 @@ namespace Eva_5._0
 
                 if (ConstraintsCompilation.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
                 {
+
                     lock (Online_Speech_Recogniser_Listening) 
                         Online_Speech_Recogniser_Listening = "true";
+
+                    ClearPagedMemoryCache();
 
                     OnlineSpeechRecognition.ContinuousRecognitionSession.AutoStopSilenceTimeout = TimeSpan.FromSeconds(Timeout);
                     OnlineSpeechRecognition.Timeouts.EndSilenceTimeout = TimeSpan.FromSeconds(Timeout);
@@ -221,6 +230,7 @@ namespace Eva_5._0
             }
         }
 
+
         private static void ContinuousRecognitionSession_Completed(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionSession sender, Windows.Media.SpeechRecognition.SpeechContinuousRecognitionCompletedEventArgs args)
         {
             lock (Online_Speech_Recogniser_Listening)
@@ -233,8 +243,6 @@ namespace Eva_5._0
 
         private static void OnlineSpeechRecognition_StateChanged(Windows.Media.SpeechRecognition.SpeechRecognizer sender, Windows.Media.SpeechRecognition.SpeechRecognizerStateChangedEventArgs args)
         {
-            Debug.WriteLine($"SpeechRecognitionResultStatus: {sender.State}");
-
             if (sender.State == Windows.Media.SpeechRecognition.SpeechRecognizerState.SpeechDetected)
             {
                 lock (Speech_Detected)
