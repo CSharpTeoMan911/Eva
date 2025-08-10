@@ -1,14 +1,12 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-
 using static Eva_5._0.Online_Speech_Recognition;
-using System.Windows.Controls;
-using System.Threading;
-using Microsoft.Win32;
-using System.Diagnostics;
 
 namespace Eva_5._0
 {
@@ -162,7 +160,7 @@ namespace Eva_5._0
 
         private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
         {
-            if(e.Mode == PowerModes.Resume) this.Activate();
+            if (e.Mode == PowerModes.Resume) this.Activate();
         }
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
@@ -234,7 +232,7 @@ namespace Eva_5._0
                             else
                             {
 
-                                switch(invisibility_mode)
+                                switch (invisibility_mode)
                                 {
                                     case true:
                                         this.Height = 0;
@@ -245,7 +243,7 @@ namespace Eva_5._0
                                         break;
                                 }
 
-                                if(bring_to_top)
+                                if (bring_to_top)
                                 {
                                     this.Activate();
                                     bring_to_top = false;
@@ -300,7 +298,7 @@ namespace Eva_5._0
                                 {
                                     lock (Window_Minimised)
                                     {
-                                        if (this.ShowInTaskbar) 
+                                        if (this.ShowInTaskbar)
                                             this.ShowInTaskbar = false;
 
                                         Window_Minimised = "false";
@@ -826,7 +824,7 @@ namespace Eva_5._0
                                 {
                                     SpeechOn();
                                 }
-                                else if(OnOff == 1)
+                                else if (OnOff == 1)
                                 {
                                     SpeechOff();
                                 }

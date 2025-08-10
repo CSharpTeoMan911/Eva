@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
-using static Eva_5._0.Commands_Customisation;
 
 namespace Eva_5._0
 {
@@ -44,7 +43,7 @@ namespace Eva_5._0
         {
             string full_path = new StringBuilder(Environment.CurrentDirectory).Append("\\").Append(settings_file_name).ToString();
 
-            if(System.IO.File.Exists(full_path) == true)
+            if (System.IO.File.Exists(full_path) == true)
             {
                 System.Security.AccessControl.FileSecurity settings_file_security = System.IO.File.GetAccessControl(settings_file_name);
 
@@ -61,14 +60,14 @@ namespace Eva_5._0
 
         public static async Task<string> GetSettingsFilePath()
         {
-            if (! System.IO.File.Exists(settings_file_name) == true)
+            if (!System.IO.File.Exists(settings_file_name) == true)
                 await Create_Settings_File(new Settings_File());
             return new StringBuilder("\"").Append(Environment.CurrentDirectory).Append("\\").Append(settings_file_name).Append("\"").ToString();
         }
 
 
 
-        
+
         private static async Task<Settings_File> Load_Settings_File()
         {
             // THE REQUIRED FILE ACCESS METHODS FOR THE SETTINGS FILE
@@ -135,7 +134,7 @@ namespace Eva_5._0
                     // [ END ]
                 }
             }
-            catch 
+            catch
             {
 
             }

@@ -1,10 +1,6 @@
 ﻿using Eva_5._0.Properties;
 using System;
-using System.Linq.Expressions;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Windows.Devices.Display.Core;
-using Windows.UI.Input.Inking;
 
 namespace Eva_5._0
 {
@@ -140,11 +136,11 @@ namespace Eva_5._0
 
         private A_p_l____And____P_r_o_c(bool initiate)
         {
-            if(initiate == true)
+            if (initiate == true)
                 InitiateCommands();
         }
 
-        public void InitiateCommands() => Task.Run(async() => { commands = await Command_Pallet.Get_Commands();});
+        public void InitiateCommands() => Task.Run(async () => { commands = await Command_Pallet.Get_Commands(); });
     }
 }
 

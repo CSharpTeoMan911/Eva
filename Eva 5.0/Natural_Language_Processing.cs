@@ -1,11 +1,6 @@
 ﻿using System;
-using System.CodeDom;
-using System.Diagnostics.Eventing.Reader;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using System.Windows.Documents;
 
 namespace Eva_5._0
 {
@@ -46,7 +41,7 @@ namespace Eva_5._0
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    internal class Natural_Language_Processing:A_p_l____And____P_r_o_c
+    internal class Natural_Language_Processing : A_p_l____And____P_r_o_c
     {
         private static StringBuilder Sentence_StringBuilder = new StringBuilder();
         private static StringBuilder Application_StringBuilder = new StringBuilder();
@@ -108,7 +103,7 @@ namespace Eva_5._0
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTActivationSoundEffect);
                 goto ChatGptMode;
             }
-            else if(Result.IndexOf("deactivate c") == 0 && Result.IndexOf(" mode") == Result.Length - " mode".Length)
+            else if (Result.IndexOf("deactivate c") == 0 && Result.IndexOf(" mode") == Result.Length - " mode".Length)
             {
                 MainWindow.chatgpt_mode_enabled = false;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTDeactivationSoundEffect);
@@ -718,7 +713,7 @@ namespace Eva_5._0
             }
             Application_StringBuilder.Clear();
 
-            if(Token_Buffer_List.Count > 0)
+            if (Token_Buffer_List.Count > 0)
             {
                 return Token_Buffer_List.Pop();
             }
@@ -791,7 +786,7 @@ namespace Eva_5._0
 
             WebApplicationSearchContent_StringBuilder.Clear();
 
-            while(index < Sentence.Length)
+            while (index < Sentence.Length)
             {
                 WebApplication_StringBuilder.Append(Sentence[index]);
 
@@ -799,7 +794,7 @@ namespace Eva_5._0
                 commands.W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryGetValue(web_app, out Token_Buffer);
 
 
-                if(Token_Buffer != null)
+                if (Token_Buffer != null)
                 {
                     Token_Buffer_List.Push(web_app);
                     Token_Buffer = null;

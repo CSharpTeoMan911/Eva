@@ -2,7 +2,6 @@
 using System;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Eva_5._0
@@ -32,7 +31,8 @@ namespace Eva_5._0
 
     public partial class App : Application
     {
-       
+        internal static ChatGPT_API ChatGPT_API = new ChatGPT_API();
+
         public static bool SettingsWindowOpen;
 
         public static bool InstructionManualOpen;
@@ -48,6 +48,7 @@ namespace Eva_5._0
         public static ChatGPT_Response_Window chatGPT_Response_Window;
 
         private static string windows_version = String.Empty;
+
 
         private sealed class Wake_Word_Engine_Mitigator : Wake_Word_Engine
         {
@@ -105,7 +106,7 @@ namespace Eva_5._0
         protected override async void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            await ChatGPT_API.Get_Available_Gpt_Models();
+            await App.ChatGPT_API.Get_Available_Gpt_Models();
         }
 
         protected override void OnExit(ExitEventArgs e)

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -49,7 +48,7 @@ namespace Eva_5._0
 
 
         public static bool Ring_Timer;
-        private bool Alarm_Started; 
+        private bool Alarm_Started;
 
 
         private double Initial_Timer_Cancel_Button_Width;
@@ -352,7 +351,7 @@ namespace Eva_5._0
                                     {
                                         DirectionPointer = true;
                                     }
-                                    else if(AnimationAngleCounter == -30)
+                                    else if (AnimationAngleCounter == -30)
                                     {
                                         DirectionPointer = false;
                                     }

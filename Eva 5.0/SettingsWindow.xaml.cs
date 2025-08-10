@@ -1,11 +1,9 @@
 ﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Linq;
-using System.Threading.Tasks;
-using static Eva_5._0.SettingsWindow;
-using System.Speech.Synthesis;
 
 namespace Eva_5._0
 {
@@ -47,7 +45,7 @@ namespace Eva_5._0
 
         private bool SwitchWindowOffset;
         private double GradientArithmeticWindowOffset;
-        
+
 
         private bool SwitchSecodaryOffsets;
         private double GradientArithmeticSecondaryOffsets;
@@ -145,7 +143,7 @@ namespace Eva_5._0
 
         private void SettingsWindowLoaded(object sender, RoutedEventArgs e)
         {
-            Task.Run(async() =>
+            Task.Run(async () =>
             {
                 try
                 {
@@ -640,15 +638,15 @@ namespace Eva_5._0
 
         private async void PreviousModel(object sender, RoutedEventArgs e)
         {
-            if (ChatGPT_API.gpt_models.Count == 0)
-                await ChatGPT_API.Get_Available_Gpt_Models();
+            if (App.ChatGPT_API.gpt_models.Count == 0)
+                await App.ChatGPT_API.Get_Available_Gpt_Models();
 
-            if (ChatGPT_API.gpt_models.Count > 0)
+            if (App.ChatGPT_API.gpt_models.Count > 0)
             {
                 if (current_model_index > 0)
                 {
                     current_model_index--;
-                    string current_gpt_model = ChatGPT_API.gpt_models.ElementAt(current_model_index);
+                    string current_gpt_model = App.ChatGPT_API.gpt_models.ElementAt(current_model_index);
                     GptModelDisplay.Text = current_gpt_model;
                     await Settings.Set_Current_Chat_GPT__Model(current_gpt_model);
                 }
@@ -657,51 +655,52 @@ namespace Eva_5._0
 
         private async void LoadCurrentModel()
         {
-            if (ChatGPT_API.gpt_models.Count == 0)
-                await ChatGPT_API.Get_Available_Gpt_Models();
+            if (App.ChatGPT_API.gpt_models.Count == 0)
+                await App.ChatGPT_API.Get_Available_Gpt_Models();
 
-            if (ChatGPT_API.gpt_models.Count > 0)
+            if (App.ChatGPT_API.gpt_models.Count > 0)
             {
                 string current_model = await Settings.Get_Current_Chat_GPT__Model();
-                int model_index = ChatGPT_API.gpt_models.IndexOf(current_model);
+                int model_index = App.ChatGPT_API.gpt_models.IndexOf(current_model);
 
                 if (model_index != -1)
                 {
                     current_model_index = model_index;
                     await Application.Current.Dispatcher.InvokeAsync(() =>
                     {
-                        GptModelDisplay.Text = ChatGPT_API.gpt_models.ElementAt(current_model_index);
+                        GptModelDisplay.Text = App.ChatGPT_API.gpt_models.ElementAt(current_model_index);
                     });
                 }
                 else
                 {
                     await Application.Current.Dispatcher.InvokeAsync(() =>
                     {
-                        GptModelDisplay.Text = ChatGPT_API.gpt_models.ElementAt(0);
+                        GptModelDisplay.Text = App.ChatGPT_API.gpt_models.ElementAt(0);
                     });
-                    await Settings.Set_Current_Chat_GPT__Model(ChatGPT_API.gpt_models.First());
+                    await Settings.Set_Current_Chat_GPT__Model(App.ChatGPT_API.gpt_models.First());
                 }
             }
         }
 
         public static void ReloadCurrentModel()
         {
-            Application.Current?.Dispatcher?.InvokeAsync(() => {
+            Application.Current?.Dispatcher?.InvokeAsync(() =>
+            {
                 CurrentInstance.LoadCurrentModel();
             });
         }
 
         private async void NextModel(object sender, RoutedEventArgs e)
         {
-            if(ChatGPT_API.gpt_models.Count == 0)
-                await ChatGPT_API.Get_Available_Gpt_Models();
+            if (App.ChatGPT_API.gpt_models.Count == 0)
+                await App.ChatGPT_API.Get_Available_Gpt_Models();
 
-            if (ChatGPT_API.gpt_models.Count > 0)
+            if (App.ChatGPT_API.gpt_models.Count > 0)
             {
-                if (current_model_index < ChatGPT_API.gpt_models.Count - 1)
+                if (current_model_index < App.ChatGPT_API.gpt_models.Count - 1)
                 {
                     current_model_index++;
-                    string current_gpt_model = ChatGPT_API.gpt_models.ElementAt(current_model_index);
+                    string current_gpt_model = App.ChatGPT_API.gpt_models.ElementAt(current_model_index);
                     GptModelDisplay.Text = current_gpt_model;
                     await Settings.Set_Current_Chat_GPT__Model(current_gpt_model);
                 }

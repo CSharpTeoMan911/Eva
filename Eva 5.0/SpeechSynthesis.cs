@@ -1,15 +1,8 @@
-﻿using Eva_5._0.Properties;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
-using System.Media;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 using Windows.Media.SpeechSynthesis;
-using Windows.UI.Xaml.Controls;
 
 namespace Eva_5._0
 {

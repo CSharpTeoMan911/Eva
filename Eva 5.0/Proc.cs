@@ -3,13 +3,11 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using Windows.UI.WebUI;
 
 namespace Eva_5._0
 {
-    internal class Proc:A_p_l____And____P_r_o_c
+    internal class Proc : A_p_l____And____P_r_o_c
     {
 
 
@@ -76,7 +74,7 @@ namespace Eva_5._0
             string Process = String.Empty;
 
 
-            using (System.Diagnostics.Process Online_Process = new System.Diagnostics.Process()) 
+            using (System.Diagnostics.Process Online_Process = new System.Diagnostics.Process())
             {
                 try
                 {
@@ -126,7 +124,7 @@ namespace Eva_5._0
 
                         await SpeechSynthesis.Synthesis(SpeechSynthesis.Action.Opening, null, Application);
 
-                        using(System.Diagnostics.Process Application_Process = new System.Diagnostics.Process())
+                        using (System.Diagnostics.Process Application_Process = new System.Diagnostics.Process())
                         {
                             Eva_Functionalities.Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
 

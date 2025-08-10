@@ -166,7 +166,7 @@ namespace Eva_5._0
             type_display.FontSize = 16;
 
             System.Windows.Controls.Button prev_ = new System.Windows.Controls.Button();
-            prev_.Click += (object sender, System.Windows.RoutedEventArgs e) => Prev__Click (sender, e, type_display);
+            prev_.Click += (object sender, System.Windows.RoutedEventArgs e) => Prev__Click(sender, e, type_display);
             prev_.FontFamily = new FontFamily("Segoe MDL2 Assets");
             prev_.Content = "\xE016";
             prev_.FontSize = 16;
@@ -270,7 +270,7 @@ namespace Eva_5._0
                     this.Close();
                 }
             }
-            catch  { }
+            catch { }
         }
 
         private void Update_command_Click_Other(object sender, System.Windows.RoutedEventArgs e, System.Windows.Controls.TextBox key, System.Windows.Controls.TextBox value)

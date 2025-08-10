@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using NAudio.Wave;
 using System.IO;
-using System.Linq;
-using System.Management;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using NAudio;
-using NAudio.CoreAudioApi;
-using NAudio.Wave;
 
 namespace Eva_5._0.Properties
 {
@@ -68,7 +60,7 @@ namespace Eva_5._0.Properties
 
             if (SoundOrOff == true)
             {
-                switch(sound)
+                switch (sound)
                 {
                     case Sounds.AppExecutionSoundEffect:
                         if (System.IO.File.Exists(@"Sounds/App execution.wav"))

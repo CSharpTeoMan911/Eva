@@ -74,9 +74,9 @@ namespace Eva_5._0
                 }
 
 
-            // [ END ]
+                // [ END ]
 
-                
+
 
 
 
@@ -182,9 +182,9 @@ namespace Eva_5._0
                     // DISPOSE THE BITMAP OBJECT MANUALLY IN ORDER TO ENSURE THAT IT WAS DISPOSED PROPERLY
                     bitmap?.Dispose();
                 }
-                
 
-                
+
+
 
 
 

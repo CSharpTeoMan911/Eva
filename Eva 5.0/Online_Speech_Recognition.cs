@@ -1,10 +1,9 @@
 ﻿using Eva_5._0.Properties;
 using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Eva_5._0
@@ -29,7 +28,7 @@ namespace Eva_5._0
 
     internal class Online_Speech_Recognition : MainWindow
     {
-        #nullable enable
+#nullable enable
         private static Windows.Media.SpeechRecognition.SpeechRecognizer? OnlineSpeechRecognition;
 
         private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Form_Filling_Constraint = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.FormFilling, "form-filling", "form")
@@ -61,10 +60,16 @@ namespace Eva_5._0
 
         [DllImport("psapi.dll")]
         private static extern bool EmptyWorkingSet(IntPtr intPtr);
-        private static void ClearPagedMemoryCache()
+        private static Task ClearPagedMemoryCache()
         {
-            foreach (Process p in Get_Recogniser_Interfaces())
-                EmptyWorkingSet(p.Handle);
+            try
+            {
+                foreach (Process p in Get_Recogniser_Interfaces())
+                    EmptyWorkingSet(p.Handle);
+            }
+            catch { }
+
+            return Task.CompletedTask;
         }
 
 
@@ -128,10 +133,10 @@ namespace Eva_5._0
                 if (ConstraintsCompilation.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
                 {
 
-                    lock (Online_Speech_Recogniser_Listening) 
+                    lock (Online_Speech_Recogniser_Listening)
                         Online_Speech_Recogniser_Listening = "true";
 
-                    ClearPagedMemoryCache();
+                    await ClearPagedMemoryCache();
 
                     OnlineSpeechRecognition.ContinuousRecognitionSession.AutoStopSilenceTimeout = TimeSpan.FromSeconds(Timeout);
                     OnlineSpeechRecognition.Timeouts.EndSilenceTimeout = TimeSpan.FromSeconds(Timeout);

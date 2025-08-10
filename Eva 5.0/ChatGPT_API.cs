@@ -1,20 +1,37 @@
 ﻿using Newtonsoft.Json.Linq;
+using SharpToken;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SharpToken;
 
 
 namespace Eva_5._0
 {
     internal class ChatGPT_API
     {
-        private static List<messages> cached_conversation = new List<messages>();
-        private static int total_tokens;
-        public static List<string> gpt_models = new List<string>();
-        public static string gpt_model_buffer;
+        private List<messages> cached_conversation = new List<messages>();
+        private int total_tokens;
+        public List<string> gpt_models = new List<string>();
+        public string gpt_model_buffer;
+
+
+        public ChatGPT_API()
+        {
+
+        }
+        public ChatGPT_API(Action<ApiResponse> callback)
+        {
+
+        }
+
+        public class ApiResponse
+        {
+            Type type { get; set; }
+            string response { get; set; }
+        }
+
 
         // CLASS THAT IS SERIALIZED IN A JSON FILE FORMAT
         // TO SEND REQUEST TO CHATGPT OVER THE API
@@ -54,16 +71,16 @@ namespace Eva_5._0
         internal class models
         {
             public string @object { get; set; }
-            public List<model> data { get; set; } 
+            public List<model> data { get; set; }
         }
 
-        public static void Clear_Conversation_Cache()
+        public void Clear_Conversation_Cache()
         {
             cached_conversation.Clear();
         }
 
 
-        public static async Task Get_Available_Gpt_Models()
+        public async Task Get_Available_Gpt_Models()
         {
             // 'HttpClient' OBJECT NEEDED TO SEND HTTP REQUESTS TO THE OPENAI SERVER.
             System.Net.Http.HttpClient api_client = new System.Net.Http.HttpClient();
@@ -110,7 +127,12 @@ namespace Eva_5._0
                             if (current_model.Contains("voice") == false)
                                 if (current_model.Contains("vision") == false)
                                     if (current_model.Contains("audio") == false)
-                                        gpt_models.Add(current_model);
+                                        if (current_model.Contains("realtime") == false)
+                                            if (current_model.Contains("tts") == false)
+                                                if (current_model.Contains("transcribe") == false)
+                                                    if (current_model.Contains("image") == false)
+                                                        if (current_model.Contains("search") == false)
+                                                            gpt_models.Add(current_model);
                     }
                 }
             }
@@ -125,7 +147,7 @@ namespace Eva_5._0
             }
         }
 
-        public static async Task<Tuple<Type, string>> Initiate_Chat_GPT(string input)
+        public async Task<Tuple<Type, string>> Initiate_Chat_GPT(string input)
         {
             string result = null;
             Type return_type = null;
@@ -264,7 +286,7 @@ namespace Eva_5._0
 
 
 
-        private static Tuple<Type, string> API_Payload_Processing(JObject json_response)
+        private Tuple<Type, string> API_Payload_Processing(JObject json_response)
         {
             // DECONSTRUCT THE JSON PAYLOAD INTO ELEMENTS.
             // IF THE API RESPONSE STRUCTURE CORRESPONDS
@@ -352,7 +374,7 @@ namespace Eva_5._0
         }
 
 
-        private static async void Remove_Superflous_Tokens(int tokens)
+        private async void Remove_Superflous_Tokens(int tokens)
         {
             // IF THE NUMBERS OF EXTRACTED GPT MODELS IS GREATER THAN 0
             if (gpt_models.Count > 0)
@@ -390,7 +412,7 @@ namespace Eva_5._0
         }
 
 
-        public static async Task<int> GetGptModelEncoding(string input)
+        public async Task<int> GetGptModelEncoding(string input)
         {
             int tokens = 0;
 
@@ -439,7 +461,7 @@ namespace Eva_5._0
                     // GET THE ENCODING THAT THE SELECTED MODEL USES
                     encoding = GptEncoding.GetEncodingForModel(current_model);
                 }
-                catch 
+                catch
                 {
                     // IF AN ERROR OCCURS, USE THE STANDARD GPT3.5 TOKENIZER ENCODING
                     encoding = GptEncoding.GetEncoding("cl100k_base");

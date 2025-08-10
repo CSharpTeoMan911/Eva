@@ -273,31 +273,31 @@ namespace Eva_5._0
             if (App.InstructionManualOpen == true)
             {
 
-                    if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                {
+
+                    if (Application.Current.MainWindow != null)
                     {
 
-                            if (Application.Current.MainWindow != null)
-                            {
+                        NormalisedOrMaximised++;
 
-                                    NormalisedOrMaximised++;
+                        switch (NormalisedOrMaximised)
+                        {
+                            case 1:
+                                NormaliseOrMaximiseTheWindowButton.Content = "\xEF2F";
+                                this.WindowState = WindowState.Maximized;
+                                break;
 
-                                    switch (NormalisedOrMaximised)
-                                    {
-                                        case 1:
-                                            NormaliseOrMaximiseTheWindowButton.Content = "\xEF2F";
-                                            this.WindowState = WindowState.Maximized;
-                                            break;
-
-                                        case 2:
-                                            NormaliseOrMaximiseTheWindowButton.Content = "\xEF2E";
-                                            this.WindowState = WindowState.Normal;
-                                            NormalisedOrMaximised = 0;
-                                            break;
-                                    }
-
-                            }
+                            case 2:
+                                NormaliseOrMaximiseTheWindowButton.Content = "\xEF2E";
+                                this.WindowState = WindowState.Normal;
+                                NormalisedOrMaximised = 0;
+                                break;
+                        }
 
                     }
+
+                }
 
             }
         }

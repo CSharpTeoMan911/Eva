@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Eva_5._0"
         mc:Ignorable="d"
-        Title="ChatGPT_Response_Window" Topmost="True" Height="350" Width="450" WindowStyle="None" AllowsTransparency="True" ResizeMode="NoResize" Loaded="Window_Loaded" Closing="Window_Closing" Opacity="0.95">
+        Title="ChatGPT_Response_Window" Topmost="True" Height="350" Width="450" WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResize" Loaded="Window_Loaded" SizeChanged="WindowSizeChanged" Closing="Window_Closing" Opacity="0.95">
 
 
     <Window.Clip>
@@ -21,88 +21,141 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
+        <StackPanel x:Name="WindowHandle" MouseDown="Move_The_Window" Background="Transparent">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3" HorizontalAlignment="Right">
+
+                    <Button  Grid.Column="4" Margin="20,15,10,10" BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Left" Content="&#xEF2D;" FontFamily="Segoe MDL2 Assets" FontSize="15" Click="MinimiseTheWindow" Style="{StaticResource MyButtonStyle}">
+
+                        <Button.Effect>
+                            <DropShadowEffect/>
+                        </Button.Effect>
+
+                        <Button.Foreground>
+                            <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                                <GradientStop Color="#FF7BBFD8" x:Name="MinimiseTheWindowOffset" Offset="1"/>
+                                <GradientStop Color="#FF11497F"/>
+                            </LinearGradientBrush>
+                        </Button.Foreground>
+                    </Button>
 
 
-        <Image Grid.RowSpan="4" Grid.ColumnSpan="9" Width="160" Height="110" VerticalAlignment="Center" HorizontalAlignment="Center" RenderOptions.EdgeMode="Aliased" RenderOptions.BitmapScalingMode="HighQuality" Source="/Images/Chat_Gpt_Logo.bmp"/>
+                    <Button x:Name="NormaliseOrMaximiseTheWindowButton"  Grid.Column="4" Margin="0,15,10,10" BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Left" Content="&#xEF2E;" FontFamily="Segoe MDL2 Assets" FontSize="15" Click="NormaliseOrMaximiseTheWindow" Style="{StaticResource MyButtonStyle}">
+
+                        <Button.Effect>
+                            <DropShadowEffect/>
+                        </Button.Effect>
+
+                        <Button.Foreground>
+                            <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                                <GradientStop Color="#FF7BBFD8" x:Name="NormaliseOrMaximiseTheWindowOffset" Offset="1"/>
+                                <GradientStop Color="#FF11497F"/>
+                            </LinearGradientBrush>
+                        </Button.Foreground>
+                    </Button>
+
+
+                    <Button  Grid.Column="4" Margin="0,15,10,10" BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Right" Content="&#xEF2C;" FontFamily="Segoe MDL2 Assets" FontSize="15" Click="CloseTheWindow" Style="{StaticResource MyButtonStyle}">
+
+                        <Button.Effect>
+                            <DropShadowEffect/>
+                        </Button.Effect>
+
+                        <Button.Foreground>
+                            <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                                <GradientStop Color="#FF7BBFD8" x:Name="CloseButtonOffset" Offset="1"/>
+                                <GradientStop Color="#FF11497F"/>
+                            </LinearGradientBrush>
+                        </Button.Foreground>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+
+        <StackPanel x:Name="MainPanel" Grid.Row="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition x:Name="TextboxGrid" Height="*"/>
+                    <RowDefinition x:Name="InputGrid" Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel x:Name="TextboxStackpanel" Margin="0,0,0,10" Grid.Row="0">
+                    <TextBox x:Name="ResponseTextBox" IsReadOnly="True" Height="250" TextWrapping="Wrap" Margin="0" FontSize="16" BorderBrush="Transparent" VerticalScrollBarVisibility="Auto">
+                        <TextBox.Foreground>
+                            <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                                <GradientStop Color="#FF0BD2A0" x:Name="ResponseTextBoxOffset" Offset="1"/>
+                                <GradientStop Color="#FF0AE6E1"/>
+                            </LinearGradientBrush>
+                        </TextBox.Foreground>
+
+                        <TextBox.Background>
+                            <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                                <GradientStop Color="#FF08090A" x:Name="Loading_TextBlockBackgroundOffset" Offset="1"/>
+                                <GradientStop Color="#FF021325"/>
+                            </LinearGradientBrush>
+                        </TextBox.Background>
+                    </TextBox>
+                </StackPanel>
+
+
+                <StackPanel x:Name="Input_Stackpanel" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                    <TextBox x:Name="InputTextBox" Width="370" Height="36" MaxHeight="120" FontFamily="Consolas" FontSize="20" VerticalAlignment="Center" CaretBrush="#FF14EFD6" BorderBrush="Transparent" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" PreviewKeyDown="Detect_Enter" TextChanged="Text_Changed">
+
+                        <TextBox.Clip>
+                            <RectangleGeometry x:Name="InputTextBox_Geometry" Rect="0, 0, 370, 36" RadiusX="5" RadiusY="5"/>
+                        </TextBox.Clip>
+
+                        <TextBox.Foreground>
+                            <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                                <GradientStop Color="#FF0BD2A0" Offset="1"/>
+                                <GradientStop Color="#FF0AE6E1"/>
+                            </LinearGradientBrush>
+                        </TextBox.Foreground>
+
+                        <TextBox.Background>
+                            <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                                <GradientStop Color="#FF173827" Offset="1"/>
+                                <GradientStop Color="#FF074C4E"/>
+                            </LinearGradientBrush>
+                        </TextBox.Background>
+
+                    </TextBox>
+
+                    <Button x:Name="Input_Button" Style="{StaticResource SendGptQueryButtonStyle}" FontSize="30" FontFamily="Segoe MDL2 Assets" Content="&#xE09B;" VerticalAlignment="Center" Margin="10,0,0,0" Click="Send_Manual_GPT_Query">
+                        <Button.Foreground>
+                            <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                                <GradientStop Color="#FF097D5E" Offset="1"/>
+                                <GradientStop Color="#FF0FFDCC"/>
+                            </LinearGradientBrush>
+                        </Button.Foreground>
+                    </Button>
+
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </Grid>
+    <!--<Grid>
+
+        <StackPanel>
+            
+        </StackPanel>
 
 
         <Rectangle Grid.RowSpan="2" Grid.ColumnSpan="9" Fill="Transparent" MouseDown="Move_The_Window"/>
 
-        <StackPanel Orientation="Horizontal" Grid.RowSpan="2" Grid.Column ="7" Grid.ColumnSpan="2" HorizontalAlignment="Right">
-
-            <Button  Grid.Column="4" Margin="20,20,20,0" BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Left" Content="&#xEF2D;" FontFamily="Segoe MDL2 Assets" FontSize="20" Click="MinimiseTheWindow" Style="{StaticResource MyButtonStyle}">
-
-                <Button.Effect>
-                    <DropShadowEffect/>
-                </Button.Effect>
-
-                <Button.Foreground>
-                    <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                        <GradientStop Color="#FF7BBFD8" x:Name="MinimiseTheWindowOffset" Offset="1"/>
-                        <GradientStop Color="#FF11497F"/>
-                    </LinearGradientBrush>
-                </Button.Foreground>
-            </Button>
 
 
-            <Button  Grid.Column="4" Margin="0,20,20,0" BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Right" Content="&#xEF2C;" FontFamily="Segoe MDL2 Assets" FontSize="20" Click="CloseTheWindow" Style="{StaticResource MyButtonStyle}">
 
-                <Button.Effect>
-                    <DropShadowEffect/>
-                </Button.Effect>
-
-                <Button.Foreground>
-                    <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                        <GradientStop Color="#FF7BBFD8" x:Name="CloseButtonOffset" Offset="1"/>
-                        <GradientStop Color="#FF11497F"/>
-                    </LinearGradientBrush>
-                </Button.Foreground>
-            </Button>
-        </StackPanel>
-
-        <TextBox x:Name="ResponseTextBox" IsReadOnly="True" Width="430" Height="166" TextWrapping="Wrap" Margin="10" FontSize="16" Grid.Row="1" Grid.RowSpan="9" Grid.ColumnSpan="9" BorderBrush="Transparent" VerticalScrollBarVisibility="Auto">
-
-
-            <TextBox.Clip>
-                <RectangleGeometry Rect="0, 0, 430, 166" RadiusX="10" RadiusY="10"/>
-            </TextBox.Clip>
-
-            <TextBox.Foreground>
-                <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                    <GradientStop Color="#FF0BD2A0" x:Name="ResponseTextBoxOffset" Offset="1"/>
-                    <GradientStop Color="#FF0AE6E1"/>
-                </LinearGradientBrush>
-            </TextBox.Foreground>
-
-            <TextBox.Background>
-                <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                    <GradientStop Color="#FF08090A" x:Name="Loading_TextBlockBackgroundOffset" Offset="1"/>
-                    <GradientStop Color="#FF021325"/>
-                </LinearGradientBrush>
-            </TextBox.Background>
-        </TextBox>
 
         <Rectangle x:Name="Loading_Background" Height="166" Width="0" Margin="0" Grid.Row="1" Grid.RowSpan="8" Grid.ColumnSpan="9"  Fill="#FF0A0A0A" Opacity="0.7">
             <Rectangle.Clip>
@@ -119,39 +172,7 @@
             </TextBlock.Foreground>
         </TextBlock>
 
-        <StackPanel x:Name="Input_Stackpanel" Grid.Row="7" Grid.RowSpan="4" Grid.ColumnSpan="9" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBox x:Name="InputTextBox" Width="370" Height="30" Margin="0,10,0,0" FontFamily="Consolas" FontSize="16" CaretBrush="#FF14EFD6" BorderBrush="Transparent" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" PreviewKeyDown="Detect_Enter" TextChanged="Text_Changed">
 
-                <TextBox.Clip>
-                    <RectangleGeometry x:Name="InputTextBox_Geometry" Rect="0, 0, 370, 30" RadiusX="5" RadiusY="5"/>
-                </TextBox.Clip>
 
-                <TextBox.Foreground>
-                    <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                        <GradientStop Color="#FF0BD2A0" Offset="1"/>
-                        <GradientStop Color="#FF0AE6E1"/>
-                    </LinearGradientBrush>
-                </TextBox.Foreground>
-
-                <TextBox.Background>
-                    <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                        <GradientStop Color="#FF173827" Offset="1"/>
-                        <GradientStop Color="#FF074C4E"/>
-                    </LinearGradientBrush>
-                </TextBox.Background>
-
-            </TextBox>
-
-            <Button x:Name="Input_Button" Style="{StaticResource SendGptQueryButtonStyle}" HorizontalAlignment="Center" FontSize="30" FontFamily="Segoe MDL2 Assets" Content="&#xE725;" VerticalAlignment="Center" Margin="10,10,0,0" Click="Send_Manual_GPT_Query">
-                <Button.Foreground>
-                    <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                        <GradientStop Color="#FF097D5E" Offset="1"/>
-                        <GradientStop Color="#FF0FFDCC"/>
-                    </LinearGradientBrush>
-                </Button.Foreground>
-            </Button>
-            
-        </StackPanel>
-
-    </Grid>
+    </Grid>-->
 </Window>

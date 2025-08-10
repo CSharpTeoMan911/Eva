@@ -1,16 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Eva_5._0
 {
@@ -102,7 +92,7 @@ namespace Eva_5._0
                         //
                         // [ BEGIN ]
 
-                        Tuple<Type, string> initiation_result = await ChatGPT_API.Initiate_Chat_GPT(String.Empty);
+                        Tuple<Type, string> initiation_result = await App.ChatGPT_API.Initiate_Chat_GPT(String.Empty);
 
                         // [ END ]
 
@@ -124,7 +114,7 @@ namespace Eva_5._0
 
                             if (App.PermisissionWindowOpen == false)
                             {
-                                if(initiation_result.Item2 == "API authentification error")
+                                if (initiation_result.Item2 == "API authentification error")
                                 {
                                     ErrorWindow errorWindow = new ErrorWindow("Invalid ChatGPT API key");
                                     errorWindow.Show();
@@ -144,7 +134,7 @@ namespace Eva_5._0
                             // IF THE RETURN TYPE OF THE OPERATION IS NOT AN EXCEPTION
                             // THIS MEANS THAT THE API KEY IS VALID AND THE WIDOW IS
                             // CLOSED
-                            await ChatGPT_API.Get_Available_Gpt_Models();
+                            await App.ChatGPT_API.Get_Available_Gpt_Models();
                             reloadCurrentModel.Invoke();
                             this.Close();
                         }

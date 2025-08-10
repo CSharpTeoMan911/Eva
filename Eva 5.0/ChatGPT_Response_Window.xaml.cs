@@ -1,18 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using Windows.UI.Xaml.Controls;
 
 namespace Eva_5._0
 {
@@ -21,6 +12,7 @@ namespace Eva_5._0
     /// </summary>
     public partial class ChatGPT_Response_Window : Window
     {
+        private ChatGPT_API ChatGPT_API;
         private static RotateTransform Rotate = new RotateTransform();
         private System.Timers.Timer Animation_Timer;
 
@@ -37,7 +29,13 @@ namespace Eva_5._0
 
         public ChatGPT_Response_Window()
         {
+            ChatGPT_API = new ChatGPT_API(ApiResponseCallback);
             InitializeComponent();
+        }
+
+        internal void ApiResponseCallback(ChatGPT_API.ApiResponse response)
+        {
+
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -78,11 +76,11 @@ namespace Eva_5._0
 
                             if (Response_Loading == true)
                             {
-                                Loading_Background.Height = ResponseTextBox.Height;
-                                Loading_Background.Width = ResponseTextBox.Width;
+                                //Loading_Background.Height = ResponseTextBox.Height;
+                                //Loading_Background.Width = ResponseTextBox.Width;
 
-                                Loading_TextBlock.Height = 60;
-                                Loading_TextBlock.Width = 60;
+                                //Loading_TextBlock.Height = 60;
+                                //Loading_TextBlock.Width = 60;
 
                                 RotationValue += 4;
 
@@ -92,20 +90,20 @@ namespace Eva_5._0
                                 }
 
                                 Rotate.Angle = RotationValue;
-                                Loading_TextBlock.RenderTransform = Rotate;
+                                //Loading_TextBlock.RenderTransform = Rotate;
                             }
                             else
                             {
-                                Loading_Background.Height = 0;
-                                Loading_Background.Width = 0;
+                                //Loading_Background.Height = 0;
+                                //Loading_Background.Width = 0;
 
-                                Loading_TextBlock.Height = 0;
-                                Loading_TextBlock.Width = 0;
+                                //Loading_TextBlock.Height = 0;
+                                //Loading_TextBlock.Width = 0;
 
                                 RotationValue = 0;
                                 Rotate.Angle = 0;
 
-                                Loading_TextBlock.RenderTransform = Rotate;
+                                //Loading_TextBlock.RenderTransform = Rotate;
                             }
 
                             if (SwitchOffset == true)
@@ -330,40 +328,63 @@ namespace Eva_5._0
         private void Text_Changed(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
 
-            #pragma warning disable CS0618 // Type or member is obsolete
-            FormattedText formattedText = new FormattedText(InputTextBox.Text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface("Consolas"), 16,Brushes.Black);
-            #pragma warning restore CS0618 // Type or member is obsolete
+#pragma warning disable CS0618 // Type or member is obsolete
+            FormattedText formattedText = new FormattedText(InputTextBox.Text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface("Consolas"), 16, Brushes.Black);
+#pragma warning restore CS0618 // Type or member is obsolete
 
             if (formattedText.Width > InputTextBox.Width - 3)
             {
-                this.Height = 500;
-                System.Windows.Controls.Grid.SetRow(ResponseTextBox, 0);
-
-                Window_Geometry.Rect = new Rect(0, 0, 450, 500);
-                System.Windows.Controls.Grid.SetRow(Input_Stackpanel, 6);
-
                 InputTextBox.Height = 120;
-                InputTextBox.Margin = new Thickness(0, 30, 0, 0);
-                InputTextBox_Geometry.Rect = new Rect(0, 0, 370, 120);
-
-                Input_Button.Margin = new Thickness(0, 30, 0, 0);
             }
             else
             {
-                this.Height = 350;
-                System.Windows.Controls.Grid.SetRow(ResponseTextBox, 1);
-
-                Window_Geometry.Rect = new Rect(0, 0, 450, 350);
-                System.Windows.Controls.Grid.SetRow(Input_Stackpanel, 7);
-
-                InputTextBox.Height = 30;
-                InputTextBox.Margin = new Thickness(0, 10, 0, 0);
-                InputTextBox_Geometry.Rect = new Rect(0, 0, 370, 30);
-
-                Input_Button.Margin = new Thickness(10, 10, 0, 0);
+                InputTextBox.Height = 36;
             }
+
+            RenderInputTextbox();
+            RenderResponseTextbox();
         }
 
         private void Get_Last_Response_Line() => ResponseTextBox.ScrollToLine(ResponseTextBox.LineCount - 1);
+
+        private void NormaliseOrMaximiseTheWindow(object sender, RoutedEventArgs e)
+        {
+            switch (this.WindowState)
+            {
+                case WindowState.Normal:
+                    this.WindowState = WindowState.Maximized;
+                    NormaliseOrMaximiseTheWindowButton.Content = "\xEF2E";
+                    break;
+                case WindowState.Maximized:
+                    this.WindowState = WindowState.Normal;
+                    NormaliseOrMaximiseTheWindowButton.Content = "\xEF2F";
+                    break;
+            }
+        }
+
+        private void WindowSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            switch (this.WindowState)
+            {
+                case WindowState.Maximized:
+                    this.Clip = new RectangleGeometry(new Rect(0, 0, e.NewSize.Width, e.NewSize.Height), 0, 0);
+                    break;
+                case WindowState.Normal:
+                    this.Clip = Window_Geometry;
+                    break;
+            }
+
+            RenderInputTextbox();
+            RenderResponseTextbox();
+        }
+
+        private void RenderResponseTextbox() => ResponseTextBox.Height = (this.RenderSize.Height - WindowHandle.RenderSize.Height) - 25 - Input_Stackpanel.RenderSize.Height;
+
+        private void RenderInputTextbox()
+        {
+            double ratio = this.RenderSize.Width / 1.216;
+            InputTextBox.Width = ratio;
+            InputTextBox.Clip = new RectangleGeometry(new Rect(0, 0, ratio, InputTextBox.Height), 5, 5);
+        }
     }
 }

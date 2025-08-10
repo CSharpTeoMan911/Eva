@@ -1,8 +1,5 @@
 ﻿using Eva_5._0.Properties;
-using Newtonsoft.Json.Serialization;
 using System;
-using System.Media;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -339,17 +336,17 @@ namespace Eva_5._0
             if (App.PermisissionWindowOpen == true)
             {
 
-                    if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                {
+
+                    if (Application.Current.MainWindow != null)
                     {
 
-                            if (Application.Current.MainWindow != null)
-                            {
-
-                                    this.Close();
-
-                            }
+                        this.Close();
 
                     }
+
+                }
 
             }
         }
@@ -532,7 +529,7 @@ namespace Eva_5._0
         private void ErrorWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             App.PermisissionWindowOpen = false;
-            if(App.Application_Error_Shutdown == true)
+            if (App.Application_Error_Shutdown == true)
             {
                 Wake_Word_Engine.Stop_The_Wake_Word_Engine();
                 Environment.Exit(0);
