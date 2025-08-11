@@ -565,13 +565,17 @@
         </Style>
 
         <Style x:Key="ConversationUserBubble" TargetType="Border">
-            <Setter Property="Background" Value="#1AAFF0"/>
-            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Background" Value="#158CBF"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="#10698F"/>
         </Style>
 
         <Style x:Key="ConversationAgentBubble" TargetType="Border">
-            <Setter Property="Background" Value="#37EDAC"/>
-            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Background" Value="#1F8763"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="#28AD7F"/>
         </Style>
 
     </Application.Resources>

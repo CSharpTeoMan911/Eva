@@ -4,10 +4,16 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Timers;
+using System.Web;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
+
 
 namespace Eva_5._0
 {
@@ -18,13 +24,13 @@ namespace Eva_5._0
 
     public partial class ChatGPT_Response_Window : Window
     {
+        private StringBuilder builder = new StringBuilder();
+        private CancellationTokenSource tokenSource;
+
         private ChatGPT_API ChatGPT_API;
         private static RotateTransform Rotate = new RotateTransform();
         private System.Timers.Timer Animation_Timer;
 
-
-        private static StringBuilder user_input = new StringBuilder();
-        private static StringBuilder chat_gpt_input = new StringBuilder();
 
         private bool WindowIsClosing;
         private bool Response_Loading;
@@ -33,24 +39,70 @@ namespace Eva_5._0
         private bool SwitchOffset;
         private double OffsetArithmetic;
 
-        public ObservableCollection<Message> messages { get; private set; } = new ObservableCollection<Message>()
-        {
-            new Message(Message.MessageType.User, "Hello! How can I assist you today?"),
-            new Message(Message.MessageType.Assistant, "Hello! I'm here to help you with any questions or tasks you have. What can I do for you today?")
-        };
+        private bool processing;
+
+        public ObservableCollection<Message> messages { get; private set; } = new ObservableCollection<Message>();
+        private Message last_gpt_message { get; set; }
 
 
         public ChatGPT_Response_Window()
         {
-            ChatGPT_API = new ChatGPT_API(ApiResponseCallback);
+            ChatGPT_API = new ChatGPT_API(new ChatGPT_API.Callback(ApiResponseCallback));
             InitializeComponent();
             DataContext = this;
-            //ConversationScrollViewer_.ItemsSource = messages;
         }
 
-        internal void ApiResponseCallback(ChatGPT_API.ApiResponse response)
+        internal async Task ApiResponseCallback(ChatGPT_API.ApiResponse response)
         {
+            await Application.Current.Dispatcher.InvokeAsync(async() => 
+            {
+                if (response.type == typeof(string))
+                {
+                    if (last_gpt_message == null)
+                    {
+                        last_gpt_message = new Message(Message.MessageType.Assistant, response.response);
+                        messages.Add(last_gpt_message);
+                    }
+                    else
+                    {
+                        last_gpt_message.UpdateMessage(response.response);
+                    }
 
+                    ConversationScrollViewer.ScrollToBottom();
+                }
+                else
+                {
+                    if (App.PermisissionWindowOpen == false)
+                    {
+                        if (response.response == "Stream finished")
+                        {
+                            Input_Button.Content = "\xF5B0";
+                            processing = false;
+                            last_gpt_message = null;
+                            await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTNotificationSoundEffect);
+                        }
+                        else if (response.response == "API authentification error")
+                        {
+                            ErrorWindow errorWindow = new ErrorWindow("Invalid ChatGPT API key");
+                            errorWindow.Show();
+                        }
+                        else if (response.response == "Input exceeds the maximum number of tokens")
+                        {
+                            ErrorWindow errorWindow = new ErrorWindow("Maximum number of tokens exceeded");
+                            errorWindow.Show();
+                        }
+                        else
+                        {
+                            if (response.response != "Task cancelled")
+                            {
+                                //ErrorWindow errorWindow = new ErrorWindow("ChatGPT error");
+                                //errorWindow.Show();
+                            }
+                        }
+                    }
+
+                }
+            }, DispatcherPriority.Render);
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -144,9 +196,6 @@ namespace Eva_5._0
                                         SwitchOffset = true;
                                     }
                                 }
-
-                                RenderInputTextbox();
-                                RenderConversationScrollViewerOffset();
                             }
                             else
                             {
@@ -177,76 +226,19 @@ namespace Eva_5._0
         }
 
 
-        public async void Update_Conversation(string input)
+        public void Update_Conversation(string input)
         {
             if (WindowIsClosing == false)
             {
+                tokenSource = new CancellationTokenSource();
+                messages.Add(new Message(Message.MessageType.User, input));
                 Response_Loading = true;
-                Tuple<Type, string> result = await ChatGPT_API.Initiate_Chat_GPT(input);
+                processing = ChatGPT_API.Initiate_Chat_GPT(input, tokenSource.Token);
 
-                await Application.Current.Dispatcher.InvokeAsync(async () =>
+                if (processing)
                 {
-                    if (Application.Current.Dispatcher.HasShutdownStarted == false)
-                    {
-                        if (Application.Current.MainWindow != null)
-                        {
-                            if (WindowIsClosing == false)
-                            {
-                                if (result.Item1 == typeof(string))
-                                {
-                                    user_input.Clear();
-                                    chat_gpt_input.Clear();
-
-                                    user_input.Append("User: ");
-                                    user_input.Append(input);
-                                    user_input.Append("\n\n");
-
-
-                                    chat_gpt_input.Append("ChatGPT: ");
-                                    chat_gpt_input.Append(result.Item2);
-                                    chat_gpt_input.Append("\n\n");
-
-                                    //ConversationScrollViewerOffset.AppendText(user_input.ToString());
-
-                                    //Get_Last_Response_Line();
-
-                                    //ConversationScrollViewerOffset.AppendText(chat_gpt_input.ToString());
-
-                                    user_input.Clear();
-                                    chat_gpt_input.Clear();
-
-                                    await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTNotificationSoundEffect);
-                                }
-                                else
-                                {
-                                    if (App.PermisissionWindowOpen == false)
-                                    {
-                                        if (result.Item2 == "API authentification error")
-                                        {
-                                            ErrorWindow errorWindow = new ErrorWindow("Invalid ChatGPT API key");
-                                            errorWindow.Show();
-                                        }
-                                        else if (result.Item2 == "Input exceeds the maximum number of tokens")
-                                        {
-                                            ErrorWindow errorWindow = new ErrorWindow("Maximum number of tokens exceeded");
-                                            errorWindow.Show();
-                                        }
-                                        else
-                                        {
-                                            if (result.Item2 != "Task cancelled")
-                                            {
-                                                ErrorWindow errorWindow = new ErrorWindow("ChatGPT error");
-                                                errorWindow.Show();
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            Response_Loading = false;
-                        }
-                    }
-                });
+                    Input_Button.Content = "\xE002";
+                }
             }
         }
 
@@ -317,22 +309,48 @@ namespace Eva_5._0
         {
             if (e.Key == Key.Return)
             {
-                Update_Conversation_And_UI();
+                Update_Conversation_And_UI(true);
             }
         }
 
-        private void Update_Conversation_And_UI()
+        private async void Update_Conversation_And_UI(bool carriageReturn = false)
         {
-            string input = InputTextBox.Text;
-            InputTextBox.IsEnabled = false;
-            InputTextBox.Clear();
-            InputTextBox.Text = InputTextBox.Text.Remove(0, InputTextBox.MaxLength);
-            Update_Conversation(input);
-            InputTextBox.IsEnabled = true;
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                switch (processing)
+                {
+                    case false:
+                        builder.Clear();
+                        builder.Append(InputTextBox.Text);
+                        
+                        if (carriageReturn)
+                            builder.Remove(builder.Length - 2, 2).ToString();
+
+                        string input = builder.ToString();
+
+                        InputTextBox.IsEnabled = false;
+                        InputTextBox.Clear();
+                        Update_Conversation(input);
+                        InputTextBox.IsEnabled = true;
+                        InputTextBox.UpdateLayout();
+                        break;
+
+                    case true:
+                        RemoveMessage();
+                        Input_Button.Content = "\xF5B0";
+                        tokenSource?.Cancel();
+                        processing = false;
+                        break;
+                }
+            }, DispatcherPriority.Render);
         }
 
-        //private void Get_Last_Response_Line() => ResponseTextBox.ScrollToLine(ResponseTextBox.LineCount - 1);
-
+        private void RemoveMessage()
+        {
+            messages.RemoveAt(messages.Count - 1);
+            ChatGPT_API.RemoveLastMessage();
+        }
+  
         private void NormaliseOrMaximiseTheWindow(object sender, RoutedEventArgs e)
         {
             switch (this.WindowState)
@@ -365,6 +383,7 @@ namespace Eva_5._0
         {
             double new_height = (this.RenderSize.Height - WindowHandle.RenderSize.Height) - 25 - Input_Stackpanel.RenderSize.Height;
             ConversationScrollViewer.Height = new_height >= 0 ? new_height : 0;
+            ConversationScrollViewer.UpdateLayout();
         }
 
         private void RenderInputTextbox()
@@ -390,9 +409,30 @@ namespace Eva_5._0
             InputTextBox.Height = height;
         }
 
-        private void Text_Changed(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        private void MessageGrid(object sender, SizeChangedEventArgs e)
         {
+            try
+            {
+                Grid messageGrid = (Grid)sender;
+                StackPanel messageStackPanel = ((StackPanel)((Border)((Grid)sender)?.Children[0])?.Child);
 
+                if (messageGrid != null)
+                {
+                    double column_width = messageGrid.RenderSize.Width / 3;
+
+                    if (column_width > 0 && messageStackPanel != null)
+                    {
+                        messageStackPanel.MaxWidth = column_width * 2;
+                    }
+                }
+            }
+            catch { }
+        }
+
+        private void MainGridSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            RenderInputTextbox();
+            RenderConversationScrollViewerOffset();
         }
     }
 }

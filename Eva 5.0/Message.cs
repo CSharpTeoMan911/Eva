@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 
 namespace Eva_5._0
@@ -11,20 +12,20 @@ namespace Eva_5._0
             Assistant
         }
 
-        private MessageType _Type;
+        private MessageType _type;
         private string _message;
-        public int _column = 0;
-        public Style _style { get; set; } = Application.Current.FindResource("ConversationUserBubble") as Style;
+        private int _column = 0;
+        private Style _style { get; set; } = Application.Current.FindResource("ConversationUserBubble") as Style;
 
-        public MessageType Type
+        public MessageType type
         {
-            get { return _Type; }
+            get { return _type; }
             set
             {
-                if (_Type != value)
+                if (_type != value)
                 {
-                    _Type = value;
-                    OnPropertyChanged(nameof(Type));
+                    _type = value;
+                    OnPropertyChanged(nameof(type));
                 }
             }
         }
@@ -70,7 +71,7 @@ namespace Eva_5._0
 
         public Message(MessageType type, string message)
         {
-            _Type = type;
+            _type = type;
             _message = message;
 
             if (type == MessageType.User)
@@ -82,6 +83,15 @@ namespace Eva_5._0
             {
                 _column = 1;
                 _style = Application.Current.FindResource("ConversationAgentBubble") as Style;
+            }
+        }
+
+        public void UpdateMessage(string newMessage)
+        {
+            if (_message != newMessage)
+            {
+                _message = newMessage;
+                OnPropertyChanged(nameof(message));
             }
         }
 

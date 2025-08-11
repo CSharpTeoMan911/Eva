@@ -3,9 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mdxam="clr-namespace:MdXaml;assembly=MdXaml"
         xmlns:local="clr-namespace:Eva_5._0"
         mc:Ignorable="d"
-        Title="ChatGPT_Response_Window" Topmost="True" Height="350" Width="450" WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResize" Loaded="Window_Loaded" SizeChanged="WindowSizeChanged" Closing="Window_Closing" Opacity="0.95">
+        Title="ChatGPT_Response_Window" Topmost="True" Height="350" Width="450" WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResize" Loaded="Window_Loaded" SizeChanged="WindowSizeChanged" Closing="Window_Closing" Opacity="0.98">
 
 
     <Window.Clip>
@@ -14,28 +15,24 @@
 
     <Window.Resources>
         <DataTemplate x:Key="MessageBubble" DataType="local:Message">
-            <Grid>
+            <Grid SizeChanged="MessageGrid">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
-                <Border Grid.ColumnSpan="2" Margin="0,0,0,10" Grid.Column="{Binding Path=column}" Style="{Binding Path=style}" ClipToBounds="True">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel>
-                            <TextBlock Text="{Binding message}" TextWrapping="Wrap" />
-                        </StackPanel>
-                    </Grid>
+                <Border x:Name="Border" Grid.ColumnSpan="2" Margin="0,20,0,0" HorizontalAlignment="Left" Grid.Column="{Binding Path=column}" Style="{Binding Path=style}" ClipToBounds="True">
+                    <StackPanel>
+                        <mdxam:MarkdownScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Padding="13" Markdown="{Binding message}" xml:space="preserve"/>
+                    </StackPanel>
                 </Border>
             </Grid>
         </DataTemplate>
 
-        <Style TargetType="{x:Type ScrollBar}">
+        <Style x:Key="DefaultScrollBarStyle" TargetType="{x:Type ScrollBar}" />
+
+        <Style x:Key="ConversationScrollbar" TargetType="{x:Type ScrollBar}" >
             <Setter Property="Width" Value="16"/>
             <Setter Property="Background" Value="#FF212121"/>
             <Setter Property="Template">
@@ -66,6 +63,39 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        
+        
+        <Style x:Key="ConversationScrollViewerTemplate" TargetType="{x:Type ScrollViewer}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                        <Grid x:Name="Grid" Background="{TemplateBinding Background}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Rectangle x:Name="Corner" Grid.Column="1" Fill="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Grid.Row="1"/>
+                            <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" CanHorizontallyScroll="False" ContentTemplate="{TemplateBinding ContentTemplate}" CanVerticallyScroll="False" Grid.Column="0" Content="{TemplateBinding Content}" CanContentScroll="{TemplateBinding CanContentScroll}" Margin="{TemplateBinding Padding}" Grid.Row="0"/>
+                            <ScrollBar x:Name="PART_VerticalScrollBar" AutomationProperties.AutomationId="VerticalScrollBar" Cursor="Arrow" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0" Grid.Row="0" Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}" ViewportSize="{TemplateBinding ViewportHeight}" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Style="{StaticResource ConversationScrollbar}"/>
+                            <ScrollBar x:Name="PART_HorizontalScrollBar" AutomationProperties.AutomationId="HorizontalScrollBar" Cursor="Arrow" Grid.Column="0" Maximum="{TemplateBinding ScrollableWidth}" Minimum="0" Orientation="Horizontal" Grid.Row="1" Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}" ViewportSize="{TemplateBinding ViewportWidth}" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        
+
+        
     </Window.Resources>
 
     <Window.Background>
@@ -75,7 +105,7 @@
         </LinearGradientBrush>
     </Window.Background>
 
-    <Grid>
+    <Grid SizeChanged="MainGridSizeChanged">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -145,39 +175,20 @@
                     <RowDefinition x:Name="InputGrid" Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <ScrollViewer x:Name="ConversationScrollViewer" Height="250" Grid.Row="0" Padding="10" Margin="0,0,0,10" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
-
-                    <ItemsControl x:Name="ConversationScrollViewer_"  ItemTemplate="{StaticResource MessageBubble}" ItemsSource="{Binding messages}" Background="Transparent"/>
-
+                <ScrollViewer Style="{DynamicResource ConversationScrollViewerTemplate}" x:Name="ConversationScrollViewer" Height="250" Grid.Row="0" Padding="10" Margin="0,0,0,10" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
                     <ScrollViewer.Background>
                         <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                            <GradientStop Color="#FF08090A" x:Name="ConversationScrollViewerOffset" Offset="1"/>
-                            <GradientStop Color="#FF021325"/>
+                            <GradientStop Color="Black" x:Name="ConversationScrollViewerOffset" Offset="1"/>
+                            <GradientStop Color="#FF000810"/>
                         </LinearGradientBrush>
                     </ScrollViewer.Background>
-                    
-                </ScrollViewer>
-                <!--<StackPanel x:Name="TextboxStackpanel" Margin="0,0,0,10" Grid.Row="0">
-                    <TextBox x:Name="ResponseTextBox" IsReadOnly="True" Height="250" TextWrapping="Wrap" Margin="0" FontSize="16" BorderBrush="Transparent" VerticalScrollBarVisibility="Auto">
-                        <TextBox.Foreground>
-                            <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                                <GradientStop Color="#FF0BD2A0" x:Name="ResponseTextBoxOffset" Offset="1"/>
-                                <GradientStop Color="#FF0AE6E1"/>
-                            </LinearGradientBrush>
-                        </TextBox.Foreground>
 
-                        <TextBox.Background>
-                            <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                                <GradientStop Color="#FF08090A" x:Name="Loading_TextBlockBackgroundOffset" Offset="1"/>
-                                <GradientStop Color="#FF021325"/>
-                            </LinearGradientBrush>
-                        </TextBox.Background>
-                    </TextBox>
-                </StackPanel>-->
+                    <ItemsControl x:Name="ConversationScrollViewer_"  ItemTemplate="{StaticResource MessageBubble}" ItemsSource="{Binding messages}" Background="Transparent"/>
+                </ScrollViewer>
 
 
                 <StackPanel x:Name="Input_Stackpanel" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" >
-                    <TextBox x:Name="InputTextBox" Width="370" Height="36" FontFamily="Consolas" FontSize="20" VerticalAlignment="Center" CaretBrush="#FF14EFD6" BorderBrush="Transparent" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" PreviewKeyDown="Detect_Enter" TextChanged="Text_Changed">
+                    <TextBox x:Name="InputTextBox" Width="370" Height="36" FontFamily="Consolas" FontSize="20" VerticalAlignment="Center" CaretBrush="#FF14EFD6" BorderBrush="Transparent" TextWrapping="Wrap" AcceptsReturn="True" PreviewKeyDown="Detect_Enter">
 
                         <TextBox.Clip>
                             <RectangleGeometry x:Name="InputTextBox_Geometry" Rect="0, 0, 370, 36" RadiusX="5" RadiusY="5"/>
@@ -199,7 +210,7 @@
 
                     </TextBox>
 
-                    <Button x:Name="Input_Button" Style="{StaticResource SendGptQueryButtonStyle}" FontSize="30" FontFamily="Segoe MDL2 Assets" Content="&#xE09B;" VerticalAlignment="Center" Margin="10,0,0,0" Click="Send_Manual_GPT_Query">
+                    <Button x:Name="Input_Button" Style="{StaticResource SendGptQueryButtonStyle}" FontSize="23" FontFamily="Segoe MDL2 Assets" Content="&#xF5B0;" VerticalAlignment="Center" Margin="10,0,0,0" Click="Send_Manual_GPT_Query">
                         <Button.Foreground>
                             <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                                 <GradientStop Color="#FF097D5E" Offset="1"/>
@@ -212,35 +223,4 @@
             </Grid>
         </StackPanel>
     </Grid>
-    <!--<Grid>
-
-        <StackPanel>
-            
-        </StackPanel>
-
-
-        <Rectangle Grid.RowSpan="2" Grid.ColumnSpan="9" Fill="Transparent" MouseDown="Move_The_Window"/>
-
-
-
-
-
-        <Rectangle x:Name="Loading_Background" Height="166" Width="0" Margin="0" Grid.Row="1" Grid.RowSpan="8" Grid.ColumnSpan="9"  Fill="#FF0A0A0A" Opacity="0.7">
-            <Rectangle.Clip>
-                <RectangleGeometry Rect="0, 0, 430, 166" RadiusX="10" RadiusY="10"/>
-            </Rectangle.Clip>
-        </Rectangle>
-
-        <TextBlock x:Name="Loading_TextBlock" RenderTransformOrigin="0.5,0.5" Margin="10" Height="0" Width="0" Opacity="0.7" Grid.Row="1" Grid.RowSpan="8" Grid.ColumnSpan="9" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="60" FontFamily="Segoe MDL2 Assets" Text="&#xE117;">
-            <TextBlock.Foreground>
-                <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                    <GradientStop Color="#FF054E3B" x:Name="Loading_TextBlockOffset" Offset="1"/>
-                    <GradientStop Color="#FF0FFDCC"/>
-                </LinearGradientBrush>
-            </TextBlock.Foreground>
-        </TextBlock>
-
-
-
-    </Grid>-->
 </Window>

@@ -2,8 +2,11 @@
 using SharpToken;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 
@@ -11,25 +14,31 @@ namespace Eva_5._0
 {
     internal class ChatGPT_API
     {
+        private StringBuilder parse_builder = new StringBuilder();
+        private StringBuilder content_builder = new StringBuilder();
+
         private List<messages> cached_conversation = new List<messages>();
         private int total_tokens;
         public List<string> gpt_models = new List<string>();
         public string gpt_model_buffer;
+        private string data_label = "data: ";
 
+        public delegate Task Callback(ApiResponse response);
+        private Callback callback;
 
         public ChatGPT_API()
         {
 
         }
-        public ChatGPT_API(Action<ApiResponse> callback)
+        public ChatGPT_API(Callback callback)
         {
-
+            this.callback = callback;
         }
 
         public class ApiResponse
         {
-            Type type { get; set; }
-            string response { get; set; }
+            public Type type { get; set; }
+            public string response { get; set; }
         }
 
 
@@ -40,7 +49,7 @@ namespace Eva_5._0
             public string model;
             public messages[] messages;
             public double temperature;
-            public int max_tokens;
+            public bool stream = true;
         }
 
 
@@ -112,7 +121,6 @@ namespace Eva_5._0
 
                 models models = JsonSerialisation.JsonDeserialiser<models>(response_string);
 
-
                 // CLEAN THE DATA WITHIN THE EXTRACTED HTTP PAYLOAD BY ELIMINATING NON-GPT MODELS
                 // AND VISION BASED MODELS
 
@@ -147,141 +155,189 @@ namespace Eva_5._0
             }
         }
 
-        public async Task<Tuple<Type, string>> Initiate_Chat_GPT(string input)
+        public void RemoveLastMessage()
         {
-            string result = null;
-            Type return_type = null;
+            if(cached_conversation?.Count > 0)
+                cached_conversation.RemoveAt(cached_conversation.Count - 1);
+        }
 
-            string selected_model = await Settings.Get_Current_Chat_GPT__Model();
-            double temp = await Settings.Get_Current_Model_Temperature();
-            int tokens = await GetGptModelEncoding(input);
-
-            if (tokens < 4096)
+        public bool Initiate_Chat_GPT(string input, CancellationToken cancellation)
+        {
+            Task.Run(async () =>
             {
-                Remove_Superflous_Tokens(tokens);
-
-                // 'HttpClient' OBJECT NEEDED TO SEND HTTP REQUESTS TO THE OPENAI SERVER.
-                System.Net.Http.HttpClient api_client = new System.Net.Http.HttpClient();
-
-                try
+                if (!cancellation.IsCancellationRequested)
                 {
-                    // IF THE OPERATION COMPLETES WITHOUT ANY ERRORS
-                    // THE SET TYPE VALUE WITHIN THE TUPLE IS A
-                    // STRING AND THE STRING VALUE IS THE
-                    // CHATGPT RESPONSE
-                    //
-                    // [ BEIGN ]
+                    string selected_model = await Settings.Get_Current_Chat_GPT__Model();
+                    double temp = await Settings.Get_Current_Model_Temperature();
+                    int tokens = await GetGptModelEncoding(input);
+                    int max_tokens = GetModelContextWindow(selected_model);
 
-                    StringBuilder api_key_StringBuilder = new StringBuilder("Bearer");
-                    api_key_StringBuilder.Append(" ");
-                    api_key_StringBuilder.Append(await Settings.Get_Chat_GPT_Api_Key());
-
-
-
-                    api_client.DefaultRequestHeaders.Add("Authorization", api_key_StringBuilder.ToString());
-
-
-                    messages messages = new messages();
-                    messages.role = "user";
-                    messages.content = input;
-
-                    cached_conversation.Add(messages);
-
-                    request request = new request();
-
-                    if (selected_model == null)
+                    if (tokens < max_tokens)
                     {
-                        request.model = "gpt-3.5-turbo";
-                        await Get_Available_Gpt_Models();
-                    }
-                    else
-                    {
-                        request.model = selected_model;
-                    }
-
-                    request.messages = cached_conversation.ToArray();
-
-                    temp = temp / 10;
-                    request.temperature = temp;
-                    request.max_tokens = 4096;
-
-
-
-                    System.Net.Http.StringContent message_content = new System.Net.Http.StringContent(await JsonSerialisation.JsonSerialiser(request), Encoding.UTF8, "application/json");
-
-                    try
-                    {
-                        System.Net.Http.HttpResponseMessage response = await api_client.PostAsync("https://api.openai.com/v1/chat/completions", message_content);
-
                         try
                         {
-                            string r = await response.Content.ReadAsStringAsync();
+                            // 'HttpClient' OBJECT NEEDED TO SEND HTTP REQUESTS TO THE OPENAI SERVER.
+                            using (System.Net.Http.HttpClient api_client = new System.Net.Http.HttpClient())
+                            {
+                                // IF THE OPERATION COMPLETES WITHOUT ANY ERRORS
+                                // THE SET TYPE VALUE WITHIN THE TUPLE IS A
+                                // STRING AND THE STRING VALUE IS THE
+                                // CHATGPT RESPONSE
+                                //
+                                // [ BEIGN ]
 
-                            JObject json_response = JsonSerialisation.JsonDeserialiser<JObject>(r);
+                                StringBuilder api_key_StringBuilder = new StringBuilder("Bearer");
+                                api_key_StringBuilder.Append(" ");
+                                api_key_StringBuilder.Append(await Settings.Get_Chat_GPT_Api_Key());
 
-                            Tuple<Type, string> payload_processing_result = API_Payload_Processing(json_response);
 
-                            return_type = payload_processing_result.Item1;
-                            result = payload_processing_result.Item2;
+                                api_client.DefaultRequestHeaders.Add("Authorization", api_key_StringBuilder.ToString());
+
+
+                                messages messages = new messages();
+                                messages.role = "user";
+                                messages.content = input;
+
+                                cached_conversation.Add(messages);
+
+                                request request = new request();
+
+                                if (selected_model == null)
+                                {
+                                    request.model = "gpt-3.5-turbo";
+                                    await Get_Available_Gpt_Models();
+                                }
+                                else
+                                {
+                                    request.model = selected_model;
+                                }
+
+                                request.messages = cached_conversation.ToArray();
+
+                                temp = temp / 10;
+                                request.temperature = temp;
+
+
+                                if (!cancellation.IsCancellationRequested)
+                                {
+                                    using (System.Net.Http.StringContent message_content = new System.Net.Http.StringContent(await JsonSerialisation.JsonSerialiser(request), Encoding.UTF8, "application/json"))
+                                    {
+                                        if (!cancellation.IsCancellationRequested)
+                                        {
+                                            using (System.Net.Http.HttpResponseMessage response = await api_client.PostAsync("https://api.openai.com/v1/chat/completions", message_content))
+                                            {
+                                                if (!cancellation.IsCancellationRequested)
+                                                {
+                                                    using (StreamReader response_stream = new StreamReader(await response.Content.ReadAsStreamAsync(), new UTF8Encoding()))
+                                                    {
+                                                        while (!response_stream.EndOfStream && !cancellation.IsCancellationRequested)
+                                                        {
+                                                            parse_builder.Clear();
+                                                            parse_builder.Append(await response_stream.ReadLineAsync());
+
+                                                            if (parse_builder.Length >= data_label.Length)
+                                                            {
+                                                                string chunk = parse_builder.Remove(0, data_label.Length).ToString();
+
+                                                                if (!String.IsNullOrEmpty(chunk))
+                                                                {
+                                                                    if (chunk != "[DONE]")
+                                                                    {
+                                                                        JObject data = JsonSerialisation.JsonDeserialiser<JObject>(chunk);
+
+                                                                        if (data != null)
+                                                                        {
+                                                                            JToken choices = data["choices"];
+
+                                                                            if (choices != null)
+                                                                            {
+                                                                                JToken delta = choices[0]["delta"];
+
+                                                                                if (data != null)
+                                                                                {
+                                                                                    JToken content = delta["content"];
+
+                                                                                    if (content != null)
+                                                                                    {
+                                                                                        content_builder.Append(content.ToString());
+
+                                                                                        await callback.Invoke(new ApiResponse()
+                                                                                        {
+                                                                                            type = typeof(string),
+                                                                                            response = content_builder.ToString()
+                                                                                        });
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+
+                                                        await callback.Invoke(new ApiResponse()
+                                                        {
+                                                            type = typeof(Exception),
+                                                            response = "Stream finished"
+                                                        });
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    api_client.CancelPendingRequests();
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            api_client.CancelPendingRequests();
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    api_client.CancelPendingRequests();
+                                }
+
+                                // [ END ]
+                            }
                         }
-                        catch
+                        catch (Exception e)
                         {
+                            Debug.WriteLine("Error: " + (e.Message));
                             // IF AN EXCEPTION OCCURS, THEN THE OPERATION
                             // IS NOT SUCCESSFUL AND THE SET TYPE VALUE
                             // WITHIN THE TUPLE IS AN EXCEPTION AND THE
                             // STRING AND THE STRING VALUE IS THE
                             // ERROR MESSAGE
 
-                            return_type = typeof(Exception);
-                            result = "An error occured";
+                            await callback.Invoke(new ApiResponse()
+                            {
+                                type = typeof(Exception),
+                                response = "An error occured"
+                            });
                         }
-                        finally
+                    }
+                    else
+                    {
+                        await callback.Invoke(new ApiResponse()
                         {
-                            response?.Dispose();
-                        }
-                    }
-                    catch
-                    {
-                        // IF AN EXCEPTION OCCURS, THEN THE OPERATION
-                        // IS NOT SUCCESSFUL AND THE SET TYPE VALUE
-                        // WITHIN THE TUPLE IS AN EXCEPTION AND THE
-                        // STRING AND THE STRING VALUE IS THE
-                        // ERROR MESSAGE
-
-                        return_type = typeof(Exception);
-                        result = "An error occured";
-                    }
-                    finally
-                    {
-                        message_content?.Dispose();
+                            type = typeof(Exception),
+                            response = "Input exceeds the maximum number of tokens"
+                        });
                     }
 
-
-                    // [ END ]
+                    Debug.WriteLine("ChatGPT API request completed successfully.");
                 }
-                catch
+                else
                 {
-                    // IF AN EXCEPTION OCCURS, THEN THE OPERATION
-                    // IS NOT SUCCESSFUL AND THE SET TYPE VALUE
-                    // WITHIN THE TUPLE IS AN EXCEPTION AND THE
-                    // STRING AND THE STRING VALUE IS THE
-                    // ERROR MESSAGE
-
-                    return_type = typeof(Exception);
-                    result = "An error occured";
+                    RemoveLastMessage();
                 }
-                finally
-                {
-                    api_client?.Dispose();
-                }
-            }
-            else
-            {
-                return_type = typeof(Exception);
-                result = "Input exceeds the maximum number of tokens";
-            }
 
-            return new Tuple<Type, string>(return_type, result);
+                content_builder.Clear();
+            });
+
+            return true;
         }
 
 
@@ -374,17 +430,65 @@ namespace Eva_5._0
         }
 
 
-        private async void Remove_Superflous_Tokens(int tokens)
+        private int GetModelContextWindow(string model)
+        {
+            return model switch
+            {
+                // GPT-3.5 family
+                "gpt-3.5-turbo-16k" => 16385, // 16,385 tokens max
+                "gpt-3.5-turbo-instruct" => 4096, // 4,096 tokens max
+                "gpt-3.5-turbo-instruct-0914" => 4096, // 4,096 tokens max
+                "gpt-3.5-turbo-1106" => 16385, // 16,385 tokens max
+                "gpt-3.5-turbo-0125" => 16385, // 16,385 tokens max
+                "gpt-3.5-turbo" => 4096, // legacy / 4,096 tokens max
+
+                // GPT-4o models
+                "gpt-4o-mini" => 128000, // 128,000 tokens max
+                "gpt-4o" => 128000, // 128,000 tokens max
+
+                // GPT-4.1 models
+                "gpt-4.1-nano" => 1047576, // 1,047,576 tokens max
+                "gpt-4.1-mini" => 1047576, // 1,047,576 tokens max
+                "gpt-4.1" => 1047576, // 1,047,576 tokens max
+
+                // GPT-4 turbo models
+                "gpt-4-turbo-preview" => 128000, // 128,000 tokens max
+                "gpt-4-turbo-2024-04-09" => 128000, // 128,000 tokens max
+                "gpt-4-turbo" => 128000, // 128,000 tokens max
+
+                // GPT-4 preview models
+                "gpt-4-1106-preview" => 128000, // 128,000 tokens max
+                "gpt-4-0125-preview" => 128000, // 128,000 tokens max
+
+                // GPT-4 standard models
+                "gpt-4-32k" => 32768, // 32,768 tokens max
+                "gpt-4-0613" => 8192, // 8,192 tokens max
+                "gpt-4" => 8192, // 8,192 tokens max
+
+                // GPT-5 models
+                "gpt-5-nano" => 400000, // 8,192 tokens max
+                "gpt-5-mini" => 400000, // 32,768 tokens max
+                "gpt-5" => 400000, // 400,000 tokens max
+
+                // Fallback for unknown models
+                _ => 4096 // default
+            };
+        }
+
+
+        private async void Remove_Superflous_Tokens(int tokens, string model)
         {
             // IF THE NUMBERS OF EXTRACTED GPT MODELS IS GREATER THAN 0
             if (gpt_models.Count > 0)
             {
-                // IF THE TOTAL NUMBER OF TOKENS IS LESS THAN OR EQUAL WITH 4096
-                if (total_tokens + tokens <= 4096)
+                int max_tokens = GetModelContextWindow(model);
+
+                // IF THE TOTAL NUMBER OF TOKENS IS LESS THAN OR EQUAL WITH max_tokens
+                if (total_tokens + tokens <= max_tokens)
                 {
                     total_tokens += tokens;
                 }
-                // IF THE TOTAL NUMBER OF TOKENS IS MORE THAN 4096
+                // IF THE TOTAL NUMBER OF TOKENS IS MORE THAN max_tokens
                 else
                 {
                     // ITERATE EACH MESSAGE WITHIN THE CACHED CONVERSATION
@@ -400,9 +504,9 @@ namespace Eva_5._0
                         // REMOVE THE CURRENT ITEM FROM THE CONVERSATION  CACHE
                         cached_conversation.RemoveAt(i);
 
-                        // IF THE TOTAL NUMBER OF TOKENS IS LESS 4096
+                        // IF THE TOTAL NUMBER OF TOKENS IS LESS max_tokens
                         // STOP THE ITERATION
-                        if (total_tokens <= 4096)
+                        if (total_tokens <= max_tokens)
                         {
                             break;
                         }

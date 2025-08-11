@@ -87,6 +87,7 @@ namespace Eva_5._0
 
                         await Settings.Set_Chat_GPT_Api_Key(Chat_GPT_Api_Key_TextBox.Text);
 
+                        /*
                         // RETRIEVE THE CHATGPT API KEY INSERTED BY THE USER AND INITIATE A DUMMY QUERY IN ORDER TO TEST 
                         // THE VALIDITY OF THE API KEY.
                         //
@@ -138,6 +139,8 @@ namespace Eva_5._0
                             reloadCurrentModel.Invoke();
                             this.Close();
                         }
+                        */
+
                     }
 
                 }
