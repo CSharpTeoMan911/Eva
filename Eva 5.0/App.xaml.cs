@@ -49,7 +49,6 @@ namespace Eva_5._0
 
         private static string windows_version = String.Empty;
 
-
         private sealed class Wake_Word_Engine_Mitigator : Wake_Word_Engine
         {
             public static void Wake_Word_Engine_Stop()

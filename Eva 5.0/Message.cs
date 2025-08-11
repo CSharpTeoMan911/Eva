@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel;
-using System.Diagnostics;
 using System.Windows;
 
 namespace Eva_5._0
 {
-    public class Message:INotifyPropertyChanged
+    public class Message : INotifyPropertyChanged
     {
         public enum MessageType
         {

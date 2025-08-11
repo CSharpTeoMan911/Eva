@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
-using System.Web;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -28,14 +24,9 @@ namespace Eva_5._0
         private CancellationTokenSource tokenSource;
 
         private ChatGPT_API ChatGPT_API;
-        private static RotateTransform Rotate = new RotateTransform();
         private System.Timers.Timer Animation_Timer;
 
-
         private bool WindowIsClosing;
-        private bool Response_Loading;
-        private double RotationValue;
-
         private bool SwitchOffset;
         private double OffsetArithmetic;
 
@@ -54,7 +45,7 @@ namespace Eva_5._0
 
         internal async Task ApiResponseCallback(ChatGPT_API.ApiResponse response)
         {
-            await Application.Current.Dispatcher.InvokeAsync(async() => 
+            await Application.Current.Dispatcher.InvokeAsync(async () =>
             {
                 if (response.type == typeof(string))
                 {
@@ -76,6 +67,7 @@ namespace Eva_5._0
                     {
                         if (response.response == "Stream finished")
                         {
+                            GC.Collect(10);
                             Input_Button.Content = "\xF5B0";
                             processing = false;
                             last_gpt_message = null;
@@ -93,11 +85,8 @@ namespace Eva_5._0
                         }
                         else
                         {
-                            if (response.response != "Task cancelled")
-                            {
-                                //ErrorWindow errorWindow = new ErrorWindow("ChatGPT error");
-                                //errorWindow.Show();
-                            }
+                            ErrorWindow errorWindow = new ErrorWindow("ChatGPT error");
+                            errorWindow.Show();
                         }
                     }
 
@@ -118,6 +107,7 @@ namespace Eva_5._0
             RenderInputTextbox();
             RenderConversationScrollViewerOffset();
         }
+
         private void Animation_Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             try
@@ -134,38 +124,6 @@ namespace Eva_5._0
                                 {
                                     Animation_Timer?.Stop();
                                     this.Close();
-                                }
-
-                                if (Response_Loading == true)
-                                {
-                                    //Loading_Background.Height = ResponseTextBox.Height;
-                                    //Loading_Background.Width = ResponseTextBox.Width;
-
-                                    //Loading_TextBlock.Height = 60;
-                                    //Loading_TextBlock.Width = 60;
-
-                                    RotationValue += 4;
-
-                                    if (RotationValue == 360)
-                                    {
-                                        RotationValue = 0;
-                                    }
-
-                                    Rotate.Angle = RotationValue;
-                                    //Loading_TextBlock.RenderTransform = Rotate;
-                                }
-                                else
-                                {
-                                    //Loading_Background.Height = 0;
-                                    //Loading_Background.Width = 0;
-
-                                    //Loading_TextBlock.Height = 0;
-                                    //Loading_TextBlock.Width = 0;
-
-                                    RotationValue = 0;
-                                    Rotate.Angle = 0;
-
-                                    //Loading_TextBlock.RenderTransform = Rotate;
                                 }
 
                                 if (SwitchOffset == true)
@@ -226,19 +184,24 @@ namespace Eva_5._0
         }
 
 
-        public void Update_Conversation(string input)
+        public async void Update_Conversation(string input)
         {
-            if (WindowIsClosing == false)
+            if (!String.IsNullOrEmpty(input))
             {
-                tokenSource = new CancellationTokenSource();
-                messages.Add(new Message(Message.MessageType.User, input));
-                Response_Loading = true;
-                processing = ChatGPT_API.Initiate_Chat_GPT(input, tokenSource.Token);
-
-                if (processing)
+                await Dispatcher.InvokeAsync(() =>
                 {
-                    Input_Button.Content = "\xE002";
-                }
+                    if (WindowIsClosing == false)
+                    {
+                        tokenSource = new CancellationTokenSource();
+                        messages.Add(new Message(Message.MessageType.User, input));
+                        processing = ChatGPT_API.Initiate_Chat_GPT(input, tokenSource.Token);
+
+                        if (processing)
+                        {
+                            Input_Button.Content = "\xE002";
+                        }
+                    }
+                }, DispatcherPriority.Render);
             }
         }
 
@@ -322,7 +285,7 @@ namespace Eva_5._0
                     case false:
                         builder.Clear();
                         builder.Append(InputTextBox.Text);
-                        
+
                         if (carriageReturn)
                             builder.Remove(builder.Length - 2, 2).ToString();
 
@@ -350,7 +313,7 @@ namespace Eva_5._0
             messages.RemoveAt(messages.Count - 1);
             ChatGPT_API.RemoveLastMessage();
         }
-  
+
         private void NormaliseOrMaximiseTheWindow(object sender, RoutedEventArgs e)
         {
             switch (this.WindowState)
@@ -364,6 +327,9 @@ namespace Eva_5._0
                     NormaliseOrMaximiseTheWindowButton.Content = "\xEF2F";
                     break;
             }
+
+            RenderInputTextbox();
+            RenderConversationScrollViewerOffset();
         }
 
         private void WindowSizeChanged(object sender, SizeChangedEventArgs e)
@@ -377,6 +343,9 @@ namespace Eva_5._0
                     this.Clip = Window_Geometry;
                     break;
             }
+
+            RenderInputTextbox();
+            RenderConversationScrollViewerOffset();
         }
 
         private void RenderConversationScrollViewerOffset()
@@ -393,7 +362,7 @@ namespace Eva_5._0
             InputTextBox.Clip = new RectangleGeometry(new Rect(0, 0, ratio, InputTextBox.Height), 5, 5);
 
 #pragma warning disable CS0618 // Type or member is obsolete
-            FormattedText formattedText = new FormattedText(InputTextBox.Text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface("Consolas"), 16, Brushes.Black);
+            FormattedText formattedText = new FormattedText(InputTextBox.Text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface("Consolas"), 20, Brushes.Black);
 #pragma warning restore CS0618 // Type or member is obsolete
 
             double max_height = (this.RenderSize.Height - WindowHandle.RenderSize.Height - 25) / 2;
@@ -402,7 +371,7 @@ namespace Eva_5._0
 
             double widths = formattedText.Width / standard_width;
 
-            double actual_height = widths * formattedText.Height;
+            double actual_height = (widths * formattedText.Height) + 20;
 
             double height = actual_height >= max_height ? max_height : actual_height <= 36 ? 36 : actual_height;
 
@@ -425,6 +394,9 @@ namespace Eva_5._0
                         messageStackPanel.MaxWidth = column_width * 2;
                     }
                 }
+
+                RenderInputTextbox();
+                RenderConversationScrollViewerOffset();
             }
             catch { }
         }
@@ -433,6 +405,30 @@ namespace Eva_5._0
         {
             RenderInputTextbox();
             RenderConversationScrollViewerOffset();
+        }
+
+        private void InputChanged(object sender, TextChangedEventArgs e)
+        {
+            RenderInputTextbox();
+            RenderConversationScrollViewerOffset();
+        }
+
+        private void InputTextChanged(object sender, TextCompositionEventArgs e)
+        {
+            RenderInputTextbox();
+            RenderConversationScrollViewerOffset();
+        }
+
+        private void InputSelection(object sender, RoutedEventArgs e)
+        {
+            RenderInputTextbox();
+            RenderConversationScrollViewerOffset();
+        }
+
+        private void Scrolled(object sender, MouseWheelEventArgs e)
+        {
+            ConversationScrollViewer.ScrollToVerticalOffset(ConversationScrollViewer.VerticalOffset - e.Delta);
+            e.Handled = true;
         }
     }
 }

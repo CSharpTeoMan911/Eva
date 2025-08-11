@@ -6,7 +6,7 @@
         xmlns:mdxam="clr-namespace:MdXaml;assembly=MdXaml"
         xmlns:local="clr-namespace:Eva_5._0"
         mc:Ignorable="d"
-        Title="ChatGPT_Response_Window" Topmost="True" Height="350" Width="450" WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResize" Loaded="Window_Loaded" SizeChanged="WindowSizeChanged" Closing="Window_Closing" Opacity="0.98">
+        Title="ChatGPT_Response_Window" Height="350" Width="450" WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResize" Loaded="Window_Loaded" SizeChanged="WindowSizeChanged" Closing="Window_Closing" Opacity="0.98">
 
 
     <Window.Clip>
@@ -24,7 +24,7 @@
 
                 <Border x:Name="Border" Grid.ColumnSpan="2" Margin="0,20,0,0" HorizontalAlignment="Left" Grid.Column="{Binding Path=column}" Style="{Binding Path=style}" ClipToBounds="True">
                     <StackPanel>
-                        <mdxam:MarkdownScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Padding="13" Markdown="{Binding message}" xml:space="preserve"/>
+                        <mdxam:MarkdownScrollViewer FontFamily="Consolas" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Padding="13" Markdown="{Binding message}" xml:space="preserve"/>
                     </StackPanel>
                 </Border>
             </Grid>
@@ -51,7 +51,7 @@
                            CornerRadius="3"
                            BorderBrush="Black"
                            BorderThickness="1"
-                           Background="#FF84C2F9"/>
+                           Background="#005EB0"/>
                                             </ControlTemplate>
                                         </Thumb.Template>
                                     </Thumb>
@@ -183,12 +183,12 @@
                         </LinearGradientBrush>
                     </ScrollViewer.Background>
 
-                    <ItemsControl x:Name="ConversationScrollViewer_"  ItemTemplate="{StaticResource MessageBubble}" ItemsSource="{Binding messages}" Background="Transparent"/>
+                    <ItemsControl x:Name="ConversationScrollViewer_"  ItemTemplate="{StaticResource MessageBubble}" ItemsSource="{Binding messages}" Background="Transparent" PreviewMouseWheel="Scrolled"/>
                 </ScrollViewer>
 
 
-                <StackPanel x:Name="Input_Stackpanel" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" >
-                    <TextBox x:Name="InputTextBox" Width="370" Height="36" FontFamily="Consolas" FontSize="20" VerticalAlignment="Center" CaretBrush="#FF14EFD6" BorderBrush="Transparent" TextWrapping="Wrap" AcceptsReturn="True" PreviewKeyDown="Detect_Enter">
+                <StackPanel x:Name="Input_Stackpanel" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" >
+                    <TextBox x:Name="InputTextBox" Style="{StaticResource InputTextboxStyle}" Width="370" Height="36" FontFamily="Consolas" FontSize="20" CaretBrush="#FF14EFD6" BorderBrush="Transparent" TextWrapping="Wrap" AcceptsReturn="True" PreviewKeyDown="Detect_Enter" TextChanged="InputChanged" TextInput="InputTextChanged" SelectionChanged="InputSelection">
 
                         <TextBox.Clip>
                             <RectangleGeometry x:Name="InputTextBox_Geometry" Rect="0, 0, 370, 36" RadiusX="5" RadiusY="5"/>

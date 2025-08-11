@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -85,79 +86,74 @@ namespace Eva_5._0
 
         public void Clear_Conversation_Cache()
         {
+            parse_builder.Clear();
+            content_builder.Clear();
             cached_conversation.Clear();
+            gpt_models.Clear();
         }
 
 
         public async Task Get_Available_Gpt_Models()
         {
-            // 'HttpClient' OBJECT NEEDED TO SEND HTTP REQUESTS TO THE OPENAI SERVER.
-            System.Net.Http.HttpClient api_client = new System.Net.Http.HttpClient();
-            api_client.Timeout = TimeSpan.FromSeconds(10);
-
-            // 'HttpResponseMessage' OBJECT NEEDED TO GET THE RESPONSE OF THE HTTP GET QUERY
-            System.Net.Http.HttpResponseMessage response = null;
-
             try
             {
-                // 'StringBuilder' OBJECT USED TO CREATE THE HTTP HEADER AUTHORISATION STRING.
-                // 'StringBuilder' IS A MUTABLE OBJECT, THUS ELIMINATING THE NEED FOR 
-                // MEMORY ALLOCATIONS FOR EACH STRING MANIPULATION
-                StringBuilder api_key_StringBuilder = new StringBuilder("Bearer");
-                api_key_StringBuilder.Append(" ");
-                api_key_StringBuilder.Append(await Settings.Get_Chat_GPT_Api_Key());
-
-                // ADD THE AUTHORISATION HEADER FROM THE 'StringBuilder'
-                api_client.DefaultRequestHeaders.Add("Authorization", api_key_StringBuilder.ToString());
-
-                // INITIATE AN HTTP GET QUERY TO THE 'https://api.openai.com/v1/models' API ENDPOINT
-                // IN ORDER TO GET A LIST OF AVAILABLE GPT MODELS
-                response = await api_client.GetAsync("https://api.openai.com/v1/models");
-
-                // READ THE JSON RESPONSE AND STORE IT INSIDE A STRING
-                string response_string = await response.Content.ReadAsStringAsync();
-
-                // DESERIALISE AND STORE THE JSON RESULT INSIDE AN OBJECT
-
-                models models = JsonSerialisation.JsonDeserialiser<models>(response_string);
-
-                // CLEAN THE DATA WITHIN THE EXTRACTED HTTP PAYLOAD BY ELIMINATING NON-GPT MODELS
-                // AND VISION BASED MODELS
-
-                if (models.data != null)
+                // 'HttpClient' OBJECT NEEDED TO SEND HTTP REQUESTS TO THE OPENAI SERVER.
+                using (HttpClient api_client = new HttpClient())
                 {
-                    gpt_models.Clear();
-                    for (int i = 0; i < models.data.Count; i++)
-                    {
-                        string current_model = models.data.ElementAt(i).id;
+                    api_client.Timeout = TimeSpan.FromSeconds(10);
 
-                        if (current_model.Contains("gpt") == true)
-                            if (current_model.Contains("voice") == false)
-                                if (current_model.Contains("vision") == false)
-                                    if (current_model.Contains("audio") == false)
-                                        if (current_model.Contains("realtime") == false)
-                                            if (current_model.Contains("tts") == false)
-                                                if (current_model.Contains("transcribe") == false)
-                                                    if (current_model.Contains("image") == false)
-                                                        if (current_model.Contains("search") == false)
-                                                            gpt_models.Add(current_model);
+                    // 'StringBuilder' OBJECT USED TO CREATE THE HTTP HEADER AUTHORISATION STRING.
+                    // 'StringBuilder' IS A MUTABLE OBJECT, THUS ELIMINATING THE NEED FOR 
+                    // MEMORY ALLOCATIONS FOR EACH STRING MANIPULATION
+                    StringBuilder api_key_StringBuilder = new StringBuilder("Bearer");
+                    api_key_StringBuilder.Append(" ");
+                    api_key_StringBuilder.Append(await Settings.Get_Chat_GPT_Api_Key());
+
+                    // ADD THE AUTHORISATION HEADER FROM THE 'StringBuilder'
+                    api_client.DefaultRequestHeaders.Add("Authorization", api_key_StringBuilder.ToString());
+
+                    // INITIATE AN HTTP GET QUERY TO THE 'https://api.openai.com/v1/models' API ENDPOINT
+                    // IN ORDER TO GET A LIST OF AVAILABLE GPT MODELS
+                    using (HttpResponseMessage response = await api_client.GetAsync("https://api.openai.com/v1/models"))
+                    {
+                        // READ THE JSON RESPONSE AND STORE IT INSIDE A STRING
+                        string response_string = await response.Content.ReadAsStringAsync();
+
+                        // DESERIALISE AND STORE THE JSON RESULT INSIDE AN OBJECT
+
+                        models models = JsonSerialisation.JsonDeserialiser<models>(response_string);
+
+                        // CLEAN THE DATA WITHIN THE EXTRACTED HTTP PAYLOAD BY ELIMINATING NON-GPT MODELS
+                        // AND VISION BASED MODELS
+
+                        if (models.data != null)
+                        {
+                            gpt_models.Clear();
+                            for (int i = 0; i < models.data.Count; i++)
+                            {
+                                string current_model = models.data.ElementAt(i).id;
+
+                                if (current_model.Contains("gpt") == true)
+                                    if (current_model.Contains("voice") == false)
+                                        if (current_model.Contains("vision") == false)
+                                            if (current_model.Contains("audio") == false)
+                                                if (current_model.Contains("realtime") == false)
+                                                    if (current_model.Contains("tts") == false)
+                                                        if (current_model.Contains("transcribe") == false)
+                                                            if (current_model.Contains("image") == false)
+                                                                if (current_model.Contains("search") == false)
+                                                                    gpt_models.Add(current_model);
+                            }
+                        }
                     }
                 }
             }
-            catch
-            {
-
-            }
-            finally
-            {
-                api_client?.Dispose();
-                response?.Dispose();
-            }
+            catch { }
         }
 
         public void RemoveLastMessage()
         {
-            if(cached_conversation?.Count > 0)
+            if (cached_conversation?.Count > 0)
                 cached_conversation.RemoveAt(cached_conversation.Count - 1);
         }
 
@@ -176,8 +172,10 @@ namespace Eva_5._0
                     {
                         try
                         {
+                            Remove_Superflous_Tokens(tokens, selected_model);
+
                             // 'HttpClient' OBJECT NEEDED TO SEND HTTP REQUESTS TO THE OPENAI SERVER.
-                            using (System.Net.Http.HttpClient api_client = new System.Net.Http.HttpClient())
+                            using (HttpClient api_client = new HttpClient())
                             {
                                 // IF THE OPERATION COMPLETES WITHOUT ANY ERRORS
                                 // THE SET TYPE VALUE WITHIN THE TUPLE IS A
@@ -226,46 +224,53 @@ namespace Eva_5._0
                                         {
                                             using (System.Net.Http.HttpResponseMessage response = await api_client.PostAsync("https://api.openai.com/v1/chat/completions", message_content))
                                             {
-                                                if (!cancellation.IsCancellationRequested)
+                                                if (response.IsSuccessStatusCode)
                                                 {
-                                                    using (StreamReader response_stream = new StreamReader(await response.Content.ReadAsStreamAsync(), new UTF8Encoding()))
+                                                    if (!cancellation.IsCancellationRequested)
                                                     {
-                                                        while (!response_stream.EndOfStream && !cancellation.IsCancellationRequested)
+                                                        using (StreamReader response_stream = new StreamReader(await response.Content.ReadAsStreamAsync(), new UTF8Encoding()))
                                                         {
-                                                            parse_builder.Clear();
-                                                            parse_builder.Append(await response_stream.ReadLineAsync());
-
-                                                            if (parse_builder.Length >= data_label.Length)
+                                                            while (!response_stream.EndOfStream && !cancellation.IsCancellationRequested)
                                                             {
-                                                                string chunk = parse_builder.Remove(0, data_label.Length).ToString();
+                                                                string resposeJson = await response_stream.ReadLineAsync();
 
-                                                                if (!String.IsNullOrEmpty(chunk))
+
+                                                                parse_builder.Clear();
+                                                                parse_builder.Append(resposeJson);
+
+                                                                if (parse_builder.Length >= data_label.Length)
                                                                 {
-                                                                    if (chunk != "[DONE]")
+                                                                    string chunk = parse_builder.Remove(0, data_label.Length).ToString();
+                                                                    Debug.WriteLine(chunk);
+
+                                                                    if (!String.IsNullOrEmpty(chunk))
                                                                     {
-                                                                        JObject data = JsonSerialisation.JsonDeserialiser<JObject>(chunk);
-
-                                                                        if (data != null)
+                                                                        if (chunk != "[DONE]")
                                                                         {
-                                                                            JToken choices = data["choices"];
+                                                                            JObject data = JsonSerialisation.JsonDeserialiser<JObject>(chunk);
 
-                                                                            if (choices != null)
+                                                                            if (data != null)
                                                                             {
-                                                                                JToken delta = choices[0]["delta"];
+                                                                                JToken choices = data["choices"];
 
-                                                                                if (data != null)
+                                                                                if (choices != null)
                                                                                 {
-                                                                                    JToken content = delta["content"];
+                                                                                    JToken delta = choices[0]["delta"];
 
-                                                                                    if (content != null)
+                                                                                    if (data != null)
                                                                                     {
-                                                                                        content_builder.Append(content.ToString());
+                                                                                        JToken content = delta["content"];
 
-                                                                                        await callback.Invoke(new ApiResponse()
+                                                                                        if (content != null)
                                                                                         {
-                                                                                            type = typeof(string),
-                                                                                            response = content_builder.ToString()
-                                                                                        });
+                                                                                            content_builder.Append(content.ToString());
+
+                                                                                            await callback.Invoke(new ApiResponse()
+                                                                                            {
+                                                                                                type = typeof(string),
+                                                                                                response = content_builder.ToString()
+                                                                                            });
+                                                                                        }
                                                                                     }
                                                                                 }
                                                                             }
@@ -273,18 +278,26 @@ namespace Eva_5._0
                                                                     }
                                                                 }
                                                             }
-                                                        }
 
-                                                        await callback.Invoke(new ApiResponse()
-                                                        {
-                                                            type = typeof(Exception),
-                                                            response = "Stream finished"
-                                                        });
+                                                            await callback.Invoke(new ApiResponse()
+                                                            {
+                                                                type = typeof(Exception),
+                                                                response = "Stream finished"
+                                                            });
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        api_client.CancelPendingRequests();
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    api_client.CancelPendingRequests();
+                                                    await callback.Invoke(new ApiResponse()
+                                                    {
+                                                        type = typeof(Exception),
+                                                        response = "API authentification error"
+                                                    });
                                                 }
                                             }
                                         }
@@ -302,9 +315,8 @@ namespace Eva_5._0
                                 // [ END ]
                             }
                         }
-                        catch (Exception e)
+                        catch
                         {
-                            Debug.WriteLine("Error: " + (e.Message));
                             // IF AN EXCEPTION OCCURS, THEN THE OPERATION
                             // IS NOT SUCCESSFUL AND THE SET TYPE VALUE
                             // WITHIN THE TUPLE IS AN EXCEPTION AND THE
@@ -326,8 +338,6 @@ namespace Eva_5._0
                             response = "Input exceeds the maximum number of tokens"
                         });
                     }
-
-                    Debug.WriteLine("ChatGPT API request completed successfully.");
                 }
                 else
                 {
@@ -339,96 +349,6 @@ namespace Eva_5._0
 
             return true;
         }
-
-
-
-        private Tuple<Type, string> API_Payload_Processing(JObject json_response)
-        {
-            // DECONSTRUCT THE JSON PAYLOAD INTO ELEMENTS.
-            // IF THE API RESPONSE STRUCTURE CORRESPONDS
-            // TO AN ERROR MESSAGE, SET THE RETURN VALUE
-            // TUPLE TYPE VALUE AS EXCEPTION AND THE 
-            // STRING VALUE AS THE EXCEPTION MESSAGE,
-            // ELSE SET THE RETURN VALUE TUPLE TYPE
-            // AS STRING AND THE RETURN VALUE AS THE
-            // RESPONSE MESSAGE.
-            //
-            //
-            // [ BEGIN ]
-
-            JToken error = json_response["error"];
-
-            if (error != null)
-            {
-                JToken message = error["message"];
-
-                if (message != null)
-                {
-
-                    string error_message = message.ToString();
-
-                    if (error_message.Contains("You didn't provide an API key") == true)
-                    {
-                        return new Tuple<Type, string>(typeof(Exception), "API authentification error");
-                    }
-                    else if (error_message.Contains("Incorrect API key provided") == true)
-                    {
-                        return new Tuple<Type, string>(typeof(Exception), "API authentification error");
-                    }
-                    else
-                    {
-                        return new Tuple<Type, string>(typeof(Exception), "An error occured");
-                    }
-
-                }
-                else
-                {
-                    return new Tuple<Type, string>(typeof(Exception), "An error occured");
-                }
-            }
-            else
-            {
-                JToken choices = json_response["choices"];
-
-                if (choices != null)
-                {
-                    JToken message = choices[0]["message"];
-
-                    if (choices != null)
-                    {
-                        JToken content = message["content"];
-
-                        if (content != null)
-                        {
-                            string content_message = content.ToString();
-
-                            messages messages = new messages();
-                            messages.role = "assistant";
-                            messages.content = content_message;
-
-                            cached_conversation.Add(messages);
-
-                            return new Tuple<Type, string>(typeof(string), content_message);
-                        }
-                        else
-                        {
-                            return new Tuple<Type, string>(typeof(Exception), "An error occured");
-                        }
-                    }
-                    else
-                    {
-                        return new Tuple<Type, string>(typeof(Exception), "An error occured");
-                    }
-                }
-                else
-                {
-                    return new Tuple<Type, string>(typeof(Exception), "An error occured");
-                }
-            }
-
-            // [ END ]
-        }
-
 
         private int GetModelContextWindow(string model)
         {
@@ -475,6 +395,51 @@ namespace Eva_5._0
             };
         }
 
+
+        private string GetModelTokenizer(string model)
+        {
+            return model switch
+            {
+                // GPT-3.5 family (use cl100k_base)
+                "gpt-3.5-turbo-16k" => "cl100k_base",
+                "gpt-3.5-turbo-instruct" => "cl100k_base",
+                "gpt-3.5-turbo-instruct-0914" => "cl100k_base",
+                "gpt-3.5-turbo-1106" => "cl100k_base",
+                "gpt-3.5-turbo-0125" => "cl100k_base",
+                "gpt-3.5-turbo" => "cl100k_base",
+
+                // GPT-4o models (use cl100k_base)
+                "gpt-4o-mini" => "cl100k_base",
+                "gpt-4o" => "cl100k_base",
+
+                // GPT-4.1 models (use cl100k_base)
+                "gpt-4.1-nano" => "cl100k_base",
+                "gpt-4.1-mini" => "cl100k_base",
+                "gpt-4.1" => "cl100k_base",
+
+                // GPT-4 turbo models (use cl100k_base)
+                "gpt-4-turbo-preview" => "cl100k_base",
+                "gpt-4-turbo-2024-04-09" => "cl100k_base",
+                "gpt-4-turbo" => "cl100k_base",
+
+                // GPT-4 preview models (use cl100k_base)
+                "gpt-4-1106-preview" => "cl100k_base",
+                "gpt-4-0125-preview" => "cl100k_base",
+
+                // GPT-4 standard models (use cl100k_base)
+                "gpt-4-32k" => "cl100k_base",
+                "gpt-4-0613" => "cl100k_base",
+                "gpt-4" => "cl100k_base",
+
+                // GPT-5 models (assuming cl100k_base)
+                "gpt-5-nano" => "cl100k_base",
+                "gpt-5-mini" => "cl100k_base",
+                "gpt-5" => "cl100k_base",
+
+                // Fallback for unknown models: assume r50k_base (legacy GPT-3)
+                _ => "r50k_base"
+            };
+        }
 
         private async void Remove_Superflous_Tokens(int tokens, string model)
         {
@@ -559,17 +524,7 @@ namespace Eva_5._0
                 }
 
 
-                GptEncoding encoding = null;
-                try
-                {
-                    // GET THE ENCODING THAT THE SELECTED MODEL USES
-                    encoding = GptEncoding.GetEncodingForModel(current_model);
-                }
-                catch
-                {
-                    // IF AN ERROR OCCURS, USE THE STANDARD GPT3.5 TOKENIZER ENCODING
-                    encoding = GptEncoding.GetEncoding("cl100k_base");
-                }
+                GptEncoding encoding = GptEncoding.GetEncoding(GetModelTokenizer(current_model));
 
                 // GET THE NUMBER OF TOKENS THAT THE INPUT CONTAINS
                 // IN ACCORDANCE WITH THE SELECTED MODEL AND ITS

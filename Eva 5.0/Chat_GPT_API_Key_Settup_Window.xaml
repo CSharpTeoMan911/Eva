@@ -69,7 +69,7 @@
         </TextBlock>
 
         <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.RowSpan="3" Grid.ColumnSpan="9" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBox x:Name="Chat_GPT_Api_Key_TextBox" Foreground="Black" FontWeight="Bold" Width="220" Height="30" FontSize="20">
+            <TextBox x:Name="Chat_GPT_Api_Key_TextBox" Style="{StaticResource InputTextboxStyle}" Foreground="Black" BorderBrush="Transparent" BorderThickness="0" FontWeight="Bold" Width="220" Height="30" FontSize="20">
 
                 <TextBox.Clip>
                     <RectangleGeometry Rect="0,0,220,30" RadiusX="10" RadiusY="10"/>
