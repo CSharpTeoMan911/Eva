@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Eva_5._0"
              StartupUri="MainWindow.xaml">
-    
-    
+
+
     <Application.Resources>
 
         <Color x:Key="WindowColor">#FFE8EDF9</Color>
@@ -65,7 +65,7 @@
                 </GradientStopCollection>
             </LinearGradientBrush.GradientStops>
         </LinearGradientBrush>
-        
+
         <Style x:Key="MyButtonStyle" TargetType="Button">
             <Setter Property="OverridesDefaultStyle" Value="True"/>
             <Setter Property="Template">
@@ -546,6 +546,33 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="ConversationScrollViewer" TargetType="ScrollBar">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid Background="{TemplateBinding Background}">
+                            <Track x:Name="PART_Track"
+                               IsDirectionReversed="true"
+                               Focusable="false">
+                                <Track.Thumb>
+                                    <Thumb Background="DarkGray"/>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ConversationUserBubble" TargetType="Border">
+            <Setter Property="Background" Value="#1AAFF0"/>
+            <Setter Property="CornerRadius" Value="10"/>
+        </Style>
+
+        <Style x:Key="ConversationAgentBubble" TargetType="Border">
+            <Setter Property="Background" Value="#37EDAC"/>
+            <Setter Property="CornerRadius" Value="10"/>
+        </Style>
+
     </Application.Resources>
-    
 </Application>

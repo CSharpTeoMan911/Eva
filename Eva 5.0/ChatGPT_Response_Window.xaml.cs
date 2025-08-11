@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text;
+using System.Timers;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -10,6 +14,8 @@ namespace Eva_5._0
     /// <summary>
     /// Interaction logic for ChatGPT_Response_Window.xaml
     /// </summary>
+    /// 
+
     public partial class ChatGPT_Response_Window : Window
     {
         private ChatGPT_API ChatGPT_API;
@@ -27,10 +33,19 @@ namespace Eva_5._0
         private bool SwitchOffset;
         private double OffsetArithmetic;
 
+        public ObservableCollection<Message> messages { get; private set; } = new ObservableCollection<Message>()
+        {
+            new Message(Message.MessageType.User, "Hello! How can I assist you today?"),
+            new Message(Message.MessageType.Assistant, "Hello! I'm here to help you with any questions or tasks you have. What can I do for you today?")
+        };
+
+
         public ChatGPT_Response_Window()
         {
             ChatGPT_API = new ChatGPT_API(ApiResponseCallback);
             InitializeComponent();
+            DataContext = this;
+            //ConversationScrollViewer_.ItemsSource = messages;
         }
 
         internal void ApiResponseCallback(ChatGPT_API.ApiResponse response)
@@ -47,120 +62,111 @@ namespace Eva_5._0
             Animation_Timer.Interval = 10;
             Animation_Timer.Elapsed += Animation_Timer_Elapsed;
             Animation_Timer.Start();
-        }
 
+            RenderInputTextbox();
+            RenderConversationScrollViewerOffset();
+        }
         private void Animation_Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (WindowIsClosing == false)
+            try
             {
-
-                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                if (WindowIsClosing == false)
                 {
-
-                    Application.Current.Dispatcher.Invoke(() =>
+                    if (Application.Current.Dispatcher.HasShutdownStarted == false)
                     {
-                        if (Application.Current.MainWindow != null)
+                        Application.Current.Dispatcher.Invoke(() =>
                         {
-                            if (App.Application_Error_Shutdown)
+                            if (Application.Current.MainWindow != null)
                             {
-                                try
+                                if (App.Application_Error_Shutdown)
                                 {
-                                    if (Animation_Timer != null)
+                                    Animation_Timer?.Stop();
+                                    this.Close();
+                                }
+
+                                if (Response_Loading == true)
+                                {
+                                    //Loading_Background.Height = ResponseTextBox.Height;
+                                    //Loading_Background.Width = ResponseTextBox.Width;
+
+                                    //Loading_TextBlock.Height = 60;
+                                    //Loading_TextBlock.Width = 60;
+
+                                    RotationValue += 4;
+
+                                    if (RotationValue == 360)
                                     {
-                                        Animation_Timer.Stop();
-                                        this.Close();
+                                        RotationValue = 0;
+                                    }
+
+                                    Rotate.Angle = RotationValue;
+                                    //Loading_TextBlock.RenderTransform = Rotate;
+                                }
+                                else
+                                {
+                                    //Loading_Background.Height = 0;
+                                    //Loading_Background.Width = 0;
+
+                                    //Loading_TextBlock.Height = 0;
+                                    //Loading_TextBlock.Width = 0;
+
+                                    RotationValue = 0;
+                                    Rotate.Angle = 0;
+
+                                    //Loading_TextBlock.RenderTransform = Rotate;
+                                }
+
+                                if (SwitchOffset == true)
+                                {
+                                    if (OffsetArithmetic > 0)
+                                    {
+                                        OffsetArithmetic--;
+                                        CloseButtonOffset.Offset += 0.003;
+                                        ConversationScrollViewerOffset.Offset += 0.003;
+                                        WindowOffset.Offset += 0.003;
+                                    }
+                                    else
+                                    {
+                                        SwitchOffset = false;
                                     }
                                 }
-                                catch { }
-                            }
-
-                            if (Response_Loading == true)
-                            {
-                                //Loading_Background.Height = ResponseTextBox.Height;
-                                //Loading_Background.Width = ResponseTextBox.Width;
-
-                                //Loading_TextBlock.Height = 60;
-                                //Loading_TextBlock.Width = 60;
-
-                                RotationValue += 4;
-
-                                if (RotationValue == 360)
+                                else
                                 {
-                                    RotationValue = 0;
+                                    if (OffsetArithmetic < 300)
+                                    {
+                                        OffsetArithmetic++;
+                                        CloseButtonOffset.Offset -= 0.003;
+                                        ConversationScrollViewerOffset.Offset += 0.003;
+                                        WindowOffset.Offset -= 0.003;
+                                    }
+                                    else
+                                    {
+                                        SwitchOffset = true;
+                                    }
                                 }
 
-                                Rotate.Angle = RotationValue;
-                                //Loading_TextBlock.RenderTransform = Rotate;
+                                RenderInputTextbox();
+                                RenderConversationScrollViewerOffset();
                             }
                             else
                             {
-                                //Loading_Background.Height = 0;
-                                //Loading_Background.Width = 0;
-
-                                //Loading_TextBlock.Height = 0;
-                                //Loading_TextBlock.Width = 0;
-
-                                RotationValue = 0;
-                                Rotate.Angle = 0;
-
-                                //Loading_TextBlock.RenderTransform = Rotate;
+                                Animation_Timer?.Stop();
                             }
+                        });
 
-                            if (SwitchOffset == true)
-                            {
-                                if (OffsetArithmetic > 0)
-                                {
-                                    OffsetArithmetic--;
-                                    CloseButtonOffset.Offset += 0.003;
-                                    ResponseTextBoxOffset.Offset += 0.003;
-                                    WindowOffset.Offset += 0.003;
-                                }
-                                else
-                                {
-                                    SwitchOffset = false;
-                                }
-                            }
-                            else
-                            {
-                                if (OffsetArithmetic < 300)
-                                {
-                                    OffsetArithmetic++;
-                                    CloseButtonOffset.Offset -= 0.003;
-                                    ResponseTextBoxOffset.Offset += 0.003;
-                                    WindowOffset.Offset -= 0.003;
-                                }
-                                else
-                                {
-                                    SwitchOffset = true;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (Animation_Timer != null)
-                            {
-                                Animation_Timer.Stop();
-                            }
-                        }
-                    });
+                    }
+                    else
+                    {
+                        Animation_Timer?.Stop();
+                    }
 
                 }
                 else
                 {
-                    if (Animation_Timer != null)
-                    {
-                        Animation_Timer.Stop();
-                    }
-                }
-
-            }
-            else
-            {
-                if (Animation_Timer != null)
-                {
-                    Animation_Timer.Stop();
+                    Animation_Timer?.Stop();
                 }
             }
+            catch { }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -200,11 +206,11 @@ namespace Eva_5._0
                                     chat_gpt_input.Append(result.Item2);
                                     chat_gpt_input.Append("\n\n");
 
-                                    ResponseTextBox.AppendText(user_input.ToString());
+                                    //ConversationScrollViewerOffset.AppendText(user_input.ToString());
 
-                                    Get_Last_Response_Line();
+                                    //Get_Last_Response_Line();
 
-                                    ResponseTextBox.AppendText(chat_gpt_input.ToString());
+                                    //ConversationScrollViewerOffset.AppendText(chat_gpt_input.ToString());
 
                                     user_input.Clear();
                                     chat_gpt_input.Clear();
@@ -325,27 +331,7 @@ namespace Eva_5._0
             InputTextBox.IsEnabled = true;
         }
 
-        private void Text_Changed(object sender, System.Windows.Controls.TextChangedEventArgs e)
-        {
-
-#pragma warning disable CS0618 // Type or member is obsolete
-            FormattedText formattedText = new FormattedText(InputTextBox.Text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface("Consolas"), 16, Brushes.Black);
-#pragma warning restore CS0618 // Type or member is obsolete
-
-            if (formattedText.Width > InputTextBox.Width - 3)
-            {
-                InputTextBox.Height = 120;
-            }
-            else
-            {
-                InputTextBox.Height = 36;
-            }
-
-            RenderInputTextbox();
-            RenderResponseTextbox();
-        }
-
-        private void Get_Last_Response_Line() => ResponseTextBox.ScrollToLine(ResponseTextBox.LineCount - 1);
+        //private void Get_Last_Response_Line() => ResponseTextBox.ScrollToLine(ResponseTextBox.LineCount - 1);
 
         private void NormaliseOrMaximiseTheWindow(object sender, RoutedEventArgs e)
         {
@@ -373,18 +359,40 @@ namespace Eva_5._0
                     this.Clip = Window_Geometry;
                     break;
             }
-
-            RenderInputTextbox();
-            RenderResponseTextbox();
         }
 
-        private void RenderResponseTextbox() => ResponseTextBox.Height = (this.RenderSize.Height - WindowHandle.RenderSize.Height) - 25 - Input_Stackpanel.RenderSize.Height;
+        private void RenderConversationScrollViewerOffset()
+        {
+            double new_height = (this.RenderSize.Height - WindowHandle.RenderSize.Height) - 25 - Input_Stackpanel.RenderSize.Height;
+            ConversationScrollViewer.Height = new_height >= 0 ? new_height : 0;
+        }
 
         private void RenderInputTextbox()
         {
             double ratio = this.RenderSize.Width / 1.216;
             InputTextBox.Width = ratio;
             InputTextBox.Clip = new RectangleGeometry(new Rect(0, 0, ratio, InputTextBox.Height), 5, 5);
+
+#pragma warning disable CS0618 // Type or member is obsolete
+            FormattedText formattedText = new FormattedText(InputTextBox.Text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface("Consolas"), 16, Brushes.Black);
+#pragma warning restore CS0618 // Type or member is obsolete
+
+            double max_height = (this.RenderSize.Height - WindowHandle.RenderSize.Height - 25) / 2;
+
+            double standard_width = InputTextBox.RenderSize.Width;
+
+            double widths = formattedText.Width / standard_width;
+
+            double actual_height = widths * formattedText.Height;
+
+            double height = actual_height >= max_height ? max_height : actual_height <= 36 ? 36 : actual_height;
+
+            InputTextBox.Height = height;
+        }
+
+        private void Text_Changed(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+
         }
     }
 }

@@ -12,6 +12,62 @@
         <RectangleGeometry x:Name="Window_Geometry" Rect="0, 0, 450, 350" RadiusX="20" RadiusY="20"/>
     </Window.Clip>
 
+    <Window.Resources>
+        <DataTemplate x:Key="MessageBubble" DataType="local:Message">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.ColumnSpan="2" Margin="0,0,0,10" Grid.Column="{Binding Path=column}" Style="{Binding Path=style}" ClipToBounds="True">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="{Binding message}" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+        </DataTemplate>
+
+        <Style TargetType="{x:Type ScrollBar}">
+            <Setter Property="Width" Value="16"/>
+            <Setter Property="Background" Value="#FF212121"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid Background="{TemplateBinding Background}" Width="{TemplateBinding Width}">
+                            <Track x:Name="PART_Track"
+                  IsDirectionReversed="true"
+                  Focusable="false">
+
+                                <Track.Thumb>
+                                    <Thumb Width="15">
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Border 
+                           CornerRadius="3"
+                           BorderBrush="Black"
+                           BorderThickness="1"
+                           Background="#FF84C2F9"/>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
     <Window.Background>
         <LinearGradientBrush StartPoint="0.5, 1" EndPoint="1, 0">
             <GradientStop Color="#FF121111" x:Name="WindowOffset" Offset="1"/>
@@ -89,7 +145,19 @@
                     <RowDefinition x:Name="InputGrid" Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <StackPanel x:Name="TextboxStackpanel" Margin="0,0,0,10" Grid.Row="0">
+                <ScrollViewer x:Name="ConversationScrollViewer" Height="250" Grid.Row="0" Padding="10" Margin="0,0,0,10" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+
+                    <ItemsControl x:Name="ConversationScrollViewer_"  ItemTemplate="{StaticResource MessageBubble}" ItemsSource="{Binding messages}" Background="Transparent"/>
+
+                    <ScrollViewer.Background>
+                        <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                            <GradientStop Color="#FF08090A" x:Name="ConversationScrollViewerOffset" Offset="1"/>
+                            <GradientStop Color="#FF021325"/>
+                        </LinearGradientBrush>
+                    </ScrollViewer.Background>
+                    
+                </ScrollViewer>
+                <!--<StackPanel x:Name="TextboxStackpanel" Margin="0,0,0,10" Grid.Row="0">
                     <TextBox x:Name="ResponseTextBox" IsReadOnly="True" Height="250" TextWrapping="Wrap" Margin="0" FontSize="16" BorderBrush="Transparent" VerticalScrollBarVisibility="Auto">
                         <TextBox.Foreground>
                             <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
@@ -105,11 +173,11 @@
                             </LinearGradientBrush>
                         </TextBox.Background>
                     </TextBox>
-                </StackPanel>
+                </StackPanel>-->
 
 
                 <StackPanel x:Name="Input_Stackpanel" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" >
-                    <TextBox x:Name="InputTextBox" Width="370" Height="36" MaxHeight="120" FontFamily="Consolas" FontSize="20" VerticalAlignment="Center" CaretBrush="#FF14EFD6" BorderBrush="Transparent" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" PreviewKeyDown="Detect_Enter" TextChanged="Text_Changed">
+                    <TextBox x:Name="InputTextBox" Width="370" Height="36" FontFamily="Consolas" FontSize="20" VerticalAlignment="Center" CaretBrush="#FF14EFD6" BorderBrush="Transparent" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" PreviewKeyDown="Detect_Enter" TextChanged="Text_Changed">
 
                         <TextBox.Clip>
                             <RectangleGeometry x:Name="InputTextBox_Geometry" Rect="0, 0, 370, 36" RadiusX="5" RadiusY="5"/>

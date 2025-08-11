@@ -146,6 +146,7 @@
       <DependentUpon>InstructionManual.xaml</DependentUpon>
     </Compile>
     <Compile Include="JsonSerialisation.cs" />
+    <Compile Include="Message.cs" />
     <Compile Include="Natural_Language_Processing.cs" />
     <Compile Include="Online_Speech_Recognition.cs" />
     <Compile Include="Sound_Player.cs" />
