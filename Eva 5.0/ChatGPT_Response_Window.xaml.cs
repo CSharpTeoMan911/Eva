@@ -1,5 +1,4 @@
-﻿using Microsoft.Toolkit.Extensions;
-using Microsoft.Toolkit.Parsers.Markdown.Blocks;
+﻿using Markdig.Syntax;
 using ModernWpf.Toolkit.UI.Controls;
 using System;
 using System.Collections.ObjectModel;
@@ -12,8 +11,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using Windows.ApplicationModel.Contacts;
-using Windows.UI.Xaml.Documents;
 
 
 namespace Eva_5._0
@@ -52,56 +49,62 @@ namespace Eva_5._0
 
         internal async void ApiResponseCallback(ChatGPT_API.ApiResponse response)
         {
-            if (response.type == ChatGPT_API.ApiResponse.PayloadType.Payload)
+            if (processing)
             {
-                if (!string.IsNullOrEmpty(response.response))
+                if (!response.token.IsCancellationRequested)
                 {
-                    if (last_gpt_message == null)
+                    if (response.type == ChatGPT_API.ApiResponse.PayloadType.Payload)
                     {
-                        last_gpt_message = new Message(Message.MessageType.Assistant, response.response);
-                        messages.Add(last_gpt_message);
-                    }
-                    else
-                    {
-                        last_gpt_message.UpdateMessage(response.response, true);
-                    }
+                        if (!string.IsNullOrEmpty(response.response))
+                        {
+                            if (last_gpt_message == null)
+                            {
+                                last_gpt_message = new Message(Message.MessageType.Assistant, response.response);
+                                messages.Add(last_gpt_message);
+                            }
+                            else
+                            {
+                                last_gpt_message.UpdateMessage(response.response, true);
+                            }
 
-                    ConversationScrollViewer.ScrollToBottom();
-                }
-            }
-            else if (response.type == ChatGPT_API.ApiResponse.PayloadType.Notification)
-            {
-                if (response.response == "Stream finished")
-                {
-                    Input_Button.Style = Application.Current.FindResource("SendGptQueryButtonStyle") as Style;
-                    Input_Button.Content = "\xF5B0";
-                    processing = false;
-                    last_gpt_message = null;
-                    await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTNotificationSoundEffect);
+                            ConversationScrollViewer.ScrollToBottom();
+                        }
+                    }
+                    else if (response.type == ChatGPT_API.ApiResponse.PayloadType.Notification)
+                    {
+                        if (response.response == "Stream finished")
+                        {
+                            Input_Button.Style = Application.Current.FindResource("SendGptQueryButtonStyle") as Style;
+                            Input_Button.Content = "\xF5B0";
+                            processing = false;
+                            last_gpt_message = null;
+                            await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTNotificationSoundEffect);
 
-                }
-            }
-            else if (response.type == ChatGPT_API.ApiResponse.PayloadType.Exception)
-            {
-                if (App.PermisissionWindowOpen == false)
-                {
-                    if (response.response == "API authentification error")
-                    {
-                        ErrorWindow errorWindow = new ErrorWindow("Invalid ChatGPT API key");
-                        errorWindow.Show();
+                        }
                     }
-                    else if (response.response == "Input exceeds the maximum number of tokens")
+                    else if (response.type == ChatGPT_API.ApiResponse.PayloadType.Exception)
                     {
-                        ErrorWindow errorWindow = new ErrorWindow("Maximum number of tokens exceeded");
-                        errorWindow.Show();
-                    }
-                    else
-                    {
-                        ErrorWindow errorWindow = new ErrorWindow("ChatGPT error");
-                        errorWindow.Show();
-                    }
-                }
+                        if (App.PermisissionWindowOpen == false)
+                        {
+                            if (response.response == "API authentification error")
+                            {
+                                ErrorWindow errorWindow = new ErrorWindow("Invalid ChatGPT API key");
+                                errorWindow.Show();
+                            }
+                            else if (response.response == "Input exceeds the maximum number of tokens")
+                            {
+                                ErrorWindow errorWindow = new ErrorWindow("Maximum number of tokens exceeded");
+                                errorWindow.Show();
+                            }
+                            else
+                            {
+                                ErrorWindow errorWindow = new ErrorWindow("ChatGPT error");
+                                errorWindow.Show();
+                            }
+                        }
 
+                    }
+                }
             }
         }
 
@@ -490,7 +493,7 @@ namespace Eva_5._0
                         string html = Markdig.Markdown.ToHtml(text);
                         // crude check: if HTML is significantly different from plain text
 
-                        if (html.Contains("<"))
+                        if (IsMarkdown(text))
                         {
                             textBox.Visibility = Visibility.Collapsed;
                             markdownTextBlock.Visibility = Visibility.Visible;
@@ -513,10 +516,7 @@ namespace Eva_5._0
 
                     if (!string.IsNullOrWhiteSpace(text))
                     {
-                        string html = Markdig.Markdown.ToHtml(text);
-                        // crude check: if HTML is significantly different from plain text
-
-                        if (html.Contains("<"))
+                        if (IsMarkdown(text))
                         {
                             textBox.Visibility = Visibility.Collapsed;
                             markdownTextBlock.Visibility = Visibility.Visible;
@@ -525,6 +525,7 @@ namespace Eva_5._0
                 }
             }
         }
+
 
         private void TextBlockMarkdownRendered(object sender, MarkdownRenderedEventArgs e)
         {
@@ -539,10 +540,7 @@ namespace Eva_5._0
 
                     if (!string.IsNullOrWhiteSpace(text))
                     {
-                        string html = Markdig.Markdown.ToHtml(text);
-                        // crude check: if HTML is significantly different from plain text
-
-                        if (html.Contains("<"))
+                        if (IsMarkdown(text))
                         {
                             textBox.Visibility = Visibility.Collapsed;
                             markdownTextBlock.Visibility = Visibility.Visible;
@@ -565,10 +563,7 @@ namespace Eva_5._0
 
                     if (!string.IsNullOrWhiteSpace(text))
                     {
-                        string html = Markdig.Markdown.ToHtml(text);
-                        // crude check: if HTML is significantly different from plain text
-
-                        if (html.Contains("<"))
+                        if (IsMarkdown(text))
                         {
                             textBox.Visibility = Visibility.Collapsed;
                             markdownTextBlock.Visibility = Visibility.Visible;
@@ -591,10 +586,7 @@ namespace Eva_5._0
 
                     if (!string.IsNullOrWhiteSpace(text))
                     {
-                        string html = Markdig.Markdown.ToHtml(text);
-                        // crude check: if HTML is significantly different from plain text
-
-                        if (html.Contains("<"))
+                        if (IsMarkdown(text))
                         {
                             textBox.Visibility = Visibility.Collapsed;
                             markdownTextBlock.Visibility = Visibility.Visible;
@@ -602,6 +594,21 @@ namespace Eva_5._0
                     }
                 }
             }
+        }
+
+        private bool IsMarkdown(string text)
+        {
+            MarkdownDocument markdown = Markdig.Markdown.Parse(text);
+            
+            foreach (var block in markdown)
+            {
+                if (!(block is Markdig.Syntax.ParagraphBlock))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private void ExpandOrContractConversationsMenu(object sender, RoutedEventArgs e)
@@ -626,53 +633,10 @@ namespace Eva_5._0
         private void LinkClicked(object sender, LinkClickedEventArgs e)
         {
             string link = e.Link;
-            Debug.WriteLine("Link: " + link);
             if (!string.IsNullOrEmpty(link))
             {
                 Proc.NavigateToLink(link);
             }
-        }
-
-        private void MarkdownContextMenu(object sender, ContextMenuEventArgs e)
-        {
-            MarkdownTextBlock markdownTextBlock = ((MarkdownTextBlock)sender);
-            markdownTextBlock.ContextMenu.IsOpen = false;
-        }
-
-        private void CopyMarkdown(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private static T FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
-        {
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
-            {
-                var child = VisualTreeHelper.GetChild(parent, i);
-                if (child is T t)
-                    return t;
-
-                var result = FindVisualChild<T>(child);
-                if (result != null)
-                    return result;
-            }
-            return null;
-        }
-
-        private void MarkdownSelected(object sender, RoutedEventArgs e)
-        {
-            MarkdownTextBlock markdownTextBlock = ((MarkdownTextBlock)sender);
-            FlowDocumentScrollViewer flowDocument = FindVisualChild<FlowDocumentScrollViewer>(markdownTextBlock);
-
-            Debug.WriteLine(flowDocument.Selection.Text);
-        }
-
-        private void MarkdownSelected(object sender, MouseEventArgs e)
-        {
-            MarkdownTextBlock markdownTextBlock = ((MarkdownTextBlock)sender);
-            FlowDocumentScrollViewer flowDocument = FindVisualChild<FlowDocumentScrollViewer>(markdownTextBlock);
-
-            Debug.WriteLine(flowDocument.Selection.Text);
         }
     }
 }

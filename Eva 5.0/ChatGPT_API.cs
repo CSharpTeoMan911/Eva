@@ -76,7 +76,10 @@ namespace Eva_5._0
             }
             public PayloadType type { get; set; }
             public string response { get; set; }
+
             public bool isFinished;
+
+            public CancellationToken token;
         }
 
 
@@ -309,7 +312,8 @@ namespace Eva_5._0
                                                                                                     responseQueue.Enqueue(new ApiResponse()
                                                                                                     {
                                                                                                         type = ApiResponse.PayloadType.Payload,
-                                                                                                        response = content_builder.ToString()
+                                                                                                        response = content_builder.ToString(),
+                                                                                                        token = cancellation
                                                                                                     });
 
                                                                                                     content_builder.Clear();
@@ -337,7 +341,8 @@ namespace Eva_5._0
                                                     {
                                                         type = ApiResponse.PayloadType.Exception,
                                                         response = "An error occured",
-                                                        isFinished = true
+                                                        isFinished = true,
+                                                        token = cancellation
                                                     });
                                                 }
                                             }
@@ -366,7 +371,8 @@ namespace Eva_5._0
                                     responseQueue.Enqueue(new ApiResponse()
                                     {
                                         type = ApiResponse.PayloadType.Payload,
-                                        response = content_builder.ToString()
+                                        response = content_builder.ToString(),
+                                        token = cancellation
                                     });
                                 }
 
@@ -377,7 +383,8 @@ namespace Eva_5._0
                             {
                                 type = ApiResponse.PayloadType.Notification,
                                 response = "Stream finished",
-                                isFinished = true
+                                isFinished = true,
+                                token = cancellation
                             });
                         }
                         catch
@@ -392,7 +399,8 @@ namespace Eva_5._0
                             {
                                 type = ApiResponse.PayloadType.Exception,
                                 response = "An error occured",
-                                isFinished = true
+                                isFinished = true,
+                                token = cancellation
                             });
                         }
                     }
@@ -402,7 +410,8 @@ namespace Eva_5._0
                         {
                             type = ApiResponse.PayloadType.Exception,
                             response = "Input exceeds the maximum number of tokens",
-                            isFinished = true
+                            isFinished = true,
+                            token = cancellation
                         });
                     }
                 }

@@ -585,7 +585,7 @@
 
         <Style x:Key="ConversationUserBubble" TargetType="Border">
             <Setter Property="Background" Value="#D2FCFF"/>
-            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="CornerRadius" Value="10"/>
             <Setter Property="BorderThickness" Value="10"/>
             <Setter Property="BorderBrush" Value="#1583D1"/>
             <Setter Property="BorderThickness" Value="2"/>

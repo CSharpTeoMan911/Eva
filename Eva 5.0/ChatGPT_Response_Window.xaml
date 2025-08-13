@@ -23,9 +23,9 @@
                 </Grid.ColumnDefinitions>
 
                 <Border x:Name="Border" Grid.ColumnSpan="2" Margin="20" HorizontalAlignment="Left" Grid.Column="{Binding Path=column}" Style="{Binding Path=style}" ClipToBounds="True">
-                    <StackPanel>
+                    <StackPanel HorizontalAlignment="Stretch">
                         <controls:MarkdownTextBlock Visibility="Collapsed" HorizontalAlignment="Left" FontSize="13" FontFamily="Cascadia Mono" FontWeight="Light" Padding="13" Text="{Binding message}" MarkdownRendered="TextBlockMarkdownRendered" TextBoxBase.TextChanged="MarkdownTextChanged" LinkClicked="LinkClicked" SizeChanged="MarkdownSizeChanged"/>
-                        <TextBox VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden" IsReadOnly="True" Background="Transparent" BorderBrush="Transparent"  BorderThickness="0" TextWrapping="Wrap" FontSize="13" FontFamily="Cascadia Mono" FontWeight="Light" Padding="13,16,13,16" TextChanged="BubbleDataChanged" SizeChanged="TextboxSizeChanged" Text="{Binding message}"/>
+                        <TextBox VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden" IsReadOnly="True" Background="Transparent" BorderBrush="Transparent" TextWrapping="Wrap" BorderThickness="0" FontSize="13" FontFamily="Cascadia Mono" FontWeight="Light" Padding="13,16,13,16" TextChanged="BubbleDataChanged" SizeChanged="TextboxSizeChanged" Text="{Binding message}"/>
                     </StackPanel>
                 </Border>
             </Grid>
@@ -43,7 +43,7 @@
                         <Grid Background="{TemplateBinding Background}" Width="{TemplateBinding Width}">
                             <Track x:Name="PART_Track" IsDirectionReversed="true" Focusable="false">
                                 <Track.Thumb>
-                                    <Thumb Width="20" MinHeight="30">
+                                    <Thumb Width="20" MinHeight="40">
                                         <Thumb.Template>
                                             <ControlTemplate TargetType="Thumb">
                                                 <Border CornerRadius="3" BorderBrush="Black" BorderThickness="1" Background="#FF0C6567"/>
