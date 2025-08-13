@@ -7,7 +7,7 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.3.0
+📌 Latest Version: v7.3.1
 
 * 🐞 Fixed chat window memory leak issue
 * 🆕 Added real-time ChatGPT conversations
