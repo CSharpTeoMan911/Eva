@@ -24,7 +24,7 @@
 
                 <Border x:Name="Border" Grid.ColumnSpan="2" Margin="20" HorizontalAlignment="Left" Grid.Column="{Binding Path=column}" Style="{Binding Path=style}" ClipToBounds="True">
                     <StackPanel>
-                        <controls:MarkdownTextBlock Visibility="Collapsed" HorizontalAlignment="Left" FontSize="16" FontFamily="Cascadia Mono" FontWeight="Light" Padding="13" Text="{Binding message}" MarkdownRendered="TextBlockMarkdownRendered"/>
+                        <controls:MarkdownTextBlock Visibility="Collapsed" HorizontalAlignment="Left" FontSize="13" FontFamily="Cascadia Mono" FontWeight="Light" Padding="13" Text="{Binding message}" MarkdownRendered="TextBlockMarkdownRendered"/>
                         <TextBox VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden" IsReadOnly="True" Background="Transparent" BorderBrush="Transparent"  BorderThickness="0" TextWrapping="Wrap" FontSize="13" FontFamily="Cascadia Mono" FontWeight="Light" Padding="13,16,13,16" TextChanged="BubbleDataChanged" Text="{Binding message}"/>
                     </StackPanel>
                 </Border>

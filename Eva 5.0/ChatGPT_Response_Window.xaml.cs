@@ -388,7 +388,6 @@ namespace Eva_5._0
                 double ratio = columnWidth * 1.8 - 40;
                 double width = this.RenderSize.Width;
 
-                Debug.WriteLine($"InputTextBoxGrid Width: {InputTextBoxGrid.RenderSize.Width}, Ratio: {ratio}");
 
                 if (ratio > 0)
                 {
