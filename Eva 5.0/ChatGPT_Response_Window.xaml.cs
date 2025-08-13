@@ -49,60 +49,63 @@ namespace Eva_5._0
 
         internal async void ApiResponseCallback(ChatGPT_API.ApiResponse response)
         {
-            if (processing)
+            if (!WindowIsClosing)
             {
-                if (!response.token.IsCancellationRequested)
+                if (processing)
                 {
-                    if (response.type == ChatGPT_API.ApiResponse.PayloadType.Payload)
+                    if (!response.token.IsCancellationRequested)
                     {
-                        if (!string.IsNullOrEmpty(response.response))
+                        if (response.type == ChatGPT_API.ApiResponse.PayloadType.Payload)
                         {
-                            if (last_gpt_message == null)
+                            if (!string.IsNullOrEmpty(response.response))
                             {
-                                last_gpt_message = new Message(Message.MessageType.Assistant, response.response);
-                                messages.Add(last_gpt_message);
-                            }
-                            else
-                            {
-                                last_gpt_message.UpdateMessage(response.response, true);
-                            }
+                                if (last_gpt_message == null)
+                                {
+                                    last_gpt_message = new Message(Message.MessageType.Assistant, response.response);
+                                    messages.Add(last_gpt_message);
+                                }
+                                else
+                                {
+                                    last_gpt_message.UpdateMessage(response.response, true);
+                                }
 
-                            ConversationScrollViewer.ScrollToBottom();
-                        }
-                    }
-                    else if (response.type == ChatGPT_API.ApiResponse.PayloadType.Notification)
-                    {
-                        if (response.response == "Stream finished")
-                        {
-                            Input_Button.Style = Application.Current.FindResource("SendGptQueryButtonStyle") as Style;
-                            Input_Button.Content = "\xF5B0";
-                            processing = false;
-                            last_gpt_message = null;
-                            await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTNotificationSoundEffect);
-
-                        }
-                    }
-                    else if (response.type == ChatGPT_API.ApiResponse.PayloadType.Exception)
-                    {
-                        if (App.PermisissionWindowOpen == false)
-                        {
-                            if (response.response == "API authentification error")
-                            {
-                                ErrorWindow errorWindow = new ErrorWindow("Invalid ChatGPT API key");
-                                errorWindow.Show();
-                            }
-                            else if (response.response == "Input exceeds the maximum number of tokens")
-                            {
-                                ErrorWindow errorWindow = new ErrorWindow("Maximum number of tokens exceeded");
-                                errorWindow.Show();
-                            }
-                            else
-                            {
-                                ErrorWindow errorWindow = new ErrorWindow("ChatGPT error");
-                                errorWindow.Show();
+                                ConversationScrollViewer.ScrollToBottom();
                             }
                         }
+                        else if (response.type == ChatGPT_API.ApiResponse.PayloadType.Notification)
+                        {
+                            if (response.response == "Stream finished")
+                            {
+                                Input_Button.Style = Application.Current.FindResource("SendGptQueryButtonStyle") as Style;
+                                Input_Button.Content = "\xF5B0";
+                                processing = false;
+                                last_gpt_message = null;
+                                await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTNotificationSoundEffect);
 
+                            }
+                        }
+                        else if (response.type == ChatGPT_API.ApiResponse.PayloadType.Exception)
+                        {
+                            if (App.PermisissionWindowOpen == false)
+                            {
+                                if (response.response == "API authentification error")
+                                {
+                                    ErrorWindow errorWindow = new ErrorWindow("Invalid ChatGPT API key");
+                                    errorWindow.Show();
+                                }
+                                else if (response.response == "Input exceeds the maximum number of tokens")
+                                {
+                                    ErrorWindow errorWindow = new ErrorWindow("Maximum number of tokens exceeded");
+                                    errorWindow.Show();
+                                }
+                                else
+                                {
+                                    ErrorWindow errorWindow = new ErrorWindow("ChatGPT error");
+                                    errorWindow.Show();
+                                }
+                            }
+
+                        }
                     }
                 }
             }
