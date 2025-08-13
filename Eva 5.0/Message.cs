@@ -68,6 +68,7 @@ namespace Eva_5._0
         }
 
 
+
         public Message(MessageType type, string message)
         {
             _type = type;

@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json.Linq;
 using SharpToken;
 using System;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -10,19 +10,15 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
-using System.Diagnostics;
 
 
 namespace Eva_5._0
 {
     internal class ChatGPT_API
     {
-        
 
-        private System.Timers.Timer dispatcherTimer = new System.Timers.Timer();
-        private bool taskFinished;
 
+        private System.Timers.Timer dispatcherTimer;
         private ConcurrentQueue<ApiResponse> responseQueue = new ConcurrentQueue<ApiResponse>();
 
         private StringBuilder parse_builder = new StringBuilder();
@@ -43,9 +39,11 @@ namespace Eva_5._0
         }
         public ChatGPT_API(Callback callback)
         {
-            this.callback = callback;
-            dispatcherTimer.Interval = 100;
+            dispatcherTimer = new System.Timers.Timer();
             dispatcherTimer.Elapsed += DispatcherTimer_Elapsed;
+            dispatcherTimer.Interval = 100;
+
+            this.callback = callback;
         }
 
         private async void DispatcherTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -66,7 +64,7 @@ namespace Eva_5._0
                 }
             }
         }
-        
+
 
         public class ApiResponse
         {
@@ -300,17 +298,22 @@ namespace Eva_5._0
 
                                                                                         if (content != null)
                                                                                         {
-                                                                                            content_builder.Append(content.ToString());
+                                                                                            string content_string = content.ToString();
 
-                                                                                            if (content_builder.Length >= 250)
+                                                                                            if (content_string != String.Empty)
                                                                                             {
-                                                                                                responseQueue.Enqueue(new ApiResponse()
-                                                                                                {
-                                                                                                    type = ApiResponse.PayloadType.Payload,
-                                                                                                    response = content_builder.ToString()
-                                                                                                });
+                                                                                                content_builder.Append(content.ToString());
 
-                                                                                                content_builder.Clear();
+                                                                                                if (content_builder.Length >= 250)
+                                                                                                {
+                                                                                                    responseQueue.Enqueue(new ApiResponse()
+                                                                                                    {
+                                                                                                        type = ApiResponse.PayloadType.Payload,
+                                                                                                        response = content_builder.ToString()
+                                                                                                    });
+
+                                                                                                    content_builder.Clear();
+                                                                                                }
                                                                                             }
                                                                                         }
                                                                                     }
@@ -327,6 +330,15 @@ namespace Eva_5._0
                                                     {
                                                         api_client.CancelPendingRequests();
                                                     }
+                                                }
+                                                else
+                                                {
+                                                    await Dispatch(new ApiResponse()
+                                                    {
+                                                        type = ApiResponse.PayloadType.Exception,
+                                                        response = "An error occured",
+                                                        isFinished = true
+                                                    });
                                                 }
                                             }
                                         }
@@ -347,11 +359,16 @@ namespace Eva_5._0
 
                             if (content_builder.Length >= 0)
                             {
-                                responseQueue.Enqueue(new ApiResponse()
+                                string last_content = content_builder.ToString();
+
+                                if (!string.IsNullOrEmpty(last_content))
                                 {
-                                    type = ApiResponse.PayloadType.Payload,
-                                    response = content_builder.ToString()
-                                });
+                                    responseQueue.Enqueue(new ApiResponse()
+                                    {
+                                        type = ApiResponse.PayloadType.Payload,
+                                        response = content_builder.ToString()
+                                    });
+                                }
 
                                 content_builder.Clear();
                             }

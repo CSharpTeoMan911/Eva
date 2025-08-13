@@ -1,15 +1,16 @@
-﻿using Microsoft.Toolkit.Wpf.UI.XamlHost;
+﻿using ModernWpf.Toolkit.UI.Controls;
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using Windows.ApplicationModel.Contacts;
 
 
 namespace Eva_5._0
@@ -33,6 +34,8 @@ namespace Eva_5._0
 
         private bool processing;
 
+        private bool isMenuPanelExpanded = false;
+
         public ObservableCollection<Message> messages { get; private set; } = new ObservableCollection<Message>();
         private Message last_gpt_message { get; set; }
 
@@ -48,29 +51,33 @@ namespace Eva_5._0
         {
             if (response.type == ChatGPT_API.ApiResponse.PayloadType.Payload)
             {
-                if (last_gpt_message == null)
+                if (!string.IsNullOrEmpty(response.response))
                 {
-                    last_gpt_message = new Message(Message.MessageType.Assistant, response.response);
-                    messages.Add(last_gpt_message);
-                }
-                else
-                {
-                    last_gpt_message.UpdateMessage(response.response, true);
-                }
+                    if (last_gpt_message == null)
+                    {
+                        last_gpt_message = new Message(Message.MessageType.Assistant, response.response);
+                        messages.Add(last_gpt_message);
+                    }
+                    else
+                    {
+                        last_gpt_message.UpdateMessage(response.response, true);
+                    }
 
-                ConversationScrollViewer.ScrollToBottom();
+                    ConversationScrollViewer.ScrollToBottom();
+                }
             }
             else if (response.type == ChatGPT_API.ApiResponse.PayloadType.Notification)
             {
                 if (response.response == "Stream finished")
                 {
+                    Input_Button.Style = Application.Current.FindResource("SendGptQueryButtonStyle") as Style;
                     Input_Button.Content = "\xF5B0";
                     processing = false;
                     last_gpt_message = null;
                     await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTNotificationSoundEffect);
                 }
             }
-            else
+            else if (response.type == ChatGPT_API.ApiResponse.PayloadType.Exception)
             {
                 if (App.PermisissionWindowOpen == false)
                 {
@@ -198,7 +205,8 @@ namespace Eva_5._0
 
                         if (processing)
                         {
-                            Input_Button.Content = "\xE002";
+                            Input_Button.Style = Application.Current.FindResource("SendGptQueryButtonProcessingStyle") as Style;
+                            Input_Button.Content = "\xF8AE";
                         }
                     }
                 }, DispatcherPriority.Render);
@@ -270,7 +278,7 @@ namespace Eva_5._0
 
         private void Detect_Enter(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Return)
+            if (e.Key == Key.Return && !processing)
             {
                 Update_Conversation_And_UI(true);
             }
@@ -300,6 +308,7 @@ namespace Eva_5._0
 
                     case true:
                         RemoveMessage();
+                        Input_Button.Style = Application.Current.FindResource("SendGptQueryButtonStyle") as Style;
                         Input_Button.Content = "\xF5B0";
                         tokenSource?.Cancel();
                         processing = false;
@@ -357,25 +366,56 @@ namespace Eva_5._0
 
         private void RenderInputTextbox()
         {
-            double ratio = this.RenderSize.Width / 1.216;
-            InputTextBox.Width = ratio;
-            InputTextBox.Clip = new RectangleGeometry(new Rect(0, 0, ratio, InputTextBox.Height), 5, 5);
+            if (InputTextBoxGrid.RenderSize.Width > 0)
+            {
+                if (isMenuPanelExpanded)
+                {
+                    double pane_width = this.RenderSize.Width * 25 / 100;
+                    double content_width = this.RenderSize.Width * 75 / 100;
+                    MenuPanel.Width = pane_width;
+                    ContentPanel.Width = content_width;
+                }
+                else
+                {
+                    double content_width = this.RenderSize.Width;
+                    MenuPanel.Width = 0;
+                    ContentPanel.Width = content_width;
+                }
+
+
+                double columnWidth = ContentPanel.RenderSize.Width / 2;
+
+                double ratio = columnWidth * 1.8 - 40;
+                double width = this.RenderSize.Width;
+
+                Debug.WriteLine($"InputTextBoxGrid Width: {InputTextBoxGrid.RenderSize.Width}, Ratio: {ratio}");
+
+                if (ratio > 0)
+                {
+                    if (width > 0)
+                    {
+                        InputTextBox.Width = ratio;
+
+                        InputTextBox.Clip = new RectangleGeometry(new Rect(0, 0, ratio, InputTextBox.Height), 5, 5);
 
 #pragma warning disable CS0618 // Type or member is obsolete
-            FormattedText formattedText = new FormattedText(InputTextBox.Text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface("Consolas"), 20, Brushes.Black);
+                        FormattedText formattedText = new FormattedText(InputTextBox.Text, CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface("Consolas"), 20, Brushes.Black);
 #pragma warning restore CS0618 // Type or member is obsolete
 
-            double max_height = (this.RenderSize.Height - WindowHandle.RenderSize.Height - 25) / 2;
+                        double max_height = (this.RenderSize.Height - WindowHandle.RenderSize.Height - 25) / 2;
 
-            double standard_width = InputTextBox.RenderSize.Width;
+                        double standard_width = InputTextBox.RenderSize.Width;
 
-            double widths = formattedText.Width / standard_width;
+                        double widths = formattedText.Width / standard_width;
 
-            double actual_height = (widths * formattedText.Height) + 20;
+                        double actual_height = (widths * formattedText.Height) + 33;
 
-            double height = actual_height >= max_height ? max_height : actual_height <= 36 ? 36 : actual_height;
+                        double height = actual_height >= max_height ? max_height : actual_height <= 36 ? 36 : actual_height;
 
-            InputTextBox.Height = height;
+                        InputTextBox.Height = height;
+                    }
+                }
+            }
         }
 
         private void MessageGrid(object sender, SizeChangedEventArgs e)
@@ -383,7 +423,7 @@ namespace Eva_5._0
             try
             {
                 Grid messageGrid = (Grid)sender;
-                StackPanel messageStackPanel = ((StackPanel)((Border)((Grid)sender)?.Children[0])?.Child);
+                StackPanel messageStackPanel = ((Border)(((Grid)sender)?.Children[0])).Child as StackPanel;
 
                 if (messageGrid != null)
                 {
@@ -429,6 +469,77 @@ namespace Eva_5._0
         {
             ConversationScrollViewer.ScrollToVerticalOffset(ConversationScrollViewer.VerticalOffset - e.Delta);
             e.Handled = true;
+        }
+
+        private void BubbleDataChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBox textBox = ((TextBox)sender);
+            MarkdownTextBlock markdownTextBlock = (MarkdownTextBlock)((StackPanel)textBox.Parent).Children[0];
+
+            if (markdownTextBlock != null)
+            {
+                if (markdownTextBlock.Visibility == Visibility.Collapsed)
+                {
+                    string text = textBox.Text;
+
+                    if (!string.IsNullOrWhiteSpace(text))
+                    {
+                        string html = Markdig.Markdown.ToHtml(text);
+                        // crude check: if HTML is significantly different from plain text
+
+                        if (html.Contains("<"))
+                        {
+                            textBox.Visibility = Visibility.Collapsed;
+                            markdownTextBlock.Visibility = Visibility.Visible;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void TextBlockMarkdownRendered(object sender, MarkdownRenderedEventArgs e)
+        {
+            MarkdownTextBlock markdownTextBlock = ((MarkdownTextBlock)sender);
+            TextBox textBox = (TextBox)((StackPanel)markdownTextBlock.Parent).Children[1];
+
+            if (markdownTextBlock != null)
+            {
+                if (markdownTextBlock.Visibility == Visibility.Collapsed)
+                {
+                    string text = markdownTextBlock.Text;
+
+                    if (!string.IsNullOrWhiteSpace(text))
+                    {
+                        string html = Markdig.Markdown.ToHtml(text);
+                        // crude check: if HTML is significantly different from plain text
+
+                        if (html.Contains("<"))
+                        {
+                            textBox.Visibility = Visibility.Collapsed;
+                            markdownTextBlock.Visibility = Visibility.Visible;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ExpandOrContractConversationsMenu(object sender, RoutedEventArgs e)
+        {
+            isMenuPanelExpanded = !isMenuPanelExpanded;
+            RenderInputTextbox();
+            RenderConversationScrollViewerOffset();
+        }
+
+        private void MenuPanelSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            RenderInputTextbox();
+            RenderConversationScrollViewerOffset();
+        }
+
+        private void ContentPanelSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            RenderInputTextbox();
+            RenderConversationScrollViewerOffset();
         }
     }
 }

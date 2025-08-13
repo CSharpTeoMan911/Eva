@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using static Eva_5._0.ChatGPT_API;
@@ -13,6 +11,8 @@ namespace Eva_5._0
     /// </summary>
     public partial class Chat_GPT_API_Key_Settup_Window : Window
     {
+        private bool keyValidated;
+
         private CancellationTokenSource tokenSource;
         private ChatGPT_API ChatGPT_API;
 
@@ -85,49 +85,49 @@ namespace Eva_5._0
                     tokenSource?.Cancel();
                     Loading_Stackpanel.Height = 0;
 
-                    if (response.type == ApiResponse.PayloadType.Payload)
+                    if (!keyValidated)
                     {
-                        // IF THE RETURN TYPE OF THE OPERATION IS AN EXCEPTION, THIS MEANS 
-                        // THAT THE API KEY IS NOT CORRECT OR THAT ANOTHER ERROR OCCURRED
-                        //
-                        // [ BEIGN ]
 
-                        await Settings.Set_Chat_GPT_Api_Key(current_key);
-
-                        if (App.PermisissionWindowOpen == false)
+                        if (response.type == ApiResponse.PayloadType.Payload)
                         {
-                            if (response.response == "API authentification error")
-                            {
-                                ErrorWindow errorWindow = new ErrorWindow("Invalid ChatGPT API key");
-                                errorWindow.Show();
-                            }
-                            else if (response.response == "Stream finished")
-                            {
-                                await App.ChatGPT_API.Get_Available_Gpt_Models();
-                                reloadCurrentModel.Invoke();
-                                this.Close();
-                            }
-                            else
-                            {
-                                ErrorWindow errorWindow = new ErrorWindow("ChatGPT error");
-                                errorWindow.Show();
-                            }
+                            await App.ChatGPT_API.Get_Available_Gpt_Models();
+                            reloadCurrentModel.Invoke();
+                            keyValidated = true;
+                            this.Close();
                         }
+                        else
+                        {
+                            // IF THE RETURN TYPE OF THE OPERATION IS AN EXCEPTION, THIS MEANS 
+                            // THAT THE API KEY IS NOT CORRECT OR THAT ANOTHER ERROR OCCURRED
+                            //
+                            // [ BEIGN ]
 
-                        // [ END ]
+                            await Settings.Set_Chat_GPT_Api_Key(current_key);
 
+                            if (App.PermisissionWindowOpen == false)
+                            {
+                                if (response.response == "API authentification error")
+                                {
+                                    ErrorWindow errorWindow = new ErrorWindow("Invalid ChatGPT API key");
+                                    errorWindow.Show();
+                                }
+                                else if (response.response == "Stream finished")
+                                {
+                                    await App.ChatGPT_API.Get_Available_Gpt_Models();
+                                    reloadCurrentModel.Invoke();
+                                    this.Close();
+                                }
+                                else
+                                {
+                                    ErrorWindow errorWindow = new ErrorWindow("ChatGPT error");
+                                    errorWindow.Show();
+                                }
+                            }
+
+                            // [ END ]
+
+                        }
                     }
-                    else
-                    {
-                        // IF THE RETURN TYPE OF THE OPERATION IS NOT AN EXCEPTION
-                        // THIS MEANS THAT THE API KEY IS VALID AND THE WIDOW IS
-                        // CLOSED
-                        await App.ChatGPT_API.Get_Available_Gpt_Models();
-                        reloadCurrentModel.Invoke();
-                        this.Close();
-                    }
-
-
                 });
             }
         }
