@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Wpf.UI.XamlHost;
+using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
@@ -43,55 +44,54 @@ namespace Eva_5._0
             DataContext = this;
         }
 
-        internal async Task ApiResponseCallback(ChatGPT_API.ApiResponse response)
+        internal async void ApiResponseCallback(ChatGPT_API.ApiResponse response)
         {
-            await Application.Current.Dispatcher.InvokeAsync(async () =>
+            if (response.type == ChatGPT_API.ApiResponse.PayloadType.Payload)
             {
-                if (response.type == typeof(string))
+                if (last_gpt_message == null)
                 {
-                    if (last_gpt_message == null)
-                    {
-                        last_gpt_message = new Message(Message.MessageType.Assistant, response.response);
-                        messages.Add(last_gpt_message);
-                    }
-                    else
-                    {
-                        last_gpt_message.UpdateMessage(response.response);
-                    }
-
-                    ConversationScrollViewer.ScrollToBottom();
+                    last_gpt_message = new Message(Message.MessageType.Assistant, response.response);
+                    messages.Add(last_gpt_message);
                 }
                 else
                 {
-                    if (App.PermisissionWindowOpen == false)
-                    {
-                        if (response.response == "Stream finished")
-                        {
-                            GC.Collect(10);
-                            Input_Button.Content = "\xF5B0";
-                            processing = false;
-                            last_gpt_message = null;
-                            await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTNotificationSoundEffect);
-                        }
-                        else if (response.response == "API authentification error")
-                        {
-                            ErrorWindow errorWindow = new ErrorWindow("Invalid ChatGPT API key");
-                            errorWindow.Show();
-                        }
-                        else if (response.response == "Input exceeds the maximum number of tokens")
-                        {
-                            ErrorWindow errorWindow = new ErrorWindow("Maximum number of tokens exceeded");
-                            errorWindow.Show();
-                        }
-                        else
-                        {
-                            ErrorWindow errorWindow = new ErrorWindow("ChatGPT error");
-                            errorWindow.Show();
-                        }
-                    }
-
+                    last_gpt_message.UpdateMessage(response.response, true);
                 }
-            }, DispatcherPriority.Render);
+
+                ConversationScrollViewer.ScrollToBottom();
+            }
+            else if (response.type == ChatGPT_API.ApiResponse.PayloadType.Notification)
+            {
+                if (response.response == "Stream finished")
+                {
+                    Input_Button.Content = "\xF5B0";
+                    processing = false;
+                    last_gpt_message = null;
+                    await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTNotificationSoundEffect);
+                }
+            }
+            else
+            {
+                if (App.PermisissionWindowOpen == false)
+                {
+                    if (response.response == "API authentification error")
+                    {
+                        ErrorWindow errorWindow = new ErrorWindow("Invalid ChatGPT API key");
+                        errorWindow.Show();
+                    }
+                    else if (response.response == "Input exceeds the maximum number of tokens")
+                    {
+                        ErrorWindow errorWindow = new ErrorWindow("Maximum number of tokens exceeded");
+                        errorWindow.Show();
+                    }
+                    else
+                    {
+                        ErrorWindow errorWindow = new ErrorWindow("ChatGPT error");
+                        errorWindow.Show();
+                    }
+                }
+
+            }
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)

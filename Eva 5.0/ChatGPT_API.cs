@@ -2,19 +2,29 @@
 using SharpToken;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Threading;
+using System.Diagnostics;
 
 
 namespace Eva_5._0
 {
     internal class ChatGPT_API
     {
+        
+
+        private System.Timers.Timer dispatcherTimer = new System.Timers.Timer();
+        private bool taskFinished;
+
+        private ConcurrentQueue<ApiResponse> responseQueue = new ConcurrentQueue<ApiResponse>();
+
         private StringBuilder parse_builder = new StringBuilder();
         private StringBuilder content_builder = new StringBuilder();
 
@@ -24,7 +34,7 @@ namespace Eva_5._0
         public string gpt_model_buffer;
         private string data_label = "data: ";
 
-        public delegate Task Callback(ApiResponse response);
+        public delegate void Callback(ApiResponse response);
         private Callback callback;
 
         public ChatGPT_API()
@@ -34,12 +44,41 @@ namespace Eva_5._0
         public ChatGPT_API(Callback callback)
         {
             this.callback = callback;
+            dispatcherTimer.Interval = 100;
+            dispatcherTimer.Elapsed += DispatcherTimer_Elapsed;
         }
+
+        private async void DispatcherTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            if (responseQueue.Count > 0)
+            {
+                if (responseQueue.TryDequeue(out ApiResponse response))
+                {
+                    await Application.Current.Dispatcher.InvokeAsync(() =>
+                    {
+                        callback.Invoke(response);
+                    });
+
+                    if (response.isFinished)
+                    {
+                        dispatcherTimer.Stop();
+                    }
+                }
+            }
+        }
+        
 
         public class ApiResponse
         {
-            public Type type { get; set; }
+            public enum PayloadType
+            {
+                Payload,
+                Exception,
+                Notification
+            }
+            public PayloadType type { get; set; }
             public string response { get; set; }
+            public bool isFinished;
         }
 
 
@@ -87,7 +126,6 @@ namespace Eva_5._0
         public void Clear_Conversation_Cache()
         {
             parse_builder.Clear();
-            content_builder.Clear();
             cached_conversation.Clear();
             gpt_models.Clear();
         }
@@ -161,6 +199,7 @@ namespace Eva_5._0
         {
             Task.Run(async () =>
             {
+                dispatcherTimer.Start();
                 if (!cancellation.IsCancellationRequested)
                 {
                     string selected_model = await Settings.Get_Current_Chat_GPT__Model();
@@ -234,14 +273,12 @@ namespace Eva_5._0
                                                             {
                                                                 string resposeJson = await response_stream.ReadLineAsync();
 
-
                                                                 parse_builder.Clear();
                                                                 parse_builder.Append(resposeJson);
 
                                                                 if (parse_builder.Length >= data_label.Length)
                                                                 {
                                                                     string chunk = parse_builder.Remove(0, data_label.Length).ToString();
-                                                                    Debug.WriteLine(chunk);
 
                                                                     if (!String.IsNullOrEmpty(chunk))
                                                                     {
@@ -265,11 +302,16 @@ namespace Eva_5._0
                                                                                         {
                                                                                             content_builder.Append(content.ToString());
 
-                                                                                            await callback.Invoke(new ApiResponse()
+                                                                                            if (content_builder.Length >= 250)
                                                                                             {
-                                                                                                type = typeof(string),
-                                                                                                response = content_builder.ToString()
-                                                                                            });
+                                                                                                responseQueue.Enqueue(new ApiResponse()
+                                                                                                {
+                                                                                                    type = ApiResponse.PayloadType.Payload,
+                                                                                                    response = content_builder.ToString()
+                                                                                                });
+
+                                                                                                content_builder.Clear();
+                                                                                            }
                                                                                         }
                                                                                     }
                                                                                 }
@@ -279,25 +321,12 @@ namespace Eva_5._0
                                                                 }
                                                             }
 
-                                                            await callback.Invoke(new ApiResponse()
-                                                            {
-                                                                type = typeof(Exception),
-                                                                response = "Stream finished"
-                                                            });
                                                         }
                                                     }
                                                     else
                                                     {
                                                         api_client.CancelPendingRequests();
                                                     }
-                                                }
-                                                else
-                                                {
-                                                    await callback.Invoke(new ApiResponse()
-                                                    {
-                                                        type = typeof(Exception),
-                                                        response = "API authentification error"
-                                                    });
                                                 }
                                             }
                                         }
@@ -314,6 +343,25 @@ namespace Eva_5._0
 
                                 // [ END ]
                             }
+
+
+                            if (content_builder.Length >= 0)
+                            {
+                                responseQueue.Enqueue(new ApiResponse()
+                                {
+                                    type = ApiResponse.PayloadType.Payload,
+                                    response = content_builder.ToString()
+                                });
+
+                                content_builder.Clear();
+                            }
+
+                            responseQueue.Enqueue(new ApiResponse()
+                            {
+                                type = ApiResponse.PayloadType.Notification,
+                                response = "Stream finished",
+                                isFinished = true
+                            });
                         }
                         catch
                         {
@@ -323,19 +371,21 @@ namespace Eva_5._0
                             // STRING AND THE STRING VALUE IS THE
                             // ERROR MESSAGE
 
-                            await callback.Invoke(new ApiResponse()
+                            await Dispatch(new ApiResponse()
                             {
-                                type = typeof(Exception),
-                                response = "An error occured"
+                                type = ApiResponse.PayloadType.Exception,
+                                response = "An error occured",
+                                isFinished = true
                             });
                         }
                     }
                     else
                     {
-                        await callback.Invoke(new ApiResponse()
+                        await Dispatch(new ApiResponse()
                         {
-                            type = typeof(Exception),
-                            response = "Input exceeds the maximum number of tokens"
+                            type = ApiResponse.PayloadType.Exception,
+                            response = "Input exceeds the maximum number of tokens",
+                            isFinished = true
                         });
                     }
                 }
@@ -343,11 +393,17 @@ namespace Eva_5._0
                 {
                     RemoveLastMessage();
                 }
-
-                content_builder.Clear();
             });
 
             return true;
+        }
+
+        private async Task Dispatch(ApiResponse payload)
+        {
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                callback.Invoke(payload);
+            });
         }
 
         private int GetModelContextWindow(string model)

@@ -5,6 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:mdxam="clr-namespace:MdXaml;assembly=MdXaml"
         xmlns:local="clr-namespace:Eva_5._0"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+        xmlns:toolkit="http://schemas.modernwpf.com/toolkit"
+        xmlns:controls="http://schemas.modernwpf.com/toolkit/controls"
         mc:Ignorable="d"
         Title="ChatGPT_Response_Window" Height="350" Width="450" WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResize" Loaded="Window_Loaded" SizeChanged="WindowSizeChanged" Closing="Window_Closing" Opacity="0.98">
 
@@ -24,7 +27,7 @@
 
                 <Border x:Name="Border" Grid.ColumnSpan="2" Margin="0,20,0,0" HorizontalAlignment="Left" Grid.Column="{Binding Path=column}" Style="{Binding Path=style}" ClipToBounds="True">
                     <StackPanel>
-                        <mdxam:MarkdownScrollViewer FontFamily="Consolas" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Padding="13" Markdown="{Binding message}" xml:space="preserve"/>
+                        <controls:MarkdownTextBlock FontFamily="Consolas" Padding="13" Text="{Binding message}"/>
                     </StackPanel>
                 </Border>
             </Grid>

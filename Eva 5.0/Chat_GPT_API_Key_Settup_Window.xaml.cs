@@ -76,7 +76,7 @@ namespace Eva_5._0
             }
         }
 
-        private async Task ProcessGptResponse(ApiResponse response)
+        private async void ProcessGptResponse(ApiResponse response)
         {
             if (!tokenSource.IsCancellationRequested)
             {
@@ -85,7 +85,7 @@ namespace Eva_5._0
                     tokenSource?.Cancel();
                     Loading_Stackpanel.Height = 0;
 
-                    if (response.type == typeof(Exception))
+                    if (response.type == ApiResponse.PayloadType.Payload)
                     {
                         // IF THE RETURN TYPE OF THE OPERATION IS AN EXCEPTION, THIS MEANS 
                         // THAT THE API KEY IS NOT CORRECT OR THAT ANOTHER ERROR OCCURRED

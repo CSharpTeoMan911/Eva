@@ -85,11 +85,20 @@ namespace Eva_5._0
             }
         }
 
-        public void UpdateMessage(string newMessage)
+        public void UpdateMessage(string newMessage, bool isContentAppended = false)
         {
             if (_message != newMessage)
             {
-                _message = newMessage;
+                switch (isContentAppended)
+                {
+                    case true:
+                        _message += newMessage;
+                        break;
+                    case false:
+                        _message = newMessage;
+                        break;
+                }
+
                 OnPropertyChanged(nameof(message));
             }
         }
