@@ -298,6 +298,18 @@ namespace Eva_5._0
             await Eva_Functionalities.Screen_Capture_Mechanism_Mitigator.Screen_Capture_Initiator();
         }
 
+        public static void NavigateToLink(string link)
+        {
+            try
+            {
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                process.StartInfo.FileName = link;
+                process.StartInfo.UseShellExecute = true;
+                process.Start();
+            }
+            catch { }
+        }
+
         ~Proc()
         {
             System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;

@@ -1,4 +1,6 @@
-﻿using ModernWpf.Toolkit.UI.Controls;
+﻿using Microsoft.Toolkit.Extensions;
+using Microsoft.Toolkit.Parsers.Markdown.Blocks;
+using ModernWpf.Toolkit.UI.Controls;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -11,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Windows.ApplicationModel.Contacts;
+using Windows.UI.Xaml.Documents;
 
 
 namespace Eva_5._0
@@ -75,6 +78,7 @@ namespace Eva_5._0
                     processing = false;
                     last_gpt_message = null;
                     await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTNotificationSoundEffect);
+
                 }
             }
             else if (response.type == ChatGPT_API.ApiResponse.PayloadType.Exception)
@@ -496,7 +500,85 @@ namespace Eva_5._0
             }
         }
 
+        private void TextboxSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            TextBox textBox = ((TextBox)sender);
+            MarkdownTextBlock markdownTextBlock = (MarkdownTextBlock)((StackPanel)textBox.Parent).Children[0];
+
+            if (markdownTextBlock != null)
+            {
+                if (markdownTextBlock.Visibility == Visibility.Collapsed)
+                {
+                    string text = textBox.Text;
+
+                    if (!string.IsNullOrWhiteSpace(text))
+                    {
+                        string html = Markdig.Markdown.ToHtml(text);
+                        // crude check: if HTML is significantly different from plain text
+
+                        if (html.Contains("<"))
+                        {
+                            textBox.Visibility = Visibility.Collapsed;
+                            markdownTextBlock.Visibility = Visibility.Visible;
+                        }
+                    }
+                }
+            }
+        }
+
         private void TextBlockMarkdownRendered(object sender, MarkdownRenderedEventArgs e)
+        {
+            MarkdownTextBlock markdownTextBlock = ((MarkdownTextBlock)sender);
+            TextBox textBox = (TextBox)((StackPanel)markdownTextBlock.Parent).Children[1];
+
+            if (markdownTextBlock != null)
+            {
+                if (markdownTextBlock.Visibility == Visibility.Collapsed)
+                {
+                    string text = markdownTextBlock.Text;
+
+                    if (!string.IsNullOrWhiteSpace(text))
+                    {
+                        string html = Markdig.Markdown.ToHtml(text);
+                        // crude check: if HTML is significantly different from plain text
+
+                        if (html.Contains("<"))
+                        {
+                            textBox.Visibility = Visibility.Collapsed;
+                            markdownTextBlock.Visibility = Visibility.Visible;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void MarkdownTextChanged(object sender, TextChangedEventArgs e)
+        {
+            MarkdownTextBlock markdownTextBlock = ((MarkdownTextBlock)sender);
+            TextBox textBox = (TextBox)((StackPanel)markdownTextBlock.Parent).Children[1];
+
+            if (markdownTextBlock != null)
+            {
+                if (markdownTextBlock.Visibility == Visibility.Collapsed)
+                {
+                    string text = markdownTextBlock.Text;
+
+                    if (!string.IsNullOrWhiteSpace(text))
+                    {
+                        string html = Markdig.Markdown.ToHtml(text);
+                        // crude check: if HTML is significantly different from plain text
+
+                        if (html.Contains("<"))
+                        {
+                            textBox.Visibility = Visibility.Collapsed;
+                            markdownTextBlock.Visibility = Visibility.Visible;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void MarkdownSizeChanged(object sender, SizeChangedEventArgs e)
         {
             MarkdownTextBlock markdownTextBlock = ((MarkdownTextBlock)sender);
             TextBox textBox = (TextBox)((StackPanel)markdownTextBlock.Parent).Children[1];
@@ -539,6 +621,58 @@ namespace Eva_5._0
         {
             RenderInputTextbox();
             RenderConversationScrollViewerOffset();
+        }
+
+        private void LinkClicked(object sender, LinkClickedEventArgs e)
+        {
+            string link = e.Link;
+            Debug.WriteLine("Link: " + link);
+            if (!string.IsNullOrEmpty(link))
+            {
+                Proc.NavigateToLink(link);
+            }
+        }
+
+        private void MarkdownContextMenu(object sender, ContextMenuEventArgs e)
+        {
+            MarkdownTextBlock markdownTextBlock = ((MarkdownTextBlock)sender);
+            markdownTextBlock.ContextMenu.IsOpen = false;
+        }
+
+        private void CopyMarkdown(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private static T FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+                if (child is T t)
+                    return t;
+
+                var result = FindVisualChild<T>(child);
+                if (result != null)
+                    return result;
+            }
+            return null;
+        }
+
+        private void MarkdownSelected(object sender, RoutedEventArgs e)
+        {
+            MarkdownTextBlock markdownTextBlock = ((MarkdownTextBlock)sender);
+            FlowDocumentScrollViewer flowDocument = FindVisualChild<FlowDocumentScrollViewer>(markdownTextBlock);
+
+            Debug.WriteLine(flowDocument.Selection.Text);
+        }
+
+        private void MarkdownSelected(object sender, MouseEventArgs e)
+        {
+            MarkdownTextBlock markdownTextBlock = ((MarkdownTextBlock)sender);
+            FlowDocumentScrollViewer flowDocument = FindVisualChild<FlowDocumentScrollViewer>(markdownTextBlock);
+
+            Debug.WriteLine(flowDocument.Selection.Text);
         }
     }
 }

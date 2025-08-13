@@ -24,8 +24,8 @@
 
                 <Border x:Name="Border" Grid.ColumnSpan="2" Margin="20" HorizontalAlignment="Left" Grid.Column="{Binding Path=column}" Style="{Binding Path=style}" ClipToBounds="True">
                     <StackPanel>
-                        <controls:MarkdownTextBlock Visibility="Collapsed" HorizontalAlignment="Left" FontSize="13" FontFamily="Cascadia Mono" FontWeight="Light" Padding="13" Text="{Binding message}" MarkdownRendered="TextBlockMarkdownRendered"/>
-                        <TextBox VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden" IsReadOnly="True" Background="Transparent" BorderBrush="Transparent"  BorderThickness="0" TextWrapping="Wrap" FontSize="13" FontFamily="Cascadia Mono" FontWeight="Light" Padding="13,16,13,16" TextChanged="BubbleDataChanged" Text="{Binding message}"/>
+                        <controls:MarkdownTextBlock Visibility="Collapsed" HorizontalAlignment="Left" FontSize="13" FontFamily="Cascadia Mono" FontWeight="Light" Padding="13" Text="{Binding message}" MarkdownRendered="TextBlockMarkdownRendered" TextBoxBase.TextChanged="MarkdownTextChanged" LinkClicked="LinkClicked" SizeChanged="MarkdownSizeChanged"/>
+                        <TextBox VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden" IsReadOnly="True" Background="Transparent" BorderBrush="Transparent"  BorderThickness="0" TextWrapping="Wrap" FontSize="13" FontFamily="Cascadia Mono" FontWeight="Light" Padding="13,16,13,16" TextChanged="BubbleDataChanged" SizeChanged="TextboxSizeChanged" Text="{Binding message}"/>
                     </StackPanel>
                 </Border>
             </Grid>
