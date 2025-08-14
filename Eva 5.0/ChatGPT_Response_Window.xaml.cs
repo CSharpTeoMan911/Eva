@@ -2,7 +2,6 @@
 using ModernWpf.Toolkit.UI.Controls;
 using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Threading;
@@ -493,7 +492,6 @@ namespace Eva_5._0
 
                     if (!string.IsNullOrWhiteSpace(text))
                     {
-                        string html = Markdig.Markdown.ToHtml(text);
                         // crude check: if HTML is significantly different from plain text
 
                         if (IsMarkdown(text))
@@ -602,7 +600,7 @@ namespace Eva_5._0
         private bool IsMarkdown(string text)
         {
             MarkdownDocument markdown = Markdig.Markdown.Parse(text);
-            
+
             foreach (var block in markdown)
             {
                 if (!(block is Markdig.Syntax.ParagraphBlock))

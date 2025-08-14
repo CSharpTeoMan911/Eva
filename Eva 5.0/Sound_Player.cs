@@ -43,7 +43,7 @@ namespace Eva_5._0.Properties
             // per cycle using a single channel, to ensure that no audio artifacts
             // (crackle) are rendered. The format uses a single audio channel to 
             // ensure compatibility with mono and stereo audio devices.
-            WaveFormat wave_format = new WaveFormat(25000, 16, 1);
+            WaveFormat wave_format = new WaveFormat(16000, 16, 1);
 
             byte[] audio = new byte[wave_format.AverageBytesPerSecond];
 
