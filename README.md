@@ -7,8 +7,9 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.3.0
+📌 Latest Version: v7.3.1
 
+* 🐞 Fixed chat window memory leak issue
 * 🆕 Added real-time ChatGPT conversations
 * 🆕 Added  markup processor for ChatGPT responses
 * 🆕 Added paged memory cache cleanup for the "SpeechRuntime.exe" process
