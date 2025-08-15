@@ -9,11 +9,8 @@
 ## 🔄 Changelog
 📌 Latest Version: v7.3.1
 
+* 🆕 Added plug-and-play device detection based white noise generation
 * 🐞 Fixed chat window memory leak issue
-* 🆕 Added real-time ChatGPT conversations
-* 🆕 Added  markup processor for ChatGPT responses
-* 🆕 Added paged memory cache cleanup for the "SpeechRuntime.exe" process
-* 🆕 Made the app available in the taskbar on minimisation
 
 ![Settings](https://github.com/user-attachments/assets/add286b1-5e11-4709-8c51-f938382eaa0f)
 
