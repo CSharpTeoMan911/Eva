@@ -7,7 +7,7 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.3.1
+📌 Latest Version: v7.3.2
 
 * 🆕 Added plug-and-play device detection based white noise generation
 * 🐞 Fixed chat window memory leak issue
