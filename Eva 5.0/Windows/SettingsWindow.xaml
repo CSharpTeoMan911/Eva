@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Eva_5._0"
         mc:Ignorable="d"
-        Title="Settings" Height="670" Width="450" WindowStyle="None" AllowsTransparency="True" Opacity="0.98" Loaded="SettingsWindowLoaded" Closing="WindowClosing" Icon="Images/Eva icon.png" Topmost="True">
+        Title="Settings" Height="670" Width="450" WindowStyle="None" AllowsTransparency="True" Opacity="0.98" Loaded="SettingsWindowLoaded" Closing="WindowClosing" Icon="../Images/Eva icon.png" Topmost="True">
 
     <!--/////////////////////////////////////////////////////////////////////////////
         ///                                                                       ///

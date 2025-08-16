@@ -1,6 +1,8 @@
 ﻿using Markdig.Syntax;
 using ModernWpf.Toolkit.UI.Controls;
 using System;
+using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
@@ -10,6 +12,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using System.Linq;
+using System.Diagnostics;
 
 
 namespace Eva_5._0
@@ -25,6 +29,7 @@ namespace Eva_5._0
         private CancellationTokenSource tokenSource;
 
         private ChatGPT_API ChatGPT_API;
+        private ChatHistory chatHistoryManager = new ChatHistory();
         private System.Timers.Timer Animation_Timer;
 
         private bool WindowIsClosing;
@@ -36,11 +41,30 @@ namespace Eva_5._0
         private bool isMenuPanelExpanded = false;
 
         public ObservableCollection<Message> messages { get; private set; } = new ObservableCollection<Message>();
+        public ObservableCollection<Chat> chatHistory { get; private set; } = new ObservableCollection<Chat>();
+
         private Message last_gpt_message { get; set; }
 
+        private bool chatHistoryLoading {  get; set; }
+
+        private bool addToChat { get; set; }
+
+        private bool newChat { get; set; }
+
+        private ChatHistory.ChatPackage currentChatPackage;
+        private long currentChatId;
+        private string currentChatTitle;
 
         public ChatGPT_Response_Window()
         {
+            ChatGPT_API = new ChatGPT_API(new ChatGPT_API.Callback(ApiResponseCallback));
+            InitializeComponent();
+            DataContext = this;
+        }
+
+        public ChatGPT_Response_Window(bool newChat)
+        {
+            this.newChat = newChat;
             ChatGPT_API = new ChatGPT_API(new ChatGPT_API.Callback(ApiResponseCallback));
             InitializeComponent();
             DataContext = this;
@@ -78,6 +102,10 @@ namespace Eva_5._0
                                 Input_Button.Style = Application.Current.FindResource("SendGptQueryButtonStyle") as Style;
                                 Input_Button.Content = "\xF5B0";
                                 processing = false;
+
+                                ChatGPT_API.AddAssistantMessage(last_gpt_message.message);
+                                UpdateChat();
+
                                 last_gpt_message = null;
                                 await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTNotificationSoundEffect);
 
@@ -122,6 +150,7 @@ namespace Eva_5._0
 
             RenderInputTextbox();
             RenderConversationScrollViewerOffset();
+            LoadChatHistory();
         }
 
         private void Animation_Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -217,6 +246,8 @@ namespace Eva_5._0
                             Input_Button.Style = Application.Current.FindResource("SendGptQueryButtonProcessingStyle") as Style;
                             Input_Button.Content = "\xF8AE";
                         }
+
+                        UpdateChat(input);
                     }
                 }, DispatcherPriority.Render);
             }
@@ -330,6 +361,7 @@ namespace Eva_5._0
         {
             messages.RemoveAt(messages.Count - 1);
             ChatGPT_API.RemoveLastMessage();
+            UpdateChat();
         }
 
         private void NormaliseOrMaximiseTheWindow(object sender, RoutedEventArgs e)
@@ -369,7 +401,11 @@ namespace Eva_5._0
         private void RenderConversationScrollViewerOffset()
         {
             double new_height = (this.RenderSize.Height - WindowHandle.RenderSize.Height) - 25 - Input_Stackpanel.RenderSize.Height;
+            double new_width = ConversationScrollViewer.RenderSize.Width;
+
             ConversationScrollViewer.Height = new_height >= 0 ? new_height : 0;
+
+            ConversationScrollViewer.Clip = new RectangleGeometry(new Rect(0, 0, new_width, new_height), 5, 5);
             ConversationScrollViewer.UpdateLayout();
         }
 
@@ -379,9 +415,8 @@ namespace Eva_5._0
             {
                 if (isMenuPanelExpanded)
                 {
-                    double pane_width = this.RenderSize.Width * 25 / 100;
-                    double content_width = this.RenderSize.Width * 75 / 100;
-                    MenuPanel.Width = pane_width;
+                    double content_width = this.RenderSize.Width - 275;
+                    MenuPanel.Width = 275;
                     ContentPanel.Width = content_width;
                 }
                 else
@@ -390,6 +425,9 @@ namespace Eva_5._0
                     MenuPanel.Width = 0;
                     ContentPanel.Width = content_width;
                 }
+
+                double menuPanelHeight = MenuPanel.RenderSize.Height - NewChatPanel.RenderSize.Height;
+                MenuView.Height = menuPanelHeight > 0 ? menuPanelHeight : 0;
 
 
                 double columnWidth = ContentPanel.RenderSize.Width / 2;
@@ -476,6 +514,12 @@ namespace Eva_5._0
         private void Scrolled(object sender, MouseWheelEventArgs e)
         {
             ConversationScrollViewer.ScrollToVerticalOffset(ConversationScrollViewer.VerticalOffset - e.Delta);
+            e.Handled = true;
+        }
+
+        private void MenuScrolled(object sender, MouseWheelEventArgs e)
+        {
+            MenuView.ScrollToVerticalOffset(MenuView.VerticalOffset - e.Delta);
             e.Handled = true;
         }
 
@@ -638,6 +682,120 @@ namespace Eva_5._0
             {
                 Proc.NavigateToLink(link);
             }
+        }
+
+        private void MenuPanelLoaded(object sender, RoutedEventArgs e)
+        {
+            LoadChatHistory();
+        }
+
+        private void LoadChatHistory()
+        {
+            ConcurrentDictionary<long, ChatHistory.ChatPackage> chats = chatHistoryManager.GetChats();
+
+            chatHistory.Clear();
+
+            if (chats != null)
+            {
+                for (int i = 0; i < chats.Count; i++)
+                {
+                    KeyValuePair<long, ChatHistory.ChatPackage> keyValuePair = chats.ElementAt(i);
+
+                    long key = keyValuePair.Key;
+                    ChatHistory.ChatPackage chatPackage = keyValuePair.Value;
+
+                    chatHistory.Add(new Chat(key, chatPackage.chatTitle));
+
+                    if (!newChat)
+                    {
+                        if (i == 0)
+                        {
+                            if (currentChatPackage == null)
+                            {
+                                currentChatTitle = chatPackage.chatTitle;
+                                currentChatPackage = chatPackage;
+                                currentChatId = key;
+
+                                chatPackage.chat.ForEach((value) => messages.Add(new Message(value.role == "user" ? Message.MessageType.User : Message.MessageType.Assistant, value.content)));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private async void UpdateChat(string title = null)
+        {
+            DateTime date = DateTime.UtcNow;
+            addToChat = false;
+
+            if (currentChatPackage == null)
+            {
+                if (!string.IsNullOrEmpty(title))
+                {
+                    StringBuilder stringBuilder = new StringBuilder();
+
+                    string[] sections = title.Split(' ');
+                    for (int i = 0; i < sections.Length; i++)
+                    {
+                        stringBuilder.Append(sections[i]);
+
+                        if (i < 5)
+                        {
+                            stringBuilder.Append(' ');
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    currentChatTitle = stringBuilder.ToString();
+                    currentChatPackage = new ChatHistory.ChatPackage()
+                    {
+                        chat = ChatGPT_API.GetMessages(),
+                        chatTitle = currentChatTitle
+                    };
+                    currentChatId = Convert.ToInt64(DateTime.UtcNow.ToString("yyyyMMddHHmmffff"));
+                }
+            }
+
+            if (currentChatId > 0)
+            {
+                if (currentChatPackage != null)
+                {
+                    Debug.WriteLine(await JsonSerialisation.JsonSerialiser(ChatGPT_API.GetMessages()));
+                    chatHistoryManager.UpdateChats(currentChatId, currentChatPackage);
+                }
+            }
+
+            LoadChatHistory();
+        }
+
+        private void DeleteChat(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            long id = (long)button.Tag;
+            chatHistoryManager.RemoveChat(id);
+            UpdateChat();
+        }
+
+        private void SelectChat(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            long id = (long)button.Tag;
+            ChatHistory.ChatPackage chatPackage = chatHistoryManager.GetChat(id);
+            ChatGPT_API.SetMessages(chatPackage.chat);
+
+            messages.Clear();
+            chatPackage.chat.ForEach((value) => messages.Add(new Message(value.role == "user" ? Message.MessageType.User : Message.MessageType.Assistant, value.content)));
+        }
+
+        private void NewChat(object sender, RoutedEventArgs e)
+        {
+            currentChatPackage = null;
+            ChatGPT_API.Clear_Conversation_Cache();
+            messages.Clear();
         }
     }
 }

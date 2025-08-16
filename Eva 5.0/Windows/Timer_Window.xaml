@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Eva_5._0"
         mc:Ignorable="d"
-        Title="Timer" Height="150" Width="250" WindowStyle="None" AllowsTransparency="True" Opacity="0.94" Focusable="False" Loaded="Timer_Window_Loaded" Closing="Timer_Window_Closing" Icon="Images/Eva icon.png">
+        Title="Timer" Height="150" Width="250" WindowStyle="None" AllowsTransparency="True" Opacity="0.94" Focusable="False" Loaded="Timer_Window_Loaded" Closing="Timer_Window_Closing" Icon="../Images/Eva icon.png">
 
 
     <!--/////////////////////////////////////////////////////////////////////////////

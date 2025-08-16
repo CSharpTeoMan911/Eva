@@ -6,7 +6,7 @@
         xmlns:xrpb="http://XamlRadialProgressBar/DotNet"
         xmlns:local="clr-namespace:Eva_5._0"
         mc:Ignorable="d"
-        Title="Eva" Height="159" Width="260" Loaded="WindowLoaded" ShowInTaskbar="False" Closing="MainWindowClosing" ResizeMode="NoResize"  Opacity="0.94" AllowsTransparency="True" WindowStyle="None" Icon="Images/Eva icon.png" Topmost="True">
+        Title="Eva" Height="159" Width="260" Loaded="WindowLoaded" ShowInTaskbar="False" Closing="MainWindowClosing" ResizeMode="NoResize"  Opacity="0.94" AllowsTransparency="True" WindowStyle="None" Icon="../Images/Eva icon.png" Topmost="True">
 
 
     <!--/////////////////////////////////////////////////////////////////////////////
@@ -226,7 +226,7 @@
             
             <Button Focusable="False" x:Name="OpenGptQueryWindowButton" Width="{Binding ElementName=OpenTimerMenuButton, Path=ActualWidth}" Height="{Binding ElementName=OpenTimerMenuButton, Path=ActualHeight}" BorderBrush="Transparent" Background="Transparent" Margin="5,0,0,6" HorizontalAlignment="Left" FontSize="18" Style="{StaticResource MyButtonStyle}" Click="Open_ChatGPT_Query_Window">
                 <Button.Content>
-                    <Image Source="Images/Chatgpt-logo.png" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Image Source="/Images/Chatgpt-logo.png" Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Button.Content>
             </Button>
 

@@ -46,6 +46,10 @@ namespace Eva_5._0
             this.callback = callback;
         }
 
+        public List<messages> GetMessages() => cached_conversation;
+
+        public void SetMessages(List<messages> messages) => cached_conversation = messages;
+
         private async void DispatcherTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             if (responseQueue.Count > 0)
@@ -422,6 +426,14 @@ namespace Eva_5._0
             });
 
             return true;
+        }
+
+        public void AddAssistantMessage(string input)
+        {
+            messages messages = new messages();
+            messages.role = "assistant";
+            messages.content = input;
+            cached_conversation.Add(messages);
         }
 
         private async Task Dispatch(ApiResponse payload)

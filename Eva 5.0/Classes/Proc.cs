@@ -277,7 +277,7 @@ namespace Eva_5._0
             {
                 if (App.ChatGPTResponseWindowOpened == false)
                 {
-                    App.chatGPT_Response_Window = new ChatGPT_Response_Window();
+                    App.chatGPT_Response_Window = new ChatGPT_Response_Window(true);
                     App.chatGPT_Response_Window.Show();
                 }
             });

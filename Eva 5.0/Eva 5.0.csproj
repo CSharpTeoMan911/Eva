@@ -12,7 +12,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
-    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -118,81 +118,83 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="A_p_l____And____P_r_o_c.cs" />
-    <Compile Include="ChatGPT_API.cs" />
-    <Compile Include="ChatGPT_Response_Window.xaml.cs">
+    <Compile Include="Classes\A_p_l____And____P_r_o_c.cs" />
+    <Compile Include="Classes\Chat.cs" />
+    <Compile Include="Classes\ChatGPT_API.cs" />
+    <Compile Include="Classes\ChatHistory.cs" />
+    <Compile Include="Windows\ChatGPT_Response_Window.xaml.cs">
       <DependentUpon>ChatGPT_Response_Window.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Chat_GPT_API_Key_Settup_Window.xaml.cs">
+    <Compile Include="Windows\Chat_GPT_API_Key_Settup_Window.xaml.cs">
       <DependentUpon>Chat_GPT_API_Key_Settup_Window.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Check_Microphone_Permission.cs" />
-    <Compile Include="Check_Role.cs" />
-    <Compile Include="Commands_Customisation.xaml.cs">
+    <Compile Include="Classes\Check_Microphone_Permission.cs" />
+    <Compile Include="Classes\Check_Role.cs" />
+    <Compile Include="Windows\Commands_Customisation.xaml.cs">
       <DependentUpon>Commands_Customisation.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Commands_Main_Window.xaml.cs">
+    <Compile Include="Windows\Commands_Main_Window.xaml.cs">
       <DependentUpon>Commands_Main_Window.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Command_Addition.xaml.cs">
+    <Compile Include="Windows\Command_Addition.xaml.cs">
       <DependentUpon>Command_Addition.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Command_Pallet.cs" />
-    <Compile Include="Command_Pallet_File.cs" />
-    <Compile Include="ErrorWindow.xaml.cs">
+    <Compile Include="Classes\Command_Pallet.cs" />
+    <Compile Include="Classes\Command_Pallet_File.cs" />
+    <Compile Include="Windows\ErrorWindow.xaml.cs">
       <DependentUpon>ErrorWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="InstructionManual.xaml.cs">
+    <Compile Include="Windows\InstructionManual.xaml.cs">
       <DependentUpon>InstructionManual.xaml</DependentUpon>
     </Compile>
-    <Compile Include="JsonSerialisation.cs" />
-    <Compile Include="Message.cs" />
-    <Compile Include="Natural_Language_Processing.cs" />
-    <Compile Include="Online_Speech_Recognition.cs" />
-    <Compile Include="Sound_Player.cs" />
-    <Compile Include="Recycle_Bine_Cleanup.cs" />
-    <Compile Include="Screen_Capture_Mechanism.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="SettingsWindow.xaml.cs">
+    <Compile Include="Classes\JsonSerialisation.cs" />
+    <Compile Include="Classes\Message.cs" />
+    <Compile Include="Classes\Natural_Language_Processing.cs" />
+    <Compile Include="Classes\Online_Speech_Recognition.cs" />
+    <Compile Include="Classes\Sound_Player.cs" />
+    <Compile Include="Classes\Recycle_Bine_Cleanup.cs" />
+    <Compile Include="Classes\Screen_Capture_Mechanism.cs" />
+    <Compile Include="Classes\Settings.cs" />
+    <Compile Include="Windows\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings_File.cs" />
-    <Compile Include="SpeechSynthesis.cs" />
-    <Compile Include="StringFormatting.cs" />
-    <Compile Include="Timer_Interval.cs" />
-    <Compile Include="Timer_Window.xaml.cs">
+    <Compile Include="Classes\Settings_File.cs" />
+    <Compile Include="Classes\SpeechSynthesis.cs" />
+    <Compile Include="Classes\StringFormatting.cs" />
+    <Compile Include="Classes\Timer_Interval.cs" />
+    <Compile Include="Windows\Timer_Window.xaml.cs">
       <DependentUpon>Timer_Window.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Wake_Word_Engine.cs" />
-    <Page Include="ChatGPT_Response_Window.xaml">
+    <Compile Include="Classes\Wake_Word_Engine.cs" />
+    <Page Include="Windows\ChatGPT_Response_Window.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Chat_GPT_API_Key_Settup_Window.xaml">
+    <Page Include="Windows\Chat_GPT_API_Key_Settup_Window.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Commands_Customisation.xaml">
+    <Page Include="Windows\Commands_Customisation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Commands_Main_Window.xaml">
+    <Page Include="Windows\Commands_Main_Window.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Command_Addition.xaml">
+    <Page Include="Windows\Command_Addition.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ErrorWindow.xaml">
+    <Page Include="Windows\ErrorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="InstructionManual.xaml">
+    <Page Include="Windows\InstructionManual.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -200,21 +202,21 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="SettingsWindow.xaml">
+    <Page Include="Windows\SettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Timer_Window.xaml">
+    <Page Include="Windows\Timer_Window.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Proc.cs" />
+    <Compile Include="Classes\Proc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -301,7 +303,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Eva icon.png" />
     <Content Include="main.py" />
     <Content Include="Sounds\AlarmSound.wav" />
     <Content Include="Sounds\App closing.wav" />

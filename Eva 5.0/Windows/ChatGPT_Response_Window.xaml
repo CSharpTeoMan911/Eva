@@ -7,13 +7,53 @@
         xmlns:ui="http://schemas.modernwpf.com/2019"
         xmlns:controls="http://schemas.modernwpf.com/toolkit/controls"
         mc:Ignorable="d"
-        x:Name="ResponseWindow" Title="ChatGPT_Response_Window" Height="350" Width="600" WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResize" Loaded="Window_Loaded" SizeChanged="WindowSizeChanged" Closing="Window_Closing" Opacity="0.98" Topmost="True" >
+        x:Name="ResponseWindow" Title="ChatGPT_Response_Window" Height="450" Width="700" WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResize" Loaded="Window_Loaded" SizeChanged="WindowSizeChanged" Closing="Window_Closing" Opacity="0.98" Topmost="True" >
 
     <Window.Clip>
-        <RectangleGeometry x:Name="Window_Geometry" Rect="0, 0, 600, 350" RadiusX="20" RadiusY="20"/>
+        <RectangleGeometry x:Name="Window_Geometry" Rect="0, 0, 700, 450" RadiusX="20" RadiusY="20"/>
     </Window.Clip>
 
     <Window.Resources>
+        <DataTemplate x:Key="ChatHistory" DataType="local:Chat">
+            <Border ClipToBounds="True" CornerRadius="10" Padding="5" Margin="0,5,0,5" BorderThickness="1.5" BorderBrush="Green" Background="#FF2F2F2F">
+                <Grid FlowDirection="LeftToRight">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <TextBox Grid.Column="0" Padding="3" BorderThickness="1" IsReadOnly="True" IsReadOnlyCaretVisible="False" TextAlignment="Center" Style="{StaticResource ChatStyle}" Text="{Binding chatTitle}">
+                        <TextBox.Foreground>
+                            <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                                <GradientStop Color="#FF097D5E" Offset="1"/>
+                                <GradientStop Color="#FF0FFDCC"/>
+                            </LinearGradientBrush>
+                        </TextBox.Foreground>
+                    </TextBox>
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <Button FontFamily="Segoe MDL2 Assets" Tag="{Binding key}" FontSize="12" Content="&#xE106;" Style="{StaticResource MyLightRoundGreenButtonStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Click="DeleteChat">
+                            <Button.Foreground>
+                                <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                                    <GradientStop Color="#FF097D5E" Offset="1"/>
+                                    <GradientStop Color="#FF0FFDCC"/>
+                                </LinearGradientBrush>
+                            </Button.Foreground>
+                        </Button>
+
+                        <Button FontFamily="Segoe MDL2 Assets" Tag="{Binding key}" FontSize="12" Content="&#xE0E3;" Style="{StaticResource MyLightRoundGreenButtonStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,0,0,0" Click="SelectChat">
+                            <Button.Foreground>
+                                <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                                    <GradientStop Color="#FF097D5E" Offset="1"/>
+                                    <GradientStop Color="#FF0FFDCC"/>
+                                </LinearGradientBrush>
+                            </Button.Foreground>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
         <DataTemplate x:Key="MessageBubble" DataType="local:Message">
             <Grid SizeChanged="MessageGrid">
                 <Grid.ColumnDefinitions>
@@ -30,23 +70,21 @@
                 </Border>
             </Grid>
         </DataTemplate>
-
-        <Style x:Key="DefaultScrollBarStyle" TargetType="{x:Type ScrollBar}" />
-
-        <Style x:Key="ConversationScrollbar" TargetType="{x:Type ScrollBar}" >
+        
+        <Style x:Key="ConversationScrollbar" TargetType="{x:Type ScrollBar}">
             <Setter Property="Margin" Value="0,0,2,0"/>
             <Setter Property="Width" Value="20"/>
             <Setter Property="Background" Value="#FF212121"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ScrollBar">
-                        <Grid Background="{TemplateBinding Background}" Width="{TemplateBinding Width}">
+                        <Grid Background="{TemplateBinding Background}" Width="{TemplateBinding Width}" HorizontalAlignment="Left">
                             <Track x:Name="PART_Track" IsDirectionReversed="true" Focusable="false">
                                 <Track.Thumb>
                                     <Thumb Width="20" MinHeight="40">
                                         <Thumb.Template>
                                             <ControlTemplate TargetType="Thumb">
-                                                <Border CornerRadius="3" BorderBrush="Black" BorderThickness="1" Background="#FF0C6567"/>
+                                                <Border MinHeight="40" CornerRadius="3" ClipToBounds="True" BorderBrush="Black" BorderThickness="1" Background="#FF0C6567"/>
                                             </ControlTemplate>
                                         </Thumb.Template>
                                     </Thumb>
@@ -57,8 +95,33 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
-        
+
+
+        <Style x:Key="MenuScrollbar" TargetType="{x:Type ScrollBar}" >
+            <Setter Property="Margin" Value="0,0,0,0"/>
+            <Setter Property="Padding" Value="0,0,0,0"/>
+            <Setter Property="Background" Value="#FF252525"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid Background="{TemplateBinding Background}" Width="{TemplateBinding Width}" HorizontalAlignment="Left">
+                            <Track x:Name="PART_Track" IsDirectionReversed="true" Focusable="false">
+                                <Track.Thumb>
+                                    <Thumb MinHeight="40">
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Border MinHeight="40" CornerRadius="3" ClipToBounds="True" BorderBrush="Black" BorderThickness="1" Background="#FF097D5E"/>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style x:Key="ConversationScrollViewerTemplate" TargetType="{x:Type ScrollViewer}">
             <Setter Property="Template">
                 <Setter.Value>
@@ -86,6 +149,34 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
+        <Style x:Key="MenuScrollViewerTemplate" TargetType="{x:Type ScrollViewer}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                        <Grid x:Name="Grid" Background="{TemplateBinding Background}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Rectangle x:Name="Corner" Grid.Column="1" Fill="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Grid.Row="1"/>
+                            <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" CanHorizontallyScroll="False" ContentTemplate="{TemplateBinding ContentTemplate}" CanVerticallyScroll="False" Grid.Column="0" Content="{TemplateBinding Content}" CanContentScroll="{TemplateBinding CanContentScroll}" Margin="{TemplateBinding Padding}" Grid.Row="0"/>
+                            <ScrollBar x:Name="PART_VerticalScrollBar" AutomationProperties.AutomationId="VerticalScrollBar" Cursor="Arrow" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0" Grid.Row="0" Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}" ViewportSize="{TemplateBinding ViewportHeight}" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Style="{StaticResource MenuScrollbar}"/>
+                            <ScrollBar x:Name="PART_HorizontalScrollBar" AutomationProperties.AutomationId="HorizontalScrollBar" Cursor="Arrow" Grid.Column="0" Maximum="{TemplateBinding ScrollableWidth}" Minimum="0" Orientation="Horizontal" Grid.Row="1" Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}" ViewportSize="{TemplateBinding ViewportWidth}" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
         
         
 
@@ -94,8 +185,8 @@
 
     <Window.Background>
         <LinearGradientBrush StartPoint="0.5, 1" EndPoint="1, 0">
-            <GradientStop Color="#FF121111" x:Name="WindowOffset" Offset="1"/>
-            <GradientStop Color="#FF133C63"/>
+            <GradientStop Color="#FF1F1F1F" x:Name="WindowOffset" Offset="1"/>
+            <GradientStop Color="#FF0A0A0A" />
         </LinearGradientBrush>
     </Window.Background>
 
@@ -115,8 +206,15 @@
 
 
                 <!--Create the button for the chat history menu control-->
-                <StackPanel Orientation="Horizontal" Visibility="Collapsed">
-                    <Button Margin="20,15,10,10" VerticalAlignment="Bottom" HorizontalAlignment="Left" Content="Ok" Click="ExpandOrContractConversationsMenu"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource MyLightGreenButtonStyle}" Margin="20,15,10,10" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE206;" Click="ExpandOrContractConversationsMenu">
+                        <Button.Foreground>
+                            <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                                <GradientStop Color="#FF097D5E" Offset="1"/>
+                                <GradientStop Color="#FF0FFDCC"/>
+                            </LinearGradientBrush>
+                        </Button.Foreground>
+                    </Button>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3" HorizontalAlignment="Right">
@@ -129,8 +227,8 @@
 
                         <Button.Foreground>
                             <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                                <GradientStop Color="#FF7BBFD8" x:Name="MinimiseTheWindowOffset" Offset="1"/>
-                                <GradientStop Color="#FF11497F"/>
+                                <GradientStop Color="#FF0FFDCC" x:Name="MinimiseTheWindowOffset" Offset="1"/>
+                                <GradientStop Color="#FF023124"/>
                             </LinearGradientBrush>
                         </Button.Foreground>
                     </Button>
@@ -144,8 +242,8 @@
 
                         <Button.Foreground>
                             <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                                <GradientStop Color="#FF7BBFD8" x:Name="NormaliseOrMaximiseTheWindowOffset" Offset="1"/>
-                                <GradientStop Color="#FF11497F"/>
+                                <GradientStop Color="#FF0FFDCC" x:Name="NormaliseOrMaximiseTheWindowOffset" Offset="1"/>
+                                <GradientStop Color="#FF023124"/>
                             </LinearGradientBrush>
                         </Button.Foreground>
                     </Button>
@@ -159,8 +257,8 @@
 
                         <Button.Foreground>
                             <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                                <GradientStop Color="#FF7BBFD8" x:Name="CloseButtonOffset" Offset="1"/>
-                                <GradientStop Color="#FF11497F"/>
+                                <GradientStop Color="#FF0FFDCC" x:Name="CloseButtonOffset" Offset="1"/>
+                                <GradientStop Color="#FF023124"/>
                             </LinearGradientBrush>
                         </Button.Foreground>
                     </Button>
@@ -169,21 +267,42 @@
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" x:Name="MainStackPanel" Grid.Row="1">
-            <StackPanel x:Name="MenuPanel" Width="0" SizeChanged="MenuPanelSizeChanged">
-
+            <StackPanel x:Name="MenuPanel" Width="275" SizeChanged="MenuPanelSizeChanged">
+                <StackPanel x:Name="NewChatPanel" Background="#FF252525">
+                    <Button Style="{StaticResource MyLightGreenButtonStyle}" BorderThickness="3" Background="Transparent" FontFamily="Consolas, Segoe MDL2 Assets" FontSize="16" Margin="5" Click="NewChat">
+                        <StackPanel Orientation="Horizontal" Margin="2">
+                            <TextBlock FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Text="&#xEA54;" Margin="0,0,10,0"/>
+                            <TextBlock Text="New Chat" FontFamily="Corbel Light" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <Button.Foreground>
+                            <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                                <GradientStop Color="#FF097D5E" Offset="1"/>
+                                <GradientStop Color="#FF0FFDCC"/>
+                            </LinearGradientBrush>
+                        </Button.Foreground>
+                    </Button>
+                </StackPanel>
+                <ScrollViewer x:Name="MenuView" BorderThickness="0" Style="{DynamicResource MenuScrollViewerTemplate}" FlowDirection="RightToLeft" Height="{Binding ElementName=MainStackPanel, Path=ActualHeight}" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
+                    <ItemsControl ItemTemplate="{StaticResource ChatHistory}" ItemsSource="{Binding chatHistory}" Padding="5" PreviewMouseWheel="MenuScrolled" Loaded="MenuPanelLoaded"/>
+                </ScrollViewer>
             </StackPanel>
-            <StackPanel x:Name="ContentPanel" Width="600" SizeChanged="ContentPanelSizeChanged">
+            
+            <StackPanel x:Name="ContentPanel" Width="425" SizeChanged="ContentPanelSizeChanged">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition x:Name="TextboxGrid" Height="*"/>
                         <RowDefinition x:Name="InputGrid" Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <ScrollViewer Style="{DynamicResource ConversationScrollViewerTemplate}" x:Name="ConversationScrollViewer" Height="250" Grid.Row="0" Padding="10" Margin="0,0,0,10" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+                    <ScrollViewer Style="{DynamicResource ConversationScrollViewerTemplate}" x:Name="ConversationScrollViewer" Height="350" Grid.Row="0" Padding="10" Margin="0,0,0,10" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+                        <ScrollViewer.Clip>
+                            <RectangleGeometry Rect="0, 0, 450, 350" RadiusX="5" RadiusY="5"/>
+                        </ScrollViewer.Clip>
+                        
                         <ScrollViewer.Background>
                             <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                                 <GradientStop Color="Black" x:Name="ConversationScrollViewerOffset" Offset="1"/>
-                                <GradientStop Color="#FF000810"/>
+                                <GradientStop Color="#FF000C02"/>
                             </LinearGradientBrush>
                         </ScrollViewer.Background>
 
@@ -199,7 +318,7 @@
                             </Grid.ColumnDefinitions>
 
 
-                            <TextBox x:Name="InputTextBox" Width="500" HorizontalAlignment="Center" Style="{StaticResource InputTextboxStyle}" Padding="5" Grid.Column="0" Height="36" FontFamily="Consolas" FontSize="20" CaretBrush="#FF14EFD6" BorderBrush="Green" BorderThickness="1.5" TextWrapping="Wrap" AcceptsReturn="True" PreviewKeyDown="Detect_Enter" TextChanged="InputChanged" TextInput="InputTextChanged" SelectionChanged="InputSelection">
+                            <TextBox x:Name="InputTextBox" Width="330" HorizontalAlignment="Center" Style="{StaticResource InputTextboxStyle}" Padding="5" Grid.Column="0" Height="36" FontFamily="Consolas" FontSize="20" CaretBrush="#FF14EFD6" BorderBrush="Green" BorderThickness="1.5" TextWrapping="Wrap" AcceptsReturn="True" PreviewKeyDown="Detect_Enter" TextChanged="InputChanged" TextInput="InputTextChanged" SelectionChanged="InputSelection">
 
                                 <TextBox.Clip>
                                     <RectangleGeometry x:Name="InputTextBox_Geometry" Rect="0, 0, 500, 36" RadiusX="5" RadiusY="5"/>
