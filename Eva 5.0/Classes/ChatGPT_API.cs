@@ -3,6 +3,7 @@ using SharpToken;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -135,6 +136,7 @@ namespace Eva_5._0
             gpt_models.Clear();
         }
 
+        public void NewChat() => cached_conversation = new List<messages>();
 
         public async Task Get_Available_Gpt_Models()
         {

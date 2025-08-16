@@ -44,7 +44,7 @@ namespace Eva_5._0
             }
         }
    
-        public void UpdateChats(long id, ChatPackage chat)
+        public async Task UpdateChats(long id, ChatPackage chat)
         {
             if (chatHistory.TryGetValue(id, out ChatPackage value))
             {
@@ -55,16 +55,16 @@ namespace Eva_5._0
                 chatHistory.TryAdd(id, chat);
             }
 
-            WriteToFile();
+            await WriteToFile();
         }
 
-        public void RemoveChat(long id)
+        public async Task RemoveChat(long id)
         {
             chatHistory.TryRemove(id, out _);
-            WriteToFile();
+            await WriteToFile();
         }
 
-
+        public int GetChatCount() => chatHistory.Count;
 
         // THIS METHOD ENSURES THAT THE PERMISSIONS TO THE SETTINGS FILE FOR THE CURRENT
         // USER INCLUDE READ, WRITE, AND DELETE FUNCTIONALITIES TO THE SETTINGS FILE.
@@ -87,7 +87,7 @@ namespace Eva_5._0
             }
         }
 
-        private async void WriteToFile()
+        private async Task WriteToFile()
         {
             if (File.Exists(chatsFilePath))
             {

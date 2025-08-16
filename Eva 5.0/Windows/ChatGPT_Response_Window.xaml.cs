@@ -1,19 +1,21 @@
 ﻿using Markdig.Syntax;
 using ModernWpf.Toolkit.UI.Controls;
 using System;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using System.Linq;
-using System.Diagnostics;
+using static Eva_5._0.ChatHistory;
 
 
 namespace Eva_5._0
@@ -45,15 +47,10 @@ namespace Eva_5._0
 
         private Message last_gpt_message { get; set; }
 
-        private bool chatHistoryLoading {  get; set; }
-
-        private bool addToChat { get; set; }
-
         private bool newChat { get; set; }
 
         private ChatHistory.ChatPackage currentChatPackage;
         private long currentChatId;
-        private string currentChatTitle;
 
         public ChatGPT_Response_Window()
         {
@@ -102,6 +99,7 @@ namespace Eva_5._0
                                 Input_Button.Style = Application.Current.FindResource("SendGptQueryButtonStyle") as Style;
                                 Input_Button.Content = "\xF5B0";
                                 processing = false;
+                                tokenSource = new CancellationTokenSource();
 
                                 ChatGPT_API.AddAssistantMessage(last_gpt_message.message);
                                 UpdateChat();
@@ -150,7 +148,8 @@ namespace Eva_5._0
 
             RenderInputTextbox();
             RenderConversationScrollViewerOffset();
-            LoadChatHistory();
+
+            await LoadChatHistory();
         }
 
         private void Animation_Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -348,10 +347,6 @@ namespace Eva_5._0
 
                     case true:
                         RemoveMessage();
-                        Input_Button.Style = Application.Current.FindResource("SendGptQueryButtonStyle") as Style;
-                        Input_Button.Content = "\xF5B0";
-                        tokenSource?.Cancel();
-                        processing = false;
                         break;
                 }
             }, DispatcherPriority.Render);
@@ -359,9 +354,16 @@ namespace Eva_5._0
 
         private void RemoveMessage()
         {
+            processing = false;
+            tokenSource?.Cancel();
+            tokenSource = new CancellationTokenSource();
+
             messages.RemoveAt(messages.Count - 1);
             ChatGPT_API.RemoveLastMessage();
             UpdateChat();
+
+            Input_Button.Style = Application.Current.FindResource("SendGptQueryButtonStyle") as Style;
+            Input_Button.Content = "\xF5B0";
         }
 
         private void NormaliseOrMaximiseTheWindow(object sender, RoutedEventArgs e)
@@ -684,25 +686,22 @@ namespace Eva_5._0
             }
         }
 
-        private void MenuPanelLoaded(object sender, RoutedEventArgs e)
+        private Task LoadChatHistory()
         {
-            LoadChatHistory();
-        }
+            MainStackPanel.IsEnabled = false;
 
-        private void LoadChatHistory()
-        {
             ConcurrentDictionary<long, ChatHistory.ChatPackage> chats = chatHistoryManager.GetChats();
 
             chatHistory.Clear();
 
             if (chats != null)
             {
-                for (int i = 0; i < chats.Count; i++)
-                {
-                    KeyValuePair<long, ChatHistory.ChatPackage> keyValuePair = chats.ElementAt(i);
+                IEnumerable<long> keys = chats.Keys.OrderBy(key => key);
 
-                    long key = keyValuePair.Key;
-                    ChatHistory.ChatPackage chatPackage = keyValuePair.Value;
+                for (int i = chats.Count - 1; i >= 0; i--)
+                {
+                    long key = keys.ElementAt(i);
+                    chats.TryGetValue(key, out ChatPackage chatPackage);
 
                     chatHistory.Add(new Chat(key, chatPackage.chatTitle));
 
@@ -712,7 +711,6 @@ namespace Eva_5._0
                         {
                             if (currentChatPackage == null)
                             {
-                                currentChatTitle = chatPackage.chatTitle;
                                 currentChatPackage = chatPackage;
                                 currentChatId = key;
 
@@ -722,12 +720,15 @@ namespace Eva_5._0
                     }
                 }
             }
+
+            MainStackPanel.IsEnabled = true;
+
+            return Task.CompletedTask;
         }
 
         private async void UpdateChat(string title = null)
         {
             DateTime date = DateTime.UtcNow;
-            addToChat = false;
 
             if (currentChatPackage == null)
             {
@@ -750,13 +751,13 @@ namespace Eva_5._0
                         }
                     }
 
-                    currentChatTitle = stringBuilder.ToString();
                     currentChatPackage = new ChatHistory.ChatPackage()
                     {
                         chat = ChatGPT_API.GetMessages(),
-                        chatTitle = currentChatTitle
+                        chatTitle = stringBuilder.ToString()
                     };
-                    currentChatId = Convert.ToInt64(DateTime.UtcNow.ToString("yyyyMMddHHmmffff"));
+
+                    currentChatId = Convert.ToInt64(DateTime.UtcNow.ToString("yyyyMMddHHmmssffff"));
                 }
             }
 
@@ -764,27 +765,46 @@ namespace Eva_5._0
             {
                 if (currentChatPackage != null)
                 {
-                    Debug.WriteLine(await JsonSerialisation.JsonSerialiser(ChatGPT_API.GetMessages()));
-                    chatHistoryManager.UpdateChats(currentChatId, currentChatPackage);
+                    await chatHistoryManager.UpdateChats(currentChatId, currentChatPackage);
                 }
             }
 
-            LoadChatHistory();
+            await LoadChatHistory();
         }
 
-        private void DeleteChat(object sender, RoutedEventArgs e)
+        private async void DeleteChat(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
             long id = (long)button.Tag;
-            chatHistoryManager.RemoveChat(id);
+            
+            await chatHistoryManager.RemoveChat(id);
+
+            if (id == currentChatId || chatHistoryManager.GetChatCount() == 1)
+            {
+                currentChatPackage = null;
+                messages.Clear();
+                ChatGPT_API.Clear_Conversation_Cache();
+            }
+
             UpdateChat();
         }
 
         private void SelectChat(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
+
             long id = (long)button.Tag;
+
+            if (processing && id != currentChatId)
+            {
+                RemoveMessage();
+            }
+
+            currentChatId = id;
+            
             ChatHistory.ChatPackage chatPackage = chatHistoryManager.GetChat(id);
+            currentChatPackage = chatPackage;
+
             ChatGPT_API.SetMessages(chatPackage.chat);
 
             messages.Clear();
@@ -793,8 +813,9 @@ namespace Eva_5._0
 
         private void NewChat(object sender, RoutedEventArgs e)
         {
+            last_gpt_message = null;
             currentChatPackage = null;
-            ChatGPT_API.Clear_Conversation_Cache();
+            ChatGPT_API.NewChat();
             messages.Clear();
         }
     }
