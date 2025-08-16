@@ -7,9 +7,10 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.3.2
+📌 Latest Version: v7.4.0
 
-* 🆕 Added plug-and-play device detection based white noise generation
+* 🆕 Implemented the ChatGPT chat history
+* 🆕 Re-designed the instruction manual window  
 * 🐞 Fixed chat window memory leak issue
 
 ![Settings](https://github.com/user-attachments/assets/add286b1-5e11-4709-8c51-f938382eaa0f)
