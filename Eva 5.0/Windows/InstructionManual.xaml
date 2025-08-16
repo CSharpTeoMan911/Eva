@@ -173,7 +173,7 @@
                 </TextBlock.Foreground>
             </TextBlock>
 
-            <ScrollViewer x:Name="MainScrollViewer" Margin="5,0,5,0" VerticalScrollBarVisibility="Auto" Style="{DynamicResource InstructionManualScrollViewerTemplate}">
+            <ScrollViewer x:Name="MainScrollViewer" Margin="5,0,5,0" VerticalScrollBarVisibility="Auto" Style="{DynamicResource InstructionManualScrollViewerTemplate}" PreviewMouseWheel="PreviewScroll">
                 <controls:MarkdownTextBlock x:Name="MarkdownText" HorizontalAlignment="Left" FontFamily="Cascadia Mono" FontWeight="Light" Padding="13" Text="{Binding message}" LinkClicked="LinkClicked" InlineCodeFontFamily="Consolas" Header1Margin="0,20,0,0" Header2Margin="0,20,0,0" Header3Margin="0,20,0,0" Header4Margin="0,10,0,0" Header5Margin="0,10,0,0" Header6Margin="0,10,0,0" InlineCodeBackground="#FF262727" CodeBackground="#FF262727" Margin="0,20,0,30" Foreground="#FF7BBFD8">
 
                     <controls:MarkdownTextBlock.Header1Foreground>

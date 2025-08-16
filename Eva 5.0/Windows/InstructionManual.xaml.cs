@@ -373,5 +373,7 @@ namespace Eva_5._0
         }
 
         private void LinkClicked(object sender, ModernWpf.Toolkit.UI.Controls.LinkClickedEventArgs e) => Proc.NavigateToLink(e.Link);
+
+        private void PreviewScroll(object sender, MouseWheelEventArgs e) => MainScrollViewer.ScrollToVerticalOffset(MainScrollViewer.VerticalOffset - e.Delta);
     }
 }
