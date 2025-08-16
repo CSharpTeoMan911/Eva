@@ -8,7 +8,7 @@
         xmlns:controls="http://schemas.modernwpf.com/toolkit/controls"
         xmlns:busyIndicator="https://github.com/moh3ngolshani/BusyIndicator"
         mc:Ignorable="d"
-        x:Name="ResponseWindow" Title="ChatGPT_Response_Window" Height="450" Width="700" WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResize" Loaded="Window_Loaded" SizeChanged="WindowSizeChanged" Closing="Window_Closing" Opacity="0.98" Topmost="True">
+        x:Name="ResponseWindow" ResizeMode="NoResize" Title="ChatGPT_Response_Window" Height="450" Width="700" WindowStyle="None" AllowsTransparency="True" Loaded="Window_Loaded" SizeChanged="WindowSizeChanged" Closing="Window_Closing" Opacity="0.98" Topmost="True">
 
     <Window.Clip>
         <RectangleGeometry x:Name="Window_Geometry" Rect="0, 0, 700, 450" RadiusX="20" RadiusY="20"/>
@@ -16,7 +16,7 @@
 
     <Window.Resources>
         <DataTemplate x:Key="ChatHistory" DataType="local:Chat">
-            <Border ClipToBounds="True" CornerRadius="10" Padding="5" Margin="0,5,0,5" BorderThickness="1.5" Style="{Binding Path=style}">
+            <Border ClipToBounds="True" CornerRadius="10" Padding="3" Margin="0,5,0,5" BorderThickness="1" Style="{Binding Path=style}">
                 <Grid FlowDirection="LeftToRight">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="3*"/>
@@ -32,7 +32,7 @@
                         </TextBox.Foreground>
                     </TextBox>
 
-                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <StackPanel Grid.Column="1" Margin="5,0,0,0" Orientation="Horizontal">
                         <Button FontFamily="Segoe MDL2 Assets" Tag="{Binding key}" FontSize="12" Content="&#xE106;" Style="{StaticResource MyLightRoundGreenButtonStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Click="DeleteChat">
                             <Button.Foreground>
                                 <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
@@ -65,7 +65,7 @@
 
                 <Border Grid.ColumnSpan="2" Margin="20" HorizontalAlignment="Left" Grid.Column="{Binding Path=column}" Style="{Binding Path=style}" ClipToBounds="True">
                     <StackPanel HorizontalAlignment="Stretch">
-                        <controls:MarkdownTextBlock Visibility="Collapsed" HorizontalAlignment="Left" FontSize="13" FontFamily="Cascadia Mono" FontWeight="Light" Padding="13" Text="{Binding message}" MarkdownRendered="TextBlockMarkdownRendered" TextBoxBase.TextChanged="MarkdownTextChanged" LinkClicked="LinkClicked" SizeChanged="MarkdownSizeChanged"/>
+                        <controls:MarkdownTextBlock Visibility="Collapsed" HorizontalAlignment="Left" FontSize="13" FontFamily="Cascadia Mono" FontWeight="Light" Padding="13" Text="{Binding message}" MarkdownRendered="TextBlockMarkdownRendered" TextBoxBase.TextChanged="MarkdownTextChanged" LinkClicked="LinkClicked" SizeChanged="MarkdownSizeChanged" InlineCodeBackground="White" InlineCodeFontFamily="Consolas" Header1Margin="0,20,0,0" Header2Margin="0,20,0,0" Header3Margin="0,20,0,0" Header4Margin="0,10,0,0" Header5Margin="0,10,0,0" Header6Margin="0,10,0,0" Header1Foreground="Black" Header2Foreground="Black" Header3Foreground="Black" Header4Foreground="Black" Header5Foreground="Black" Header6Foreground="Black"/>
                         <TextBox Visibility="{Binding Path=chat}" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden" IsReadOnly="True" Background="Transparent" BorderBrush="Transparent" TextWrapping="Wrap" BorderThickness="0" FontSize="13" FontFamily="Cascadia Mono" FontWeight="Light" Padding="13,16,13,16" TextChanged="BubbleDataChanged" SizeChanged="TextboxSizeChanged" Text="{Binding message}"/>
 
                         <StackPanel  Visibility="{Binding Path=pending}" Height="68" Width="200">
@@ -213,10 +213,10 @@
 
                 <!--Create the button for the chat history menu control-->
                 <StackPanel Orientation="Horizontal">
-                    <Button x:Name="ChatHistoryButton" Style="{StaticResource MyLightGreenButtonStyle}" Margin="20,15,10,10" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="23" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Click="ExpandOrContractConversationsMenu">
+                    <Button x:Name="ChatHistoryButton" Style="{StaticResource MyGreenBorderButtonStyle}" Margin="20,0,10,10" VerticalAlignment="Bottom" HorizontalAlignment="Left" Padding="0" FontSize="25" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Click="ExpandOrContractConversationsMenu">
                         <Button.Foreground>
                             <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                                <GradientStop Color="#FF097D5E" Offset="1"/>
+                                <GradientStop Color="#FF097D5E" x:Name="MenuButtonOffset" Offset="1"/>
                                 <GradientStop Color="#FF09AD75"/>
                             </LinearGradientBrush>
                         </Button.Foreground>
@@ -225,7 +225,7 @@
 
                 <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3" HorizontalAlignment="Right">
 
-                    <Button  Grid.Column="4" Margin="20,15,10,10" BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Left" Content="&#xEF2D;" FontFamily="Segoe MDL2 Assets" FontSize="15" Click="MinimiseTheWindow" Style="{StaticResource MyButtonStyle}">
+                    <Button x:Name="MinimiseTheWindowButton" Grid.Column="4" Margin="20,15,10,10" BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Left" Content="&#xEF2D;" FontFamily="Segoe MDL2 Assets" FontSize="15" Click="MinimiseTheWindow" Style="{StaticResource MyGreenBorderButtonStyle}">
 
                         <Button.Effect>
                             <DropShadowEffect/>
@@ -240,7 +240,7 @@
                     </Button>
 
 
-                    <Button x:Name="NormaliseOrMaximiseTheWindowButton"  Grid.Column="4" Margin="0,15,10,10" BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Left" Content="&#xEF2E;" FontFamily="Segoe MDL2 Assets" FontSize="15" Click="NormaliseOrMaximiseTheWindow" Style="{StaticResource MyButtonStyle}">
+                    <Button x:Name="NormaliseOrMaximiseTheWindowButton"  Grid.Column="4" Margin="0,15,10,10" BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Left" Content="&#xEF2E;" FontFamily="Segoe MDL2 Assets" FontSize="15" Click="NormaliseOrMaximiseTheWindow" Style="{StaticResource MyGreenBorderButtonStyle}">
 
                         <Button.Effect>
                             <DropShadowEffect/>
@@ -255,7 +255,7 @@
                     </Button>
 
 
-                    <Button  Grid.Column="4" Margin="0,15,10,10" BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Right" Content="&#xEF2C;" FontFamily="Segoe MDL2 Assets" FontSize="15" Click="CloseTheWindow" Style="{StaticResource MyButtonStyle}">
+                    <Button x:Name="CloseTheWindowButton" Grid.Column="4" Margin="0,15,10,10" BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Right" Content="&#xEF2C;" FontFamily="Segoe MDL2 Assets" FontSize="15" Click="CloseTheWindow" Style="{StaticResource MyGreenBorderButtonStyle}">
 
                         <Button.Effect>
                             <DropShadowEffect/>
@@ -281,7 +281,7 @@
             <StackPanel Orientation="Horizontal" x:Name="MainStackPanel" Grid.Row="1">
                 <StackPanel x:Name="MenuPanel" Width="0" Margin="0,5,0,0" SizeChanged="MenuPanelSizeChanged">
                     <StackPanel x:Name="NewChatPanel">
-                        <Button x:Name="NewChatButton" Style="{StaticResource MyGreenButtonStyle}" BorderThickness="3" Background="Transparent" FontFamily="Consolas, Segoe MDL2 Assets" Foreground="#FF01BB01" FontSize="16" Click="NewChat">
+                        <Button x:Name="NewChatButton" Style="{StaticResource MyGreenButtonStyle}" BorderThickness="3" Background="Transparent" Foreground="#FF0FFDC1" FontSize="14" Click="NewChat">
                             <StackPanel Orientation="Horizontal" Margin="2">
                                 <TextBlock FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Text="&#xEA54;" Margin="0,0,10,0"/>
                                 <TextBlock Text="New Chat" FontFamily="Corbel Light" VerticalAlignment="Center"/>

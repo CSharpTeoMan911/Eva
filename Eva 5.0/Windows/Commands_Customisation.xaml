@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Eva_5._0"
         mc:Ignorable="d"
-        Title="Add Command" Height="340" Width="650" Topmost="True"  WindowStyle="None" AllowsTransparency="True" Loaded="Window_Loaded" Icon="../Images/Eva icon.png">
+        Title="Add Command" Height="340" Width="650" Topmost="True" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True" Loaded="Window_Loaded" Icon="../Images/Eva icon.png">
 
     <Window.Clip>
         <RectangleGeometry Rect="0,0,650,340" RadiusX="10" RadiusY="10"/>

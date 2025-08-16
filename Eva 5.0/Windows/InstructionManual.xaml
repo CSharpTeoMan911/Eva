@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Eva_5._0"
         mc:Ignorable="d"
-        Title="Instruction Manual" Height="450" Width="800" Closing="InstructionManualWindowClosing" Loaded="InstructionManualWindowLoaded" SizeChanged="Window_Size_Changed" WindowStyle="None" AllowsTransparency="True" Opacity="0.98" Icon="../Images/Eva icon.png">
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+        xmlns:controls="http://schemas.modernwpf.com/toolkit/controls"
+        Title="Instruction Manual" Height="450" Width="800" ResizeMode="NoResize" Closing="InstructionManualWindowClosing" Loaded="InstructionManualWindowLoaded" SizeChanged="Window_Size_Changed" WindowStyle="None" AllowsTransparency="True" Opacity="0.98" Icon="../Images/Eva icon.png">
 
 
 
@@ -36,9 +38,64 @@
     <Window.Background>
         <LinearGradientBrush StartPoint="0.5, 1" EndPoint="1, 0">
             <GradientStop Color="#FF121111" x:Name="WindowOffset" Offset="1"/>
-            <GradientStop Color="#FF0D3358"/>
+            <GradientStop Color="#FF0B2A48"/>
         </LinearGradientBrush>
     </Window.Background>
+
+    <Window.Resources>
+        <Style x:Key="InstructionManualScrollbar" TargetType="{x:Type ScrollBar}">
+            <Setter Property="Margin" Value="0,0,2,0"/>
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Background" Value="#FF212121"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid Background="{TemplateBinding Background}" Width="{TemplateBinding Width}" HorizontalAlignment="Left">
+                            <Track x:Name="PART_Track" IsDirectionReversed="true" Focusable="false">
+                                <Track.Thumb>
+                                    <Thumb Width="20">
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Border CornerRadius="3" ClipToBounds="True" BorderBrush="Black" BorderThickness="1" Background="#FF155CA2"/>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="InstructionManualScrollViewerTemplate" TargetType="{x:Type ScrollViewer}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                        <Grid x:Name="Grid" Background="{TemplateBinding Background}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Rectangle x:Name="Corner" Grid.Column="1" Fill="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Grid.Row="1"/>
+                            <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" CanHorizontallyScroll="False" ContentTemplate="{TemplateBinding ContentTemplate}" CanVerticallyScroll="False" Grid.Column="0" Content="{TemplateBinding Content}" CanContentScroll="{TemplateBinding CanContentScroll}" Margin="{TemplateBinding Padding}" Grid.Row="0"/>
+                            <ScrollBar x:Name="PART_VerticalScrollBar" AutomationProperties.AutomationId="VerticalScrollBar" Cursor="Arrow" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0" Grid.Row="0" Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}" ViewportSize="{TemplateBinding ViewportHeight}" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Style="{StaticResource InstructionManualScrollbar}"/>
+                            <ScrollBar x:Name="PART_HorizontalScrollBar" AutomationProperties.AutomationId="HorizontalScrollBar" Cursor="Arrow" Grid.Column="0" Maximum="{TemplateBinding ScrollableWidth}" Minimum="0" Orientation="Horizontal" Grid.Row="1" Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}" ViewportSize="{TemplateBinding ViewportWidth}" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -49,306 +106,119 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
 
-        <Rectangle Grid.ColumnSpan="5" Fill="Transparent" MouseDown="MoveTheWindow"/>
-
-        <StackPanel Orientation="Horizontal" Grid.Column ="3" Grid.ColumnSpan="2" HorizontalAlignment="Right">
-
-            <Button x:Name="MinimiseTheWindowButton" Margin="20,20,20,0" BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Left" Content="&#xEF2D;" FontFamily="Segoe MDL2 Assets" FontSize="20" Click="MinimiseTheWindow" Style="{StaticResource MyButtonStyle}">
-
-                <Button.Effect>
-                    <DropShadowEffect/>
-                </Button.Effect>
-
-                <Button.Foreground>
-                    <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                        <GradientStop Color="#FF7BBFD8" x:Name="MinimiseTheWindowOffset" Offset="1"/>
-                        <GradientStop Color="#FF11497F"/>
-                    </LinearGradientBrush>
-                </Button.Foreground>
-            </Button>
-
-            <Button x:Name="NormaliseOrMaximiseTheWindowButton" Margin="0,20,20,0" BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Right" Content="&#xEF2E;" FontFamily="Segoe MDL2 Assets" FontSize="20" Click="NormaliseOrMaximiseTheWindow" Style="{StaticResource MyButtonStyle}">
-
-                <Button.Effect>
-                    <DropShadowEffect/>
-                </Button.Effect>
-
-                <Button.Foreground>
-                    <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                        <GradientStop Color="#FF7BBFD8" x:Name="NormaliseOrMaximiseButtonOffset" Offset="1"/>
-                        <GradientStop Color="#FF11497F"/>
-                    </LinearGradientBrush>
-                </Button.Foreground>
-            </Button>
-
-            <Button x:Name="CloseTheWindowButton" Margin="0,20,20,0" BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Right" Content="&#xEF2C;" FontFamily="Segoe MDL2 Assets" FontSize="20" Click="CloseTheWindow" Style="{StaticResource MyButtonStyle}">
-
-                <Button.Effect>
-                    <DropShadowEffect/>
-                </Button.Effect>
-
-                <Button.Foreground>
-                    <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                        <GradientStop Color="#FF7BBFD8" x:Name="CloseButtonOffset" Offset="1"/>
-                        <GradientStop Color="#FF11497F"/>
-                    </LinearGradientBrush>
-                </Button.Foreground>
-            </Button>
-        </StackPanel>
-
-
-        <TextBlock x:Name="InstructionManualTitle" Grid.Row="1" Grid.ColumnSpan="5" HorizontalAlignment="Center" FontFamily="Bahnschrift" FontSize="40" Text="Instruction Manual">
-            <TextBlock.Foreground>
-                <LinearGradientBrush>
-                    <GradientStop Color="#FF7BBFD8" x:Name="InstructionManualTitleTextBlockOffset" Offset="1"/>
-                    <GradientStop Color="#FF1B70C3"/>
-                </LinearGradientBrush>
-            </TextBlock.Foreground>
-        </TextBlock>
-
-        
-
-        <ScrollViewer Grid.Row="2" Grid.ColumnSpan="5" Grid.RowSpan="4" Margin="20,0,20,0" VerticalScrollBarVisibility="Auto">
-
-            <StackPanel HorizontalAlignment="Center">
-
-                <TextBlock x:Name="AboutEva" Margin="0,30,0,0" FontFamily="Bahnschrift" FontSize="27" Text="&#x0a;About Eva">
-
-                    <TextBlock.Foreground>
-                        <LinearGradientBrush>
-                            <GradientStop Color="#FF7BBFD8" x:Name="AboutEvaTextBlockOffset" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </TextBlock.Foreground>
-                </TextBlock>
-
-
-                <TextBlock x:Name="AboutEvaContent" Margin="0,30,0,0" FontFamily="Bahnschrift Light" FontSize="24" Text="Eva is an A. I. assistant that has the purpose &#x0a;of helping users multi-task. Eva is achieving&#x0a;this by executing voice commands given by&#x0a;the user.&#x0a;&#x0a;Eva is an open-source project and you can&#x0a;find the project ">
-
-                    <Hyperlink
-                    NavigateUri="https://github.com/CSharpTeoMan911/Eva"
-                    RequestNavigate="Navigate_To_Eva_Project">
-                    here.
-                    </Hyperlink>
-                    
-                    <TextBlock.Foreground>
-                        <LinearGradientBrush>
-                            <GradientStop Color="#FF7BBFD8" x:Name="AboutEvaContentTextBlockOffset" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </TextBlock.Foreground>
-                </TextBlock>
-
-
-
-                <TextBlock x:Name="UserInstructions" Margin="0,30,0,0" FontFamily="Bahnschrift" FontSize="27" Text="&#x0a;&#x0a;&#x0a;User Instructions">
-
-                    <TextBlock.Foreground>
-                        <LinearGradientBrush>
-                            <GradientStop Color="#FF7BBFD8" x:Name="UserInstructionsTextBlockOffset" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </TextBlock.Foreground>
-                </TextBlock>
-
-
-                <TextBlock x:Name="UserInstructionsContent" Margin="0,30,0,0" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;In order for Eva to execute commands, the&#x0a;user must do the following steps:&#x0a;&#x0a;1)  Press the &#xF781; button.&#x0a;&#x0a;2) When the button is displaying &#xE1D6;,&#x0a;    Eva is actively listening.&#x0a;&#x0a;3) Tell Eva the wake word [ Listen ]&#x0a;    or the wake word [ Hey listen ],&#x0a;    followed by a command. You must&#x0a;    wait one second before giving it a&#x0a;    command.&#x0a;&#x0a;    When the circle is changing its&#x0a;    colour in a bright blue colour,&#x0a;    and the timer is initiated,&#x0a;    Eva is actively listening.&#x0a;&#x0a;    Because the online speech&#x0a;    recognition engine has a &#x0a;    timeout, when the timer &#x0a;    reaches ' 0 ', Eva will stop &#x0a;    listening.&#x0a;&#x0a;    Eva has a delay mechanism&#x0a;    which prevents it from&#x0a;    taking commands more&#x0a;    often than once every&#x0a;    3 seconds. When the&#x0a;    circle turns red, wait&#x0a;    until it turns blue&#x0a;    again to give a&#x0a;    command.&#x0a;&#x0a;   If the user wants to &#x0a;   to stop Eva listening,&#x0a;   the user must say&#x0a;   [ Stop listening ].">
-
-                    <TextBlock.Foreground>
-                        <LinearGradientBrush>
-                            <GradientStop Color="#FF7BBFD8" x:Name="UserInstructionsContentTextBlockOffset" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </TextBlock.Foreground>
-                </TextBlock>
-
-
-                <TextBlock x:Name="Commands" Margin="0,30,0,0" FontFamily="Bahnschrift" FontSize="27" Text="&#x0a;&#x0a;&#x0a;Commands">
-
-                    <TextBlock.Foreground>
-                        <LinearGradientBrush>
-                            <GradientStop Color="#FF7BBFD8" x:Name="CommandsTextBlockOffset" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </TextBlock.Foreground>
-                    
-                </TextBlock>
-
-
-                <TextBlock x:Name="CommandsContent" Margin="0,30,0,0" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;In order for Eva to open applications, follow&#x0a;the following formats:&#x0a;&#x0a;open [ Application ]&#x0a;&#x0a;open [ Application ] now&#x0a;&#x0a;open [ Application ] please&#x0a;&#x0a;please open [ Application ]&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;List of applications Eva can open:&#x0a;&#x0a;-chrome&#x0a;&#x0a;-edge&#x0a;&#x0a;-firefox&#x0a;&#x0a;-opera&#x0a;&#x0a;-calculator&#x0a;&#x0a;-paint&#x0a;&#x0a;-file explorer&#x0a;&#x0a;-gmail&#x0a;&#x0a;-skype&#x0a;&#x0a;-notepad&#x0a;&#x0a;-task manager&#x0a;&#x0a;-command prompt&#x0a;&#x0a;-powershell&#x0a;&#x0a;-windows terminal&#x0a;&#x0a;-visual studio 2019&#x0a;&#x0a;-visual studio 2022&#x0a;&#x0a;-visual studio code&#x0a;&#x0a;-calendar&#x0a;&#x0a;-weather&#x0a;&#x0a;-snip and sketch&#x0a;&#x0a;-word&#x0a;&#x0a;-powerpoint&#x0a;&#x0a;-excel&#x0a;&#x0a;-onedrive&#x0a;&#x0a;-settings&#x0a;&#x0a;-disk cleanup&#x0a;&#x0a;-control panel&#x0a;&#x0a;-temporary files&#x0a;&#x0a;-recycle bin cleanup&#x0a;&#x0a;&#x0a;&#x0a;Example:&#x0a;&#x0a;[ Command format ] = open [ Application ]&#x0a;&#x0a;[ Application ] = chrome&#x0a;&#x0a;[ Command ] = open chrome&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;Eva can open the settings menu at any&#x0a;settings page.&#x0a;&#x0a;For example, if you want&#x0a;to open the settings menu:&#x0a;&#x0a;[ Application ] = settings&#x0a;&#x0a;&#x0a;&#x0a;In order for Eva to open a settings page&#x0a;or sub-section of a page:&#x0a;&#x0a;[ Application ] = [ page name [ or ] sub-section name ] + settings&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;If the sub-section name ends with settings&#x0a;do not add settings:&#x0a;&#x0a;[ Application ] = [ sub-section name ]&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;Examples:&#x0a;&#x0a;Page name = Devices&#x0a;&#x0a;[ Command format ] = open [ Application ]&#x0a;&#x0a;[ Application ] = devices settings&#x0a;&#x0a;[ Command ] = open devices settings&#x0a;&#x0a;&#x0a;&#x0a;Sub-section (field within a page,&#x0a;in this example Devices) = Mouse&#x0a;&#x0a;[ Command format ] = open [ Application ]&#x0a;&#x0a;[ Application ] = mouse settings&#x0a;&#x0a;[ Command ] = open mouse settings&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;In order for Eva to set a timer, follow&#x0a;the following formats:&#x0a;&#x0a;set a [ Time interval ] timer&#x0a;&#x0a;please set a [ Time interval ] timer&#x0a;&#x0a;set a [ Time interval ] timer please&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;Example:&#x0a;&#x0a;[ Command format ] = set a [ Time interval ] timer&#x0a;&#x0a;[ Time interval ] = 1 hour, 45 minutes and 10 seconds&#x0a;&#x0a;[ Command ] = set an 1 hour, 45 minutes and 10 seconds timer&#x0a;&#x0a;&#x0a;If the timer is set, the &#xE2AD; button will&#x0a;change from colour red to blue.&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;To cancel the timer set, open the timer&#x0a;window by pressing the &#xE2AD; button&#x0a;and then cancel it by pressing the&#x0a;&#xF13D; button, or by giving it a close&#x0a;command by telling it in one of&#x0a;the command formats:&#x0a;&#x0a;&#x0a;[ Application ] = timer&#x0a;&#x0a;&#x0a;&#x0a;close [ Application ]&#x0a;&#x0a;close timer&#x0a;&#x0a;&#x0a;&#x0a;close [ Application ] please&#x0a;&#x0a;close timer please&#x0a;&#x0a;&#x0a;&#x0a;close [ Application ] now&#x0a;&#x0a;close timer now&#x0a;&#x0a;&#x0a;&#x0a;please close [ Application ]&#x0a;&#x0a;please close timer&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;In order for Eva to close applications, follow&#x0a;the following formats:&#x0a;&#x0a;close [ Application ]&#x0a;&#x0a;close [ Application ] now&#x0a;&#x0a;close [ Application ] please&#x0a;&#x0a;please close [ Application ]&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;List of applications Eva can close:&#x0a;&#x0a;-chrome&#x0a;&#x0a;-edge&#x0a;&#x0a;-firefox&#x0a;&#x0a;-opera&#x0a;&#x0a;-calculator&#x0a;&#x0a;-paint&#x0a;&#x0a;-skype&#x0a;&#x0a;-notepad&#x0a;&#x0a;-calendar&#x0a;&#x0a;-weather&#x0a;&#x0a;-snip and sketch&#x0a;&#x0a;-settings&#x0a;&#x0a;-task manager&#x0a;&#x0a;-command prompt&#x0a;&#x0a;-powershell&#x0a;&#x0a;-windows terminal&#x0a;&#x0a;-visual studio 2019&#x0a;&#x0a;-visual studio 2022&#x0a;&#x0a;-visual studio code&#x0a;&#x0a;-disk cleanup&#x0a;&#x0a;-timer&#x0a;&#x0a;&#x0a;&#x0a;Example:&#x0a;&#x0a;[ Command format ] = close [ Application ]&#x0a;&#x0a;[ Application ] = chrome&#x0a;&#x0a;[ Command ] = close chrome&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;In order for Eva to search content&#x0a;on web applications, follow the&#x0a;following formats:&#x0a;&#x0a;search [ Content ] on [ Web Application ]&#x0a;&#x0a;search on [ Web Application ] [ Content ]&#x0a;&#x0a;please search on [ Web Application ] [Content]&#x0a;&#x0a;please search [ Content ] on [ Web Application ]&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;List of applications Eva can search&#x0a;content on:&#x0a;&#x0a;-google&#x0a;&#x0a;-google news&#x0a;&#x0a;-google images&#x0a;&#x0a;-ebay&#x0a;&#x0a;-netflix&#x0a;&#x0a;-wikipedia&#x0a;&#x0a;-amazon&#x0a;&#x0a;-reddit&#x0a;&#x0a;-facebook&#x0a;&#x0a;-instagram&#x0a;&#x0a;-gmail&#x0a;&#x0a;-twitter&#x0a;&#x0a;-pinterest&#x0a;&#x0a;-linkedin&#x0a;&#x0a;-github&#x0a;&#x0a;-unsplash&#x0a;&#x0a;-stackoverflow&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;Example:&#x0a;&#x0a;[ Command format ] = search [ Content ] on [ Web Application ]&#x0a;&#x0a;[ Web Application ] = youtube&#x0a;&#x0a;[ Content ] = robots &#x0a;&#x0a;[ Command ] = search robots on youtube&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;In order for Eva to take a&#x0a;screenshot, follow the&#x0a;following formats:&#x0a;&#x0a;screenshot&#x0a;&#x0a;take screenshot&#x0a;&#x0a;take a screenshot&#x0a;&#x0a;take a screenshot please&#x0a;&#x0a;please take a screenshot&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;In order for Eva to give commands to ChatGPT&#x0a;follow the following steps:&#x0a;&#x0a;- Open the settings menu and select the&#x0a;   &#xE90F; button and insert your OpenAI API&#x0a;   key.&#x0a;&#x0a;- If the API key is valid you can request&#x0a;   queries from ChatGPT by following&#x0a;   the command format:&#x0a;&#x0a;   [ Command format ] = Gpt [ Query ].&#x0a;&#x0a;   [ Query ] = what is the fastest bird on the planet?&#x0a;&#x0a;   [ Command ] = Gpt what is the fastest bird on the planet?&#x0a;&#x0a;Alternatively you can enable the [chatbot mode]&#x0a;to give queries to chatgpt continously. When&#x0a;you want to switch back to the normal mode,&#x0a;you can disable the [chatbot mode].&#x0a;&#x0a;To enable the chatbot mode you must use&#x0a;one of the following commands:&#x0a;&#x0a;[ Command ] = Activate chatbot mode&#x0a;[ Command ] = Enable chatbot mode&#x0a;&#x0a;When the chatbot mode is activated, the&#x0a;circular indicator will switch the color&#x0a;from blue to green. While in the chatbot&#x0a;mode, you can give ChatGPT queries&#x0a;continously by telling Eva either the&#x0a;wake word [ Listen ] or the wake word&#x0a;[ Hey listen ] followed by the query&#x0a;to be sent to ChatGPT.&#x0a;&#x0a;To disable the chatbot mode you must use&#x0a;one of the following commands:&#x0a;&#x0a;[ Command ] = Deactivate chatbot mode&#x0a;[ Command ] = Disable chatbot mode&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;In order for Eva app window to become invisible or visible&#x0a;execute either the command 'visible' or 'invisible' accordingly&#x0a;by following these steps:&#x0a;&#x0a;1) Say 'Listen' and wait until circle turns blue and/or the app beeps &#x0a;&#x0a;2) Say either 'Invisible' or 'Visible'&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;">
-
-                    <TextBlock.Foreground>
-                        <LinearGradientBrush>
-                            <GradientStop Color="#FF7BBFD8" x:Name="CommandsContentTextBlockOffset" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </TextBlock.Foreground>
-                </TextBlock>
-
-
-
-                <TextBlock x:Name="ExtraFeatures" Margin="0,30,0,0" FontFamily="Bahnschrift" FontSize="27" Text="&#x0a;&#x0a;&#x0a;Extra features">
-
-                    <TextBlock.Foreground>
-                        <LinearGradientBrush>
-                            <GradientStop Color="#FF7BBFD8" x:Name="ExtraFeaturesTextBlockOffset" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </TextBlock.Foreground>
-
-                </TextBlock>
-
-
-
-                <TextBlock x:Name="ExtraFeaturesContent" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;&#x0a;If you want to prevent the accidental&#x0a;activation of Eva without pressing&#x0a;the &#xEC71; button, just press the  &#xEF2D;&#x0a;button in order to minimise the&#x0a;application. When you want to&#x0a;give Eva commands just&#x0a;restore the application&#x0a;window.&#x0a;&#x0a;">
-
-                    <TextBlock.Foreground>
-                        <LinearGradientBrush>
-                            <GradientStop Color="#FF7BBFD8" x:Name="ExtraFeaturesContentTextBlockOffset" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </TextBlock.Foreground>
-
-                </TextBlock>
-
-                <TextBlock x:Name="ExtraFeaturesContent2" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="To customise the commands, go to&#x0a;">
-                     <Hyperlink
-                        NavigateUri="https://github.com/CSharpTeoMan911/Eva/wiki/Commands-customisation"
-                        RequestNavigate="Navigate_To_Commands_Customisation">
-                        <StackPanel>
-                            <TextBlock Text="for a detailed tutorial."/>
-                        </StackPanel>
-                    </Hyperlink>
-                    
-                    <TextBlock.Foreground>
-                        <LinearGradientBrush>
-                            <GradientStop Color="#FF7BBFD8" x:Name="ExtraFeaturesContentTextBlockOffset2" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </TextBlock.Foreground>
-
-                </TextBlock>
-
-
-
-                <TextBlock x:Name="Troubleshooting" Margin="0,30,0,0" FontFamily="Bahnschrift" FontSize="27" Text="&#x0a;&#x0a;&#x0a;Troubleshooting">
-
-                    <TextBlock.Foreground>
-                        <LinearGradientBrush>
-                            <GradientStop Color="#FF7BBFD8" x:Name="TroubleshootingTextBlockOffset" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </TextBlock.Foreground>
-
-                </TextBlock>
-
-
-                <TextBlock x:Name="TroubleshootingContents0_1" Margin="0,30,0,0" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;If Eva cannot understand you is because you selected an English&#x0a;version that is not suitable for your accent. To select the desired&#x0a;English version open the 'Application's Settings Page' and select&#x0a;the English version under the 'Speech Language' section.&#x0a;">
-                    <TextBlock.Foreground>
-                        <LinearGradientBrush>
-                            <GradientStop Color="#FF7BBFD8" x:Name="TroubleshootingContentTextBlockOffset0_1" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </TextBlock.Foreground>
-                </TextBlock>
-
-
-                <TextBlock x:Name="TroubleshootingContents1" Margin="0,30,0,30" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;If Eva cannot hear you, open the Settings page and go to&#x0a;">
-                    
-                    <Hyperlink
-                        NavigateUri=""
-                        RequestNavigate="Open_Settings_At_Speech_Recognition">
-                        <StackPanel>
-                            <TextBlock Text="Time and Language -> Speech -> Microphone. Under the
-                        &#x0a;Microphone section, press the 'Get Stared' button and 
-                        &#x0a;follow the instructions"/>
-                        </StackPanel>
-                    </Hyperlink>
-                    <TextBlock.Foreground>
-                        <LinearGradientBrush>
-                            <GradientStop Color="#FF7BBFD8" x:Name="TroubleshootingContentTextBlockOffset1" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </TextBlock.Foreground>
-                </TextBlock>
-
-                <TextBlock x:Name="TroubleshootingContents2" Margin="0,30,0,30" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;If Eva has accuracy problems, open the Settings page and go to&#x0a;">
-                    
-                    <Hyperlink
-                        NavigateUri=""
-                        RequestNavigate="Open_Settings_At_Speech_Recognition">
-                        <StackPanel>
-                            <TextBlock Text="Time and Language -> Speech -> Speech language. Under the&#x0a;Microphone section, check the 'Recognise non-native accents',&#x0a;checkmark."/>
-                        </StackPanel>
-                    </Hyperlink>
-                    <TextBlock.Foreground>
-                        <LinearGradientBrush>
-                            <GradientStop Color="#FF7BBFD8" x:Name="TroubleshootingContentTextBlockOffset2" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </TextBlock.Foreground>
-                </TextBlock>
-
-                <TextBlock x:Name="TroubleshootingContents3" Margin="0,30,0,0" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="&#x0a;&#x0a;If Eva still cannot hear you or do you have accuracy and/or&#x0a;behaviour related problems open the Command Prompt as&#x0a;Administrator and type the commands:">
-
-                    <TextBlock.Foreground>
-                        <LinearGradientBrush>
-                            <GradientStop Color="#FF7BBFD8" x:Name="TroubleshootingContentTextBlockOffset3" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </TextBlock.Foreground>
-
-                </TextBlock>
-
-                <TextBox x:Name="CommandsTextBox" IsReadOnly="True" TextWrapping="Wrap" Margin="0,30,0,30" Width="600px" Height="130px" FontSize="16" BorderBrush="Transparent" HorizontalAlignment="Left" VerticalScrollBarVisibility="Auto" Text="Dism /Online /Cleanup-Image /ScanHealth&#x0a;&#x0a;Dism /Online /Cleanup-Image /CheckHealth&#x0a;&#x0a;sfc/scannow">
-
-
-
-                    <TextBox.Clip>
-                        <RectangleGeometry Rect="0, 0, 600, 130" RadiusX="10" RadiusY="10"/>
-                    </TextBox.Clip>
-
-                    <TextBox.Foreground>
-                        <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                            <GradientStop Color="#FF0BD2A0" x:Name="CommandsTextBoxOffset" Offset="1"/>
-                            <GradientStop Color="#FF0AE6E1"/>
-                        </LinearGradientBrush>
-                    </TextBox.Foreground>
-
-                    <TextBox.Background>
-                        <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                            <GradientStop Color="#FF08090A" x:Name="CommandsTextBoxBackgroundOffset" Offset="1"/>
-                            <GradientStop Color="#FF021325"/>
-                        </LinearGradientBrush>
-                    </TextBox.Background>
-                </TextBox>
-
-
-                <TextBlock x:Name="TroubleshootingContents4" Margin="0,0,0,0" FontFamily="Bahnschrift Light, Segoe MDL2 Assets" FontSize="24" Text="These commands must be entered in order to fix corrupt system&#x0a;files. Eva is dependant on the Windows OS and as a result,&#x0a;corrupt system files may cause serious behavioural and&#x0a;functional issues.&#x0a;&#x0a;&#x0a;">
-
-                    <TextBlock.Foreground>
-                        <LinearGradientBrush>
-                            <GradientStop Color="#FF7BBFD8" x:Name="TroubleshootingContentTextBlockOffset4" Offset="1"/>
-                            <GradientStop Color="#FF1B70C3"/>
-                        </LinearGradientBrush>
-                    </TextBlock.Foreground>
-
-                </TextBlock>
-
-
-
-
+        <StackPanel Grid.ColumnSpan="9">
+            <StackPanel x:Name="WindowHandle">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Rectangle Grid.Column="0" Fill="Transparent" MouseDown="MoveTheWindow"/>
+
+                    <StackPanel Orientation="Horizontal" Grid.Column ="1" Margin="0,0,0,10" HorizontalAlignment="Right">
+
+                        <Button x:Name="MinimiseTheWindowButton" Margin="20,20,20,0" BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Left" Content="&#xEF2D;" FontFamily="Segoe MDL2 Assets" FontSize="20" Click="MinimiseTheWindow" Style="{StaticResource MyButtonStyle}">
+
+                            <Button.Effect>
+                                <DropShadowEffect/>
+                            </Button.Effect>
+
+                            <Button.Foreground>
+                                <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                                    <GradientStop Color="#FF7BBFD8" x:Name="MinimiseTheWindowOffset" Offset="1"/>
+                                    <GradientStop Color="#FF11497F"/>
+                                </LinearGradientBrush>
+                            </Button.Foreground>
+                        </Button>
+
+                        <Button x:Name="NormaliseOrMaximiseTheWindowButton" Margin="0,20,20,0" BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Right" Content="&#xEF2E;" FontFamily="Segoe MDL2 Assets" FontSize="20" Click="NormaliseOrMaximiseTheWindow" Style="{StaticResource MyButtonStyle}">
+
+                            <Button.Effect>
+                                <DropShadowEffect/>
+                            </Button.Effect>
+
+                            <Button.Foreground>
+                                <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                                    <GradientStop Color="#FF7BBFD8" x:Name="NormaliseOrMaximiseButtonOffset" Offset="1"/>
+                                    <GradientStop Color="#FF11497F"/>
+                                </LinearGradientBrush>
+                            </Button.Foreground>
+                        </Button>
+
+                        <Button x:Name="CloseTheWindowButton" Margin="0,20,20,0" BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Right" Content="&#xEF2C;" FontFamily="Segoe MDL2 Assets" FontSize="20" Click="CloseTheWindow" Style="{StaticResource MyButtonStyle}">
+
+                            <Button.Effect>
+                                <DropShadowEffect/>
+                            </Button.Effect>
+
+                            <Button.Foreground>
+                                <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                                    <GradientStop Color="#FF7BBFD8" x:Name="CloseButtonOffset" Offset="1"/>
+                                    <GradientStop Color="#FF11497F"/>
+                                </LinearGradientBrush>
+                            </Button.Foreground>
+                        </Button>
+                    </StackPanel>
+                </Grid>
             </StackPanel>
 
-        </ScrollViewer>
+            <TextBlock x:Name="InstructionManualTitle" HorizontalAlignment="Center" FontFamily="Bahnschrift" FontSize="40" Text="Instruction Manual">
+                <TextBlock.Foreground>
+                    <LinearGradientBrush>
+                        <GradientStop Color="#FF7BBFD8" x:Name="InstructionManualTitleTextBlockOffset" Offset="1"/>
+                        <GradientStop Color="#FF1B70C3"/>
+                    </LinearGradientBrush>
+                </TextBlock.Foreground>
+            </TextBlock>
 
+            <ScrollViewer x:Name="MainScrollViewer" Margin="5,0,5,0" VerticalScrollBarVisibility="Auto" Style="{DynamicResource InstructionManualScrollViewerTemplate}">
+                <controls:MarkdownTextBlock x:Name="MarkdownText" HorizontalAlignment="Left" FontFamily="Cascadia Mono" FontWeight="Light" Padding="13" Text="{Binding message}" LinkClicked="LinkClicked" InlineCodeFontFamily="Consolas" Header1Margin="0,20,0,0" Header2Margin="0,20,0,0" Header3Margin="0,20,0,0" Header4Margin="0,10,0,0" Header5Margin="0,10,0,0" Header6Margin="0,10,0,0" InlineCodeBackground="#FF262727" CodeBackground="#FF262727" Margin="0,20,0,30" Foreground="#FF7BBFD8">
+
+                    <controls:MarkdownTextBlock.Header1Foreground>
+                        <LinearGradientBrush>
+                            <GradientStop Color="#FF7BBFD8" x:Name="InstructionManualH1TextBlockOffset" Offset="1"/>
+                            <GradientStop Color="#FF1B70C3"/>
+                        </LinearGradientBrush>
+                    </controls:MarkdownTextBlock.Header1Foreground>
+
+                    <controls:MarkdownTextBlock.Header2Foreground>
+                        <LinearGradientBrush>
+                            <GradientStop Color="#FF7BBFD8" x:Name="InstructionManualH2TextBlockOffset" Offset="1"/>
+                            <GradientStop Color="#FF1B70C3"/>
+                        </LinearGradientBrush>
+                    </controls:MarkdownTextBlock.Header2Foreground>
+
+                    <controls:MarkdownTextBlock.Header3Foreground>
+                        <LinearGradientBrush>
+                            <GradientStop Color="#FF7BBFD8" x:Name="InstructionManualH3TextBlockOffset" Offset="1"/>
+                            <GradientStop Color="#FF1B70C3"/>
+                        </LinearGradientBrush>
+                    </controls:MarkdownTextBlock.Header3Foreground>
+
+                    <controls:MarkdownTextBlock.Header4Foreground>
+                        <LinearGradientBrush>
+                            <GradientStop Color="#FF7BBFD8" x:Name="InstructionManualH4TextBlockOffset" Offset="1"/>
+                            <GradientStop Color="#FF1B70C3"/>
+                        </LinearGradientBrush>
+                    </controls:MarkdownTextBlock.Header4Foreground>
+
+                    <controls:MarkdownTextBlock.Header5Foreground>
+                        <LinearGradientBrush>
+                            <GradientStop Color="#FF7BBFD8" x:Name="InstructionManualH5TextBlockOffset" Offset="1"/>
+                            <GradientStop Color="#FF1B70C3"/>
+                        </LinearGradientBrush>
+                    </controls:MarkdownTextBlock.Header5Foreground>
+
+                    <controls:MarkdownTextBlock.Header6Foreground>
+                        <LinearGradientBrush>
+                            <GradientStop Color="#FF7BBFD8" x:Name="InstructionManualH6TextBlockOffset" Offset="1"/>
+                            <GradientStop Color="#FF1B70C3"/>
+                        </LinearGradientBrush>
+                    </controls:MarkdownTextBlock.Header6Foreground>
+                </controls:MarkdownTextBlock>
+            </ScrollViewer>
+        </StackPanel>
     </Grid>
 </Window>

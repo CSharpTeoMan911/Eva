@@ -174,9 +174,13 @@ namespace Eva_5._0
                                     if (OffsetArithmetic > 0)
                                     {
                                         OffsetArithmetic--;
-                                        CloseButtonOffset.Offset += 0.003;
                                        
                                         WindowOffset.Offset += 0.003;
+
+                                        MinimiseTheWindowOffset.Offset += 0.003;
+                                        NormaliseOrMaximiseTheWindowOffset.Offset += 0.003;
+                                        CloseButtonOffset.Offset += 0.003;
+                                        MenuButtonOffset.Offset += 0.003;
                                     }
                                     else
                                     {
@@ -188,9 +192,13 @@ namespace Eva_5._0
                                     if (OffsetArithmetic < 300)
                                     {
                                         OffsetArithmetic++;
-                                        CloseButtonOffset.Offset -= 0.003;
                                    
                                         WindowOffset.Offset -= 0.003;
+
+                                        MinimiseTheWindowOffset.Offset -= 0.003;
+                                        NormaliseOrMaximiseTheWindowOffset.Offset -= 0.003;
+                                        CloseButtonOffset.Offset -= 0.003;
+                                        MenuButtonOffset.Offset -= 0.003;
                                     }
                                     else
                                     {

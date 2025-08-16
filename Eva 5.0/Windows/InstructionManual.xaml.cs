@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 
@@ -29,6 +31,9 @@ namespace Eva_5._0
     public partial class InstructionManual : Window
     {
 
+        private readonly string fileName = "InstructionManual.md";
+        private readonly string filePath;
+
         private System.Timers.Timer AnimationTimer;
         private byte NormalisedOrMaximised;
         private bool TimerDisposed;
@@ -42,6 +47,7 @@ namespace Eva_5._0
 
         public InstructionManual()
         {
+            filePath = $"{Environment.CurrentDirectory}\\{fileName}";
             InitializeComponent();
         }
 
@@ -50,13 +56,26 @@ namespace Eva_5._0
             App.InstructionManualOpen = false;
         }
 
-        private void InstructionManualWindowLoaded(object sender, RoutedEventArgs e)
+        private async void InstructionManualWindowLoaded(object sender, RoutedEventArgs e)
         {
             AnimationTimer = new System.Timers.Timer();
             AnimationTimer.Disposed += AnimationTimer_Disposed;
             AnimationTimer.Elapsed += AnimationTimer_Elapsed;
             AnimationTimer.Interval = 10;
             AnimationTimer.Start();
+
+            try
+            {
+                using (FileStream fs = File.OpenRead(filePath))
+                {
+                    using (StreamReader sr = new StreamReader(fs))
+                    {
+                        string markdown = await sr.ReadToEndAsync();
+                        MarkdownText.Text = markdown;
+                    }
+                }
+            }
+            catch(Exception E) { Debug.WriteLine(E.Message); }
 
             this.Topmost = true;
         }
@@ -164,16 +183,6 @@ namespace Eva_5._0
                                                         NormaliseOrMaximiseButtonOffset.Offset += 0.025;
                                                         MinimiseTheWindowOffset.Offset += 0.025;
                                                         InstructionManualTitleTextBlockOffset.Offset += 0.025;
-                                                        AboutEvaTextBlockOffset.Offset += 0.025;
-                                                        AboutEvaContentTextBlockOffset.Offset += 0.025;
-                                                        UserInstructionsTextBlockOffset.Offset += 0.025;
-                                                        UserInstructionsContentTextBlockOffset.Offset += 0.025;
-                                                        CommandsTextBlockOffset.Offset += 0.025;
-                                                        CommandsContentTextBlockOffset.Offset += 0.025;
-                                                        TroubleshootingTextBlockOffset.Offset += 0.025;
-                                                        TroubleshootingContentTextBlockOffset1.Offset += 0.025;
-                                                        ExtraFeaturesTextBlockOffset.Offset += 0.025;
-                                                        ExtraFeaturesContentTextBlockOffset.Offset += 0.025;
                                                         break;
 
                                                     case false:
@@ -193,16 +202,6 @@ namespace Eva_5._0
                                                         NormaliseOrMaximiseButtonOffset.Offset -= 0.025;
                                                         MinimiseTheWindowOffset.Offset -= 0.025;
                                                         InstructionManualTitleTextBlockOffset.Offset -= 0.025;
-                                                        AboutEvaTextBlockOffset.Offset -= 0.025;
-                                                        AboutEvaContentTextBlockOffset.Offset -= 0.025;
-                                                        UserInstructionsTextBlockOffset.Offset -= 0.025;
-                                                        UserInstructionsContentTextBlockOffset.Offset -= 0.025;
-                                                        CommandsTextBlockOffset.Offset -= 0.025;
-                                                        CommandsContentTextBlockOffset.Offset -= 0.025;
-                                                        TroubleshootingTextBlockOffset.Offset -= 0.025;
-                                                        TroubleshootingContentTextBlockOffset1.Offset -= 0.025;
-                                                        ExtraFeaturesTextBlockOffset.Offset -= 0.025;
-                                                        ExtraFeaturesContentTextBlockOffset.Offset -= 0.025;
                                                         break;
 
                                                     case false:
@@ -342,13 +341,10 @@ namespace Eva_5._0
         {
             if (App.InstructionManualOpen == true)
             {
-
                 if (Application.Current.Dispatcher.HasShutdownStarted == false)
                 {
-
                     if (Application.Current.MainWindow != null)
                     {
-
                         Rect geometry = new Rect();
 
                         geometry.Height = this.Height;
@@ -356,10 +352,10 @@ namespace Eva_5._0
 
                         Instruction_Manual_Geometry.Rect = geometry;
 
+                        double height = this.RenderSize.Height - WindowHandle.RenderSize.Height - InstructionManualTitle.RenderSize.Height;
+                        MainScrollViewer.Height = height > 0 ? height : 0;
                     }
-
                 }
-
             }
         }
 
@@ -375,5 +371,7 @@ namespace Eva_5._0
                 }
             }
         }
+
+        private void LinkClicked(object sender, ModernWpf.Toolkit.UI.Controls.LinkClickedEventArgs e) => Proc.NavigateToLink(e.Link);
     }
 }

@@ -6,7 +6,7 @@
         xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
         xmlns:local="clr-namespace:Eva_5._0"
         mc:Ignorable="d"
-        Title="Chat_GPT_API_Key_Settup_Window" Height="180" Width="330" AllowsTransparency="True" WindowStyle="None" Topmost="True" Opacity="0.95" Loaded="Window_Loaded" Closing="Window_Closing" Icon="../Images/EVA.ico">
+        Title="Chat GPT API Key Setup" ResizeMode="NoResize" Height="180" Width="330" AllowsTransparency="True" WindowStyle="None" Topmost="True" Opacity="0.95" Loaded="Window_Loaded" Closing="Window_Closing" Icon="../Images/EVA.ico">
 
     <Window.Clip>
         <RectangleGeometry Rect="0,0,330,180" RadiusX="10" RadiusY="10"/>
