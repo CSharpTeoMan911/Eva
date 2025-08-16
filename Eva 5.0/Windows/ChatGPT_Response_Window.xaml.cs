@@ -690,9 +690,27 @@ namespace Eva_5._0
             }
         }
 
+        private void Loading(bool finished)
+        {
+            switch (finished)
+            {
+                case true:
+                    ChatHistoryButton.IsEnabled = true;
+                    Input_Button.IsEnabled = true;
+                    MainBusyMask.IsBusy = false;
+                    break;
+
+                case false:
+                    ChatHistoryButton.IsEnabled = false;
+                    Input_Button.IsEnabled = false;
+                    MainBusyMask.IsBusy = true;
+                    break;
+            }
+        }
+
         private Task LoadChatHistory()
         {
-            MainStackPanel.IsEnabled = false;
+            Loading(false);
 
             ConcurrentDictionary<long, ChatHistory.ChatPackage> chats = chatHistoryManager.GetChats();
 
@@ -725,7 +743,7 @@ namespace Eva_5._0
                 }
             }
 
-            MainStackPanel.IsEnabled = true;
+            Loading(true);
 
             return Task.CompletedTask;
         }
