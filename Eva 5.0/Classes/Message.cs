@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Windows;
 
 namespace Eva_5._0
@@ -15,6 +16,9 @@ namespace Eva_5._0
         private string _message;
         private int _column = 0;
         private Style _style { get; set; } = Application.Current.FindResource("ConversationUserBubble") as Style;
+
+        private Visibility _pending = Visibility.Collapsed;
+        private Visibility _chat = Visibility.Visible;
 
         public MessageType type
         {
@@ -68,8 +72,34 @@ namespace Eva_5._0
         }
 
 
+        public Visibility pending
+        {
+            get { return _pending; }
+            set
+            {
+                if (_pending != value)
+                {
+                    _pending = value;
+                    OnPropertyChanged(nameof(pending));
+                }
+            }
+        }
 
-        public Message(MessageType type, string message)
+        public Visibility chat
+        {
+            get { return _chat; }
+            set
+            {
+                if (_chat != value)
+                {
+                    _chat = value;
+                    OnPropertyChanged(nameof(chat));
+                }
+            }
+        }
+
+
+        public Message(MessageType type, string message = null)
         {
             _type = type;
             _message = message;
@@ -79,7 +109,7 @@ namespace Eva_5._0
                 _column = 0;
                 _style = Application.Current.FindResource("ConversationUserBubble") as Style;
             }
-            else
+            else if (type == MessageType.Assistant)
             {
                 _column = 1;
                 _style = Application.Current.FindResource("ConversationAgentBubble") as Style;
@@ -102,6 +132,24 @@ namespace Eva_5._0
 
                 OnPropertyChanged(nameof(message));
             }
+        }
+
+        public void PendingStarted()
+        {
+            _pending = Visibility.Visible;
+            _chat = Visibility.Collapsed;
+
+            OnPropertyChanged(nameof(pending));
+            OnPropertyChanged(nameof(chat));
+        }
+
+        public void PendingFinished()
+        {
+            _pending = Visibility.Collapsed;
+            _chat = Visibility.Visible;
+
+            OnPropertyChanged(nameof(pending));
+            OnPropertyChanged(nameof(chat));
         }
 
 

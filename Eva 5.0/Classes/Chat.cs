@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 
 namespace Eva_5._0
 {
     public class Chat : INotifyPropertyChanged
     {
         private string _chatTitle { get; set; }
+        private Style _style {  get; set; }
+
+        public enum Selection
+        {
+            Current,
+            Default
+        }
         
         public string chatTitle
         {
@@ -20,6 +25,19 @@ namespace Eva_5._0
                 {
                     _chatTitle = value;
                     OnPropertyChanged(nameof(chatTitle));
+                }
+            }
+        }
+
+        public Style style
+        {
+            get { return _style; }
+            set
+            {
+                if (_style != value)
+                {
+                    _style = value;
+                    OnPropertyChanged(nameof(style));
                 }
             }
         }
@@ -39,10 +57,20 @@ namespace Eva_5._0
             }
         }
 
-        public Chat(long key, string chatTitle)
+        public Chat(long key, string chatTitle, Selection selection)
         {
             _key = key;
             _chatTitle = chatTitle;
+
+            switch (selection)
+            {
+                case Selection.Current:
+                    _style = Application.Current.FindResource("CurrentChatHistoryItem") as Style;
+                    break;
+                case Selection.Default:
+                    _style = Application.Current.FindResource("DefaultChatHistoryItem") as Style;
+                    break;
+            }
         }
 
 

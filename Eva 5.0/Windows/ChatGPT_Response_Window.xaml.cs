@@ -52,6 +52,10 @@ namespace Eva_5._0
         private ChatHistory.ChatPackage currentChatPackage;
         private long currentChatId;
 
+
+        private readonly BrushConverter colorConverter = new BrushConverter();
+        private readonly SolidColorBrush transparent = new SolidColorBrush(Colors.Transparent);
+
         public ChatGPT_Response_Window()
         {
             ChatGPT_API = new ChatGPT_API(new ChatGPT_API.Callback(ApiResponseCallback));
@@ -79,57 +83,52 @@ namespace Eva_5._0
                         {
                             if (!string.IsNullOrEmpty(response.response))
                             {
-                                if (last_gpt_message == null)
-                                {
-                                    last_gpt_message = new Message(Message.MessageType.Assistant, response.response);
-                                    messages.Add(last_gpt_message);
-                                }
-                                else
-                                {
-                                    last_gpt_message.UpdateMessage(response.response, true);
-                                }
-
+                                last_gpt_message.UpdateMessage(response.response, true);
                                 ConversationScrollViewer.ScrollToBottom();
                             }
                         }
-                        else if (response.type == ChatGPT_API.ApiResponse.PayloadType.Notification)
+                        else
                         {
-                            if (response.response == "Stream finished")
+                            last_gpt_message?.PendingFinished();
+
+                            if (response.type == ChatGPT_API.ApiResponse.PayloadType.Notification)
                             {
-                                Input_Button.Style = Application.Current.FindResource("SendGptQueryButtonStyle") as Style;
-                                Input_Button.Content = "\xF5B0";
-                                processing = false;
-                                tokenSource = new CancellationTokenSource();
-
-                                ChatGPT_API.AddAssistantMessage(last_gpt_message.message);
-                                UpdateChat();
-
-                                last_gpt_message = null;
-                                await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTNotificationSoundEffect);
-
-                            }
-                        }
-                        else if (response.type == ChatGPT_API.ApiResponse.PayloadType.Exception)
-                        {
-                            if (App.PermisissionWindowOpen == false)
-                            {
-                                if (response.response == "API authentification error")
+                                if (response.response == "Stream finished")
                                 {
-                                    ErrorWindow errorWindow = new ErrorWindow("Invalid ChatGPT API key");
-                                    errorWindow.Show();
-                                }
-                                else if (response.response == "Input exceeds the maximum number of tokens")
-                                {
-                                    ErrorWindow errorWindow = new ErrorWindow("Maximum number of tokens exceeded");
-                                    errorWindow.Show();
-                                }
-                                else
-                                {
-                                    ErrorWindow errorWindow = new ErrorWindow("ChatGPT error");
-                                    errorWindow.Show();
+                                    Input_Button.Style = Application.Current.FindResource("SendGptQueryButtonStyle") as Style;
+                                    Input_Button.Content = "\xF5B0";
+                                    processing = false;
+                                    tokenSource = new CancellationTokenSource();
+
+                                    ChatGPT_API.AddAssistantMessage(last_gpt_message.message);
+                                    await UpdateChat();
+
+                                    last_gpt_message = null;
+                                    await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTNotificationSoundEffect);
                                 }
                             }
+                            else if (response.type == ChatGPT_API.ApiResponse.PayloadType.Exception)
+                            {
+                                if (App.PermisissionWindowOpen == false)
+                                {
+                                    if (response.response == "API authentification error")
+                                    {
+                                        ErrorWindow errorWindow = new ErrorWindow("Invalid ChatGPT API key");
+                                        errorWindow.Show();
+                                    }
+                                    else if (response.response == "Input exceeds the maximum number of tokens")
+                                    {
+                                        ErrorWindow errorWindow = new ErrorWindow("Maximum number of tokens exceeded");
+                                        errorWindow.Show();
+                                    }
+                                    else
+                                    {
+                                        ErrorWindow errorWindow = new ErrorWindow("ChatGPT error");
+                                        errorWindow.Show();
+                                    }
+                                }
 
+                            }
                         }
                     }
                 }
@@ -176,7 +175,7 @@ namespace Eva_5._0
                                     {
                                         OffsetArithmetic--;
                                         CloseButtonOffset.Offset += 0.003;
-                                        ConversationScrollViewerOffset.Offset += 0.003;
+                                       
                                         WindowOffset.Offset += 0.003;
                                     }
                                     else
@@ -190,7 +189,7 @@ namespace Eva_5._0
                                     {
                                         OffsetArithmetic++;
                                         CloseButtonOffset.Offset -= 0.003;
-                                        ConversationScrollViewerOffset.Offset += 0.003;
+                                   
                                         WindowOffset.Offset -= 0.003;
                                     }
                                     else
@@ -228,16 +227,21 @@ namespace Eva_5._0
         }
 
 
-        public async void Update_Conversation(string input)
+        public async Task Update_Conversation(string input)
         {
             if (!String.IsNullOrEmpty(input))
             {
-                await Dispatcher.InvokeAsync(() =>
+                await Dispatcher.InvokeAsync(async() =>
                 {
                     if (WindowIsClosing == false)
                     {
                         tokenSource = new CancellationTokenSource();
                         messages.Add(new Message(Message.MessageType.User, input));
+
+                        last_gpt_message = new Message(Message.MessageType.Assistant, String.Empty);
+                        messages.Add(last_gpt_message);
+                        last_gpt_message.PendingStarted();
+
                         processing = ChatGPT_API.Initiate_Chat_GPT(input, tokenSource.Token);
 
                         if (processing)
@@ -246,7 +250,8 @@ namespace Eva_5._0
                             Input_Button.Content = "\xF8AE";
                         }
 
-                        UpdateChat(input);
+                        await UpdateChat(input);
+                        ConversationScrollViewer.ScrollToBottom();
                     }
                 }, DispatcherPriority.Render);
             }
@@ -303,29 +308,28 @@ namespace Eva_5._0
                     {
                         this.DragMove();
                     }
-
                 }
 
             }
         }
 
 
-        private void Send_Manual_GPT_Query(object sender, RoutedEventArgs e)
+        private async void Send_Manual_GPT_Query(object sender, RoutedEventArgs e)
         {
-            Update_Conversation_And_UI();
+            await Update_Conversation_And_UI();
         }
 
-        private void Detect_Enter(object sender, KeyEventArgs e)
+        private async void Detect_Enter(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return && !processing)
             {
-                Update_Conversation_And_UI(true);
+                await Update_Conversation_And_UI(true);
             }
         }
 
-        private async void Update_Conversation_And_UI(bool carriageReturn = false)
+        private async Task Update_Conversation_And_UI(bool carriageReturn = false)
         {
-            await Application.Current.Dispatcher.InvokeAsync(() =>
+            await Application.Current.Dispatcher.InvokeAsync(async() =>
             {
                 switch (processing)
                 {
@@ -340,19 +344,19 @@ namespace Eva_5._0
 
                         InputTextBox.IsEnabled = false;
                         InputTextBox.Clear();
-                        Update_Conversation(input);
+                        await Update_Conversation(input);
                         InputTextBox.IsEnabled = true;
                         InputTextBox.UpdateLayout();
                         break;
 
                     case true:
-                        RemoveMessage();
+                        await RemoveMessage();
                         break;
                 }
             }, DispatcherPriority.Render);
         }
 
-        private void RemoveMessage()
+        private async Task RemoveMessage()
         {
             processing = false;
             tokenSource?.Cancel();
@@ -360,7 +364,7 @@ namespace Eva_5._0
 
             messages.RemoveAt(messages.Count - 1);
             ChatGPT_API.RemoveLastMessage();
-            UpdateChat();
+            await UpdateChat();
 
             Input_Button.Style = Application.Current.FindResource("SendGptQueryButtonStyle") as Style;
             Input_Button.Content = "\xF5B0";
@@ -428,7 +432,7 @@ namespace Eva_5._0
                     ContentPanel.Width = content_width;
                 }
 
-                double menuPanelHeight = MenuPanel.RenderSize.Height - NewChatPanel.RenderSize.Height;
+                double menuPanelHeight = MenuPanel.RenderSize.Height - NewChatPanel.RenderSize.Height - 5;
                 MenuView.Height = menuPanelHeight > 0 ? menuPanelHeight : 0;
 
 
@@ -703,11 +707,9 @@ namespace Eva_5._0
                     long key = keys.ElementAt(i);
                     chats.TryGetValue(key, out ChatPackage chatPackage);
 
-                    chatHistory.Add(new Chat(key, chatPackage.chatTitle));
-
                     if (!newChat)
                     {
-                        if (i == 0)
+                        if (i == chats.Count - 1)
                         {
                             if (currentChatPackage == null)
                             {
@@ -718,6 +720,8 @@ namespace Eva_5._0
                             }
                         }
                     }
+
+                    chatHistory.Add(new Chat(key, chatPackage.chatTitle, key == currentChatId ? Chat.Selection.Current : Chat.Selection.Default));
                 }
             }
 
@@ -726,7 +730,7 @@ namespace Eva_5._0
             return Task.CompletedTask;
         }
 
-        private async void UpdateChat(string title = null)
+        private async Task UpdateChat(string title = null)
         {
             DateTime date = DateTime.UtcNow;
 
@@ -786,10 +790,10 @@ namespace Eva_5._0
                 ChatGPT_API.Clear_Conversation_Cache();
             }
 
-            UpdateChat();
+            await UpdateChat();
         }
 
-        private void SelectChat(object sender, RoutedEventArgs e)
+        private async void SelectChat(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
 
@@ -797,7 +801,7 @@ namespace Eva_5._0
 
             if (processing && id != currentChatId)
             {
-                RemoveMessage();
+                await RemoveMessage();
             }
 
             currentChatId = id;
@@ -809,6 +813,7 @@ namespace Eva_5._0
 
             messages.Clear();
             chatPackage.chat.ForEach((value) => messages.Add(new Message(value.role == "user" ? Message.MessageType.User : Message.MessageType.Assistant, value.content)));
+            await LoadChatHistory();
         }
 
         private void NewChat(object sender, RoutedEventArgs e)
@@ -818,5 +823,9 @@ namespace Eva_5._0
             ChatGPT_API.NewChat();
             messages.Clear();
         }
+
+        private void MouseIn(object sender, MouseEventArgs e) => NewChatButton.Background = (Brush)colorConverter.ConvertFromString("#FF001506");
+
+        private void MouseOut(object sender, MouseEventArgs e) => NewChatButton.Background = (Brush)colorConverter.ConvertFromString("#FF013510");
     }
 }

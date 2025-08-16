@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Eva_5._0"
         xmlns:ui="http://schemas.modernwpf.com/2019"
         xmlns:controls="http://schemas.modernwpf.com/toolkit/controls"
+        xmlns:busyIndicator="https://github.com/moh3ngolshani/BusyIndicator"
         mc:Ignorable="d"
         x:Name="ResponseWindow" Title="ChatGPT_Response_Window" Height="450" Width="700" WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResize" Loaded="Window_Loaded" SizeChanged="WindowSizeChanged" Closing="Window_Closing" Opacity="0.98" Topmost="True">
 
@@ -15,13 +16,13 @@
 
     <Window.Resources>
         <DataTemplate x:Key="ChatHistory" DataType="local:Chat">
-            <Border ClipToBounds="True" CornerRadius="10" Padding="5" Margin="0,5,0,5" BorderThickness="1.5" BorderBrush="Green" Background="#FF2F2F2F">
+            <Border ClipToBounds="True" CornerRadius="10" Padding="5" Margin="0,5,0,5" BorderThickness="1.5" Style="{Binding Path=style}">
                 <Grid FlowDirection="LeftToRight">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="3*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    
+
                     <TextBox Grid.Column="0" Padding="3" BorderThickness="1" IsReadOnly="True" IsReadOnlyCaretVisible="False" TextAlignment="Center" Style="{StaticResource ChatStyle}" Text="{Binding chatTitle}">
                         <TextBox.Foreground>
                             <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
@@ -62,15 +63,24 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
-                <Border x:Name="Border" Grid.ColumnSpan="2" Margin="20" HorizontalAlignment="Left" Grid.Column="{Binding Path=column}" Style="{Binding Path=style}" ClipToBounds="True">
+                <Border Grid.ColumnSpan="2" Margin="20" HorizontalAlignment="Left" Grid.Column="{Binding Path=column}" Style="{Binding Path=style}" ClipToBounds="True">
                     <StackPanel HorizontalAlignment="Stretch">
                         <controls:MarkdownTextBlock Visibility="Collapsed" HorizontalAlignment="Left" FontSize="13" FontFamily="Cascadia Mono" FontWeight="Light" Padding="13" Text="{Binding message}" MarkdownRendered="TextBlockMarkdownRendered" TextBoxBase.TextChanged="MarkdownTextChanged" LinkClicked="LinkClicked" SizeChanged="MarkdownSizeChanged"/>
-                        <TextBox VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden" IsReadOnly="True" Background="Transparent" BorderBrush="Transparent" TextWrapping="Wrap" BorderThickness="0" FontSize="13" FontFamily="Cascadia Mono" FontWeight="Light" Padding="13,16,13,16" TextChanged="BubbleDataChanged" SizeChanged="TextboxSizeChanged" Text="{Binding message}"/>
+                        <TextBox Visibility="{Binding Path=chat}" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden" IsReadOnly="True" Background="Transparent" BorderBrush="Transparent" TextWrapping="Wrap" BorderThickness="0" FontSize="13" FontFamily="Cascadia Mono" FontWeight="Light" Padding="13,16,13,16" TextChanged="BubbleDataChanged" SizeChanged="TextboxSizeChanged" Text="{Binding message}"/>
+
+                        <StackPanel  Visibility="{Binding Path=pending}" Height="65" Width="200">
+                            <busyIndicator:BusyMask IsBusy="True" BusyContent="" BusyContentMargin="0,0,0,20" Margin="0" Padding="0" IndicatorType="Swirl" VerticalAlignment="Center" HorizontalAlignment="Center" Background="Transparent">
+                                <busyIndicator:BusyMask.Resources>
+                                    <SolidColorBrush x:Key="IndicatorForeground" Color="#FF004822" />
+                                    <SolidColorBrush x:Key="IndicatorBackground" Color="Transparent" />
+                                </busyIndicator:BusyMask.Resources>
+                            </busyIndicator:BusyMask>
+                        </StackPanel>
                     </StackPanel>
                 </Border>
             </Grid>
         </DataTemplate>
-        
+
         <Style x:Key="ConversationScrollbar" TargetType="{x:Type ScrollBar}">
             <Setter Property="Margin" Value="0,0,2,0"/>
             <Setter Property="Width" Value="20"/>
@@ -81,10 +91,10 @@
                         <Grid Background="{TemplateBinding Background}" Width="{TemplateBinding Width}" HorizontalAlignment="Left">
                             <Track x:Name="PART_Track" IsDirectionReversed="true" Focusable="false">
                                 <Track.Thumb>
-                                    <Thumb Width="20" MinHeight="40">
+                                    <Thumb Width="20">
                                         <Thumb.Template>
                                             <ControlTemplate TargetType="Thumb">
-                                                <Border MinHeight="40" CornerRadius="3" ClipToBounds="True" BorderBrush="Black" BorderThickness="1" Background="#FF0C6567"/>
+                                                <Border CornerRadius="3" ClipToBounds="True" BorderBrush="Black" BorderThickness="1" Background="#FF0C6567"/>
                                             </ControlTemplate>
                                         </Thumb.Template>
                                     </Thumb>
@@ -107,7 +117,7 @@
                         <Grid Background="{TemplateBinding Background}" Width="{TemplateBinding Width}" HorizontalAlignment="Left">
                             <Track x:Name="PART_Track" IsDirectionReversed="true" Focusable="false">
                                 <Track.Thumb>
-                                    <Thumb MinHeight="40">
+                                    <Thumb>
                                         <Thumb.Template>
                                             <ControlTemplate TargetType="Thumb">
                                                 <Border MinHeight="40" CornerRadius="3" ClipToBounds="True" BorderBrush="Black" BorderThickness="1" Background="#FF097D5E"/>
@@ -177,16 +187,16 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        
-        
 
-        
+
+
+
     </Window.Resources>
 
     <Window.Background>
         <LinearGradientBrush StartPoint="0.5, 1" EndPoint="1, 0">
-            <GradientStop Color="#FF1F1F1F" x:Name="WindowOffset" Offset="1"/>
-            <GradientStop Color="#FF0A0A0A" />
+            <GradientStop Color="#FF102911" x:Name="WindowOffset" Offset="1"/>
+            <GradientStop Color="#FF001906" />
         </LinearGradientBrush>
     </Window.Background>
 
@@ -207,11 +217,11 @@
 
                 <!--Create the button for the chat history menu control-->
                 <StackPanel Orientation="Horizontal">
-                    <Button Style="{StaticResource MyLightGreenButtonStyle}" Margin="20,15,10,10" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="20" FontFamily="Segoe MDL2 Assets" Content="&#xE206;" Click="ExpandOrContractConversationsMenu">
+                    <Button Style="{StaticResource MyLightGreenButtonStyle}" Margin="20,15,10,10" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="23" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Click="ExpandOrContractConversationsMenu">
                         <Button.Foreground>
                             <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                                 <GradientStop Color="#FF097D5E" Offset="1"/>
-                                <GradientStop Color="#FF0FFDCC"/>
+                                <GradientStop Color="#FF09AD75"/>
                             </LinearGradientBrush>
                         </Button.Foreground>
                     </Button>
@@ -228,7 +238,7 @@
                         <Button.Foreground>
                             <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                                 <GradientStop Color="#FF0FFDCC" x:Name="MinimiseTheWindowOffset" Offset="1"/>
-                                <GradientStop Color="#FF023124"/>
+                                <GradientStop Color="#FF01563E"/>
                             </LinearGradientBrush>
                         </Button.Foreground>
                     </Button>
@@ -243,7 +253,7 @@
                         <Button.Foreground>
                             <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                                 <GradientStop Color="#FF0FFDCC" x:Name="NormaliseOrMaximiseTheWindowOffset" Offset="1"/>
-                                <GradientStop Color="#FF023124"/>
+                                <GradientStop Color="#FF01563E"/>
                             </LinearGradientBrush>
                         </Button.Foreground>
                     </Button>
@@ -258,7 +268,7 @@
                         <Button.Foreground>
                             <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
                                 <GradientStop Color="#FF0FFDCC" x:Name="CloseButtonOffset" Offset="1"/>
-                                <GradientStop Color="#FF023124"/>
+                                <GradientStop Color="#FF01563E"/>
                             </LinearGradientBrush>
                         </Button.Foreground>
                     </Button>
@@ -267,50 +277,38 @@
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" x:Name="MainStackPanel" Grid.Row="1">
-            <StackPanel x:Name="MenuPanel" Width="275" SizeChanged="MenuPanelSizeChanged">
-                <StackPanel x:Name="NewChatPanel" Background="#FF252525">
-                    <Button Style="{StaticResource MyLightGreenButtonStyle}" BorderThickness="3" Background="Transparent" FontFamily="Consolas, Segoe MDL2 Assets" FontSize="16" Margin="5" Click="NewChat">
+            <StackPanel x:Name="MenuPanel" Width="0" Margin="0,5,0,0" SizeChanged="MenuPanelSizeChanged">
+                <StackPanel x:Name="NewChatPanel">
+                    <Button x:Name="NewChatButton" Style="{StaticResource MyGreenButtonStyle}" BorderThickness="3" Background="Transparent" FontFamily="Consolas, Segoe MDL2 Assets" Foreground="#FF01BB01" FontSize="16" Click="NewChat">
                         <StackPanel Orientation="Horizontal" Margin="2">
                             <TextBlock FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Text="&#xEA54;" Margin="0,0,10,0"/>
                             <TextBlock Text="New Chat" FontFamily="Corbel Light" VerticalAlignment="Center"/>
                         </StackPanel>
-                        <Button.Foreground>
-                            <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                                <GradientStop Color="#FF097D5E" Offset="1"/>
-                                <GradientStop Color="#FF0FFDCC"/>
-                            </LinearGradientBrush>
-                        </Button.Foreground>
                     </Button>
                 </StackPanel>
                 <ScrollViewer x:Name="MenuView" BorderThickness="0" Style="{DynamicResource MenuScrollViewerTemplate}" FlowDirection="RightToLeft" Height="{Binding ElementName=MainStackPanel, Path=ActualHeight}" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
                     <ItemsControl ItemTemplate="{StaticResource ChatHistory}" ItemsSource="{Binding chatHistory}" Padding="5" PreviewMouseWheel="MenuScrolled"/>
                 </ScrollViewer>
             </StackPanel>
-            
-            <StackPanel x:Name="ContentPanel" Width="425" SizeChanged="ContentPanelSizeChanged">
+
+            <StackPanel x:Name="ContentPanel" Width="700" SizeChanged="ContentPanelSizeChanged">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition x:Name="TextboxGrid" Height="*"/>
+                        <RowDefinition x:Name="TextboxGrid" Height="109*"/>
+                        <RowDefinition Height="66*"/>
                         <RowDefinition x:Name="InputGrid" Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <ScrollViewer Style="{DynamicResource ConversationScrollViewerTemplate}" x:Name="ConversationScrollViewer" Height="350" Grid.Row="0" Padding="10" Margin="0,0,0,10" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
+                    <ScrollViewer Style="{DynamicResource ConversationScrollViewerTemplate}" x:Name="ConversationScrollViewer" Height="340" Grid.Row="0" Padding="10" Margin="10,0,10,10" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" Grid.RowSpan="2" Background="#FF2D3C34">
                         <ScrollViewer.Clip>
-                            <RectangleGeometry Rect="0, 0, 450, 350" RadiusX="5" RadiusY="5"/>
+                            <RectangleGeometry Rect="0, 0, 679, 340" RadiusX="5" RadiusY="5"/>
                         </ScrollViewer.Clip>
-                        
-                        <ScrollViewer.Background>
-                            <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                                <GradientStop Color="Black" x:Name="ConversationScrollViewerOffset" Offset="1"/>
-                                <GradientStop Color="#FF000C02"/>
-                            </LinearGradientBrush>
-                        </ScrollViewer.Background>
 
                         <ItemsControl x:Name="ConversationScrollViewer_"  ItemTemplate="{StaticResource MessageBubble}" ItemsSource="{Binding messages}" Background="Transparent" PreviewMouseWheel="Scrolled"/>
                     </ScrollViewer>
 
 
-                    <StackPanel x:Name="Input_Stackpanel"  Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" >
+                    <StackPanel x:Name="Input_Stackpanel"  Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" >
                         <Grid HorizontalAlignment="Center" x:Name="InputTextBoxGrid" Width="{Binding ElementName=ContentPanel, Path=Width}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="9*" x:Name="Column"/>
@@ -318,10 +316,10 @@
                             </Grid.ColumnDefinitions>
 
 
-                            <TextBox x:Name="InputTextBox" Width="330" HorizontalAlignment="Center" Style="{StaticResource InputTextboxStyle}" Padding="5" Grid.Column="0" Height="36" FontFamily="Consolas" FontSize="20" CaretBrush="#FF14EFD6" BorderBrush="Green" BorderThickness="1.5" TextWrapping="Wrap" AcceptsReturn="True" PreviewKeyDown="Detect_Enter" TextChanged="InputChanged" TextInput="InputTextChanged" SelectionChanged="InputSelection">
+                            <TextBox x:Name="InputTextBox" Width="600" HorizontalAlignment="Center" Style="{StaticResource InputTextboxStyle}" Padding="5" Grid.Column="0" Height="36" FontFamily="Consolas" FontSize="20" CaretBrush="#FF14EFD6" BorderBrush="Green" BorderThickness="1.5" TextWrapping="Wrap" AcceptsReturn="True" PreviewKeyDown="Detect_Enter" TextChanged="InputChanged" TextInput="InputTextChanged" SelectionChanged="InputSelection">
 
                                 <TextBox.Clip>
-                                    <RectangleGeometry x:Name="InputTextBox_Geometry" Rect="0, 0, 500, 36" RadiusX="5" RadiusY="5"/>
+                                    <RectangleGeometry x:Name="InputTextBox_Geometry" Rect="0, 0, 600, 36" RadiusX="5" RadiusY="5"/>
                                 </TextBox.Clip>
 
                                 <TextBox.Foreground>
@@ -350,7 +348,7 @@
                                     </Button.Foreground>
                                 </Button>
                             </StackPanel>
-                           
+
                         </Grid>
 
                     </StackPanel>

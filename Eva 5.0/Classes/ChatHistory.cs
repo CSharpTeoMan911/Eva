@@ -71,7 +71,7 @@ namespace Eva_5._0
         // THE SETTINGS FILE MUST HAVE READ AND WRITE PERMISSIONS IN ORDER FOR THE 
         // APPLICATION TO ACCESS THE CHATGPT API KEY AND THE SET VOLUME SETTINGS,
         // OTHERWISE THE APPLICATION CAN CRASH.
-        private void Ensure_Access_To_The_Settings_File()
+        private Task Ensure_Access_To_The_Settings_File()
         {
             if (System.IO.File.Exists(chatsFilePath))
             {
@@ -85,13 +85,15 @@ namespace Eva_5._0
 
                 System.IO.File.SetAccessControl(chatsFilePath, settings_file_security);
             }
+
+            return Task.CompletedTask;
         }
 
         private async Task WriteToFile()
         {
             if (File.Exists(chatsFilePath))
             {
-                Ensure_Access_To_The_Settings_File();
+                await Ensure_Access_To_The_Settings_File();
             }
 
             using (FileStream fs = File.Open(chatsFilePath, FileMode.Create))
@@ -107,7 +109,7 @@ namespace Eva_5._0
         {
             if (File.Exists(chatsFilePath))
             {
-                Ensure_Access_To_The_Settings_File();
+                await Ensure_Access_To_The_Settings_File();
 
                 using (FileStream fs = File.Open(chatsFilePath, FileMode.Open))
                 {

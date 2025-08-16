@@ -283,7 +283,7 @@ namespace Eva_5._0
             });
 
             await sound_player.Play_Sound(Sound_Player.Sounds.AppExecutionSoundEffect);
-            App.chatGPT_Response_Window.Update_Conversation(input);
+            await App.chatGPT_Response_Window.Update_Conversation(input);
         }
 
 
