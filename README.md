@@ -7,12 +7,13 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.4.3
+📌 Latest Version: v7.4.5
 
 * 🆕 Implemented the ChatGPT chat history
 * 🆕 ChatGPT can now render markdown inside the chat
 * 🆕 Re-designed the instruction manual window
 * 🐞 Fixed UI related bugs such as window snapping
+* 🐞 Updated the windows titles
 
 <img width="724" height="681" alt="Settings" src="https://github.com/user-attachments/assets/a6879123-9362-45fe-9975-7faa034dac57" />
 
