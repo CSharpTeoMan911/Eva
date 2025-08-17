@@ -7,7 +7,7 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.4.4
+📌 Latest Version: v7.4.5
 
 * 🆕 Implemented the ChatGPT chat history
 * 🆕 ChatGPT can now render markdown inside the chat
