@@ -36,8 +36,6 @@ namespace Eva_5._0
 
         private System.Timers.Timer AnimationTimer;
         private byte NormalisedOrMaximised;
-        private bool TimerDisposed;
-
 
         private bool SwitchWindowOffset;
         private double GradientArithmeticWindowOffset;

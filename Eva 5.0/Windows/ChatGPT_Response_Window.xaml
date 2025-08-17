@@ -8,7 +8,7 @@
         xmlns:controls="http://schemas.modernwpf.com/toolkit/controls"
         xmlns:busyIndicator="https://github.com/moh3ngolshani/BusyIndicator"
         mc:Ignorable="d"
-        x:Name="ResponseWindow" ResizeMode="NoResize" Title="ChatGPT_Response_Window" Height="450" Width="700" WindowStyle="None" AllowsTransparency="True" Loaded="Window_Loaded" SizeChanged="WindowSizeChanged" Closing="Window_Closing" Opacity="0.98" Topmost="True">
+        x:Name="ResponseWindow" ResizeMode="NoResize" Title="Chat-GPT" Height="450" Width="700" WindowStyle="None" AllowsTransparency="True" Loaded="Window_Loaded" SizeChanged="WindowSizeChanged" Closing="Window_Closing" Opacity="0.98" Topmost="True">
 
     <Window.Clip>
         <RectangleGeometry x:Name="Window_Geometry" Rect="0, 0, 700, 450" RadiusX="20" RadiusY="20"/>
