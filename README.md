@@ -11,7 +11,8 @@
 
 * 🆕 Implemented the ChatGPT chat history
 * 🆕 ChatGPT can now render markdown inside the chat
-* 🆕 Re-designed the instruction manual window 
+* 🆕 Re-designed the instruction manual window
+* 🐞 Fixed UI related bugs such as window snapping
 
 <img width="724" height="681" alt="Settings" src="https://github.com/user-attachments/assets/a6879123-9362-45fe-9975-7faa034dac57" />
 
