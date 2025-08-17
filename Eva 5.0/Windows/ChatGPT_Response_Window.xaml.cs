@@ -850,8 +850,8 @@ namespace Eva_5._0
             messages.Clear();
         }
 
-        private void MouseIn(object sender, MouseEventArgs e) => NewChatButton.Background = (Brush)colorConverter.ConvertFromString("#FF001506");
+        private void MouseIn(object sender, MouseEventArgs e) => NewChatButtonBorder.Background = (Brush)colorConverter.ConvertFromString("#FF1B5003");
 
-        private void MouseOut(object sender, MouseEventArgs e) => NewChatButton.Background = (Brush)colorConverter.ConvertFromString("#FF013510");
+        private void MouseOut(object sender, MouseEventArgs e) => NewChatButtonBorder.Background = (Brush)colorConverter.ConvertFromString("#FF133802");
     }
 }

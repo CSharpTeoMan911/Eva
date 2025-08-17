@@ -142,7 +142,7 @@
 
             <Style x:Key="MyLightRoundGreenButtonStyle" TargetType="Button">
                 <Setter Property="OverridesDefaultStyle" Value="True"/>
-                <Setter Property="Background" Value="#FF151515"/>
+                <Setter Property="Background" Value="#FF0E270B"/>
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">

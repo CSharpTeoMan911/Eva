@@ -280,14 +280,16 @@
 
             <StackPanel Orientation="Horizontal" x:Name="MainStackPanel" Grid.Row="1">
                 <StackPanel x:Name="MenuPanel" Width="0" Margin="0,5,0,0" SizeChanged="MenuPanelSizeChanged">
-                    <StackPanel x:Name="NewChatPanel">
-                        <Button x:Name="NewChatButton" Style="{StaticResource MyGreenButtonStyle}" BorderThickness="3" Background="Transparent" Foreground="#FF0FFDC1" FontSize="14" Click="NewChat">
-                            <StackPanel Orientation="Horizontal" Margin="2">
-                                <TextBlock FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Text="&#xEA54;" Margin="0,0,10,0"/>
-                                <TextBlock Text="New Chat" FontFamily="Corbel Light" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
+                    <Border x:Name="NewChatButtonBorder" Background="#FF133802" ClipToBounds="True" CornerRadius="5" Margin="5,0,0,0">
+                        <StackPanel x:Name="NewChatPanel">
+                            <Button x:Name="NewChatButton" Style="{StaticResource MyGreenButtonStyle}" BorderThickness="3" Background="Transparent" Foreground="#FF0FFDC1" FontSize="16" Click="NewChat" MouseEnter="MouseIn" MouseLeave="MouseOut">
+                                <StackPanel Orientation="Horizontal" Margin="2">
+                                    <TextBlock FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Text="&#xE206;" Margin="0,0,10,0"/>
+                                    <TextBlock Text="New chat" FontFamily="Corbel Light" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </Border>
                     <ScrollViewer x:Name="MenuView" BorderThickness="0" Style="{DynamicResource MenuScrollViewerTemplate}" FlowDirection="RightToLeft" Height="{Binding ElementName=MainStackPanel, Path=ActualHeight}" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
                         <ItemsControl ItemTemplate="{StaticResource ChatHistory}" ItemsSource="{Binding chatHistory}" Padding="5" PreviewMouseWheel="MenuScrolled"/>
                     </ScrollViewer>
