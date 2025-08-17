@@ -23,7 +23,7 @@
 
 ## 📥 Download
 * ➡️ Download Eva from SourceForge: https://sourceforge.net/projects/eva-ai/
-* ➡️ Download Eva from Github: https://github.com/CSharpTeoMan911/Eva/releases/tag/Release
+* ➡️ Download Eva from Github: https://github.com/CSharpTeoMan911/Eva/releases
 
 <br>
 <br>
