@@ -7,13 +7,15 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.4.0
+📌 Latest Version: v7.4.3
 
 * 🆕 Implemented the ChatGPT chat history
-* 🆕 Re-designed the instruction manual window  
-* 🐞 Fixed chat window memory leak issue
+* 🆕 ChatGPT can now render markdown inside the chat
+* 🆕 Re-designed the instruction manual window
+* 🐞 Fixed UI related bugs such as window snapping
 
-![Settings](https://github.com/user-attachments/assets/add286b1-5e11-4709-8c51-f938382eaa0f)
+<img width="724" height="681" alt="Settings" src="https://github.com/user-attachments/assets/a6879123-9362-45fe-9975-7faa034dac57" />
+
 
 <br>
 <br>
@@ -34,7 +36,7 @@
 ## About ❓
 * Eva is an A.I. assistant that has the purpose of helping users multi-task. It also has the use of helping people with mental and phisical disabilities. All the commands to be executed are given to Eva through voice commmands.
 
-https://github.com/user-attachments/assets/294ea835-7d7c-4568-9578-da16f195cb2c
+https://github.com/user-attachments/assets/cb57aae9-8f52-4323-95ef-aac1812aa80e
 
 <br> 
 
@@ -187,24 +189,21 @@ You can find detailed instructions on command patterns and troubleshooting in th
 
 <br>
 
-![Eva_Capture2121712780](https://user-images.githubusercontent.com/87245086/201437406-45b9ef8a-5dc2-42d2-813b-9695436c46d7.jpg)
+![Eva_Capture1225954986](https://github.com/user-attachments/assets/28e1d5ac-942d-4ca2-aef2-0bc695f47f64)
 
-![Eva_Capture829367817](https://user-images.githubusercontent.com/87245086/201437415-e3107b6c-44f2-45d2-bbe5-bcccd6f25ca6.jpg)
-
-![Eva_Capture1195645157](https://user-images.githubusercontent.com/87245086/201437423-54a0cc92-6473-4675-94ee-71b3fd7d9ea0.jpg)
-
-![Eva_Capture1277613527](https://user-images.githubusercontent.com/87245086/201437431-b0853d46-8418-49cc-bb01-1714ed4064f0.jpg)
-
-![Eva_Capture34673362](https://user-images.githubusercontent.com/87245086/201437439-a3196b97-7d39-457e-ac38-38300363ab61.jpg)
+![Eva_Capture1445270440](https://github.com/user-attachments/assets/1ad5b108-db95-47c9-a134-e8e28f71f8c0)
 
 <br>
 
 # ⚙️ Command Customization
 
-![Eva_Capture2072297579](https://github.com/CSharpTeoMan911/Eva/assets/87245086/6076ec7e-f28c-46fc-8ed2-1f2cfc1e6ff8)
+<img width="1128" height="683" alt="Command Customisation" src="https://github.com/user-attachments/assets/9582eece-f325-4c2e-899a-4cbcf8bbd21e" />
 
-* Add, remove, and modify commands as you desire. For detailed instruction regarding command customisation, go to the Wiki page https://github.com/CSharpTeoMan911/Eva/wiki/Commands-customisation 
 
+* Add, remove, and modify commands as you desire. For detailed instruction regarding command customisation, go to the Wiki page: **https://github.com/CSharpTeoMan911/Eva/wiki/Commands-customisation** 
+
+<br>
+<br>
 <br>
 
 # 🤖 What Eva Can Do?
@@ -216,11 +215,11 @@ You can find detailed instructions on command patterns and troubleshooting in th
 
 <br>
 
-![Eva_Capture859377083](https://user-images.githubusercontent.com/87245086/234132245-9aa81de9-5f31-47da-94e0-480917bf8995.jpg)
+<img width="820" height="681" alt="Api key setup" src="https://github.com/user-attachments/assets/d5f470f4-31d1-4561-baf3-58d893cbe839" />
 
-![Eva_Capture1166755094](https://user-images.githubusercontent.com/87245086/234132257-9282765f-ff1a-4ae9-8ecc-edb0c9f14ccf.jpg)
+![Eva_Capture1350166031](https://github.com/user-attachments/assets/a328a720-dca8-43db-99c1-576ee0e4fb4f)
 
-![Eva_Capture443117994](https://user-images.githubusercontent.com/87245086/234130364-07979c73-ecd3-42a1-a69d-6a65591a4133.jpg)
+![Eva_Capture296921737](https://github.com/user-attachments/assets/81550a89-2ae2-414e-9cf5-7e8f05c355d6)
 
 <br>
 
@@ -228,18 +227,18 @@ You can find detailed instructions on command patterns and troubleshooting in th
 * Eva can set timers for you, whether it’s for cooking, work breaks, or other tasks!
 <br>
 
-![Eva_Capture503136236](https://user-images.githubusercontent.com/87245086/201438495-856d831c-6ea7-432e-a510-fbcb47de5b86.jpg)
+<img width="278" height="336" alt="Timer off" src="https://github.com/user-attachments/assets/277bb2f3-800d-4913-8dfb-515bfaa7cbee" />
 
-![Eva_Capture885556763](https://user-images.githubusercontent.com/87245086/201438506-20d08227-9722-4812-8b43-3a79e1fbd3e8.jpg)
+<img width="277" height="337" alt="Timer on" src="https://github.com/user-attachments/assets/47e76af6-1320-4875-af47-f91c951b590c" />
 
 <br>
 
 ## 📸 Take Screenshots
-* Need to capture your screen? Eva can take screenshots on demand.
+* Need to capture your screen? Eva can take screenshots on demand. The main window has an auto-hide feature when the screenshot function is initiated, thus making this process as seamless possible.
 
 <br>
 
-![Eva_Capture2037081470](https://user-images.githubusercontent.com/87245086/201479017-97b49edf-d54c-46b9-87b0-c0feedac00a9.jpg)
+![Eva_Capture1101378818](https://github.com/user-attachments/assets/9c490e12-76a2-4dce-94cb-9937f753a52a)
 
 <br>
 
