@@ -181,13 +181,9 @@ To take a screenshot:
 
 Steps:  
 1. Open the settings menu and insert your OpenAI API key.  
-2. If valid, you can query ChatGPT:  
-   - **`Gpt [Query]`**  
-   - Example: **`Gpt what is the fastest bird on the planet?`**  
-
-You can also enable **chatbot mode**:  
-- **`Activate chatbot mode`**  
-- **`Enable chatbot mode`**  
+2. If valid, you can enable chatbot mode by using one of the commands below:  
+   - **`Activate chatbot mode`**  
+   - **`Enable chatbot mode`**  
 
 When chatbot mode is on:  
 - The indicator turns **🟢 green**.  
