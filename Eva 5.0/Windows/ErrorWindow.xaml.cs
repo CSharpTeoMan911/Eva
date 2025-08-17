@@ -20,8 +20,6 @@ namespace Eva_5._0
         private bool SwitchSecondaryOffsets;
         private double GradientArithmeticSecodaryOffsets;
 
-        private bool TimerDisposed;
-
         private byte NormalisedOrMaximised;
 
         private int ErrorPageTitleAnimation;
@@ -272,9 +270,6 @@ namespace Eva_5._0
         }
 
 
-
-
-
         private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
             System.Diagnostics.Process navigation_process = new System.Diagnostics.Process();
@@ -287,19 +282,13 @@ namespace Eva_5._0
         {
             if (App.PermisissionWindowOpen == true)
             {
-
                 if (Application.Current.Dispatcher.HasShutdownStarted == false)
                 {
-
                     if (Application.Current.MainWindow != null)
                     {
-
                         this.WindowState = WindowState.Minimized;
-
                     }
-
                 }
-
             }
         }
 
@@ -307,10 +296,8 @@ namespace Eva_5._0
         {
             if (App.PermisissionWindowOpen == true)
             {
-
                 if (Application.Current.Dispatcher.HasShutdownStarted == false)
                 {
-
                     if (Application.Current.MainWindow != null)
                     {
 
@@ -325,9 +312,7 @@ namespace Eva_5._0
                             NormalisedOrMaximised = 0;
                         }
                     }
-
                 }
-
             }
         }
 
@@ -335,19 +320,13 @@ namespace Eva_5._0
         {
             if (App.PermisissionWindowOpen == true)
             {
-
                 if (Application.Current.Dispatcher.HasShutdownStarted == false)
                 {
-
                     if (Application.Current.MainWindow != null)
                     {
-
                         this.Close();
-
                     }
-
                 }
-
             }
         }
 
@@ -356,19 +335,13 @@ namespace Eva_5._0
         {
             if (App.PermisissionWindowOpen == true)
             {
-
                 if (Application.Current.Dispatcher.HasShutdownStarted == false)
                 {
-
                     if (Application.Current.MainWindow != null)
                     {
-
                         this.DragMove();
-
                     }
-
                 }
-
             }
         }
 
@@ -376,7 +349,6 @@ namespace Eva_5._0
         private void ErrorWindowLoaded(object sender, RoutedEventArgs e)
         {
             AnimationTimer = new System.Timers.Timer();
-            AnimationTimer.Disposed += AnimationTimer_Disposed;
             AnimationTimer.Elapsed += AnimationTimer_Elapsed;
             AnimationTimer.Interval = 10;
             AnimationTimer.Start();
@@ -521,14 +493,11 @@ namespace Eva_5._0
             catch { }
         }
 
-        private void AnimationTimer_Disposed(object sender, EventArgs e)
-        {
-            TimerDisposed = true;
-        }
-
         private void ErrorWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            AnimationTimer?.Dispose();
             App.PermisissionWindowOpen = false;
+
             if (App.Application_Error_Shutdown == true)
             {
                 Wake_Word_Engine.Stop_The_Wake_Word_Engine();
@@ -559,15 +528,6 @@ namespace Eva_5._0
 
                 }
 
-            }
-        }
-
-
-        ~ErrorWindow()
-        {
-            if (TimerDisposed == false)
-            {
-                AnimationTimer?.Dispose();
             }
         }
     }

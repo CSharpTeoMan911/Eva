@@ -54,12 +54,12 @@ namespace Eva_5._0
         private void InstructionManualWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             App.InstructionManualOpen = false;
+            AnimationTimer?.Dispose();
         }
 
         private async void InstructionManualWindowLoaded(object sender, RoutedEventArgs e)
         {
             AnimationTimer = new System.Timers.Timer();
-            AnimationTimer.Disposed += AnimationTimer_Disposed;
             AnimationTimer.Elapsed += AnimationTimer_Elapsed;
             AnimationTimer.Interval = 10;
             AnimationTimer.Start();
@@ -221,28 +221,17 @@ namespace Eva_5._0
             }
         }
 
-        private void AnimationTimer_Disposed(object sender, EventArgs e)
-        {
-            TimerDisposed = true;
-        }
-
         private void MoveTheWindow(object sender, MouseButtonEventArgs e)
         {
             if (App.InstructionManualOpen == true)
             {
-
                 if (Application.Current.Dispatcher.HasShutdownStarted == false)
                 {
-
                     if (Application.Current.MainWindow != null)
                     {
-
                         this.DragMove();
-
                     }
-
                 }
-
             }
         }
 
@@ -250,19 +239,13 @@ namespace Eva_5._0
         {
             if (App.InstructionManualOpen == true)
             {
-
                 if (Application.Current.Dispatcher.HasShutdownStarted == false)
                 {
-
                     if (Application.Current.MainWindow != null)
                     {
-
                         this.WindowState = WindowState.Minimized;
-
                     }
-
                 }
-
             }
         }
 
@@ -305,19 +288,13 @@ namespace Eva_5._0
         {
             if (App.InstructionManualOpen == true)
             {
-
                 if (Application.Current.Dispatcher.HasShutdownStarted == false)
                 {
-
                     if (Application.Current.MainWindow != null)
                     {
-
                         this.Close();
-
                     }
-
                 }
-
             }
         }
 
@@ -355,19 +332,6 @@ namespace Eva_5._0
                         double height = this.RenderSize.Height - WindowHandle.RenderSize.Height - InstructionManualTitle.RenderSize.Height;
                         MainScrollViewer.Height = height > 0 ? height : 0;
                     }
-                }
-            }
-        }
-
-
-
-        ~InstructionManual()
-        {
-            if (TimerDisposed)
-            {
-                if (AnimationTimer != null)
-                {
-                    AnimationTimer.Dispose();
                 }
             }
         }

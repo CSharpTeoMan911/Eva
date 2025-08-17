@@ -39,19 +39,13 @@ namespace Eva_5._0
         {
             if (WindowIsClosing == false)
             {
-
                 if (Application.Current.Dispatcher.HasShutdownStarted == false)
                 {
-
                     if (Application.Current.MainWindow != null)
                     {
-
                         this.DragMove();
-
                     }
-
                 }
-
             }
         }
 
@@ -60,19 +54,13 @@ namespace Eva_5._0
         {
             if (WindowIsClosing == false)
             {
-
                 if (Application.Current.Dispatcher.HasShutdownStarted == false)
                 {
-
                     if (Application.Current.MainWindow != null)
                     {
-
                         this.Close();
-
                     }
-
                 }
-
             }
         }
 

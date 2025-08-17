@@ -414,30 +414,47 @@ namespace Eva_5._0
 
         private void RenderConversationScrollViewerOffset()
         {
-            double new_height = (this.RenderSize.Height - WindowHandle.RenderSize.Height) - 25 - Input_Stackpanel.RenderSize.Height;
-            double new_width = ConversationScrollViewer.RenderSize.Width;
+            try
+            {
+                double new_height = (this.RenderSize.Height - WindowHandle.RenderSize.Height) - 25 - Input_Stackpanel.RenderSize.Height;
+                double new_width = ConversationScrollViewer.RenderSize.Width;
 
-            ConversationScrollViewer.Height = new_height >= 0 ? new_height : 0;
-
-            ConversationScrollViewer.Clip = new RectangleGeometry(new Rect(0, 0, new_width, new_height), 5, 5);
-            ConversationScrollViewer.UpdateLayout();
+                if (new_height > 0)
+                {
+                    if (new_width > 0)
+                    {
+                        ConversationScrollViewer.Height = new_height;
+                        ConversationScrollViewer.Clip = new RectangleGeometry(new Rect(0, 0, new_width, new_height), 5, 5);
+                        ConversationScrollViewer.UpdateLayout();
+                    }
+                }
+            }
+            catch { }
         }
 
         private void RenderInputTextbox()
         {
-            if (InputTextBoxGrid.RenderSize.Width > 0)
+            try
             {
+                double content_width = 0;
+
                 if (isMenuPanelExpanded)
                 {
-                    double content_width = this.RenderSize.Width - 275;
-                    MenuPanel.Width = 275;
-                    ContentPanel.Width = content_width;
+                    content_width = this.RenderSize.Width - 275;
+                    if (content_width > 0)
+                    {
+                        MenuPanel.Width = 275;
+                        ContentPanel.Width = content_width;
+                    }
                 }
                 else
                 {
-                    double content_width = this.RenderSize.Width;
-                    MenuPanel.Width = 0;
-                    ContentPanel.Width = content_width;
+                    content_width = this.RenderSize.Width;
+                    if (content_width > 0)
+                    {
+                        MenuPanel.Width = 0;
+                        ContentPanel.Width = content_width;
+                    }
                 }
 
                 double menuPanelHeight = MenuPanel.RenderSize.Height - NewChatPanel.RenderSize.Height - 5;
@@ -476,6 +493,7 @@ namespace Eva_5._0
                     }
                 }
             }
+            catch { }
         }
 
         private void MessageGrid(object sender, SizeChangedEventArgs e)

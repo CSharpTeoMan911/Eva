@@ -119,6 +119,12 @@ namespace Eva_5._0
         {
             WindowIsClosing = true;
             App.SettingsWindowOpen = false;
+
+            AnimationAndFunctionalityTimer?.Dispose();
+            CurrentInstance = null;
+
+            System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
+            GC.Collect(2, GCCollectionMode.Forced);
         }
 
         private void MoveTheWindow(object sender, MouseButtonEventArgs e)
@@ -816,14 +822,6 @@ namespace Eva_5._0
                 SpeechOperationTimeout.Text = Timeout.ToString();
                 await Settings.Set_Speech_Timeout_Settings(Timeout);
             }
-        }
-
-        ~SettingsWindow()
-        {
-            AnimationAndFunctionalityTimer?.Dispose();
-            CurrentInstance = null;
-            System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-            GC.Collect(2, GCCollectionMode.Forced);
         }
     }
 }

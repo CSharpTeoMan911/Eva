@@ -654,13 +654,7 @@ namespace Eva_5._0
 
             try
             {
-                try
-                {
-                    AnimationAndFunctionalityTimer?.Stop();
-                    AnimationAndFunctionalityTimer?.Dispose();
-                }
-                catch { }
-
+                AnimationAndFunctionalityTimer?.Dispose();
                 BeginExecutionAnimation = null;
 
                 Wake_Word_Engine.Stop_The_Wake_Word_Engine();
@@ -990,11 +984,6 @@ namespace Eva_5._0
                 App.chatGPT_Response_Window = new ChatGPT_Response_Window();
                 App.chatGPT_Response_Window.Show();
             }
-        }
-
-        ~MainWindow()
-        {
-            Wake_Word_Engine.Stop_The_Wake_Word_Engine();
         }
     }
 }

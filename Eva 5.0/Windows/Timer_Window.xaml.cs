@@ -425,16 +425,7 @@ namespace Eva_5._0
             {
                 A_p_l____And____P_r_o_c.sound_player.Stop_Alarm();
             }
+            Animation_And_Functionality_Timer?.Dispose();
         }
-
-        ~Timer_Window()
-        {
-            try
-            {
-                Animation_And_Functionality_Timer?.Dispose();
-            }
-            catch { }
-        }
-
     }
 }

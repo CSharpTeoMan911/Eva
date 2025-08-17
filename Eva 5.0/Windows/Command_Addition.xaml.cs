@@ -130,7 +130,7 @@ namespace Eva_5._0
 
             StackPanel current_item = new StackPanel();
             current_item.Orientation = System.Windows.Controls.Orientation.Horizontal;
-            current_item.Width = Main_Content.ActualWidth;
+            current_item.Width = Main_Content.ActualWidth > 0 ? Main_Content.ActualWidth : 0;
             current_item.Margin = new System.Windows.Thickness(10, 20, 0, 10);
 
 

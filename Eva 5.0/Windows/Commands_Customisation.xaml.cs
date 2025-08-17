@@ -364,7 +364,7 @@ namespace Eva_5._0
 
                 StackPanel current_item = new StackPanel();
                 current_item.Orientation = Orientation.Horizontal;
-                current_item.Width = Main_Content_ScrollViewer.ActualWidth;
+                current_item.Width = Main_Content_ScrollViewer.ActualWidth > 0 ? Main_Content_ScrollViewer.ActualWidth : 0;
                 current_item.Margin = new Thickness(10, 10, 0, 10);
 
 
