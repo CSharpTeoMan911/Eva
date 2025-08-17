@@ -824,8 +824,6 @@ namespace Eva_5._0
         {
             Button button = (Button)sender;
             long id = (long)button.Tag;
-            
-            await chatHistoryManager.RemoveChat(id);
 
             if (id == currentChatId || chatHistoryManager.GetChatCount() == 1)
             {
@@ -834,6 +832,7 @@ namespace Eva_5._0
                 ChatGPT_API.Clear_Conversation_Cache();
             }
 
+            await chatHistoryManager.RemoveChat(id);
             await UpdateChat();
         }
 
@@ -869,7 +868,6 @@ namespace Eva_5._0
         }
 
         private void MouseIn(object sender, MouseEventArgs e) => NewChatButtonBorder.Background = (Brush)colorConverter.ConvertFromString("#FF1B5003");
-
         private void MouseOut(object sender, MouseEventArgs e) => NewChatButtonBorder.Background = (Brush)colorConverter.ConvertFromString("#FF133802");
     }
 }
