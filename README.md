@@ -10,6 +10,7 @@
 📌 Latest Version: v7.4.0
 
 * 🆕 Implemented the ChatGPT chat history
+* 🆕 ChatGPT can now render markdown inside the chat
 * 🆕 Re-designed the instruction manual window  
 * 🐞 Fixed chat window memory leak issue
 
