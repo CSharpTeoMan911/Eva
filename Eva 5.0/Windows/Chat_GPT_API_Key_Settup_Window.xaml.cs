@@ -71,11 +71,9 @@ namespace Eva_5._0
                 await Dispatcher.InvokeAsync(async () =>
                 {
                     tokenSource?.Cancel();
-                    Loading_Stackpanel.Height = 0;
 
                     if (!keyValidated)
                     {
-
                         if (response.type == ApiResponse.PayloadType.Payload)
                         {
                             await App.ChatGPT_API.Get_Available_Gpt_Models();
@@ -118,6 +116,9 @@ namespace Eva_5._0
                     }
                 });
             }
+
+            MainStackPanel.Visibility = Visibility.Visible;
+            LoadingIndicator.IsBusy = false;
         }
 
 
@@ -133,12 +134,10 @@ namespace Eva_5._0
                     // IF THE MAIN WINDOW IS NOT NULL
                     if (Application.Current.MainWindow != null)
                     {
-                        tokenSource = new CancellationTokenSource();
+                        MainStackPanel.Visibility = Visibility.Collapsed;
+                        LoadingIndicator.IsBusy = true;
 
-                        await Application.Current.Dispatcher.InvokeAsync(() =>
-                        {
-                            Loading_Stackpanel.Height = 180;
-                        });
+                        tokenSource = new CancellationTokenSource();
 
                         current_key = await Settings.Get_Chat_GPT_Api_Key();
 

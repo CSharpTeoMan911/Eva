@@ -284,9 +284,6 @@
     <PackageReference Include="System.Text.Json">
       <Version>9.0.8</Version>
     </PackageReference>
-    <PackageReference Include="XamlAnimatedGif">
-      <Version>2.3.1</Version>
-    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Eva icon.png" />

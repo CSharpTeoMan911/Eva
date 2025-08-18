@@ -3,22 +3,22 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
         xmlns:local="clr-namespace:Eva_5._0"
+        xmlns:busyIndicator="https://github.com/moh3ngolshani/BusyIndicator"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="Chat GPT API Key Setup" ResizeMode="NoResize" Height="180" Width="330" AllowsTransparency="True" WindowStyle="None" Topmost="True" Opacity="0.95" Loaded="Window_Loaded" Closing="Window_Closing" Icon="../Images/EVA.ico">
+        Title="Chat GPT API Key Setup" ResizeMode="NoResize" Height="180" Width="300" AllowsTransparency="True" WindowStyle="None" Topmost="True" Opacity="0.95" Loaded="Window_Loaded" Closing="Window_Closing" Icon="../Images/EVA.ico">
 
     <Window.Clip>
-        <RectangleGeometry Rect="0,0,330,180" RadiusX="10" RadiusY="10"/>
+        <RectangleGeometry Rect="0,0,300,180" RadiusX="10" RadiusY="10"/>
     </Window.Clip>
-    
+
     <Window.Background>
         <LinearGradientBrush StartPoint="0.5, 1" EndPoint="1, 0">
             <GradientStop Color="#FF121111" x:Name="WindowOffset" Offset="1"/>
             <GradientStop Color="#FF133C63"/>
         </LinearGradientBrush>
     </Window.Background>
-
 
     <Grid>
         <Grid.RowDefinitions>
@@ -39,12 +39,9 @@
         </Grid.ColumnDefinitions>
 
         <Rectangle Grid.ColumnSpan="5" Fill="Transparent" MouseDown="MoveTheWindow"/>
-
-
-
         <StackPanel Orientation="Horizontal" Grid.RowSpan="2" Grid.Column ="3" Grid.ColumnSpan="2" HorizontalAlignment="Right">
 
-            <Button  Grid.Column="4" Margin="0,20,20,0" BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Right" Content="&#xEF2C;" FontFamily="Segoe MDL2 Assets" FontSize="20" Click="CloseTheWindow" Style="{StaticResource MyButtonStyle}">
+            <Button  Grid.Column="4" Margin="0,10,10,0" BorderBrush="Transparent" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Right" Content="&#xEF2C;" FontFamily="Segoe MDL2 Assets" FontSize="16" Click="CloseTheWindow" Style="{StaticResource MyButtonStyle}">
 
                 <Button.Effect>
                     <DropShadowEffect/>
@@ -59,71 +56,75 @@
             </Button>
         </StackPanel>
 
-        <TextBlock HorizontalAlignment="Center" Grid.Row="1" Grid.ColumnSpan="9" Grid.RowSpan="3" Margin="10,0,10,0" VerticalAlignment="Center" FontSize="30" FontFamily="Corbel Light" Text="ChatGPT API key">
-            <TextBlock.Foreground>
-                <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
-                    <GradientStop Color="#FF7BBFD8" x:Name="ChatGPTApiKeyOffset" Offset="1"/>
-                    <GradientStop Color="#FF1B70C3"/>
-                </LinearGradientBrush>
-            </TextBlock.Foreground>
-        </TextBlock>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.RowSpan="3" Grid.ColumnSpan="9" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBox x:Name="Chat_GPT_Api_Key_TextBox" Style="{StaticResource InputTextboxStyle}" Foreground="Black" BorderBrush="Transparent" BorderThickness="0" FontWeight="Bold" Width="220" Height="30" FontSize="20">
-
-                <TextBox.Clip>
-                    <RectangleGeometry Rect="0,0,220,30" RadiusX="10" RadiusY="10"/>
-                </TextBox.Clip>
-                
-                <TextBox.Background>
-                    <LinearGradientBrush>
-                        <GradientStop Color="#FF7BBFD8" x:Name="ChatGptApiTextBoxOffset" Offset="1"/>
-                        <GradientStop Color="#FF1B70C3"/>
-                    </LinearGradientBrush>
-                </TextBox.Background>
-            </TextBox>
-
-            <Button Margin="5,0,0,0" FontFamily="Segoe MDL2 Assets" Click="Set_Chat_Gpt_Api_Key" Background="Black" FontSize="25" VerticalAlignment="Center" Content="&#xE930;" Style="{StaticResource MyButtonStyle}">
-                <Button.Foreground>
-                    <LinearGradientBrush>
-                        <GradientStop Color="#FF7BBFD8" x:Name="SetChatGptApiButtonOffset" Offset="1"/>
-                        <GradientStop Color="#FF1B70C3"/>
-                    </LinearGradientBrush>
-                </Button.Foreground>
-            </Button>
-        </StackPanel>
-
-        <StackPanel x:Name="Loading_Stackpanel" Opacity="0.95" Height="0" Width="330" Grid.RowSpan="9" Grid.ColumnSpan="9" HorizontalAlignment="Center" Orientation="Vertical">
-            <StackPanel.Clip>
-                <RectangleGeometry Rect="0,0,330,180" RadiusX="10" RadiusY="10"/>
-            </StackPanel.Clip>
-
-            <StackPanel.Background>
-                <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                    <GradientStop Color="Black" Offset="1"/>
-                    <GradientStop Color="#FF012A4A"/>
-                </LinearGradientBrush>
-            </StackPanel.Background>
-
+        <busyIndicator:BusyMask x:Name="LoadingIndicator" IsBusy="False" Grid.Row="1" Grid.ColumnSpan="9" Grid.RowSpan="5" IndicatorType="Cupertino" BusyContent="" Background="Transparent">
+            <busyIndicator:BusyMask.Resources>
+                <SolidColorBrush x:Key="IndicatorForeground" Color="#FF00D1F9" />
+                <SolidColorBrush x:Key="IndicatorBackground" Color="Transparent" />
+                <sys:Double x:Key="IndicatorScaleX" >1.5</sys:Double>
+                <sys:Double x:Key="IndicatorScaleY" >1.5</sys:Double>
+            </busyIndicator:BusyMask.Resources>
             
-            <!--Credit to teej14 for the animated gif.  
-            GIF reference: https://tenor.com/view/loading-gif-hr-gif-23067502 -->
+            <StackPanel x:Name="MainStackPanel">
+                <TextBlock HorizontalAlignment="Center" Margin="10,20,10,0" VerticalAlignment="Center" FontSize="28" FontFamily="Corbel Light" Text="ChatGPT API Key">
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush StartPoint=" 0.5, 1" EndPoint="1, 0">
+                            <GradientStop Color="#FF7BBFD8" x:Name="ChatGPTApiKeyOffset" Offset="1"/>
+                            <GradientStop Color="#FF1B70C3"/>
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+                </TextBlock>
 
-            <!--Credit to Thomas Levesque for the GIF rendering library.
-            GIF library reference: https://github.com/XamlAnimatedGif/XamlAnimatedGif -->
-            <Image Margin="0,30,0,0" Width="65" Height="65" HorizontalAlignment="Center" RenderOptions.EdgeMode="Aliased" RenderOptions.BitmapScalingMode="HighQuality" gif:AnimationBehavior.SourceUri="Images/loading-gif.gif"/>
+                <StackPanel Orientation="Horizontal" Margin="0,40,0,0" Grid.ColumnSpan="9" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBox x:Name="Chat_GPT_Api_Key_TextBox" Style="{StaticResource InputTextboxStyle}" Foreground="Black" BorderBrush="Transparent" CaretBrush="#FF011F38" BorderThickness="0" FontWeight="Bold" Width="220" Height="30" FontSize="20">
 
-            <TextBlock Margin="0,20,0,0" HorizontalAlignment="Center" FontSize="35" FontFamily="Corbel Light" Text="Processing">
-                <TextBlock.Foreground>
-                    <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
-                        <GradientStop Color="#FFA0A0A0" Offset="1"/>
-                        <GradientStop Color="#FFA7A7A7"/>
-                    </LinearGradientBrush>
-                </TextBlock.Foreground>
-            </TextBlock>
+                        <TextBox.Clip>
+                            <RectangleGeometry Rect="0,0,220,30" RadiusX="10" RadiusY="10"/>
+                        </TextBox.Clip>
 
-        </StackPanel>
+                        <TextBox.Background>
+                            <LinearGradientBrush>
+                                <GradientStop Color="#FF7BBFD8" x:Name="ChatGptApiTextBoxOffset" Offset="1"/>
+                                <GradientStop Color="#FF1D7AD4"/>
+                            </LinearGradientBrush>
+                        </TextBox.Background>
+                    </TextBox>
 
+                    <Button Margin="5,0,0,0" FontFamily="Segoe MDL2 Assets" Click="Set_Chat_Gpt_Api_Key" Background="Black" FontSize="25" VerticalAlignment="Center" Content="&#xE930;" Style="{StaticResource MyButtonStyle}">
+                        <Button.Foreground>
+                            <LinearGradientBrush>
+                                <GradientStop Color="#FF7BBFD8" x:Name="SetChatGptApiButtonOffset" Offset="1"/>
+                                <GradientStop Color="#FF1B70C3"/>
+                            </LinearGradientBrush>
+                        </Button.Foreground>
+                    </Button>
+                </StackPanel>
+
+                <StackPanel Opacity="0.95" Height="0" Width="330" Grid.RowSpan="9" Grid.ColumnSpan="9" HorizontalAlignment="Center" Orientation="Vertical">
+                    <StackPanel.Clip>
+                        <RectangleGeometry Rect="0,0,330,180" RadiusX="10" RadiusY="10"/>
+                    </StackPanel.Clip>
+
+                    <StackPanel.Background>
+                        <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                            <GradientStop Color="Black" Offset="1"/>
+                            <GradientStop Color="#FF012A4A"/>
+                        </LinearGradientBrush>
+                    </StackPanel.Background>
+
+                    <TextBlock Margin="0,20,0,0" HorizontalAlignment="Center" FontSize="35" FontFamily="Corbel Light" Text="Processing">
+                        <TextBlock.Foreground>
+                            <LinearGradientBrush StartPoint="0.5, 1" EndPoint="0, 1">
+                                <GradientStop Color="#FFA0A0A0" Offset="1"/>
+                                <GradientStop Color="#FFA7A7A7"/>
+                            </LinearGradientBrush>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+
+                </StackPanel>
+            </StackPanel>
+        </busyIndicator:BusyMask>
+        
     </Grid>
 
 </Window>
