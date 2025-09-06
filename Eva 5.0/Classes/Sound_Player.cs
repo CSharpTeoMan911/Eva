@@ -56,7 +56,6 @@ namespace Eva_5._0.Properties
             try
             {
                 MMDeviceCollection devices = GetAudioDevices();
-
                 if (devices.Count > 0)
                 {
                     MMDevice current_device = devices[devices.Count - 1];
@@ -111,55 +110,55 @@ namespace Eva_5._0.Properties
                 switch (sound)
                 {
                     case Sounds.AppExecutionSoundEffect:
-                        if (System.IO.File.Exists(@"Sounds/App execution.wav"))
+                        if (File.Exists(@"Sounds/App execution.wav"))
                         {
                             AppExecutionSoundEffect.Play();
                         }
                         break;
                     case Sounds.AppTerminationSoundEffect:
-                        if (System.IO.File.Exists(@"Sounds/App closing.wav"))
+                        if (File.Exists(@"Sounds/App closing.wav"))
                         {
                             AppTerminationSoundEffect.Play();
                         }
                         break;
                     case Sounds.ScreenshotExecutionSoundEffect:
-                        if (System.IO.File.Exists(@"Sounds/Screenshot_Sound_Effect.wav"))
+                        if (File.Exists(@"Sounds/Screenshot_Sound_Effect.wav"))
                         {
                             ScreenshotExecutionSoundEffect.Play();
                         }
                         break;
                     case Sounds.Alarm_Sound_Effect:
-                        if (System.IO.File.Exists(@"Sounds/AlarmSound.wav"))
+                        if (File.Exists(@"Sounds/AlarmSound.wav"))
                         {
                             Alarm_Sound_Effect.PlayLooping();
                         }
                         break;
                     case Sounds.ErrorSoundEffect:
-                        if (System.IO.File.Exists(@"Sounds/Privacy statement declined or mic not available.wav"))
+                        if (File.Exists(@"Sounds/Privacy statement declined or mic not available.wav"))
                         {
                             ErrorSoundEffect.Play();
                         }
                         break;
                     case Sounds.AppActivationSoundEffect:
-                        if (System.IO.File.Exists(@"Sounds/Listen.wav"))
+                        if (File.Exists(@"Sounds/Listen.wav"))
                         {
                             AppActivationSoundEffect.Play();
                         }
                         break;
                     case Sounds.ChatGPTNotificationSoundEffect:
-                        if (System.IO.File.Exists(@"Sounds/Chat_GPT_Notification.wav"))
+                        if (File.Exists(@"Sounds/Chat_GPT_Notification.wav"))
                         {
                             ChatGPTNotificationSoundEffect.Play();
                         }
                         break;
                     case Sounds.ChatGPTActivationSoundEffect:
-                        if (System.IO.File.Exists(@"Sounds/ChatGpt Activated.wav"))
+                        if (File.Exists(@"Sounds/ChatGpt Activated.wav"))
                         {
                             ChatGPTActivationSoundEffect.Play();
                         }
                         break;
                     case Sounds.ChatGPTDeactivationSoundEffect:
-                        if (System.IO.File.Exists(@"Sounds/ChatGpt Deactivation.wav"))
+                        if (File.Exists(@"Sounds/ChatGpt Deactivation.wav"))
                         {
                             ChatGPTDeactivationSoundEffect.Play();
                         }
