@@ -468,42 +468,30 @@ namespace Eva_5._0
                                     {
                                         string socket_message_value = Encoding.UTF8.GetString(buffer, 0, bytes_read);
 
-                                        // LOCK THE "Online_Speech_Recogniser_Listening" OBJECT
-                                        // IN ORDER TO BLOCK OTHER THREADS FROM MODIFYING IT
-                                        //
-                                        // [ BEGIN ]
-
-                                        lock (Online_Speech_Recogniser_Listening)
+                                        if (Proc.tasks_running == 0)
                                         {
-                                            lock (Wake_Word_Detected)
+                                            if (socket_message_value == wake_word_engine_loaded)
                                             {
-                                                if (Proc.tasks_running == 0)
+                                                resetTime = DateTime.UtcNow;
+                                                wake_word_engines_loaded++;
+                                            }
+                                            else if (socket_message_value == cancel_wake_word)
+                                            {
+                                                if (Interlocked.Read(ref Online_Speech_Recogniser_Listening) == 1)
                                                 {
-                                                    if (socket_message_value == wake_word_engine_loaded)
-                                                    {
-                                                        resetTime = DateTime.UtcNow;
-                                                        wake_word_engines_loaded++;
-                                                    }
-                                                    else if (socket_message_value == cancel_wake_word)
-                                                    {
-                                                        if (Online_Speech_Recogniser_Listening == "true")
-                                                        {
-                                                            Online_Speech_Recogniser_Listening = "false";
-                                                            Online_Speech_Recognition.Close_Speech_Recognition_Interface();
-                                                        }
-                                                    }
-                                                    else if (socket_message_value == wake_word)
-                                                    {
-                                                        if (Online_Speech_Recogniser_Listening == "false")
-                                                        {
-                                                            Wake_Word_Detected = "true";
-                                                        }
-                                                    }
+                                                    Interlocked.Exchange(ref Online_Speech_Recogniser_Listening, 0);
+                                                    Online_Speech_Recognition.Close_Speech_Recognition_Interface();
+                                                }
+                                            }
+                                            else if (socket_message_value == wake_word)
+                                            {
+                                                if (Interlocked.Read(ref Online_Speech_Recogniser_Listening) == 0)
+                                                {
+                                                    Interlocked.Exchange(ref Wake_Word_Detected, 1);
                                                 }
                                             }
                                         }
 
-                                        // [ END ]
                                     }
                                 }
                                 else

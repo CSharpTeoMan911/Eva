@@ -98,21 +98,21 @@ namespace Eva_5._0
 
         // [ BEGIN ] STATIC OBJECTS OBJECTS FOR THE SPEECH RECOGNITION SYSTEM STATE MACHINE THAT ARE ACCESSED IN A THREAD SAFE MANNER
 
-        protected static string Online_Speech_Recogniser_Listening = "false";
+        protected static long Online_Speech_Recogniser_Listening;
 
-        protected static string BeginExecutionAnimation = "false";
+        protected static long BeginExecutionAnimation;
 
-        protected static string Speech_Detected = "false";
+        protected static long Speech_Detected;
 
-        protected static string Window_Minimised = "false";
+        protected static long Window_Minimised;
 
-        protected static string Online_Speech_Recogniser_Disabled = "false";
+        protected static long Online_Speech_Recogniser_Disabled;
 
-        protected static string Online_Speech_Recogniser_State = "Idle";
+        protected static Windows.Media.SpeechRecognition.SpeechRecognizerState Online_Speech_Recogniser_State = Windows.Media.SpeechRecognition.SpeechRecognizerState.Idle;
 
-        protected static string Wake_Word_Detected = "false";
+        protected static long Wake_Word_Detected;
 
-        protected static string Initiated = "false";
+        protected static long Initiated;
 
         // [ END ] STATIC OBJECTS OBJECTS FOR THE SPEECH RECOGNITION SYSTEM STATE MACHINE THAT ARE ACCESSED IN A THREAD SAFE MANNER
 
@@ -296,189 +296,168 @@ namespace Eva_5._0
                                 // IF THE WINDOW STATE STATUS IS MINIMISED AS "false"
                                 if (Application.Current.MainWindow.WindowState == WindowState.Normal)
                                 {
-                                    lock (Window_Minimised)
-                                    {
-                                        if (this.ShowInTaskbar)
-                                            this.ShowInTaskbar = false;
 
-                                        Window_Minimised = "false";
-                                    }
+                                    if (this.ShowInTaskbar)
+                                        this.ShowInTaskbar = false;
+
+                                    Interlocked.Exchange(ref Window_Minimised, 0);
                                 }
 
-                                lock (Wake_Word_Detected)
+
+                                // IF THE WAKE WORD ENGINE DETECTED A KEYWORD
+                                if (Interlocked.Read(ref Wake_Word_Detected) == 1)
                                 {
-                                    // IF THE WAKE WORD ENGINE DETECTED A KEYWORD
-                                    if (Wake_Word_Detected == "true")
+                                    // AFTER THE WAKE WORD DETECTION PROCEDURE IS FINISHED, RESET THE INICATOR TO ITS DEFAULT VALUE
+                                    Interlocked.Exchange(ref Wake_Word_Detected, 0);
+
+
+                                    // IF THE ONLINE SPEECH RECOGNITION ENGINE IS NOT DISABLED
+                                    if (Interlocked.Read(ref Online_Speech_Recogniser_Disabled) == 0)
                                     {
-                                        // AFTER THE WAKE WORD DETECTION PROCEDURE IS FINISHED, RESET THE INICATOR TO ITS DEFAULT VALUE
-                                        Wake_Word_Detected = "false";
-
-                                        lock (Online_Speech_Recogniser_Disabled)
+                                        // CALCULATE THE ACTIVATION DELAY TO BE SET FOR THE ONLINE SPEECH RECOGNITION ENGINE
+                                        // AND INITIATE THE ONLINE SPEECH RECOGNITION ENGINE.
+                                        if (Online_Speech_Recogniser_Delay_Calculator() == true)
                                         {
-                                            // IF THE ONLINE SPEECH RECOGNITION ENGINE IS NOT DISABLED
-                                            if (Online_Speech_Recogniser_Disabled == "false")
-                                            {
-                                                // INITIATE ON A DIFFERENT CPU THREAD THE SET OF TASKS. THE TASKS WILL BE SYNCHRONISED ON THIS THREAD,
-                                                // MENING THAT THE 'await' KEYWORD WILL CONTROL THE 'ParallelProcessing' THREAD, AND NOT THREADS
-                                                // WITHIN THE THREADPOOL.
-
-                                                Task.Run(() =>
-                                                {
-                                                    // CALCULATE THE ACTIVATION DELAY TO BE SET FOR THE ONLINE SPEECH RECOGNITION ENGINE
-                                                    // AND INITIATE THE ONLINE SPEECH RECOGNITION ENGINE.
-                                                    if (Online_Speech_Recogniser_Delay_Calculator() == true)
-                                                    {
-                                                        Online_Speech_Recognition.Online_Speech_Recognition_Session_Creation_And_Initiation();
-                                                    }
-                                                });
-                                            }
+                                            Online_Speech_Recognition.Online_Speech_Recognition_Session_Creation_And_Initiation();
                                         }
-
                                     }
                                 }
 
 
-                                lock (Online_Speech_Recogniser_Listening)
+
+                                if (Online_Speech_Recogniser_Listening == 1)
                                 {
-
-                                    if (Online_Speech_Recogniser_Listening == "true")
+                                    // IF THE ONLINE SPEECH RECOGNITION ENGINE IS DISABLED OR THE WINDOW IS MINIMISED,
+                                    // MAKE THE ONLINE SPEECH RECOGNITION ENGINE STOP TAKING INPUT
+                                    if (Interlocked.Read(ref Window_Minimised) == 1 || Interlocked.Read(ref Online_Speech_Recogniser_Disabled) == 1)
                                     {
-                                        lock (Online_Speech_Recogniser_Disabled)
+                                        Interlocked.Exchange(ref Wake_Word_Detected, 0);
+
+                                        Interlocked.Exchange(ref Online_Speech_Recogniser_Listening, 0);
+                                        Online_Speech_Recognition.Close_Speech_Recognition_Interface();
+                                    }
+
+
+
+
+
+
+                                    // IF THE ONLINE SPEECH RECOGNITION ENGINE IS IN THE 'Idle' OR 'Paused' STATES
+                                    if (Online_Speech_Recogniser_State == Windows.Media.SpeechRecognition.SpeechRecognizerState.Idle || Online_Speech_Recogniser_State == Windows.Media.SpeechRecognition.SpeechRecognizerState.Paused)
+                                    {
+                                        // IF THE ONLINE SPEECH RECOGNITION ENGINE IS NOT ALREADY IN THE LOCK STATE,
+                                        // START THE LOCK STATE TIMER AND MARK THE ONLINE SPEECH RECOGNITION ENGINE'S
+                                        // OPERATIONAL STATE AS 'LOCKED'
+                                        if (online_speech_recogniser_lock_state_time_elapsed_is_enabled == false)
                                         {
-                                            lock (Wake_Word_Detected)
-                                            {
-                                                // IF THE ONLINE SPEECH RECOGNITION ENGINE IS DISABLED OR THE WINDOW IS MINIMISED,
-                                                // MAKE THE ONLINE SPEECH RECOGNITION ENGINE STOP TAKING INPUT
-                                                if (Window_Minimised == "true" || Online_Speech_Recogniser_Disabled == "true")
-                                                {
-                                                    Wake_Word_Detected = "false";
-                                                    Online_Speech_Recogniser_Listening = "false";
-                                                    Online_Speech_Recognition.Close_Speech_Recognition_Interface();
-                                                }
-                                            }
+                                            online_speech_recogniser_lock_state_time_elapsed.Start();
+                                            online_speech_recogniser_lock_state_time_elapsed_is_enabled = true;
                                         }
 
-
-                                        lock (Online_Speech_Recogniser_State)
+                                        // IF THE ONLINE SPEECH RECOGNITION ENGINE IS ALREADY IN THE LOCK STATE
+                                        if (online_speech_recogniser_lock_state_time_elapsed_is_enabled == true)
                                         {
-                                            // IF THE ONLINE SPEECH RECOGNITION ENGINE IS IN THE 'Idle' OR 'Paused' STATES
-                                            if (Online_Speech_Recogniser_State == "Idle" || Online_Speech_Recogniser_State == "Paused")
+                                            // IF THE TIME IN WHICH THE ONLINE SPEECH RECOGNITION ENGINE WAS LOCKED IS GREATER
+                                            // THAN 4 SECONDS, STOP THE ONLINE SPEECH RECOGNITION ENGINE FROM TAKING INPUT
+                                            // AND STOP THE ONLINE SPEECH RECOGNITION ENGINE WINDOWS PROCESS
+                                            if (online_speech_recogniser_lock_state_time_elapsed.ElapsedMilliseconds > 4000)
                                             {
-                                                // IF THE ONLINE SPEECH RECOGNITION ENGINE IS NOT ALREADY IN THE LOCK STATE,
-                                                // START THE LOCK STATE TIMER AND MARK THE ONLINE SPEECH RECOGNITION ENGINE'S
-                                                // OPERATIONAL STATE AS 'LOCKED'
-                                                if (online_speech_recogniser_lock_state_time_elapsed_is_enabled == false)
-                                                {
-                                                    online_speech_recogniser_lock_state_time_elapsed.Start();
-                                                    online_speech_recogniser_lock_state_time_elapsed_is_enabled = true;
-                                                }
+                                                Interlocked.Exchange(ref Online_Speech_Recogniser_Listening, 0);
 
-                                                // IF THE ONLINE SPEECH RECOGNITION ENGINE IS ALREADY IN THE LOCK STATE
-                                                if (online_speech_recogniser_lock_state_time_elapsed_is_enabled == true)
+                                                void Shutdown()
                                                 {
-                                                    // IF THE TIME IN WHICH THE ONLINE SPEECH RECOGNITION ENGINE WAS LOCKED IS GREATER
-                                                    // THAN 4 SECONDS, STOP THE ONLINE SPEECH RECOGNITION ENGINE FROM TAKING INPUT
-                                                    // AND STOP THE ONLINE SPEECH RECOGNITION ENGINE WINDOWS PROCESS
-                                                    if (online_speech_recogniser_lock_state_time_elapsed.ElapsedMilliseconds > 4000)
-                                                    {
-                                                        Online_Speech_Recogniser_Listening = "false";
-                                                        void Shutdown()
-                                                        {
-                                                            Close_Speech_Recognition_Interface();
-                                                            OS_Online_Speech_Recognition_Interface_Shutdown();
-                                                        }
-                                                        Shutdown();
-                                                    }
+                                                    Close_Speech_Recognition_Interface();
+                                                    OS_Online_Speech_Recognition_Interface_Shutdown();
                                                 }
-                                            }
-                                            else
-                                            {
-                                                // ELSE, IT MEANS THAT THE ONLINE SPEECH RECOGNITION ENGINE RESUMED ITS OPERATION AND
-                                                // THE LOCK STATE TIMER IS STOPPED AND RESET
-                                                online_speech_recogniser_lock_state_time_elapsed.Stop();
-                                                online_speech_recogniser_lock_state_time_elapsed.Reset();
-                                                online_speech_recogniser_lock_state_time_elapsed_is_enabled = false;
-                                            }
-                                        }
-
-                                        // IF THE TIMEOUT FOR THE ONLINE SPEECH RECOGNITION ENGINE SPEECH TO TEXT OPERATION IS NOT NULL
-                                        if (online_speech_recognition_timeout != null)
-                                        {
-                                            // IF THE DIFFERENCE BETWEEN THE CURRENT TIME AND THE TIME WHEN THE ONLINE SPEECH RECOGNITION ENGINE
-                                            // BEGAN THE SPEECH TO TEXT OPERATION IS GREATER THAN 20 SECONDS ADUJUST THE GUI TO DISPLAY THAT
-                                            // THE ONLINE SPEECH RECOGNITION ENGINE DOES NOT TAKE INPUT AND STOP THE ONLINE SPEECH
-                                            // RECOGNITION ENGINE SPEECH FROM TAKING INPUT
-                                            if (((TimeSpan)(DateTime.UtcNow - online_speech_recognition_timeout)).TotalMilliseconds >= 20000)
-                                            {
-                                                Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
-                                                Online_Speech_Recognition_Timer_Display.Text = String.Empty;
-                                                Online_Speech_Recogniser_Listening = "false";
-                                            }
-                                            // ELSE IF THE DIFFERENCE BETWEEN THE CURRENT TIME AND THE TIME WHEN THE ONLINE SPEECH RECOGNITION ENGINE
-                                            // BEGAN THE SPEECH TO TEXT OPERATION IS LESS THAN 20 SECONDS
-                                            else
-                                            {
-                                                lock (Speech_Detected)
-                                                {
-                                                    // IF THE ONLINE SPEECH RECOGNITION ENGINE DETECTED SPEECH, RESET THE GUI COUNTER
-                                                    // REGARDING THE ONLINE SPEECH RECOGNITION ENGINE TIMEOUT
-                                                    if (Speech_Detected == "true")
-                                                    {
-                                                        Speech_Detected = "false";
-                                                        target_value = 1000;
-                                                        Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
-                                                        Online_Speech_Recognition_Timer_Display.Text = String.Empty;
-                                                    }
-                                                }
-
-                                                // IF THE DIFFERENCE BETWEEN THE CURRENT TIME AND THE TIME WHEN THE ONLINE SPEECH RECOGNITION ENGINE STARTED
-                                                // ITS OPERATION IS GREATER OR EQUAL THAN THE CURRENT TARGET VALUE
-                                                if (((TimeSpan)(DateTime.UtcNow - online_speech_recognition_timeout)).TotalMilliseconds >= target_value - 300)
-                                                {
-                                                    // IF THE TARGET VALUE IS SMALLER OR EQUAL THAN 20 SECONDS
-                                                    // DECREMENT THE GUI INPUT INTERVAL COUNTDOWN TIMER VALUE
-                                                    // BY ONE SECOND AND INCREMENT THE CURRENT TARGET VALUE
-                                                    // BY ONE SECOND
-                                                    if (target_value <= 20000)
-                                                    {
-                                                        target_value += 1000;
-                                                        Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index++;
-                                                    }
-                                                }
-
-                                                Online_Speech_Recognition_Timer_Display.Text = Online_Speech_Recognition_Timeout_Timer_UI_Intervals[Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index];
-
-                                                // WHILE THE ONLINE SPEECH RECOGNITION ENGINE IS OPERATING SET THE CIRCULAR STATUS INDICATOR
-                                                // COLOR AS BRIGHT BLUE
-                                                if (chatgpt_mode_enabled == true)
-                                                {
-                                                    OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString(chatbot_mode_activated_outer_elipse_offset_color);
-                                                    OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString(chatbot_mode_activated_outer_elipse_gradient_color);
-                                                }
-                                                else
-                                                {
-                                                    OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString(normal_mode_activated_outer_elipse_offset_color);
-                                                    OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString(normal_mode_activated_outer_elipse_gradient_color);
-                                                }
+                                                Shutdown();
                                             }
                                         }
                                     }
                                     else
                                     {
-                                        lock (Initiated)
-                                        {
-                                            Initiated = "false";
-                                        }
-
-                                        target_value = 1000;
-                                        Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
-                                        Online_Speech_Recognition_Timer_Display.Text = String.Empty;
-
+                                        // ELSE, IT MEANS THAT THE ONLINE SPEECH RECOGNITION ENGINE RESUMED ITS OPERATION AND
+                                        // THE LOCK STATE TIMER IS STOPPED AND RESET
                                         online_speech_recogniser_lock_state_time_elapsed.Stop();
                                         online_speech_recogniser_lock_state_time_elapsed.Reset();
                                         online_speech_recogniser_lock_state_time_elapsed_is_enabled = false;
                                     }
+
+
+                                    // IF THE TIMEOUT FOR THE ONLINE SPEECH RECOGNITION ENGINE SPEECH TO TEXT OPERATION IS NOT NULL
+                                    if (online_speech_recognition_timeout != null)
+                                    {
+                                        // IF THE DIFFERENCE BETWEEN THE CURRENT TIME AND THE TIME WHEN THE ONLINE SPEECH RECOGNITION ENGINE
+                                        // BEGAN THE SPEECH TO TEXT OPERATION IS GREATER THAN 20 SECONDS ADUJUST THE GUI TO DISPLAY THAT
+                                        // THE ONLINE SPEECH RECOGNITION ENGINE DOES NOT TAKE INPUT AND STOP THE ONLINE SPEECH
+                                        // RECOGNITION ENGINE SPEECH FROM TAKING INPUT
+                                        if (((TimeSpan)(DateTime.UtcNow - online_speech_recognition_timeout)).TotalMilliseconds >= 20000)
+                                        {
+                                            Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
+                                            Online_Speech_Recognition_Timer_Display.Text = String.Empty;
+                                            Interlocked.Exchange(ref Online_Speech_Recogniser_Listening, 0);
+                                        }
+                                        // ELSE IF THE DIFFERENCE BETWEEN THE CURRENT TIME AND THE TIME WHEN THE ONLINE SPEECH RECOGNITION ENGINE
+                                        // BEGAN THE SPEECH TO TEXT OPERATION IS LESS THAN 20 SECONDS
+                                        else
+                                        {
+
+
+                                            // IF THE ONLINE SPEECH RECOGNITION ENGINE DETECTED SPEECH, RESET THE GUI COUNTER
+                                            // REGARDING THE ONLINE SPEECH RECOGNITION ENGINE TIMEOUT
+                                            if (Interlocked.Read(ref Speech_Detected) == 1)
+                                            {
+                                                Interlocked.Exchange(ref Speech_Detected, 0);
+                                                target_value = 1000;
+                                                Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
+                                                Online_Speech_Recognition_Timer_Display.Text = String.Empty;
+                                            }
+
+
+                                            // IF THE DIFFERENCE BETWEEN THE CURRENT TIME AND THE TIME WHEN THE ONLINE SPEECH RECOGNITION ENGINE STARTED
+                                            // ITS OPERATION IS GREATER OR EQUAL THAN THE CURRENT TARGET VALUE
+                                            if (((TimeSpan)(DateTime.UtcNow - online_speech_recognition_timeout)).TotalMilliseconds >= target_value - 300)
+                                            {
+                                                // IF THE TARGET VALUE IS SMALLER OR EQUAL THAN 20 SECONDS
+                                                // DECREMENT THE GUI INPUT INTERVAL COUNTDOWN TIMER VALUE
+                                                // BY ONE SECOND AND INCREMENT THE CURRENT TARGET VALUE
+                                                // BY ONE SECOND
+                                                if (target_value <= 20000)
+                                                {
+                                                    target_value += 1000;
+                                                    Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index++;
+                                                }
+                                            }
+
+                                            Online_Speech_Recognition_Timer_Display.Text = Online_Speech_Recognition_Timeout_Timer_UI_Intervals[Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index];
+
+                                            // WHILE THE ONLINE SPEECH RECOGNITION ENGINE IS OPERATING SET THE CIRCULAR STATUS INDICATOR
+                                            // COLOR AS BRIGHT BLUE
+                                            if (chatgpt_mode_enabled == true)
+                                            {
+                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString(chatbot_mode_activated_outer_elipse_offset_color);
+                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString(chatbot_mode_activated_outer_elipse_gradient_color);
+                                            }
+                                            else
+                                            {
+                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString(normal_mode_activated_outer_elipse_offset_color);
+                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString(normal_mode_activated_outer_elipse_gradient_color);
+                                            }
+                                        }
+                                    }
                                 }
+                                else
+                                {
+                                    Interlocked.Exchange(ref Initiated, 0);
+
+                                    target_value = 1000;
+                                    Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
+                                    Online_Speech_Recognition_Timer_Display.Text = String.Empty;
+
+                                    online_speech_recogniser_lock_state_time_elapsed.Stop();
+                                    online_speech_recogniser_lock_state_time_elapsed.Reset();
+                                    online_speech_recogniser_lock_state_time_elapsed_is_enabled = false;
+                                }
+
 
 
                                 // IF THE APPLICATION'S TIMER WAS SET, CHANGE THE COLOR OF THE TIMER BUTTON
@@ -534,59 +513,58 @@ namespace Eva_5._0
                                 }
 
 
-                                lock (BeginExecutionAnimation)
+
+                                if (Interlocked.Read(ref BeginExecutionAnimation) == 1)
                                 {
-                                    if (BeginExecutionAnimation == "true")
+                                    // IF A PROCESS WAS EXECUTED, BEGIN THE PROCESS EXECUTION ANIMATION
+                                    // BY MAKING THE RECTANGLE WITHIN THE CIRCULAR STATUS INDICATOR
+                                    // HAVE 0 WIDTH
+                                    Rotator.Width = 0;
+
+                                    if (ExecutionAnimationArithmetic == 40)
                                     {
-                                        // IF A PROCESS WAS EXECUTED, BEGIN THE PROCESS EXECUTION ANIMATION
-                                        // BY MAKING THE RECTANGLE WITHIN THE CIRCULAR STATUS INDICATOR
-                                        // HAVE 0 WIDTH
-                                        Rotator.Width = 0;
-
-                                        if (ExecutionAnimationArithmetic == 40)
-                                        {
-                                            // IF THE 'ExecutionAnimationArithmetic' VARIABLE EQUALS WITH 40
-                                            // SET THE COLOR CIRCULAR STATUS INDICATOR TO RED AND SET THE
-                                            // 'ExecutionAnimationArithmetic' TO 0
-                                            OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                            OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                            ExecutionAnimationArithmetic = 0;
-                                            BeginExecutionAnimation = "false";
-                                        }
-                                        else
-                                        {
-                                            // IF THE 'ExecutionAnimationArithmetic' VARIABLE IS LESS THAN 40,
-                                            // INCREMENT THE 'ExecutionAnimationArithmetic' BY 4 EACH ITERATION
-                                            ExecutionAnimationArithmetic += 4;
-
-                                            // IF THE 'ExecutionAnimationArithmetic' VALUE IS GREATER THAN 4 AND
-                                            // A MULTIPLE OF 4
-                                            if (ExecutionAnimationArithmetic >= 4 && ExecutionAnimationArithmetic % 4 == 0)
-                                            {
-                                                // MAKE THE COLORS ALTERNATE BETWEEN PALE BLUE AND WHITE EVERY ITERATION
-                                                if (Colour_Switch == true)
-                                                {
-                                                    OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                    OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
-                                                    Colour_Switch = false;
-                                                }
-                                                else
-                                                {
-                                                    OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                    OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
-                                                    Colour_Switch = true;
-
-                                                }
-                                            }
-                                        }
+                                        // IF THE 'ExecutionAnimationArithmetic' VARIABLE EQUALS WITH 40
+                                        // SET THE COLOR CIRCULAR STATUS INDICATOR TO RED AND SET THE
+                                        // 'ExecutionAnimationArithmetic' TO 0
+                                        OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                        OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                        ExecutionAnimationArithmetic = 0;
+                                        Interlocked.Exchange(ref BeginExecutionAnimation, 0);
                                     }
                                     else
                                     {
-                                        // IF NO PROCESS WAS EXECUTED, RESET THE RECTANGLE WITHIN THE CIRCULAR STATUS INDICATOR
-                                        // TO ITS ORIGINAL WIDTH
-                                        Rotator.Width = InitialRotatorWidth;
+                                        // IF THE 'ExecutionAnimationArithmetic' VARIABLE IS LESS THAN 40,
+                                        // INCREMENT THE 'ExecutionAnimationArithmetic' BY 4 EACH ITERATION
+                                        ExecutionAnimationArithmetic += 4;
+
+                                        // IF THE 'ExecutionAnimationArithmetic' VALUE IS GREATER THAN 4 AND
+                                        // A MULTIPLE OF 4
+                                        if (ExecutionAnimationArithmetic >= 4 && ExecutionAnimationArithmetic % 4 == 0)
+                                        {
+                                            // MAKE THE COLORS ALTERNATE BETWEEN PALE BLUE AND WHITE EVERY ITERATION
+                                            if (Colour_Switch == true)
+                                            {
+                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
+                                                Colour_Switch = false;
+                                            }
+                                            else
+                                            {
+                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                                Colour_Switch = true;
+
+                                            }
+                                        }
                                     }
                                 }
+                                else
+                                {
+                                    // IF NO PROCESS WAS EXECUTED, RESET THE RECTANGLE WITHIN THE CIRCULAR STATUS INDICATOR
+                                    // TO ITS ORIGINAL WIDTH
+                                    Rotator.Width = InitialRotatorWidth;
+                                }
+
 
 
                                 // SET THE CURRENT ROTATIONAL ANGLE OF THE RECTANGLE WITHIN THE CIRCULAR STATUS INDICATOR
@@ -641,7 +619,7 @@ namespace Eva_5._0
                                     }
                                 }
                             }
-                        });
+                        }, System.Windows.Threading.DispatcherPriority.Render);
                     }
                 }
             }
@@ -655,8 +633,7 @@ namespace Eva_5._0
             try
             {
                 AnimationAndFunctionalityTimer?.Dispose();
-                BeginExecutionAnimation = null;
-
+               
                 Wake_Word_Engine.Stop_The_Wake_Word_Engine();
                 Environment.Exit(0);
             }
@@ -666,22 +643,23 @@ namespace Eva_5._0
 
         private void MoveTheWindow(object sender, MouseButtonEventArgs e)
         {
-            if (MainWindowIsClosing == false)
+            try
             {
-
-                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                if (MainWindowIsClosing == false)
                 {
-
-                    if (Application.Current.MainWindow != null)
+                    if (Application.Current != null)
                     {
-
-                        this.DragMove();
-
+                        if (Application.Current.Dispatcher != null)
+                        {
+                            if (Application.Current.MainWindow != null)
+                            {
+                                this.DragMove();
+                            }
+                        }
                     }
-
                 }
-
             }
+            catch { }
         }
 
         private void ContractOrExpandTheMainWindow(object sender, RoutedEventArgs e)
@@ -764,11 +742,7 @@ namespace Eva_5._0
                         this.ShowInTaskbar = true;
                         Application.Current.MainWindow.WindowState = WindowState.Minimized;
 
-                        lock (Window_Minimised)
-                        {
-                            Window_Minimised = "true";
-                        }
-
+                        Interlocked.Exchange(ref Window_Minimised, 1);
                     }
 
                 }
@@ -847,10 +821,7 @@ namespace Eva_5._0
             if (OnOff == 0)
             {
                 // LOCK THE VARIABLE ON THE STACK TO BE ACCESSED ONLY BY THE CURRENT THREAD
-                lock (Online_Speech_Recogniser_Disabled)
-                {
-                    Online_Speech_Recogniser_Disabled = "false";
-                }
+                Interlocked.Exchange(ref Online_Speech_Recogniser_Disabled, 0);
 
                 // CHANGE THE BUTTON CONTENT BY INVOKING THE OPERATION ON THE UI THREAD
                 Application.Current.Dispatcher.Invoke(() =>
@@ -870,10 +841,7 @@ namespace Eva_5._0
             if (OnOff == 1)
             {
                 // LOCK THE VARIABLE ON THE STACK TO BE ACCESSED ONLY BY THE CURRENT THREAD
-                lock (Online_Speech_Recogniser_Disabled)
-                {
-                    Online_Speech_Recogniser_Disabled = "true";
-                }
+                Interlocked.Exchange(ref Online_Speech_Recogniser_Disabled, 1);
 
                 // CHANGE THE BUTTON CONTENT BY INVOKING THE OPERATION ON THE UI THREAD
                 Application.Current.Dispatcher.Invoke(() =>

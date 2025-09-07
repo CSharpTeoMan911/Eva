@@ -3,7 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
 
 namespace Eva_5._0
@@ -28,7 +28,7 @@ namespace Eva_5._0
 
     internal class Online_Speech_Recognition : MainWindow
     {
-#nullable enable
+        #nullable enable
         private static Windows.Media.SpeechRecognition.SpeechRecognizer? OnlineSpeechRecognition;
 
         private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Form_Filling_Constraint = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.FormFilling, "form-filling", "form")
@@ -60,23 +60,9 @@ namespace Eva_5._0
 
         public static async void Online_Speech_Recognition_Session_Creation_And_Initiation()
         {
-            bool operational = false;
-
-            lock (Online_Speech_Recogniser_Disabled)
-            {
-                lock (Window_Minimised)
-                {
-                    lock (Online_Speech_Recogniser_Listening)
-                    {
-                        if (Online_Speech_Recogniser_Disabled == "false" && Online_Speech_Recogniser_Listening == "false" && Window_Minimised == "false")
-                            operational = true;
-                    }
-                }
-            }
-
             int Timeout = await Settings.Get_Speech_Timeout_Settings();
 
-            if (operational == true)
+            if (Interlocked.Read(ref Online_Speech_Recogniser_Disabled) == 0 && Interlocked.Read(ref Online_Speech_Recogniser_Listening) == 0 && Interlocked.Read(ref Window_Minimised) == 0)
                 Initiate_The_Online_Speech_Recognition_Engine(Timeout);
         }
 
@@ -85,13 +71,13 @@ namespace Eva_5._0
         {
             try
             {
+                DateTime start = DateTime.UtcNow;
+
                 // ENSURE THAT THE ONLINE SPEECH RECOGNITION INTERFACE IS CLOSED
                 OS_Online_Speech_Recognition_Interface_Shutdown();
 
-
                 // INITIATE THE SPEECH RECOGNITION ENGINE
                 OnlineSpeechRecognition = new Windows.Media.SpeechRecognition.SpeechRecognizer(new Windows.Globalization.Language(await Settings.Get_Speech_Language_Settings()));
-
 
                 OnlineSpeechRecognition.Constraints.Clear();
                 switch (await Settings.Get_Speech_Operation_Settings())
@@ -111,9 +97,6 @@ namespace Eva_5._0
 
                 if (ConstraintsCompilation.Status == Windows.Media.SpeechRecognition.SpeechRecognitionResultStatus.Success)
                 {
-
-                    //await ClearPagedMemoryCache();
-
                     OnlineSpeechRecognition.ContinuousRecognitionSession.AutoStopSilenceTimeout = TimeSpan.FromSeconds(Timeout);
                     OnlineSpeechRecognition.Timeouts.EndSilenceTimeout = TimeSpan.FromSeconds(Timeout);
                     OnlineSpeechRecognition.Timeouts.InitialSilenceTimeout = TimeSpan.FromSeconds(Timeout);
@@ -125,7 +108,7 @@ namespace Eva_5._0
                     OnlineSpeechRecognition.RecognitionQualityDegrading += OnlineSpeechRecognition_RecognitionQualityDegrading;
                     OnlineSpeechRecognition.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
 
-                    await OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionMode.Default);
+                    await OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionMode.PauseOnRecognition);
 
                     await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppActivationSoundEffect);
 
@@ -133,8 +116,7 @@ namespace Eva_5._0
                     online_speech_recognition_timeout = DateTime.UtcNow;
                     Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.UtcNow;
 
-                    lock (Online_Speech_Recogniser_Listening)
-                        Online_Speech_Recogniser_Listening = "true";
+                    Interlocked.Exchange(ref Online_Speech_Recogniser_Listening, 1);
                 }
                 else
                 {
@@ -178,28 +160,12 @@ namespace Eva_5._0
                 }
                 else
                 {
-                    bool disabled = false;
-                    lock (Online_Speech_Recogniser_Disabled)
+                    if (Interlocked.Read(ref Window_Minimised) == 0 || Interlocked.Read(ref Online_Speech_Recogniser_Disabled) == 0)
                     {
-                        lock (Window_Minimised)
-                        {
-                            if (Window_Minimised == "true" || Online_Speech_Recogniser_Disabled == "true")
-                            {
-                                disabled = true;
-                            }
-                        }
-                    }
-
-                    if (disabled == true)
-                    {
-                        Close_Speech_Recognition_Interface();
-                    }
-                    else
-                    {
-                        Close_Speech_Recognition_Interface();
                         string Result = args.Result.Text.ToLower();
                         Natural_Language_Processing.PreProcessing(StringFormatting.RemoveNewLine(new StringBuilder(Result, Result.Length)));
                     }
+                    Close_Speech_Recognition_Interface();
                 }
             }
             catch (Exception E)
@@ -212,43 +178,31 @@ namespace Eva_5._0
             }
 
 
-            lock (Online_Speech_Recogniser_Listening)
-            {
-                Online_Speech_Recogniser_Listening = "false";
-                Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.UtcNow;
-            }
+            Interlocked.Exchange(ref Online_Speech_Recogniser_Listening, 0);
+            Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.UtcNow;
         }
 
 
         private static void ContinuousRecognitionSession_Completed(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionSession sender, Windows.Media.SpeechRecognition.SpeechContinuousRecognitionCompletedEventArgs args)
         {
-            lock (Online_Speech_Recogniser_Listening)
-            {
-                Online_Speech_Recogniser_Listening = "false";
-                Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.UtcNow;
-                Close_Speech_Recognition_Interface();
-            }
+            Interlocked.Exchange(ref Online_Speech_Recogniser_Listening, 0);
+            Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.UtcNow;
+            Close_Speech_Recognition_Interface();
         }
 
         private static void OnlineSpeechRecognition_StateChanged(Windows.Media.SpeechRecognition.SpeechRecognizer sender, Windows.Media.SpeechRecognition.SpeechRecognizerStateChangedEventArgs args)
         {
             if (sender.State == Windows.Media.SpeechRecognition.SpeechRecognizerState.SpeechDetected)
             {
-                lock (Speech_Detected)
+                if (Interlocked.Read(ref Speech_Detected) == 0)
                 {
-                    if (Speech_Detected == "false")
-                    {
-                        Speech_Detected = "true";
-                        Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.UtcNow;
+                    Interlocked.Exchange(ref Speech_Detected, 1);
+                    Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.UtcNow;
 
-                        lock (Initiated)
-                        {
-                            if (Initiated == "false")
-                            {
-                                online_speech_recognition_timeout = DateTime.UtcNow;
-                                Initiated = "true";
-                            }
-                        }
+                    if (Interlocked.Read(ref Initiated) == 0)
+                    {
+                        online_speech_recognition_timeout = DateTime.UtcNow;
+                        Interlocked.Exchange(ref Initiated, 1);
                     }
                 }
             }
@@ -258,9 +212,9 @@ namespace Eva_5._0
                 sender?.ContinuousRecognitionSession?.Resume();
             }
 
-            lock (Online_Speech_Recogniser_State)
+            if (sender != null)
             {
-                Online_Speech_Recogniser_State = sender?.State.ToString();
+                Online_Speech_Recogniser_State = sender.State;
             }
         }
 
@@ -313,10 +267,11 @@ namespace Eva_5._0
                     OnlineSpeechRecognition.ContinuousRecognitionSession.ResultGenerated -= ContinuousRecognitionSession_ResultGenerated;
 
                     OnlineSpeechRecognition.Dispose();
+
                     int successful = Marshal.FinalReleaseComObject(OnlineSpeechRecognition);
                     OnlineSpeechRecognition = null;
 
-                    GC.Collect(10, GCCollectionMode.Forced);
+                    GC.Collect(1, GCCollectionMode.Forced);
                     GC.WaitForFullGCComplete();
                 }
             }
@@ -341,29 +296,23 @@ namespace Eva_5._0
         {
             try
             {
-                lock (Online_Speech_Recogniser_Listening)
+                if (Interlocked.Read(ref Online_Speech_Recogniser_Listening) == 0 && Interlocked.Read(ref Online_Speech_Recogniser_Listening) == 0)
                 {
-                    lock (Wake_Word_Detected)
+                    // SHUT DOWN THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS ("SpeechRuntime.exe")
+                    //
+                    // BEGIN
+
+                    // DISPOSE THE ONLINE SPEECH RECOGNITION INTERFACE OBJECT
+                    Close_Speech_Recognition_Interface();
+
+
+                    // TERMINATE THE WINDOWS OS ONLINE SPEECH RECOGNITION INTERFACE USING
+                    // THE OS' SHELL TO ENSURE THAT THE PROCESS WAS TERMINATED
+                    foreach (Process p in Get_Recogniser_Interfaces())
                     {
-                        if (Online_Speech_Recogniser_Listening == "false" && Wake_Word_Detected == "false")
-                        {
-                            // SHUT DOWN THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS ("SpeechRuntime.exe")
-                            //
-                            // BEGIN
-
-                            // DISPOSE THE ONLINE SPEECH RECOGNITION INTERFACE OBJECT
-                            Close_Speech_Recognition_Interface();
-
-
-                            // TERMINATE THE WINDOWS OS ONLINE SPEECH RECOGNITION INTERFACE USING
-                            // THE OS' SHELL TO ENSURE THAT THE PROCESS WAS TERMINATED
-                            foreach (Process p in Get_Recogniser_Interfaces())
-                            {
-                                p.Kill();
-                            }
-                            // END
-                        }
+                        p.Kill();
                     }
+                    // END
                 }
             }
             catch

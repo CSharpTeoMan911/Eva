@@ -1,5 +1,6 @@
 ﻿using Eva_5._0.Properties;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Eva_5._0
@@ -100,10 +101,7 @@ namespace Eva_5._0
             {
                 internal static void Start_The_Application_Execution_Animation()
                 {
-                    lock (BeginExecutionAnimation)
-                    {
-                        BeginExecutionAnimation = "true";
-                    }
+                    Interlocked.Exchange(ref BeginExecutionAnimation, 1);
                 }
             }
 
