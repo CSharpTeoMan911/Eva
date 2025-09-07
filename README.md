@@ -7,8 +7,9 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.4.6
+📌 Latest Version: v7.5.0
 
+* 🆕 Optimised the application for low power devices, such as laptops
 * 🆕 Implemented the ChatGPT chat history
 * 🆕 ChatGPT can now render markdown inside the chat
 * 🆕 Re-designed the instruction manual window
