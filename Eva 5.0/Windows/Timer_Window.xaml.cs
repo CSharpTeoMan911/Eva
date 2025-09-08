@@ -71,21 +71,20 @@ namespace Eva_5._0
 
         private void Move_The_Window(object sender, MouseButtonEventArgs e)
         {
-            if (Application.Current != null)
+            try
             {
-                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                if (Application.Current != null)
                 {
-                    Application.Current.Dispatcher.Invoke(() =>
+                    if (Application.Current.Dispatcher != null)
                     {
-                        if (Application.Current.MainWindow != null)
+                        if (!Application.Current.Dispatcher.HasShutdownStarted)
                         {
-
-                            this.DragMove();
-
+                            this?.DragMove();
                         }
-                    });
+                    }
                 }
             }
+            catch { }
         }
 
         private void Close_The_Window(object sender, RoutedEventArgs e)

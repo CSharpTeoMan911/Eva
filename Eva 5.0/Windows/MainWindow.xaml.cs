@@ -313,12 +313,18 @@ namespace Eva_5._0
                                     // IF THE ONLINE SPEECH RECOGNITION ENGINE IS NOT DISABLED
                                     if (Interlocked.Read(ref Online_Speech_Recogniser_Disabled) == 0)
                                     {
-                                        // CALCULATE THE ACTIVATION DELAY TO BE SET FOR THE ONLINE SPEECH RECOGNITION ENGINE
-                                        // AND INITIATE THE ONLINE SPEECH RECOGNITION ENGINE.
-                                        if (Online_Speech_Recogniser_Delay_Calculator() == true)
+                                        Thread operational_thread = new Thread(() =>
                                         {
-                                            Online_Speech_Recognition.Online_Speech_Recognition_Session_Creation_And_Initiation();
-                                        }
+                                            // CALCULATE THE ACTIVATION DELAY TO BE SET FOR THE ONLINE SPEECH RECOGNITION ENGINE
+                                            // AND INITIATE THE ONLINE SPEECH RECOGNITION ENGINE.
+                                            if (Online_Speech_Recogniser_Delay_Calculator() == true)
+                                            {
+                                                Online_Speech_Recognition.Online_Speech_Recognition_Session_Creation_And_Initiation();
+                                            }
+                                        });
+                                        operational_thread.Priority = ThreadPriority.Highest;
+                                        operational_thread.SetApartmentState(ApartmentState.STA);
+                                        operational_thread.Start();
                                     }
                                 }
 

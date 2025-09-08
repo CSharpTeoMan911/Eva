@@ -315,22 +315,23 @@ namespace Eva_5._0
 
         private void Move_The_Window(object sender, MouseButtonEventArgs e)
         {
-            if (WindowIsClosing == false)
+            try
             {
-                if (Application.Current != null)
+                if (WindowIsClosing == false)
                 {
-                    if (Application.Current.Dispatcher != null)
+                    if (Application.Current != null)
                     {
-                        if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                        if (Application.Current.Dispatcher != null)
                         {
-                            if (Application.Current.MainWindow != null)
+                            if (!Application.Current.Dispatcher.HasShutdownStarted)
                             {
-                                this.DragMove();
+                                this?.DragMove();
                             }
                         }
                     }
                 }
             }
+            catch { }
         }
 
         private async void Send_Manual_GPT_Query(object sender, RoutedEventArgs e)

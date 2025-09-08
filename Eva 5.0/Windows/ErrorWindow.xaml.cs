@@ -333,16 +333,23 @@ namespace Eva_5._0
 
         private void MoveTheWindow(object sender, MouseButtonEventArgs e)
         {
-            if (App.PermisissionWindowOpen == true)
+            try
             {
-                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                if (App.PermisissionWindowOpen == true)
                 {
-                    if (Application.Current.MainWindow != null)
+                    if (Application.Current != null)
                     {
-                        this.DragMove();
+                        if (Application.Current.Dispatcher != null)
+                        {
+                            if (!Application.Current.Dispatcher.HasShutdownStarted)
+                            {
+                                this?.DragMove();
+                            }
+                        }
                     }
                 }
             }
+            catch { }
         }
 
 

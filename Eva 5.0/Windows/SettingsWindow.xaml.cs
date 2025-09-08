@@ -131,19 +131,20 @@ namespace Eva_5._0
         {
             if (WindowIsClosing == false)
             {
-
-                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                try
                 {
-
-                    if (Application.Current.MainWindow != null)
+                    if (Application.Current != null)
                     {
-
-                        this.DragMove();
-
+                        if (Application.Current.Dispatcher != null)
+                        {
+                            if (!Application.Current.Dispatcher.HasShutdownStarted)
+                            {
+                                this?.DragMove();
+                            }
+                        }
                     }
-
                 }
-
+                catch { }
             }
         }
 

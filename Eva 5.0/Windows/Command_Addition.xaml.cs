@@ -325,7 +325,20 @@ namespace Eva_5._0
 
         private void Move_Window(object sender, MouseButtonEventArgs e)
         {
-            this.DragMove();
+            try
+            {
+                if (Application.Current != null)
+                {
+                    if (Application.Current.Dispatcher != null)
+                    {
+                        if (!Application.Current.Dispatcher.HasShutdownStarted)
+                        {
+                            this?.DragMove();
+                        }
+                    }
+                }
+            }
+            catch { }
         }
 
         private void CloseWindow(object sender, System.Windows.RoutedEventArgs e)

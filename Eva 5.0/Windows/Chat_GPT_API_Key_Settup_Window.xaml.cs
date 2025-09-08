@@ -37,16 +37,27 @@ namespace Eva_5._0
         // WHEN THE MOUSE LEFT BUTTON IS PRESSED AND THE WINDOW'S HANDLE IS DRAGGED
         private void MoveTheWindow(object sender, MouseButtonEventArgs e)
         {
-            if (WindowIsClosing == false)
+            try
             {
-                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                if (WindowIsClosing == false)
                 {
-                    if (Application.Current.MainWindow != null)
+                    if (Application.Current != null)
                     {
-                        this.DragMove();
+                        if (Application.Current.Dispatcher != null)
+                        {
+                            if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                            {
+                                if (Application.Current.MainWindow != null)
+                                {
+                                    this?.DragMove();
+                                }
+                            }
+                        }
                     }
                 }
+
             }
+            catch { }
         }
 
         // METHOD THAT CLOSES THE APPLICATION'S WINDOW 
