@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows;
 
 namespace Eva_5._0
@@ -8,14 +6,14 @@ namespace Eva_5._0
     public class Chat : INotifyPropertyChanged
     {
         private string _chatTitle { get; set; }
-        private Style _style {  get; set; }
+        private Style _style { get; set; }
 
         public enum Selection
         {
             Current,
             Default
         }
-        
+
         public string chatTitle
         {
             get { return _chatTitle; }

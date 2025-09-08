@@ -1,6 +1,6 @@
 ﻿using NAudio.CoreAudioApi;
 using NAudio.Wave;
-using System.Diagnostics;
+using System.Buffers;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -64,6 +64,14 @@ namespace Eva_5._0.Properties
                     if (current_device.ID != deviceID)
                     {
                         deviceID = current_device.ID;
+
+                        if (wave_player?.PlaybackState == PlaybackState.Playing)
+                        {
+                            wave_player?.Stop();
+                        }
+
+                        wave_player?.Dispose();
+
                         PlayWhiteNoise(audioFormat);
                     }
                 }
@@ -75,25 +83,17 @@ namespace Eva_5._0.Properties
         {
             try
             {
-                if (wave_player != null)
-                {
-                    if (wave_player.PlaybackState == PlaybackState.Playing)
-                    {
-                        wave_player.Stop();
-                    }
-
-                    wave_player.Dispose();
-                }
-
                 wave_player = new WaveOutEvent();
 
-                byte[] audio = new byte[wave_format.AverageBytesPerSecond];
-
-                BufferedWaveProvider bufferedWave = new BufferedWaveProvider(wave_format);
-                bufferedWave.AddSamples(audio, 0, audio.Length);
-                wave_player.DeviceNumber = -1;
-                wave_player.Init(bufferedWave);
-                wave_player.Play();
+                using (MemoryPool<byte> memoryPool = MemoryPool<byte>.Shared)
+                {
+                    byte[] audio = memoryPool.Rent(wave_format.AverageBytesPerSecond).Memory.ToArray();
+                    BufferedWaveProvider bufferedWave = new BufferedWaveProvider(wave_format);
+                    bufferedWave.AddSamples(audio, 0, audio.Length);
+                    wave_player.DeviceNumber = -1;
+                    wave_player.Init(bufferedWave);
+                    wave_player.Play();
+                }
             }
             catch { }
         }

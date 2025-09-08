@@ -73,7 +73,7 @@ namespace Eva_5._0
                     }
                 }
             }
-            catch(Exception E) { Debug.WriteLine(E.Message); }
+            catch (Exception E) { Debug.WriteLine(E.Message); }
 
             this.Topmost = true;
         }

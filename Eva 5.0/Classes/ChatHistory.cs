@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
-using System.Diagnostics;
 
 namespace Eva_5._0
 {
@@ -43,7 +42,7 @@ namespace Eva_5._0
                 chatHistory = chats;
             }
         }
-   
+
         public async Task UpdateChats(long id, ChatPackage chat)
         {
             if (chatHistory.TryGetValue(id, out ChatPackage value))
@@ -63,6 +62,8 @@ namespace Eva_5._0
             chatHistory.TryRemove(id, out _);
             await WriteToFile();
         }
+
+        public void ClearChatHistory() => chatHistory?.Clear();
 
         public int GetChatCount() => chatHistory.Count;
 

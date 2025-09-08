@@ -28,7 +28,7 @@ namespace Eva_5._0
 
     internal class Online_Speech_Recognition : MainWindow
     {
-        #nullable enable
+#nullable enable
         private static Windows.Media.SpeechRecognition.SpeechRecognizer? OnlineSpeechRecognition;
 
         private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Form_Filling_Constraint = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.FormFilling, "form-filling", "form")

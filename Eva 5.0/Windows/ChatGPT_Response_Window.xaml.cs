@@ -4,7 +4,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -54,7 +53,6 @@ namespace Eva_5._0
 
 
         private readonly BrushConverter colorConverter = new BrushConverter();
-        private readonly SolidColorBrush transparent = new SolidColorBrush(Colors.Transparent);
 
         public ChatGPT_Response_Window()
         {
@@ -174,7 +172,7 @@ namespace Eva_5._0
                                     if (OffsetArithmetic > 0)
                                     {
                                         OffsetArithmetic--;
-                                       
+
                                         WindowOffset.Offset += 0.003;
 
                                         MinimiseTheWindowOffset.Offset += 0.003;
@@ -192,7 +190,7 @@ namespace Eva_5._0
                                     if (OffsetArithmetic < 300)
                                     {
                                         OffsetArithmetic++;
-                                   
+
                                         WindowOffset.Offset -= 0.003;
 
                                         MinimiseTheWindowOffset.Offset -= 0.003;
@@ -231,7 +229,15 @@ namespace Eva_5._0
         {
             WindowIsClosing = true;
             App.ChatGPTResponseWindowOpened = false;
+            Animation_Timer?.Close();
             Animation_Timer?.Dispose();
+
+            chatHistoryManager?.ClearChatHistory();
+            messages?.Clear();
+            chatHistory?.Clear();
+
+            GC.Collect(1, GCCollectionMode.Forced);
+            GC.WaitForPendingFinalizers();
         }
 
 
@@ -239,7 +245,7 @@ namespace Eva_5._0
         {
             if (!String.IsNullOrEmpty(input))
             {
-                await Dispatcher.InvokeAsync(async() =>
+                await Dispatcher.InvokeAsync(async () =>
                 {
                     if (WindowIsClosing == false)
                     {
@@ -260,6 +266,9 @@ namespace Eva_5._0
 
                         await UpdateChat(input);
                         ConversationScrollViewer.ScrollToBottom();
+
+                        GC.Collect(1, GCCollectionMode.Forced);
+                        GC.WaitForPendingFinalizers();
                     }
                 }, DispatcherPriority.Render);
             }
@@ -308,19 +317,21 @@ namespace Eva_5._0
         {
             if (WindowIsClosing == false)
             {
-
-                if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                if (Application.Current != null)
                 {
-
-                    if (Application.Current.MainWindow != null)
+                    if (Application.Current.Dispatcher != null)
                     {
-                        this.DragMove();
+                        if (Application.Current.Dispatcher.HasShutdownStarted == false)
+                        {
+                            if (Application.Current.MainWindow != null)
+                            {
+                                this.DragMove();
+                            }
+                        }
                     }
                 }
-
             }
         }
-
 
         private async void Send_Manual_GPT_Query(object sender, RoutedEventArgs e)
         {
@@ -337,7 +348,7 @@ namespace Eva_5._0
 
         private async Task Update_Conversation_And_UI(bool carriageReturn = false)
         {
-            await Application.Current.Dispatcher.InvokeAsync(async() =>
+            await Application.Current.Dispatcher.InvokeAsync(async () =>
             {
                 switch (processing)
                 {
@@ -848,7 +859,7 @@ namespace Eva_5._0
             }
 
             currentChatId = id;
-            
+
             ChatHistory.ChatPackage chatPackage = chatHistoryManager.GetChat(id);
             currentChatPackage = chatPackage;
 

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -633,7 +632,7 @@ namespace Eva_5._0
             try
             {
                 AnimationAndFunctionalityTimer?.Dispose();
-               
+
                 Wake_Word_Engine.Stop_The_Wake_Word_Engine();
                 Environment.Exit(0);
             }
