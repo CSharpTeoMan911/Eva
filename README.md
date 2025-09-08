@@ -7,7 +7,7 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.5.0
+📌 Latest Version: v7.5.1
 
 * 🆕 Optimised the application for low power devices, such as laptops
 * 🆕 Implemented the ChatGPT chat history
