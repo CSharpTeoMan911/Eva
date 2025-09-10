@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
-using System.Data;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,11 +23,13 @@ namespace Eva_5._0
         }
 
         private ConcurrentDictionary<string, string> clone = new ConcurrentDictionary<string, string>();
-        
+
         private ConcurrentDictionary<Command, CommandsContent> commands_diff = new ConcurrentDictionary<Command, CommandsContent>();
         public ObservableCollection<Command> commands { get; private set; } = new ObservableCollection<Command>();
 
         private SettingsWindow.OpenSpeech openSpeech;
+
+        private readonly StringBuilder search_filter = new StringBuilder();
 
         public enum Option
         {
@@ -86,10 +86,12 @@ namespace Eva_5._0
         {
             AddCommandButton.IsEnabled = false;
             ResetButton.IsEnabled = false;
+            SearchButton.IsEnabled = false;
+            ClearFilterButton.IsEnabled = false;
 
             A_p_l____And____P_r_o_c.commands = await Command_Pallet.Get_Commands();
 
-            Application.Current.Dispatcher.Invoke(() =>
+            await Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 switch (selected_option)
                 {
@@ -103,10 +105,12 @@ namespace Eva_5._0
                         Load_Other(A_p_l____And____P_r_o_c.commands.W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name);
                         break;
                 }
-            });
+            }, System.Windows.Threading.DispatcherPriority.Render);
 
             AddCommandButton.IsEnabled = true;
             ResetButton.IsEnabled = true;
+            SearchButton.IsEnabled = true;
+            ClearFilterButton.IsEnabled = true;
         }
 
 
@@ -114,61 +118,78 @@ namespace Eva_5._0
         private void Load_Open_Applications(ConcurrentDictionary<string, string> selected_items)
         {
             commands.Clear();
-            foreach (string key in selected_items.Keys)
+            string filter = search_filter.ToString();
+
+            for (int i = 0; i < selected_items.Keys.Count; i++)
             {
-                string command_value = String.Empty;
-                selected_items.TryGetValue(key, out command_value);
+                string key = selected_items.Keys.ElementAt(i);
+                bool item_valid = !String.IsNullOrEmpty(filter) ? (key.Contains(filter) ? true : false) : true;
 
-                clone.TryAdd(key, command_value);
-
-                string command_type = command_value.Substring(0, 3);
-                string command_content = command_value.Substring(6);
-
-                if (command_type != "APP")
+                if (item_valid)
                 {
-                    Command.Type type_enum = Command.Type.CMD;
-                    switch (command_type)
-                    {
-                        case "PRC":
-                            type_enum = Command.Type.PRC;
-                            break;
-                        case "CMD":
-                            type_enum = Command.Type.CMD;
-                            break;
-                        case "URI":
-                            type_enum = Command.Type.URI;
-                            break;
-                    }
+                    string command_value = String.Empty;
+                    selected_items.TryGetValue(key, out command_value);
 
-                    Command command = new Command(key, command_content, type_enum, true);
-                    commands_diff.TryAdd(command, new CommandsContent()
+                    clone.TryAdd(key, command_value);
+
+                    string command_type = command_value.Substring(0, 3);
+                    string command_content = command_value.Substring(6);
+
+                    if (command_type != "APP")
                     {
-                        command = key,
-                        content = command_content,
-                        type = command_type
-                    });
-                    commands.Add(command);
+                        Command.Type type_enum = Command.Type.CMD;
+                        switch (command_type)
+                        {
+                            case "PRC":
+                                type_enum = Command.Type.PRC;
+                                break;
+                            case "CMD":
+                                type_enum = Command.Type.CMD;
+                                break;
+                            case "URI":
+                                type_enum = Command.Type.URI;
+                                break;
+                        }
+
+                        Command command = new Command(key, command_content, type_enum, true);
+                        commands_diff.TryAdd(command, new CommandsContent()
+                        {
+                            command = key,
+                            content = command_content,
+                            type = command_type
+                        });
+                        commands.Add(command);
+                    }
                 }
             }
         }
 
         private void Load_Other(ConcurrentDictionary<string, string> selected_items)
         {
-            foreach (string key in selected_items.Keys)
+            commands.Clear();
+            string filter = search_filter.ToString();
+
+            for (int i = 0; i < selected_items.Keys.Count; i++)
             {
-                string command_value = String.Empty;
-                selected_items.TryGetValue(key, out command_value);
+                string key = selected_items.Keys.ElementAt(i);
+                bool item_valid = !String.IsNullOrEmpty(filter) ? (key.Contains(filter) ? true : false) : true;
 
-                clone.TryAdd(key, command_value);
-
-                Command command = new Command(key, command_value, Command.Type.NULL, false);
-                commands_diff.TryAdd(command, new CommandsContent()
+                if (item_valid)
                 {
-                    command = key,
-                    content = command_value,
-                    type = "NULL"
-                });
-                commands.Add(command);
+                    string command_value = String.Empty;
+                    selected_items.TryGetValue(key, out command_value);
+
+                    clone.TryAdd(key, command_value);
+
+                    Command command = new Command(key, command_value, Command.Type.NULL, false);
+                    commands_diff.TryAdd(command, new CommandsContent()
+                    {
+                        command = key,
+                        content = command_value,
+                        type = "NULL"
+                    });
+                    commands.Add(command);
+                }
             }
         }
 
@@ -237,9 +258,11 @@ namespace Eva_5._0
             command_Addition.ShowDialog();
         }
 
-        private void Search(object sender, RoutedEventArgs e)
+        private async void Search(object sender, RoutedEventArgs e)
         {
-
+            search_filter.Clear();
+            search_filter.Append(SearchTextBox.Text);
+            await LoadContents();
         }
 
         private void Prev__Click(object sender, RoutedEventArgs e)
@@ -364,6 +387,13 @@ namespace Eva_5._0
             commands.Remove(command_instance);
 
             await UpdateCommands();
+        }
+
+        private async void ResetSeachFilter(object sender, RoutedEventArgs e)
+        {
+            SearchTextBox.Clear();
+            search_filter.Clear();
+            await LoadContents();
         }
     }
 }

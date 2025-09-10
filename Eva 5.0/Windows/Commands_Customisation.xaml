@@ -76,9 +76,9 @@
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="3" Grid.ColumnSpan="5">
-            <Button Margin="0,0,5,0" Foreground="White" Height="24" Width="24" VerticalAlignment="Center" FontSize="14" FontFamily="Segoe MDL2 Assets" Style="{StaticResource MyCommandPalletButtonStyle}" Content="&#xE117;" Click="Search"/>
+            <Button x:Name="ClearFilterButton" Margin="0,0,5,0" Foreground="White" Height="24" Width="24" VerticalAlignment="Center" FontSize="14" FontFamily="Segoe MDL2 Assets" Style="{StaticResource MyWhiteButtonStyle}" Content="&#xE117;" Click="ResetSeachFilter"/>
             <TextBox x:Name="SearchTextBox" Width="170" VerticalAlignment="Center" FontSize="16"/>
-            <Button Margin="15,0,0,0" Foreground="White" Height="24" Width="24" VerticalAlignment="Center" FontSize="14" FontFamily="Segoe MDL2 Assets" Style="{StaticResource MyCommandPalletButtonStyle}" Content="&#xE11A;" Click="Search"/>
+            <Button x:Name="SearchButton" Margin="25,0,0,0" Foreground="White" Height="24" Width="24" VerticalAlignment="Center" FontSize="14" FontFamily="Segoe MDL2 Assets" Style="{StaticResource MyCommandPalletButtonStyle}" Content="&#xE11A;" Click="Search"/>
         </StackPanel>
         
         <StackPanel Grid.ColumnSpan="5" Orientation="Horizontal">
