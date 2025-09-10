@@ -20,24 +20,26 @@
 
     <Window.Resources>
         <DataTemplate x:Key="CommandItems" DataType="local:Command">
-            <StackPanel Orientation="Horizontal" Margin="10,20,0,10">
-                <TextBlock Text="Command: " Margin="5,0,0,0"/>
-                <TextBox Margin="5,0,0,0" Width="100" Text="{Binding command}"/>
+            <Border Margin="0,5,0,5" BorderBrush="Black" BorderThickness="1" CornerRadius="5">
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Command: " Margin="5,0,0,0"/>
+                    <TextBox Margin="5,0,0,0" Width="100" Text="{Binding command}"/>
 
-                <TextBlock Text="Content: " Margin="20,0,0,0"/>
-                <TextBox Margin="5,0,0,0" Width="100" Text="{Binding content}"/>
+                    <TextBlock Text="Content: " Margin="20,0,0,0"/>
+                    <TextBox Margin="5,0,0,0" Width="100" Text="{Binding content}"/>
 
-                <TextBlock Text="Type: " Margin="20,0,0,0" Visibility="{Binding type_panel_visibility}"/>
-                <StackPanel Orientation="Horizontal" Visibility="{Binding type_panel_visibility}">
-                    <Button FontFamily="Segoe MDL2 Assets" Content="&#xE016;" Click="Prev__Click"/>
-                    <TextBox Width="45" IsReadOnly="True" Text="{Binding type}"/>
-                    <Button FontFamily="Segoe MDL2 Assets" Content="&#xE017;" Click="Next__Click"/>
+                    <TextBlock Text="Type: " Margin="20,0,0,0" Visibility="{Binding type_panel_visibility}"/>
+                    <StackPanel Orientation="Horizontal" Visibility="{Binding type_panel_visibility}">
+                        <Button FontFamily="Segoe MDL2 Assets" Content="&#xE016;" Click="Prev__Click"/>
+                        <TextBox TextAlignment="Center" Width="45" IsReadOnly="True" Text="{Binding type}"/>
+                        <Button FontFamily="Segoe MDL2 Assets" Content="&#xE017;" Click="Next__Click"/>
+                    </StackPanel>
+
+                    <Button Tag="{Binding command_instance}" FontFamily="Segoe MDL2 Assets" Margin="30,0,0,0" Content="&#xE149;" Click="Reset_Command"/>
+                    <Button Tag="{Binding command_instance}" FontFamily="Segoe MDL2 Assets" Margin="20,0,0,0" Content="&#xE105;" Click="Save_Command"/>
+                    <Button Tag="{Binding command_instance}" FontFamily="Segoe MDL2 Assets" Margin="20,0,5,0" Content="&#xE107;" Click="Delete_Command"/>
                 </StackPanel>
-
-                <Button Tag="{Binding command_instance}" FontFamily="Segoe MDL2 Assets" Margin="30,0,0,0" Content="&#xE149;" Click="Reset_Command"/>
-                <Button Tag="{Binding command_instance}" FontFamily="Segoe MDL2 Assets" Margin="20,0,0,0" Content="&#xE105;" Click="Save_Command"/>
-                <Button Tag="{Binding command_instance}" FontFamily="Segoe MDL2 Assets" Margin="20,0,0,0" Content="&#xE107;" Click="Delete_Command"/>
-            </StackPanel>
+            </Border>
         </DataTemplate>
     </Window.Resources>
 
