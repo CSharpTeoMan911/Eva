@@ -19,8 +19,25 @@
     </Window.Background>
 
     <Window.Resources>
-        <DataTemplate x:Key="CommandItem">
-            
+        <DataTemplate x:Key="CommandItems" DataType="local:Command">
+            <StackPanel Orientation="Horizontal" Margin="10,20,0,10">
+                <TextBlock Text="Command: " Margin="5,0,0,0"/>
+                <TextBox Margin="5,0,0,0" Width="100" Text="{Binding command}"/>
+
+                <TextBlock Text="Content: " Margin="20,0,0,0"/>
+                <TextBox Margin="5,0,0,0" Width="100" Text="{Binding content}"/>
+
+                <TextBlock Text="Type: " Margin="20,0,0,0" Visibility="{Binding type_panel_visibility}"/>
+                <StackPanel Orientation="Horizontal" Visibility="{Binding type_panel_visibility}">
+                    <Button FontFamily="Segoe MDL2 Assets" Content="&#xE016;" Click="Prev__Click"/>
+                    <TextBox Width="45" IsReadOnly="True" Text="{Binding type}"/>
+                    <Button FontFamily="Segoe MDL2 Assets" Content="&#xE017;" Click="Next__Click"/>
+                </StackPanel>
+
+                <Button Tag="{Binding command_instance}" FontFamily="Segoe MDL2 Assets" Margin="30,0,0,0" Content="&#xE149;" Click="Reset_Command"/>
+                <Button Tag="{Binding command_instance}" FontFamily="Segoe MDL2 Assets" Margin="20,0,0,0" Content="&#xE105;" Click="Save_Command"/>
+                <Button Tag="{Binding command_instance}" FontFamily="Segoe MDL2 Assets" Margin="20,0,0,0" Content="&#xE107;" Click="Delete_Command"/>
+            </StackPanel>
         </DataTemplate>
     </Window.Resources>
 
@@ -54,12 +71,18 @@
 
 
 
-        <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,10,0" Grid.Column="7" Grid.RowSpan="2" Grid.ColumnSpan="2" Orientation="Horizontal">
+        <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,7,10,0" Grid.Column="7" Grid.RowSpan="2" Grid.ColumnSpan="2" Orientation="Horizontal">
             <Button FontFamily="Segoe MDL2 Assets"  Content="&#xEF2C;" Width="23" Height="23" FontSize="13" Foreground="White" Style="{StaticResource MyWhiteButtonStyle}" Click="CloseWindow"/>
         </StackPanel>
 
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="3" Grid.ColumnSpan="5">
+            <Button Margin="0,0,5,0" Foreground="White" Height="24" Width="24" VerticalAlignment="Center" FontSize="14" FontFamily="Segoe MDL2 Assets" Style="{StaticResource MyCommandPalletButtonStyle}" Content="&#xE117;" Click="Search"/>
+            <TextBox x:Name="SearchTextBox" Width="170" VerticalAlignment="Center" FontSize="16"/>
+            <Button Margin="15,0,0,0" Foreground="White" Height="24" Width="24" VerticalAlignment="Center" FontSize="14" FontFamily="Segoe MDL2 Assets" Style="{StaticResource MyCommandPalletButtonStyle}" Content="&#xE11A;" Click="Search"/>
+        </StackPanel>
+        
         <StackPanel Grid.ColumnSpan="5" Orientation="Horizontal">
-            <Button Margin="10,0,0,0" FontFamily="Corbel, Segoe MDL2 Assets" VerticalAlignment="Center" FontSize="20" Style="{StaticResource MyCommandPalletButtonStyle}" Click="AddCommand">
+            <Button x:Name="AddCommandButton" Margin="10,0,0,0" FontFamily="Corbel, Segoe MDL2 Assets" VerticalAlignment="Center" FontSize="20" Style="{StaticResource MyCommandPalletButtonStyle}" Click="AddCommand">
                 <Button.Content>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock FontSize="15" Padding="2" FontFamily="Corbel Light" Text="Add command" VerticalAlignment="Center" Foreground="White"/>
@@ -67,7 +90,7 @@
                     </StackPanel>
                 </Button.Content>
             </Button>
-            <Button Margin="10,0,0,0" FontFamily="Corbel, Segoe MDL2 Assets" VerticalAlignment="Center" FontSize="20" Style="{StaticResource MyCommandPalletButtonStyle}" Click="Reset_Commands">
+            <Button x:Name="ResetButton" Margin="10,0,0,0" FontFamily="Corbel, Segoe MDL2 Assets" VerticalAlignment="Center" FontSize="20" Style="{StaticResource MyCommandPalletButtonStyle}" Click="Reset_Commands">
                 <Button.Content>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock FontSize="15" Padding="2" FontFamily="Corbel Light" Text="Reset" VerticalAlignment="Center" Foreground="White"/>
@@ -79,9 +102,9 @@
        
 
         <ScrollViewer   x:Name="Main_Content_ScrollViewer" Grid.Row="1" Grid.RowSpan="8" Grid.ColumnSpan="9" Background="White">
-            <StackPanel x:Name="Main_Content" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <ItemsControl x:Name="Main_Content" ItemTemplate="{StaticResource CommandItems}" ItemsSource="{Binding commands}" HorizontalAlignment="Center" VerticalAlignment="Center">
                 
-            </StackPanel>
+            </ItemsControl>
         </ScrollViewer>
 
 

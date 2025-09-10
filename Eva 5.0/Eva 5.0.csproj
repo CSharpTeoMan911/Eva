@@ -122,6 +122,7 @@
     <Compile Include="Classes\Chat.cs" />
     <Compile Include="Classes\ChatGPT_API.cs" />
     <Compile Include="Classes\ChatHistory.cs" />
+    <Compile Include="Classes\Command.cs" />
     <Compile Include="Windows\ChatGPT_Response_Window.xaml.cs">
       <DependentUpon>ChatGPT_Response_Window.xaml</DependentUpon>
     </Compile>
