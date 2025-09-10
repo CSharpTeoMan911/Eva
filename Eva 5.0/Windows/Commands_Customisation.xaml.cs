@@ -220,7 +220,7 @@ namespace Eva_5._0
             GC.Collect(10);
         }
 
-        private async void UpdateClone(ConcurrentDictionary<string, string> clone_)
+        private async Task UpdateClone(ConcurrentDictionary<string, string> clone_)
         {
             clone = clone_;
 

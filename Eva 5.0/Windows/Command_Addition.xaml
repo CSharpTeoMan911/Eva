@@ -18,6 +18,28 @@
         </LinearGradientBrush>
     </Window.Background>
 
+    <Window.Resources>
+        <DataTemplate x:Key="CommandTemplate" DataType="local:CommandCharacteristics">
+            <StackPanel Orientation="Horizontal" Margin="10,20,0,10">
+                <TextBlock Text="Command: " FontSize="16" Margin="5,0,0,0"/>
+                <TextBox FontSize="16" Width="120" Text="{Binding command}"/>
+
+                <TextBlock Text="Content: " FontSize="16" Margin="20,0,0,0"/>
+                <TextBox Margin="5,0,0,0" FontSize="16" Width="120" Text="{Binding content}"/>
+
+                <TextBlock Text="Type: " FontSize="16" Margin="20,0,0,0"/>
+
+                <StackPanel Orientation="Horizontal" Visibility="{Binding type_panel_visibility}">
+                    <Button FontSize="16" FontFamily="Segoe MDL2 Assets" Content="&#xE016;" Click="PreviousType"/>
+                    <TextBox FontSize="16" Width="45" Text="{Binding type}"/>
+                    <Button FontSize="16" FontFamily="Segoe MDL2 Assets" Content="&#xE017;" Click="NextType"/>
+                </StackPanel>
+
+                <Button FontFamily="Segoe MDL2 Assets" Margin="30,0,0,0" FontSize="16" Content="&#xE105;" Click="AddCommand"/>
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
+    
     <Grid>
 
         <Grid.ColumnDefinitions>
@@ -53,7 +75,7 @@
         </StackPanel>
 
         <StackPanel Name="Main_Content" Grid.Row="2" Grid.RowSpan="4" Grid.ColumnSpan="9" Background="White">
-            
+            <ItemsControl ItemTemplate="{StaticResource CommandTemplate}" ItemsSource="{Binding command_format}"/>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.RowSpan="3" Grid.ColumnSpan="9" Background="#FFE6E6E6">
