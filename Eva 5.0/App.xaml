@@ -234,7 +234,7 @@
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="border" Property="BorderBrush" Value="White" />
+                                    <Setter TargetName="border" Property="BorderBrush" Value="#008DEB" />
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>

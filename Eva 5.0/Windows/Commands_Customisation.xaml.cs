@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -356,7 +357,7 @@ namespace Eva_5._0
             }
             else
             {
-                if (!String.IsNullOrEmpty(command_content) && content_box.Text == command_diff.content)
+                if (!String.IsNullOrEmpty(command_content) && content_box.Text == command_diff.content && type_box.Text == command_diff.type)
                 {
                     MessageBox.Show("The key already exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }

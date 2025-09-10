@@ -84,7 +84,7 @@
         </StackPanel>
         
         <StackPanel Grid.ColumnSpan="5" Orientation="Horizontal">
-            <Button x:Name="AddCommandButton" Margin="10,0,0,0" FontFamily="Corbel, Segoe MDL2 Assets" VerticalAlignment="Center" FontSize="20" Style="{StaticResource MyCommandPalletButtonStyle}" Click="AddCommand">
+            <Button x:Name="AddCommandButton" Margin="10,0,0,0" FontFamily="Corbel, Segoe MDL2 Assets" VerticalAlignment="Center" FontSize="20" Style="{StaticResource MyCommandPalletButtonStyle}" Background="Transparent" Click="AddCommand">
                 <Button.Content>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock FontSize="15" Padding="2" FontFamily="Corbel Light" Text="Add command" VerticalAlignment="Center" Foreground="White"/>
@@ -92,7 +92,7 @@
                     </StackPanel>
                 </Button.Content>
             </Button>
-            <Button x:Name="ResetButton" Margin="10,0,0,0" FontFamily="Corbel, Segoe MDL2 Assets" VerticalAlignment="Center" FontSize="20" Style="{StaticResource MyCommandPalletButtonStyle}" Click="Reset_Commands">
+            <Button x:Name="ResetButton" Margin="10,0,0,0" FontFamily="Corbel, Segoe MDL2 Assets" VerticalAlignment="Center" FontSize="20" Style="{StaticResource MyCommandPalletButtonStyle}" Background="Transparent" Click="Reset_Commands">
                 <Button.Content>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock FontSize="15" Padding="2" FontFamily="Corbel Light" Text="Reset" VerticalAlignment="Center" Foreground="White"/>
