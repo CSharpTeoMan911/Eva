@@ -21,8 +21,8 @@
 <br>
 
 ## 📥 Download
-* ➡️ Download Eva from SourceForge: https://sourceforge.net/projects/eva-ai/
-* ➡️ Download Eva from Github: https://github.com/CSharpTeoMan911/Eva/releases
+* ➡️ Download the ```Eva.msi``` installer from **SourceForge**: https://sourceforge.net/projects/eva-ai/
+* ➡️ Download the ```Eva.msi``` installer from **Github**: https://github.com/CSharpTeoMan911/Eva/releases
 
 <br>
 <br>
