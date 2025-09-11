@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -31,6 +32,9 @@ namespace Eva_5._0
         private SettingsWindow.OpenSpeech openSpeech;
 
         private readonly StringBuilder search_filter = new StringBuilder();
+
+        private bool write_initiated = false;
+
 
         public enum Option
         {
@@ -196,23 +200,26 @@ namespace Eva_5._0
 
         private async Task UpdateCommands()
         {
-            switch (selected_option)
+            if (!write_initiated)
             {
-                case Option.OpenApplications:
-                    A_p_l____And____P_r_o_c.commands.A_p_l_Name__And__A_p_l___E_x__Name = clone;
-                    await Command_Pallet.Set_Commands(A_p_l____And____P_r_o_c.commands);
-                    break;
-                case Option.CloseApplications:
-                    A_p_l____And____P_r_o_c.commands.A_p_l_Name__And__A_p_l___P_r_o_c_Name = clone;
-                    await Command_Pallet.Set_Commands(A_p_l____And____P_r_o_c.commands);
-                    break;
-                case Option.SearchContentOnWebApplications:
-                    A_p_l____And____P_r_o_c.commands.W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name = clone;
-                    await Command_Pallet.Set_Commands(A_p_l____And____P_r_o_c.commands);
-                    break;
-            }
+                switch (selected_option)
+                {
+                    case Option.OpenApplications:
+                        A_p_l____And____P_r_o_c.commands.A_p_l_Name__And__A_p_l___E_x__Name = clone;
+                        await Command_Pallet.Set_Commands(A_p_l____And____P_r_o_c.commands);
+                        break;
+                    case Option.CloseApplications:
+                        A_p_l____And____P_r_o_c.commands.A_p_l_Name__And__A_p_l___P_r_o_c_Name = clone;
+                        await Command_Pallet.Set_Commands(A_p_l____And____P_r_o_c.commands);
+                        break;
+                    case Option.SearchContentOnWebApplications:
+                        A_p_l____And____P_r_o_c.commands.W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name = clone;
+                        await Command_Pallet.Set_Commands(A_p_l____And____P_r_o_c.commands);
+                        break;
+                }
 
-            await LoadContents();
+                await LoadContents();
+            }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -223,34 +230,48 @@ namespace Eva_5._0
 
         private async Task UpdateClone(ConcurrentDictionary<string, string> clone_)
         {
-            clone = clone_;
+            if (!write_initiated) 
+            {
+                write_initiated = true;
 
-            await UpdateCommands();
+                clone = clone_;
 
-            commands.Clear();
+                await UpdateCommands();
 
-            await LoadContents();
-            Main_Content.UpdateLayout();
+                commands.Clear();
+
+                await LoadContents();
+                Main_Content.UpdateLayout();
+
+                write_initiated = false;
+            }
         }
 
         private async void Reset_Commands(object sender, RoutedEventArgs e)
         {
-            await Command_Pallet.Reset_Commands(selected_option);
-
-            switch (selected_option)
+            if (!write_initiated) 
             {
-                case Option.OpenApplications:
-                    clone = A_p_l____And____P_r_o_c.commands.A_p_l_Name__And__A_p_l___E_x__Name;
-                    break;
-                case Option.CloseApplications:
-                    clone = A_p_l____And____P_r_o_c.commands.A_p_l_Name__And__A_p_l___P_r_o_c_Name;
-                    break;
-                case Option.SearchContentOnWebApplications:
-                    clone = A_p_l____And____P_r_o_c.commands.W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name;
-                    break;
-            }
+                write_initiated = true;
 
-            await UpdateCommands();
+                await Command_Pallet.Reset_Commands(selected_option);
+
+                switch (selected_option)
+                {
+                    case Option.OpenApplications:
+                        clone = A_p_l____And____P_r_o_c.commands.A_p_l_Name__And__A_p_l___E_x__Name;
+                        break;
+                    case Option.CloseApplications:
+                        clone = A_p_l____And____P_r_o_c.commands.A_p_l_Name__And__A_p_l___P_r_o_c_Name;
+                        break;
+                    case Option.SearchContentOnWebApplications:
+                        clone = A_p_l____And____P_r_o_c.commands.W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name;
+                        break;
+                }
+
+                await UpdateCommands();
+
+                write_initiated = false;
+            }
         }
 
         private void AddCommand(object sender, RoutedEventArgs e)
@@ -332,62 +353,76 @@ namespace Eva_5._0
 
         private async void Save_Command(object sender, RoutedEventArgs e)
         {
-            Button button = (Button)sender;
-            Command command_instance = (Command)button.Tag;
-
-            commands_diff.TryGetValue(command_instance, out CommandsContent command_diff);
-
-            string command_content = String.Empty;
-            clone.TryGetValue(command_instance.command, out command_content);
-
-            StackPanel main_panel = button.Parent as StackPanel;
-            TextBox command_box = main_panel.Children[1] as TextBox;
-            TextBox content_box = main_panel.Children[3] as TextBox;
-
-            StackPanel type_panel = main_panel.Children[5] as StackPanel;
-            TextBox type_box = type_panel.Children[1] as TextBox;
-
-            StringBuilder content_builder = new StringBuilder(type_box.Text);
-            content_builder.Append(" = ");
-            content_builder.Append(content_box.Text);
-
-            if (command_box.Text == String.Empty)
+            if (!write_initiated) 
             {
-                command_instance.command = command_diff.command;
-            }
-            else
-            {
-                if (!String.IsNullOrEmpty(command_content) && content_box.Text == command_diff.content && type_box.Text == command_diff.type)
+                write_initiated = true;
+
+                Button button = (Button)sender;
+                Command command_instance = (Command)button.Tag;
+
+                commands_diff.TryGetValue(command_instance, out CommandsContent command_diff);
+
+                string command_content = String.Empty;
+                clone.TryGetValue(command_instance.command, out command_content);
+
+                StackPanel main_panel = button.Parent as StackPanel;
+                TextBox command_box = main_panel.Children[1] as TextBox;
+                TextBox content_box = main_panel.Children[3] as TextBox;
+
+                StackPanel type_panel = main_panel.Children[5] as StackPanel;
+                TextBox type_box = type_panel.Children[1] as TextBox;
+
+                StringBuilder content_builder = new StringBuilder(type_box.Text);
+                content_builder.Append(" = ");
+                content_builder.Append(content_box.Text);
+
+                if (command_box.Text == String.Empty)
                 {
-                    MessageBox.Show("The key already exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    command_instance.command = command_diff.command;
                 }
                 else
                 {
-                    bool changed = commands_diff.TryUpdate(command_instance, new CommandsContent()
+                    if (!String.IsNullOrEmpty(command_content) && content_box.Text == command_diff.content && type_box.Text == command_diff.type)
                     {
-                        command = command_box.Text,
-                        content = content_box.Text,
-                        type = type_box.Text
-                    }, command_diff);
+                        MessageBox.Show("The key already exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                    {
+                        bool changed = commands_diff.TryUpdate(command_instance, new CommandsContent()
+                        {
+                            command = command_box.Text,
+                            content = content_box.Text,
+                            type = type_box.Text
+                        }, command_diff);
 
-                    clone.TryUpdate(command_box.Text, content_builder.ToString(), command_content);
+                        clone.TryUpdate(command_box.Text, content_builder.ToString(), command_content);
+                    }
+
                 }
 
-            }
+                await UpdateCommands();
 
-            await UpdateCommands();
+                write_initiated = false;
+            }
         }
 
         private async void Delete_Command(object sender, RoutedEventArgs e)
         {
-            Button button = (Button)sender;
-            Command command_instance = (Command)button.Tag;
+            if (!write_initiated) 
+            {
+                write_initiated = true;
 
-            commands_diff.TryRemove(command_instance, out CommandsContent command_diff);
-            clone.TryRemove(command_instance.command, out string command_content);
-            commands.Remove(command_instance);
+                Button button = (Button)sender;
+                Command command_instance = (Command)button.Tag;
 
-            await UpdateCommands();
+                commands_diff.TryRemove(command_instance, out CommandsContent command_diff);
+                clone.TryRemove(command_instance.command, out string command_content);
+                commands.Remove(command_instance);
+
+                await UpdateCommands();
+
+                write_initiated = false;
+            }
         }
 
         private async void ResetSeachFilter(object sender, RoutedEventArgs e)

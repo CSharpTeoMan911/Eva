@@ -38,6 +38,8 @@ namespace Eva_5._0
             if (tasks_running == 0)
             {
                 // INCREMENT THE AMOUNT OF TASKS CURRENTLY RUNNING BY '1'
+                Interlocked.MemoryBarrier();
+                Interlocked.SpeculationBarrier();
                 Interlocked.Increment(ref tasks_running);
 
                 switch (process_type)

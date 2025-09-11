@@ -101,6 +101,8 @@ namespace Eva_5._0
             {
                 internal static void Start_The_Application_Execution_Animation()
                 {
+                    Interlocked.MemoryBarrier();
+                    Interlocked.SpeculationBarrier();
                     Interlocked.Exchange(ref BeginExecutionAnimation, 1);
                 }
             }

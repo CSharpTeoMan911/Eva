@@ -62,6 +62,8 @@ namespace Eva_5._0
         {
             int Timeout = await Settings.Get_Speech_Timeout_Settings();
 
+            Interlocked.MemoryBarrier();
+            Interlocked.SpeculationBarrier();
             if (Interlocked.Read(ref Online_Speech_Recogniser_Disabled) == 0 && Interlocked.Read(ref Online_Speech_Recogniser_Listening) == 0 && Interlocked.Read(ref Window_Minimised) == 0)
                 Initiate_The_Online_Speech_Recognition_Engine(Timeout);
         }
@@ -71,6 +73,9 @@ namespace Eva_5._0
         {
             try
             {
+                Interlocked.MemoryBarrier();
+                Interlocked.SpeculationBarrier();
+
                 DateTime start = DateTime.UtcNow;
 
                 // ENSURE THAT THE ONLINE SPEECH RECOGNITION INTERFACE IS CLOSED
@@ -154,6 +159,9 @@ namespace Eva_5._0
         {
             try
             {
+                Interlocked.MemoryBarrier();
+                Interlocked.SpeculationBarrier();
+
                 if ((args.Result.Text == String.Empty) || (args.Result == null))
                 {
                     Close_Speech_Recognition_Interface();
@@ -176,8 +184,7 @@ namespace Eva_5._0
                     Online_Speech_Recognition_Error_Management(Online_Speech_Recognition_Error_Type.Online_Speech_Recognition_Access_Denied);
                 }
             }
-
-
+            
             Interlocked.Exchange(ref Online_Speech_Recogniser_Listening, 0);
             Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.UtcNow;
         }
@@ -185,6 +192,9 @@ namespace Eva_5._0
 
         private static void ContinuousRecognitionSession_Completed(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionSession sender, Windows.Media.SpeechRecognition.SpeechContinuousRecognitionCompletedEventArgs args)
         {
+            Interlocked.MemoryBarrier();
+            Interlocked.SpeculationBarrier();
+
             Interlocked.Exchange(ref Online_Speech_Recogniser_Listening, 0);
             Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.UtcNow;
             Close_Speech_Recognition_Interface();
@@ -192,6 +202,9 @@ namespace Eva_5._0
 
         private static void OnlineSpeechRecognition_StateChanged(Windows.Media.SpeechRecognition.SpeechRecognizer sender, Windows.Media.SpeechRecognition.SpeechRecognizerStateChangedEventArgs args)
         {
+            Interlocked.MemoryBarrier();
+            Interlocked.SpeculationBarrier();
+
             if (sender.State == Windows.Media.SpeechRecognition.SpeechRecognizerState.SpeechDetected)
             {
                 if (Interlocked.Read(ref Speech_Detected) == 0)
@@ -296,6 +309,9 @@ namespace Eva_5._0
         {
             try
             {
+                Interlocked.MemoryBarrier();
+                Interlocked.SpeculationBarrier();
+
                 if (Interlocked.Read(ref Online_Speech_Recogniser_Listening) == 0 && Interlocked.Read(ref Online_Speech_Recogniser_Listening) == 0)
                 {
                     // SHUT DOWN THE OS' MAIN ONLINE SPEECH RECOGNITION INTERFACE PROCESS ("SpeechRuntime.exe")

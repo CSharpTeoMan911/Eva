@@ -451,6 +451,9 @@ namespace Eva_5._0
                 {
                     while (Wake_Word_Started == true)
                     {
+                        Interlocked.MemoryBarrier();
+                        Interlocked.SpeculationBarrier();
+
                         await namedPipe?.WaitForConnectionAsync(pipeCancellationToken);
 
                         if (MainWindowIsClosing == false)
