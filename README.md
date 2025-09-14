@@ -7,11 +7,13 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.5.2
+📌 Latest Version: v7.5.3
 
 * 🆕 Added commands search option
 * 🆕 Optimised the application for low power devices, such as laptops
-* 🐞 Fixed UI related issues regarding threading 
+* 🐞 Fixed UI related issues regarding threading
+* 🐞 Fixed thread synchronisation bugs
+* 🐞 Fixed race-condition read/write override bugs on the commands pallet file 
 
 <img width="724" height="681" alt="Settings" src="https://github.com/user-attachments/assets/a6879123-9362-45fe-9975-7faa034dac57" />
 
@@ -19,8 +21,8 @@
 <br>
 
 ## 📥 Download
-* ➡️ Download Eva from SourceForge: https://sourceforge.net/projects/eva-ai/
-* ➡️ Download Eva from Github: https://github.com/CSharpTeoMan911/Eva/releases
+* ➡️ Download the ```Eva.msi``` installer from **SourceForge**: https://sourceforge.net/projects/eva-ai/
+* ➡️ Download the ```Eva.msi``` installer from **Github**: https://github.com/CSharpTeoMan911/Eva/releases
 
 <br>
 <br>
