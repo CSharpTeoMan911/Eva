@@ -68,12 +68,8 @@ namespace Eva_5._0
         private static CancellationTokenSource pipeCancellationTokenSource;
         private static CancellationToken pipeCancellationToken;
 
-        private static MainWindow.WakeWordActivationCallback WakeWordEngineActivationCallback;
-
-        public static void Start_The_Wake_Word_Engine(MainWindow.WakeWordActivationCallback wakeWordActivationCallback)
+        public static void Start_The_Wake_Word_Engine()
         {
-            WakeWordEngineActivationCallback = wakeWordActivationCallback;
-
             // INITIATE A WAKE WORD ENGINE PROCESS ON A DIFFERENT THREAD FOR CPU LOAD DISTRIBUTION PURPOSES
             // AND ALSO TO PREVENT THE LOCKING OF THE CALLING THREAD. AFTER THE WAKE WORD ENGINE PROCESS
             // STARTED, INITIATE A TIMER THAT PRVENTS WAKE WORD ENGINE LOCK.
@@ -227,6 +223,8 @@ namespace Eva_5._0
                 // STOP THE PROCESSES THROUGH THE OBJECTS AS A BACKUP METHOD
                 //
                 // [ START ]
+
+                Wake_Word_Started = false;
 
                 pipeCancellationTokenSource?.Cancel();
 
@@ -435,12 +433,10 @@ namespace Eva_5._0
                     // [ END ]
                 }
 
-                Wake_Word_Started = false;
                 return true;
             }
             catch
             {
-                Wake_Word_Started = false;
                 return false;
             }
         }
@@ -473,17 +469,16 @@ namespace Eva_5._0
 
                                     if (bytes_read > 0)
                                     {
-                                        string pipe_message_value = Encoding.UTF8.GetString(buffer, 0, bytes_read);
+                                        string socket_message_value = Encoding.UTF8.GetString(buffer, 0, bytes_read);
 
                                         if (Proc.tasks_running == 0)
                                         {
-                                            if (pipe_message_value == wake_word_engine_loaded)
+                                            if (socket_message_value == wake_word_engine_loaded)
                                             {
                                                 resetTime = DateTime.UtcNow;
                                                 wake_word_engines_loaded++;
-                                                WakeWordEngineActivationCallback.Invoke();
                                             }
-                                            else if (pipe_message_value == cancel_wake_word)
+                                            else if (socket_message_value == cancel_wake_word)
                                             {
                                                 if (Interlocked.Read(ref Online_Speech_Recogniser_Listening) == 1)
                                                 {
@@ -491,7 +486,7 @@ namespace Eva_5._0
                                                     Online_Speech_Recognition.Close_Speech_Recognition_Interface();
                                                 }
                                             }
-                                            else if (pipe_message_value == wake_word)
+                                            else if (socket_message_value == wake_word)
                                             {
                                                 if (Interlocked.Read(ref Online_Speech_Recogniser_Listening) == 0)
                                                 {
