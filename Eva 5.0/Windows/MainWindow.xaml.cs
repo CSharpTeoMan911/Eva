@@ -223,8 +223,7 @@ namespace Eva_5._0
                             Button_Timeout -= 10;
                         }
 
-                        Interlocked.MemoryBarrier();
-                        Interlocked.SpeculationBarrier();
+
 
                         // METHODS AND PARAMETERS THAT MUST BE EXECUTED AND/OR MANIPULATED ON THE UI THREAD,
                         // ARE MOVED ON THE UI THREAD VIA THE "Application.Current.Dispatcher.Invoke()" METHOD
@@ -832,18 +831,8 @@ namespace Eva_5._0
         {
             if (OnOff == 0)
             {
-                // START THE WAKE WORD ENGINE PROCESS
-                Wake_Word_Engine.Start_The_Wake_Word_Engine(OnWakeWordEngineActivated);
-            }
-        }
-
-        private void WakeWordEngineActivatedCallback()
-        {
-            Interlocked.MemoryBarrier();
-            Interlocked.SpeculationBarrier();
-
-            // LOCK THE VARIABLE ON THE STACK TO BE ACCESSED ONLY BY THE CURRENT THREAD
-            Interlocked.Exchange(ref Online_Speech_Recogniser_Disabled, 0);
+                // LOCK THE VARIABLE ON THE STACK TO BE ACCESSED ONLY BY THE CURRENT THREAD
+                Interlocked.Exchange(ref Online_Speech_Recogniser_Disabled, 0);
 
             // CHANGE THE BUTTON CONTENT BY INVOKING THE OPERATION ON THE UI THREAD
             Application.Current.Dispatcher.Invoke(() =>
@@ -859,9 +848,6 @@ namespace Eva_5._0
         {
             if (OnOff == 1)
             {
-                Interlocked.MemoryBarrier();
-                Interlocked.SpeculationBarrier();
-
                 // LOCK THE VARIABLE ON THE STACK TO BE ACCESSED ONLY BY THE CURRENT THREAD
                 Interlocked.Exchange(ref Online_Speech_Recogniser_Disabled, 1);
 
