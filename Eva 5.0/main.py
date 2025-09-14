@@ -9,8 +9,6 @@ import aiofiles
 
 config = sys.argv[2]
 
-initial_frames = 0
-
 # INITIATE PYAUDIO OBJECT, LISTEN TO THE DEFAULT MIC ON 1 CHANNEL, WITH A RATE OF 16000 HZ AND A BUFFER OF 1600 FRAMES
 mic = pyaudio.PyAudio()
 stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=3000)
@@ -76,20 +74,15 @@ async def wake_word_engine_process():
     # READ 1000 FRAMES FOR EACH ITERATION (1500 * 2 = 3000 bytes)
     data = stream.read(1500, False)
 
-    if initial_frames < 3:
-        initial_frames += 1
-
     try:
-        if initial_frames == 3:
-            await pipe_messaging("[ loaded ]")
-            initial_frames += 1
-
         # RETRIEVE THE AUDIO WAVEFORM DATA AND PERFORM SPEECH TO TEXT CONVERSION
         if recognizer.AcceptWaveform(data):
             await keyword_spotter(recognizer.Result())
             await keyword_spotter(recognizer.FinalResult())
         else:
             await keyword_spotter(recognizer.PartialResult())
+        
+        await pipe_messaging("[ loaded ]")
     except KeyboardInterrupt:
         sys.exit(0)
 

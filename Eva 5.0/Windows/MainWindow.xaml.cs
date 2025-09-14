@@ -147,8 +147,14 @@ namespace Eva_5._0
 
         private int OnOff;
 
+        public delegate void WakeWordActivationCallback();
+        public static WakeWordActivationCallback OnWakeWordEngineActivated;
+
         public MainWindow()
         {
+            OnWakeWordEngineActivated = new WakeWordActivationCallback(WakeWordEngineActivatedCallback);
+
+
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
 
             for (int i = 20; i >= 0; i--)
@@ -826,22 +832,26 @@ namespace Eva_5._0
         {
             if (OnOff == 0)
             {
-                Interlocked.MemoryBarrier();
-                Interlocked.SpeculationBarrier();
-
-                // LOCK THE VARIABLE ON THE STACK TO BE ACCESSED ONLY BY THE CURRENT THREAD
-                Interlocked.Exchange(ref Online_Speech_Recogniser_Disabled, 0);
-
-                // CHANGE THE BUTTON CONTENT BY INVOKING THE OPERATION ON THE UI THREAD
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    SpeechRecognitionButton.Content = "\xE1D6";
-                });
-
                 // START THE WAKE WORD ENGINE PROCESS
-                Wake_Word_Engine.Start_The_Wake_Word_Engine();
-                Interlocked.Increment(ref OnOff);
+                Wake_Word_Engine.Start_The_Wake_Word_Engine(OnWakeWordEngineActivated);
             }
+        }
+
+        private void WakeWordEngineActivatedCallback()
+        {
+            Interlocked.MemoryBarrier();
+            Interlocked.SpeculationBarrier();
+
+            // LOCK THE VARIABLE ON THE STACK TO BE ACCESSED ONLY BY THE CURRENT THREAD
+            Interlocked.Exchange(ref Online_Speech_Recogniser_Disabled, 0);
+
+            // CHANGE THE BUTTON CONTENT BY INVOKING THE OPERATION ON THE UI THREAD
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                SpeechRecognitionButton.Content = "\xE1D6";
+            });
+
+            Interlocked.Increment(ref OnOff);
         }
 
 
