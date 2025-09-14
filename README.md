@@ -7,9 +7,8 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.5.4
+📌 Latest Version: v7.5.3
 
-* 🆕 Implemented callback at both UI and system level on wake word engine loadup
 * 🆕 Added commands search option
 * 🆕 Optimised the application for low power devices, such as laptops
 * 🐞 Fixed UI related issues regarding threading
