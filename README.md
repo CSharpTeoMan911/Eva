@@ -7,7 +7,7 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.5.5
+📌 Latest Version: v7.5.6
 
 * 🆕 Added wake word engine initialisation callback
 * 🆕 Added commands search option
