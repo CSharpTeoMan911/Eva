@@ -7,7 +7,7 @@ import time
 import asyncio
 import aiofiles
 
-config = sys.argv[2]
+config = sys.argv[1]
 
 # INITIATE PYAUDIO OBJECT, LISTEN TO THE DEFAULT MIC ON 1 CHANNEL, WITH A RATE OF 16000 HZ AND A BUFFER OF 1600 FRAMES
 mic = pyaudio.PyAudio()
@@ -15,11 +15,7 @@ stream = mic.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, fr
 stream.start_stream()
 
 # LOAD THE VOSK SPEECH RECOGNITION MODEL FROM THE APPLICATION'S DIRECTORY
-model = None
-if str(sys.argv[1]) == "0":
-    model = Model(model_path=os.path.join(os.getcwd(), "model 1"), lang="en-us")
-else:
-    model = Model(model_path=os.path.join(os.getcwd(), "model 2"), lang="en-us")
+model = Model(model_path=os.path.join(os.getcwd(), "vosk-model-small-en-us-0.15"), lang="en-us")
 
 # INITIATE KALDI SPEECH RECOGNIZER INSTANCE USING THE VOSK MODEL AND A FREQUENCY OF 16000 HZ
 recognizer = KaldiRecognizer(model, 16000)
