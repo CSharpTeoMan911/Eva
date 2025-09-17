@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -145,10 +146,14 @@ namespace Eva_5._0
 
         private double RotationValue;
 
-        private int OnOff;
+        protected static long OnOff;
+
+        private Wake_Word_Engine.Wake_Word_Engine_Event_Handler wake_Word_Engine_Event_Handler;
 
         public MainWindow()
         {
+            wake_Word_Engine_Event_Handler = new Wake_Word_Engine.Wake_Word_Engine_Event_Handler(SpeechOnCallback);
+
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
 
             for (int i = 20; i >= 0; i--)
@@ -794,11 +799,14 @@ namespace Eva_5._0
 
                             if (Microphone_Available == true)
                             {
-                                if (OnOff == 0)
+                                Interlocked.MemoryBarrier();
+                                Interlocked.SpeculationBarrier();
+
+                                if (Interlocked.Read(ref OnOff) == 0)
                                 {
                                     SpeechOn();
                                 }
-                                else if (OnOff == 1)
+                                else if (Interlocked.Read(ref OnOff) == 1)
                                 {
                                     SpeechOff();
                                 }
@@ -822,48 +830,71 @@ namespace Eva_5._0
         }
 
 
-        private void SpeechOn()
+        private async void SpeechOn()
         {
-            if (OnOff == 0)
+            Interlocked.MemoryBarrier();
+            Interlocked.SpeculationBarrier();
+
+            if (Interlocked.Read(ref OnOff) == 0)
             {
-                Interlocked.MemoryBarrier();
-                Interlocked.SpeculationBarrier();
+                await Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    this.SpeechRecognitionButton.IsEnabled = false;
+                }, System.Windows.Threading.DispatcherPriority.Render);
+
+                // START THE WAKE WORD ENGINE PROCESS
+                Wake_Word_Engine.Start_The_Wake_Word_Engine(wake_Word_Engine_Event_Handler);
+            }
+        }
+
+        public async void SpeechOnCallback()
+        {
+            Interlocked.MemoryBarrier();
+            Interlocked.SpeculationBarrier();
+
+            if (Interlocked.Read(ref OnOff) == 0)
+            {
+                // LOCK THE VARIABLE ON THE STACK TO BE ACCESSED ONLY BY THE CURRENT THREAD
+                Interlocked.Exchange(ref OnOff, 1);
 
                 // LOCK THE VARIABLE ON THE STACK TO BE ACCESSED ONLY BY THE CURRENT THREAD
                 Interlocked.Exchange(ref Online_Speech_Recogniser_Disabled, 0);
 
                 // CHANGE THE BUTTON CONTENT BY INVOKING THE OPERATION ON THE UI THREAD
-                Application.Current.Dispatcher.Invoke(() =>
+                await Application.Current.Dispatcher.InvokeAsync(() =>
                 {
+                    this.SpeechRecognitionButton.IsEnabled = true;
                     SpeechRecognitionButton.Content = "\xE1D6";
-                });
-
-                // START THE WAKE WORD ENGINE PROCESS
-                Wake_Word_Engine.Start_The_Wake_Word_Engine();
-                Interlocked.Increment(ref OnOff);
+                }, System.Windows.Threading.DispatcherPriority.Render);
             }
         }
 
 
-        private void SpeechOff()
+        private async void SpeechOff()
         {
-            if (OnOff == 1)
+            Interlocked.MemoryBarrier();
+            Interlocked.SpeculationBarrier();
+
+            if (Interlocked.Read(ref OnOff) == 1)
             {
-                Interlocked.MemoryBarrier();
-                Interlocked.SpeculationBarrier();
+                await Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    this.SpeechRecognitionButton.IsEnabled = false;
+                }, System.Windows.Threading.DispatcherPriority.Render);
 
                 // LOCK THE VARIABLE ON THE STACK TO BE ACCESSED ONLY BY THE CURRENT THREAD
                 Interlocked.Exchange(ref Online_Speech_Recogniser_Disabled, 1);
 
-                // CHANGE THE BUTTON CONTENT BY INVOKING THE OPERATION ON THE UI THREAD
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    SpeechRecognitionButton.Content = "\xF781";
-                });
-
                 // TEMINATE THE WAKE WORD ENGINE PROCESS
                 Wake_Word_Engine.Stop_The_Wake_Word_Engine();
-                Interlocked.Decrement(ref OnOff);
+                Interlocked.Exchange(ref OnOff, 0);
+
+                // CHANGE THE BUTTON CONTENT BY INVOKING THE OPERATION ON THE UI THREAD
+                await Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    this.SpeechRecognitionButton.IsEnabled = true;
+                    SpeechRecognitionButton.Content = "\xF781";
+                }, System.Windows.Threading.DispatcherPriority.Render);
             }
         }
 

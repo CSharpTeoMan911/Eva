@@ -27,7 +27,7 @@ recognizer.SetGrammar('["listen", "stop", "listening", "[unk]"]')
 recognizer.SetWords(True)
 recognizer.SetPartialWords(True)
 
-
+boot_time = time.time()
 
 async def get_confidence() -> float:
     confidence_threshold = 0.85
@@ -60,6 +60,12 @@ async def wake_word_engine_operation():
     except KeyboardInterrupt:
         sys.exit(0)
 
+async def wake_word_engine_spool() -> bool:
+    global boot_time
+    if time.time() - boot_time >= 3:
+        return True
+    else:
+        return False
 
 async def wake_word_engine_process():
     ##############################################
@@ -82,7 +88,8 @@ async def wake_word_engine_process():
         else:
             await keyword_spotter(recognizer.PartialResult())
         
-        await pipe_messaging("[ loaded ]")
+        if await wake_word_engine_spool() is True:
+            await pipe_messaging("[ loaded ]")
     except KeyboardInterrupt:
         sys.exit(0)
 

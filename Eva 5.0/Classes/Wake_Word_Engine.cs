@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Pipes;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Eva_5._0
 {
@@ -68,7 +70,10 @@ namespace Eva_5._0
         private static CancellationTokenSource pipeCancellationTokenSource;
         private static CancellationToken pipeCancellationToken;
 
-        public static void Start_The_Wake_Word_Engine()
+        public delegate void Wake_Word_Engine_Event_Handler();
+        public static event Wake_Word_Engine_Event_Handler _Wake_Word_Engine_Event;
+
+        public static void Start_The_Wake_Word_Engine(Wake_Word_Engine_Event_Handler Wake_Word_Engine_Event)
         {
             // INITIATE A WAKE WORD ENGINE PROCESS ON A DIFFERENT THREAD FOR CPU LOAD DISTRIBUTION PURPOSES
             // AND ALSO TO PREVENT THE LOCKING OF THE CALLING THREAD. AFTER THE WAKE WORD ENGINE PROCESS
@@ -78,6 +83,7 @@ namespace Eva_5._0
 
             try
             {
+                _Wake_Word_Engine_Event += Wake_Word_Engine_Event;
                 pipeCancellationTokenSource = new CancellationTokenSource();
                 pipeCancellationToken = pipeCancellationTokenSource.Token;
 
@@ -475,8 +481,15 @@ namespace Eva_5._0
                                         {
                                             if (socket_message_value == wake_word_engine_loaded)
                                             {
-                                                resetTime = DateTime.UtcNow;
-                                                wake_word_engines_loaded++;
+                                                if (Interlocked.Read(ref OnOff) == 0)
+                                                {
+                                                    if (wake_word_engines_loaded == 0)
+                                                    {
+                                                        resetTime = DateTime.UtcNow;
+                                                        wake_word_engines_loaded++;
+                                                        _Wake_Word_Engine_Event.Invoke();
+                                                    }
+                                                }
                                             }
                                             else if (socket_message_value == cancel_wake_word)
                                             {

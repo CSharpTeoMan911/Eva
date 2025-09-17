@@ -28,7 +28,7 @@ namespace Eva_5._0
 
     internal class Online_Speech_Recognition : MainWindow
     {
-#nullable enable
+        #nullable enable
         private static Windows.Media.SpeechRecognition.SpeechRecognizer? OnlineSpeechRecognition;
 
         private static Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint Form_Filling_Constraint = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(Windows.Media.SpeechRecognition.SpeechRecognitionScenario.FormFilling, "form-filling", "form")
@@ -241,7 +241,7 @@ namespace Eva_5._0
                     case Online_Speech_Recognition_Error_Type.Online_Speech_Recognition_Access_Denied:
                         if (App.PermisissionWindowOpen == false)
                         {
-                            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                            Application.Current.Dispatcher.Invoke(() =>
                             {
                                 ErrorWindow OpenPermissionDeclinedWindow = new ErrorWindow("Online Speech Recognition Access Denied");
                                 OpenPermissionDeclinedWindow.Show();
@@ -281,11 +281,7 @@ namespace Eva_5._0
 
                     OnlineSpeechRecognition.Dispose();
 
-                    int successful = Marshal.FinalReleaseComObject(OnlineSpeechRecognition);
-                    OnlineSpeechRecognition = null;
-
-                    GC.Collect(1, GCCollectionMode.Forced);
-                    GC.WaitForFullGCComplete();
+                    Marshal.FinalReleaseComObject(OnlineSpeechRecognition);
                 }
             }
             catch { }
