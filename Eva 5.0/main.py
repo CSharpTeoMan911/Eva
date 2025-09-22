@@ -24,6 +24,7 @@ recognizer.SetWords(True)
 recognizer.SetPartialWords(True)
 
 boot_time = time.time()
+boot_finished = False
 
 async def get_confidence() -> float:
     confidence_threshold = 0.85
@@ -72,6 +73,7 @@ async def wake_word_engine_process():
     # CREDIT TO https://buddhi-ashen-dev.vercel.app/posts/offline-speech-recognition
 
     global initial_frames
+    global boot_finished
 
     # READ 1000 FRAMES FOR EACH ITERATION (1500 * 2 = 3000 bytes)
     data = stream.read(1500, False)
@@ -84,8 +86,9 @@ async def wake_word_engine_process():
         else:
             await keyword_spotter(recognizer.PartialResult())
         
-        if await wake_word_engine_spool() is True:
+        if await wake_word_engine_spool() is True and boot_finished is False:
             await pipe_messaging("[ loaded ]")
+            boot_finished = True
     except KeyboardInterrupt:
         sys.exit(0)
 

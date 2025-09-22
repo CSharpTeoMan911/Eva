@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Pipes;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace Eva_5._0
 {
@@ -52,10 +50,19 @@ namespace Eva_5._0
         // 2) INSTALL THE PIP PACKAGES: "Vosk", "PyAudio", AND "sounddevice" USING THE 
         //    COMMAND: /path/to/Eva 5.0.exe/python.exe -m pip install [ PACKAGE NAME ]
 
+        private static Queue<Process> wake_word_processes = new Queue<Process>();
+
+        private static long wake_word_engines_loaded;
+
         private static string wake_word_engine_loaded = "[ loaded ]";
         private static string cancel_wake_word = "stop listening";
         private static string wake_word = "listen";
         private static bool Wake_Word_Started = false;
+
+
+        // Variable that sets in how many minutes the wake word engine is reset
+        private static int wake_word_engine_reset_time = 7;
+        public static DateTime resetTime;
 
         private static CancellationTokenSource pipeCancellationTokenSource;
         private static CancellationToken pipeCancellationToken;
@@ -73,17 +80,104 @@ namespace Eva_5._0
 
             try
             {
-                _Wake_Word_Engine_Event += Wake_Word_Engine_Event;
+                _Wake_Word_Engine_Event = Wake_Word_Engine_Event;
+
                 pipeCancellationTokenSource = new CancellationTokenSource();
                 pipeCancellationToken = pipeCancellationTokenSource.Token;
+
+                wake_word_engines_loaded = 0;
+                resetTime = DateTime.UtcNow;
 
                 // INITIATE THE WAKE WORD ENGINE ON A THREAD-POOL THREAD
                 Task.Run(Initiate_Wake_Word_Engine);
 
                 Wake_Word_Started = true;
+
+                System.Timers.Timer wake_word_management_timer = new System.Timers.Timer();
+                wake_word_management_timer.Elapsed += Wake_word_management_timer_Elapsed;
+                wake_word_management_timer.Interval = 10;
+                wake_word_management_timer.Start();
             }
             catch { }
 
+            // [ END ]
+        }
+
+        private static void Wake_word_management_timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            // RESET THE WAKE WORD ENGINE PROCESS ONCE EVERY 10 MINUTES. THIS IS DONE TO PREVENT WAKE WORD ENGINE LOCK,
+            // AND ALSO TO PREVENT THE OVERFLOW OF THE DATA BUFFER USED BY THE ENGINE TO STORE THE AUDIO DATA
+            //
+            // [ START ]
+
+            try
+            {
+                Interlocked.MemoryBarrier();
+                Interlocked.SpeculationBarrier();
+
+                System.Timers.Timer timer = ((System.Timers.Timer)(sender));
+
+                if (Wake_Word_Started == true)
+                {
+                    if (MainWindowIsClosing == false)
+                    {
+                        if (App.Application_Error_Shutdown == false)
+                        {
+                            if (DateTime.UtcNow - resetTime >= TimeSpan.FromMinutes(wake_word_engine_reset_time))
+                            {
+                                if (Interlocked.Read(ref wake_word_engines_loaded) == 1)
+                                {
+                                    if (wake_word_processes.Count == 1)
+                                    {
+                                        Initiate_Wake_Word_Engine();
+                                    }
+                                }
+                            }
+
+                            if (Interlocked.Read(ref wake_word_engines_loaded) >= 2)
+                            {
+                                Process process = null;
+
+                                while (wake_word_processes.Count > 1)
+                                {
+                                    process = wake_word_processes?.Dequeue();
+                                    process?.Kill();
+
+                                    Interlocked.Decrement(ref wake_word_engines_loaded);
+                                    resetTime = DateTime.UtcNow;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (sender != null)
+                            {
+                                timer?.Close();
+                                timer?.Dispose();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (sender != null)
+                        {
+                            timer?.Close();
+                            timer?.Dispose();
+                        }
+                    }
+                }
+                else
+                {
+                    if (sender != null)
+                    {
+                        timer?.Close();
+                        timer?.Dispose();
+                    }
+                }
+            }
+            catch { }
+
+            //
             // [ END ]
         }
 
@@ -101,12 +195,14 @@ namespace Eva_5._0
                 // [ BEGIN ]
 
                 System.Diagnostics.Process wake_word_process = new System.Diagnostics.Process();
-                wake_word_process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                wake_word_process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                 wake_word_process.StartInfo.FileName = new StringBuilder(Environment.CurrentDirectory).Append(@"\python 3.12\python.exe").ToString();
                 wake_word_process.StartInfo.CreateNoWindow = true;
                 wake_word_process.StartInfo.UseShellExecute = false;
                 wake_word_process.StartInfo.Arguments = new StringBuilder("main.py vosk-model-small-en-us-0.15 ").Append((await Settings.GetSettingsFilePath()).ToString()).ToString();
                 wake_word_process.Start();
+
+                wake_word_processes.Enqueue(wake_word_process);
 
                 await Wake_Word_Detector(wake_word_process);
 
@@ -114,6 +210,7 @@ namespace Eva_5._0
             }
             catch { }
         }
+
 
         public static bool Stop_The_Wake_Word_Engine()
         {
@@ -128,7 +225,12 @@ namespace Eva_5._0
 
                 pipeCancellationTokenSource?.Cancel();
 
-
+                Process process = null;
+                while (wake_word_processes.Count > 0)
+                {
+                    process = wake_word_processes?.Dequeue();
+                    process?.Kill();
+                }
 
                 // [ END ]
 
@@ -374,6 +476,9 @@ namespace Eva_5._0
                                                 {
                                                     _Wake_Word_Engine_Event.Invoke();
                                                 }
+
+                                                resetTime = DateTime.UtcNow;
+                                                Interlocked.Increment(ref wake_word_engines_loaded);
                                             }
                                             else if (socket_message_value == cancel_wake_word)
                                             {
