@@ -7,11 +7,12 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.5.6
+📌 Latest Version: v7.5.7
 
 * 🆕 Added wake word engine initialisation callback
 * 🆕 Added commands search option
 * 🆕 Optimised the application for low power devices, such as laptops
+* 🐞 Re-added the wake word engine reset mechanism
 * 🐞 Fixed UI related issues regarding threading
 * 🐞 Fixed thread synchronisation bugs
 * 🐞 Fixed race-condition read/write override bugs on the commands pallet file 
