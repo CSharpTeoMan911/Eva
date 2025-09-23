@@ -9,6 +9,7 @@
 ## 🔄 Changelog
 📌 Latest Version: v7.5.7
 
+* 🆕 Added automatic microphone audio level maximisation 
 * 🆕 Added wake word engine initialisation callback
 * 🆕 Added commands search option
 * 🆕 Optimised the application for low power devices, such as laptops
