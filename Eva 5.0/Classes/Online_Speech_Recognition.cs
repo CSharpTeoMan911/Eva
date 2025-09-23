@@ -114,6 +114,7 @@ namespace Eva_5._0
                     OnlineSpeechRecognition.ContinuousRecognitionSession.ResultGenerated += ContinuousRecognitionSession_ResultGenerated;
 
                     await OnlineSpeechRecognition.ContinuousRecognitionSession.StartAsync(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionMode.PauseOnRecognition);
+                    CleanedAppPagedMemory();
 
                     await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppActivationSoundEffect);
 
@@ -122,6 +123,7 @@ namespace Eva_5._0
                     Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.UtcNow;
 
                     Interlocked.Exchange(ref Online_Speech_Recogniser_Listening, 1);
+
                 }
                 else
                 {
@@ -259,6 +261,22 @@ namespace Eva_5._0
         }
 
 
+        [DllImport("psapi.dll")]
+        private static extern bool EmptyWorkingSet(IntPtr hProcess);
+
+        private static void CleanedAppPagedMemory()
+        {
+            try
+            {
+                foreach (Process p in Get_Recogniser_Interfaces())
+                {
+                    EmptyWorkingSet(p.Handle);
+                }
+            }
+            catch { }
+        }
+
+
         public static void Close_Speech_Recognition_Interface()
         {
             try
@@ -272,8 +290,6 @@ namespace Eva_5._0
                     OnlineSpeechRecognition.ContinuousRecognitionSession.ResultGenerated -= ContinuousRecognitionSession_ResultGenerated;
 
                     OnlineSpeechRecognition.Dispose();
-
-                    Marshal.FinalReleaseComObject(OnlineSpeechRecognition);
                 }
             }
             catch { }
