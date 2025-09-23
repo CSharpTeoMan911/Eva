@@ -7,7 +7,7 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.5.7
+📌 Latest Version: v7.5.8
 
 * 🆕 Added automatic microphone audio level maximisation 
 * 🆕 Added wake word engine initialisation callback
