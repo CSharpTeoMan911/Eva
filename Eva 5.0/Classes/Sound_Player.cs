@@ -1,6 +1,7 @@
 ﻿using NAudio.CoreAudioApi;
 using NAudio.Wave;
 using System.Buffers;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -55,15 +56,24 @@ namespace Eva_5._0.Properties
         {
             try
             {
-                MMDeviceCollection devices = GetAudioDevices();
-                if (devices.Count > 0)
-                {
-                    MMDevice current_device = devices[devices.Count - 1];
-                    WaveFormat audioFormat = current_device.AudioClient.MixFormat;
+      
+                MMDevice current_render_device = GetAudioPlaybackDevice();
 
-                    if (current_device.ID != deviceID)
+                if (current_render_device != null)
+                {
+                    WaveFormat audioFormat = current_render_device.AudioClient.MixFormat;
+
+                    if (current_render_device.ID != deviceID)
                     {
-                        deviceID = current_device.ID;
+                        // Set the capture's device audio volume to 100% in order to have the highest degree of accuracy
+                        MMDevice current_capture_device = GetAudioCaptureDevice();
+
+                        if (current_capture_device != null)
+                        {
+                            current_capture_device.AudioEndpointVolume.MasterVolumeLevelScalar = 1f;
+                        }
+
+                        deviceID = current_render_device.ID;
 
                         if (wave_player?.PlaybackState == PlaybackState.Playing)
                         {
@@ -98,8 +108,9 @@ namespace Eva_5._0.Properties
             catch { }
         }
 
-        private MMDeviceCollection GetAudioDevices() => enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active);
+        private MMDevice GetAudioPlaybackDevice() => enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
 
+        private MMDevice GetAudioCaptureDevice() => enumerator.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Communications);
 
         public async Task Play_Sound(Sounds sound)
         {

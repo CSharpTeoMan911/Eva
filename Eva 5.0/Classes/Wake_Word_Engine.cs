@@ -95,7 +95,7 @@ namespace Eva_5._0
 
                 System.Timers.Timer wake_word_management_timer = new System.Timers.Timer();
                 wake_word_management_timer.Elapsed += Wake_word_management_timer_Elapsed;
-                wake_word_management_timer.Interval = 10;
+                wake_word_management_timer.Interval = 1;
                 wake_word_management_timer.Start();
             }
             catch { }

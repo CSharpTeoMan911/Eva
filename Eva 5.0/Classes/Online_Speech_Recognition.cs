@@ -157,36 +157,28 @@ namespace Eva_5._0
 
         private static void ContinuousRecognitionSession_ResultGenerated(Windows.Media.SpeechRecognition.SpeechContinuousRecognitionSession sender, Windows.Media.SpeechRecognition.SpeechContinuousRecognitionResultGeneratedEventArgs args)
         {
+            Interlocked.MemoryBarrier();
+            Interlocked.SpeculationBarrier();
+
             try
             {
-                Interlocked.MemoryBarrier();
-                Interlocked.SpeculationBarrier();
-
-                if ((args.Result.Text == String.Empty) || (args.Result == null))
+                if (Interlocked.Read(ref Window_Minimised) == 0 || Interlocked.Read(ref Online_Speech_Recogniser_Disabled) == 0)
                 {
-                    Close_Speech_Recognition_Interface();
-                }
-                else
-                {
-                    if (Interlocked.Read(ref Window_Minimised) == 0 || Interlocked.Read(ref Online_Speech_Recogniser_Disabled) == 0)
-                    {
-                        string Result = args.Result.Text.ToLower();
-                        Natural_Language_Processing.PreProcessing(StringFormatting.RemoveNewLine(new StringBuilder(Result, Result.Length)));
-                    }
-                    Close_Speech_Recognition_Interface();
+                    string Result = args.Result.Text.ToLower();
+                    Natural_Language_Processing.PreProcessing(StringFormatting.RemoveNewLine(new StringBuilder(Result, Result.Length)));
                 }
             }
             catch (Exception E)
             {
                 if (E.HResult == -2147199735)
                 {
-                    Close_Speech_Recognition_Interface();
                     Online_Speech_Recognition_Error_Management(Online_Speech_Recognition_Error_Type.Online_Speech_Recognition_Access_Denied);
                 }
             }
             
             Interlocked.Exchange(ref Online_Speech_Recogniser_Listening, 0);
             Online_Speech_Recogniser_Activation_Delay_Detector = DateTime.UtcNow;
+            Close_Speech_Recognition_Interface();
         }
 
 
