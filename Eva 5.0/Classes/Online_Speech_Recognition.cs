@@ -272,8 +272,6 @@ namespace Eva_5._0
                     OnlineSpeechRecognition.ContinuousRecognitionSession.ResultGenerated -= ContinuousRecognitionSession_ResultGenerated;
 
                     OnlineSpeechRecognition.Dispose();
-
-                    Marshal.FinalReleaseComObject(OnlineSpeechRecognition);
                 }
             }
             catch { }
