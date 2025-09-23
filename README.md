@@ -13,7 +13,6 @@
 * 🆕 Added wake word engine initialisation callback
 * 🆕 Added commands search option
 * 🆕 Optimised the application for low power devices, such as laptops
-* 🐞 Fixed thread synchronisation bugs
 * 🐞 Re-added the wake word engine reset mechanism
 * 🐞 Fixed UI related issues regarding threading
 * 🐞 Fixed thread synchronisation bugs
