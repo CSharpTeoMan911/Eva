@@ -222,8 +222,8 @@ namespace Eva_5._0
                             Button_Timeout -= 10;
                         }
 
-                        //Interlocked.MemoryBarrier();
-                        //Interlocked.SpeculationBarrier();
+                        Interlocked.MemoryBarrier();
+                        Interlocked.SpeculationBarrier();
 
                         // METHODS AND PARAMETERS THAT MUST BE EXECUTED AND/OR MANIPULATED ON THE UI THREAD,
                         // ARE MOVED ON THE UI THREAD VIA THE "Application.Current.Dispatcher.Invoke()" METHOD
