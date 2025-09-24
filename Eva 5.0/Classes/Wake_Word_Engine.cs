@@ -58,6 +58,7 @@ namespace Eva_5._0
         private static string cancel_wake_word = "stop listening";
         private static string wake_word = "listen";
         private static bool Wake_Word_Started = false;
+        private static string model = "0";
 
 
         // Variable that sets in how many minutes the wake word engine is reset
@@ -199,8 +200,10 @@ namespace Eva_5._0
                 wake_word_process.StartInfo.FileName = new StringBuilder(Environment.CurrentDirectory).Append(@"\python 3.12\python.exe").ToString();
                 wake_word_process.StartInfo.CreateNoWindow = true;
                 wake_word_process.StartInfo.UseShellExecute = false;
-                wake_word_process.StartInfo.Arguments = new StringBuilder("main.py vosk-model-small-en-us-0.15 ").Append((await Settings.GetSettingsFilePath()).ToString()).ToString();
+                wake_word_process.StartInfo.Arguments = new StringBuilder("main.py ").Append(model).Append(' ').Append((await Settings.GetSettingsFilePath()).ToString()).ToString();
                 wake_word_process.Start();
+
+                SwitchModel();
 
                 wake_word_processes.Enqueue(wake_word_process);
 
@@ -439,7 +442,13 @@ namespace Eva_5._0
         }
 
 
-
+        private static void SwitchModel()
+        {
+            if (model == "0")
+                model = "1";
+            else
+                model = "0";
+        }
         private static async Task Wake_Word_Detector(Process python)
         {
             try
