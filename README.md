@@ -9,6 +9,7 @@
 ## 🔄 Changelog
 📌 Latest Version: v7.6.0
 
+* 🆕 Re-added physical model switch-up 
 * 🆕 Added automatic microphone audio level maximisation 
 * 🆕 Added wake word engine initialisation callback
 * 🆕 Added commands search option
