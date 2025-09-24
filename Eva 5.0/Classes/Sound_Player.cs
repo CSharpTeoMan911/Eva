@@ -65,12 +65,12 @@ namespace Eva_5._0.Properties
 
                     if (current_render_device.ID != deviceID)
                     {
-                        // Set the capture's device audio volume to 100% in order to have the highest degree of accuracy
+                        // Set the capture's device audio volume to 50% in order to have a high degree of accuracy as well as to avoid audio distortions
                         MMDevice current_capture_device = GetAudioCaptureDevice();
 
                         if (current_capture_device != null)
                         {
-                            current_capture_device.AudioEndpointVolume.MasterVolumeLevelScalar = 1f;
+                            current_capture_device.AudioEndpointVolume.MasterVolumeLevelScalar = 0.5f;
                         }
 
                         deviceID = current_render_device.ID;
