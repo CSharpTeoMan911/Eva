@@ -9,6 +9,7 @@
 ## 🔄 Changelog
 📌 Latest Version: v7.6.1
 
+* 🆕 Removed paged memory cleanup
 * 🆕 Re-added physical model switch-up 
 * 🆕 Added automatic microphone audio level maximisation
 * 🆕 Re-calibrated the 
