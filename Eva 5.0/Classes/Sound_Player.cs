@@ -56,33 +56,34 @@ namespace Eva_5._0.Properties
         {
             try
             {
-      
-                MMDevice current_render_device = GetAudioPlaybackDevice();
-
-                if (current_render_device != null)
+                using (MMDevice current_render_device = GetAudioPlaybackDevice())
                 {
-                    WaveFormat audioFormat = current_render_device.AudioClient.MixFormat;
-
-                    if (current_render_device.ID != deviceID)
+                    if (current_render_device != null)
                     {
-                        // Set the capture's device audio volume to 50% in order to have a high degree of accuracy as well as to avoid audio distortions
-                        MMDevice current_capture_device = GetAudioCaptureDevice();
+                        WaveFormat audioFormat = current_render_device.AudioClient.MixFormat;
 
-                        if (current_capture_device != null)
+                        if (current_render_device.ID != deviceID)
                         {
-                            current_capture_device.AudioEndpointVolume.MasterVolumeLevelScalar = 0.5f;
+                            // Set the capture's device audio volume to 50% in order to have a high degree of accuracy as well as to avoid audio distortions
+                            using (MMDevice current_capture_device = GetAudioCaptureDevice())
+                            {
+                                if (current_capture_device != null)
+                                {
+                                    current_capture_device.AudioEndpointVolume.MasterVolumeLevelScalar = 0.5f;
+                                }
+
+                                deviceID = current_render_device.ID;
+
+                                if (wave_player?.PlaybackState == PlaybackState.Playing)
+                                {
+                                    wave_player?.Stop();
+                                }
+
+                                wave_player?.Dispose();
+
+                                PlayWhiteNoise(audioFormat);
+                            }
                         }
-
-                        deviceID = current_render_device.ID;
-
-                        if (wave_player?.PlaybackState == PlaybackState.Playing)
-                        {
-                            wave_player?.Stop();
-                        }
-
-                        wave_player?.Dispose();
-
-                        PlayWhiteNoise(audioFormat);
                     }
                 }
             }
