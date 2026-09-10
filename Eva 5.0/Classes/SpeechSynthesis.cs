@@ -27,11 +27,23 @@ namespace Eva_5._0
             {
                 foreach (VoiceInformation voice in SpeechSynthesizer.AllVoices)
                     if (voice.Language == "en-GB" || voice.Language == "en-us")
+                    {
                         if (voice.Gender == VoiceGender.Female)
                         {
                             synthesizer.Voice = voice;
                             break;
                         }
+                    }
+                    else
+                    {
+                        if (App.PermisissionWindowOpen == false)
+                        {
+                            ErrorWindow OpenPermissionDeclinedWindow = new ErrorWindow("Language not supported");
+                            OpenPermissionDeclinedWindow.Show();
+                        }
+
+                        break;
+                    }
 
                 if (synthesizer.Voice.Gender != VoiceGender.Female)
                 {

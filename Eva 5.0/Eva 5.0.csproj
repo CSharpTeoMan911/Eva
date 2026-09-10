@@ -124,6 +124,7 @@
     <Compile Include="Classes\ChatHistory.cs" />
     <Compile Include="Classes\Command.cs" />
     <Compile Include="Classes\CommandCharacteristics.cs" />
+    <Compile Include="Classes\MoonshineASR.cs" />
     <Compile Include="Windows\ChatGPT_Response_Window.xaml.cs">
       <DependentUpon>ChatGPT_Response_Window.xaml</DependentUpon>
     </Compile>
@@ -152,7 +153,6 @@
     <Compile Include="Classes\JsonSerialisation.cs" />
     <Compile Include="Classes\Message.cs" />
     <Compile Include="Classes\Natural_Language_Processing.cs" />
-    <Compile Include="Classes\Online_Speech_Recognition.cs" />
     <Compile Include="Classes\Sound_Player.cs" />
     <Compile Include="Classes\Recycle_Bine_Cleanup.cs" />
     <Compile Include="Classes\Screen_Capture_Mechanism.cs" />

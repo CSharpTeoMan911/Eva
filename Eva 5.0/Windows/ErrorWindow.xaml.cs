@@ -37,10 +37,6 @@ namespace Eva_5._0
                         MicrophoneAccessDenied();
                         break;
 
-                    case "Online Speech Recognition Access Denied":
-                        OnlineSpeechRecognitionAccessDenied();
-                        break;
-
                     case "Invalid ChatGPT API key":
                         InvalidChatGPTAPIKey();
                         break;
@@ -83,29 +79,6 @@ namespace Eva_5._0
                     else
                     {
                         ErrorContext.Text = "Go to Privacy & Security  ->  Microphone.\n\n\nUnder the  [Microphone access] section, press the\nbutton associated with it, in order to enable it.";
-                    }
-                });
-            }
-            catch { }
-        }
-
-        private async void OnlineSpeechRecognitionAccessDenied()
-        {
-            await player.Play_Sound(Sound_Player.Sounds.ErrorSoundEffect);
-
-            try
-            {
-                await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:privacy-speech"));
-
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    if (App.Get_Windows_Version() == "Windows 10")
-                    {
-                        ErrorContext.Text = "Go to Settings  ->  Privacy  ->  Speech.\n\n\nUnder the  [Online speech recognition]  section,\npress the button associated with it,\nin order to enable it.";
-                    }
-                    else
-                    {
-                        ErrorContext.Text = "Go to Privacy & Security  ->  Speech.\n\n\nUnder the  [Online speech recognition]  section,\npress the button associated with it,\nin order to enable it.";
                     }
                 });
             }

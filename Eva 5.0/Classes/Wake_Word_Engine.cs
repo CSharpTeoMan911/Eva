@@ -494,7 +494,7 @@ namespace Eva_5._0
                                                 if (Interlocked.Read(ref Online_Speech_Recogniser_Listening) == 1)
                                                 {
                                                     Interlocked.Exchange(ref Online_Speech_Recogniser_Listening, 0);
-                                                    Online_Speech_Recognition.Close_Speech_Recognition_Interface();
+                                                    
                                                 }
                                             }
                                             else if (socket_message_value == wake_word)

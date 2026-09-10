@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using Eva_5._0.Classes;
+using Microsoft.Win32;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,7 +7,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using static Eva_5._0.Online_Speech_Recognition;
 
 namespace Eva_5._0
 {
@@ -33,10 +33,6 @@ namespace Eva_5._0
         private static RotateTransform Rotate = new RotateTransform();
 
         private static System.Collections.Generic.List<string> Online_Speech_Recognition_Timeout_Timer_UI_Intervals = new System.Collections.Generic.List<string>();
-
-        private short Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index;
-
-        private short target_value = 1000;
 
         private bool Cropped = true;
 
@@ -72,7 +68,7 @@ namespace Eva_5._0
         // BEGIN
 
         protected static DateTime? Online_Speech_Recogniser_Activation_Delay_Detector = null;
-        private static readonly double Online_Speech_Recogniser_Activation_Delay = 2.9;
+        private static readonly double Speech_Recogniser_Activation_Delay = 0.2;
 
         // END
 
@@ -80,12 +76,6 @@ namespace Eva_5._0
 
 
         private System.Timers.Timer AnimationAndFunctionalityTimer;
-
-
-
-        protected static System.Diagnostics.Stopwatch online_speech_recogniser_lock_state_time_elapsed = new System.Diagnostics.Stopwatch();
-
-        private static bool online_speech_recogniser_lock_state_time_elapsed_is_enabled;
 
         public static bool chatgpt_mode_enabled = false;
 
@@ -119,7 +109,7 @@ namespace Eva_5._0
 
 
 
-        protected static DateTime? online_speech_recognition_timeout;
+        protected static DateTime? speech_recognition_timeout;
 
 
 
@@ -261,7 +251,7 @@ namespace Eva_5._0
                                     // IF THE INTERVAL OF TIME BETWEEN THE CURRENT TIME AND THE TIME WHEN THE ONLINE SPEECH RECOGNITION ENGINE EXCEEDS THE 
                                     // AMOUNT OF SECONDS SET FOR THE SET ONLINE SPEECH RECOGNITION DELAY, MAKE THE APPLICATION MAIN WINDOW'S
                                     // CIRCULAR STATUS INDICATOR BLUE
-                                    if (((TimeSpan)(DateTime.UtcNow - Online_Speech_Recogniser_Activation_Delay_Detector)).TotalSeconds > Online_Speech_Recogniser_Activation_Delay)
+                                    if (((TimeSpan)(DateTime.UtcNow - Online_Speech_Recogniser_Activation_Delay_Detector)).TotalSeconds > Speech_Recogniser_Activation_Delay)
                                     {
                                         if (chatgpt_mode_enabled == true)
                                         {
@@ -319,18 +309,16 @@ namespace Eva_5._0
                                     // IF THE ONLINE SPEECH RECOGNITION ENGINE IS NOT DISABLED
                                     if (Interlocked.Read(ref Online_Speech_Recogniser_Disabled) == 0)
                                     {
-                                        Thread operational_thread = new Thread(() =>
+                                        async void Start()
                                         {
                                             // CALCULATE THE ACTIVATION DELAY TO BE SET FOR THE ONLINE SPEECH RECOGNITION ENGINE
                                             // AND INITIATE THE ONLINE SPEECH RECOGNITION ENGINE.
-                                            if (Online_Speech_Recogniser_Delay_Calculator() == true)
+                                            if (Speech_Recogniser_Delay_Calculator() == true)
                                             {
-                                                Online_Speech_Recognition.Online_Speech_Recognition_Session_Creation_And_Initiation();
+                                                await MoonshineASR.StartEngine();
                                             }
-                                        });
-                                        operational_thread.Priority = ThreadPriority.Highest;
-                                        operational_thread.SetApartmentState(ApartmentState.STA);
-                                        operational_thread.Start();
+                                        };
+                                        Start();
                                     }
                                 }
 
@@ -345,67 +333,23 @@ namespace Eva_5._0
                                         Interlocked.Exchange(ref Wake_Word_Detected, 0);
 
                                         Interlocked.Exchange(ref Online_Speech_Recogniser_Listening, 0);
-                                        Online_Speech_Recognition.Close_Speech_Recognition_Interface();
+                                        
                                     }
 
-
-
-
-
-
-                                    // IF THE ONLINE SPEECH RECOGNITION ENGINE IS IN THE 'Idle' OR 'Paused' STATES
-                                    if (Online_Speech_Recogniser_State == Windows.Media.SpeechRecognition.SpeechRecognizerState.Idle || Online_Speech_Recogniser_State == Windows.Media.SpeechRecognition.SpeechRecognizerState.Paused)
-                                    {
-                                        // IF THE ONLINE SPEECH RECOGNITION ENGINE IS NOT ALREADY IN THE LOCK STATE,
-                                        // START THE LOCK STATE TIMER AND MARK THE ONLINE SPEECH RECOGNITION ENGINE'S
-                                        // OPERATIONAL STATE AS 'LOCKED'
-                                        if (online_speech_recogniser_lock_state_time_elapsed_is_enabled == false)
-                                        {
-                                            online_speech_recogniser_lock_state_time_elapsed.Start();
-                                            online_speech_recogniser_lock_state_time_elapsed_is_enabled = true;
-                                        }
-
-                                        // IF THE ONLINE SPEECH RECOGNITION ENGINE IS ALREADY IN THE LOCK STATE
-                                        if (online_speech_recogniser_lock_state_time_elapsed_is_enabled == true)
-                                        {
-                                            // IF THE TIME IN WHICH THE ONLINE SPEECH RECOGNITION ENGINE WAS LOCKED IS GREATER
-                                            // THAN 4 SECONDS, STOP THE ONLINE SPEECH RECOGNITION ENGINE FROM TAKING INPUT
-                                            // AND STOP THE ONLINE SPEECH RECOGNITION ENGINE WINDOWS PROCESS
-                                            if (online_speech_recogniser_lock_state_time_elapsed.ElapsedMilliseconds > 4000)
-                                            {
-                                                Interlocked.Exchange(ref Online_Speech_Recogniser_Listening, 0);
-
-                                                void Shutdown()
-                                                {
-                                                    Close_Speech_Recognition_Interface();
-                                                    OS_Online_Speech_Recognition_Interface_Shutdown();
-                                                }
-                                                Shutdown();
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        // ELSE, IT MEANS THAT THE ONLINE SPEECH RECOGNITION ENGINE RESUMED ITS OPERATION AND
-                                        // THE LOCK STATE TIMER IS STOPPED AND RESET
-                                        online_speech_recogniser_lock_state_time_elapsed.Stop();
-                                        online_speech_recogniser_lock_state_time_elapsed.Reset();
-                                        online_speech_recogniser_lock_state_time_elapsed_is_enabled = false;
-                                    }
 
 
                                     // IF THE TIMEOUT FOR THE ONLINE SPEECH RECOGNITION ENGINE SPEECH TO TEXT OPERATION IS NOT NULL
-                                    if (online_speech_recognition_timeout != null)
+                                    if (speech_recognition_timeout != null)
                                     {
                                         // IF THE DIFFERENCE BETWEEN THE CURRENT TIME AND THE TIME WHEN THE ONLINE SPEECH RECOGNITION ENGINE
                                         // BEGAN THE SPEECH TO TEXT OPERATION IS GREATER THAN 20 SECONDS ADUJUST THE GUI TO DISPLAY THAT
                                         // THE ONLINE SPEECH RECOGNITION ENGINE DOES NOT TAKE INPUT AND STOP THE ONLINE SPEECH
                                         // RECOGNITION ENGINE SPEECH FROM TAKING INPUT
-                                        if (((TimeSpan)(DateTime.UtcNow - online_speech_recognition_timeout)).TotalMilliseconds >= 20000)
+                                        if (((TimeSpan)(DateTime.UtcNow - speech_recognition_timeout)).TotalMilliseconds >= 20000)
                                         {
-                                            Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
                                             Online_Speech_Recognition_Timer_Display.Text = String.Empty;
                                             Interlocked.Exchange(ref Online_Speech_Recogniser_Listening, 0);
+                                            MoonshineASR.StopEngine();
                                         }
                                         // ELSE IF THE DIFFERENCE BETWEEN THE CURRENT TIME AND THE TIME WHEN THE ONLINE SPEECH RECOGNITION ENGINE
                                         // BEGAN THE SPEECH TO TEXT OPERATION IS LESS THAN 20 SECONDS
@@ -418,28 +362,9 @@ namespace Eva_5._0
                                             if (Interlocked.Read(ref Speech_Detected) == 1)
                                             {
                                                 Interlocked.Exchange(ref Speech_Detected, 0);
-                                                target_value = 1000;
-                                                Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
                                                 Online_Speech_Recognition_Timer_Display.Text = String.Empty;
                                             }
 
-
-                                            // IF THE DIFFERENCE BETWEEN THE CURRENT TIME AND THE TIME WHEN THE ONLINE SPEECH RECOGNITION ENGINE STARTED
-                                            // ITS OPERATION IS GREATER OR EQUAL THAN THE CURRENT TARGET VALUE
-                                            if (((TimeSpan)(DateTime.UtcNow - online_speech_recognition_timeout)).TotalMilliseconds >= target_value - 300)
-                                            {
-                                                // IF THE TARGET VALUE IS SMALLER OR EQUAL THAN 20 SECONDS
-                                                // DECREMENT THE GUI INPUT INTERVAL COUNTDOWN TIMER VALUE
-                                                // BY ONE SECOND AND INCREMENT THE CURRENT TARGET VALUE
-                                                // BY ONE SECOND
-                                                if (target_value <= 20000)
-                                                {
-                                                    target_value += 1000;
-                                                    Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index++;
-                                                }
-                                            }
-
-                                            Online_Speech_Recognition_Timer_Display.Text = Online_Speech_Recognition_Timeout_Timer_UI_Intervals[Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index];
 
                                             // WHILE THE ONLINE SPEECH RECOGNITION ENGINE IS OPERATING SET THE CIRCULAR STATUS INDICATOR
                                             // COLOR AS BRIGHT BLUE
@@ -455,18 +380,6 @@ namespace Eva_5._0
                                             }
                                         }
                                     }
-                                }
-                                else
-                                {
-                                    Interlocked.Exchange(ref Initiated, 0);
-
-                                    target_value = 1000;
-                                    Online_Speech_Recognition_Timeout_Timer_UI_Intervals_Current_Index = 0;
-                                    Online_Speech_Recognition_Timer_Display.Text = String.Empty;
-
-                                    online_speech_recogniser_lock_state_time_elapsed.Stop();
-                                    online_speech_recogniser_lock_state_time_elapsed.Reset();
-                                    online_speech_recogniser_lock_state_time_elapsed_is_enabled = false;
                                 }
 
 
@@ -813,11 +726,11 @@ namespace Eva_5._0
                             }
                             else
                             {
-                                // INITIATE THE ERROR PAGE SIGNIFYING THAT THE MICROPHONE IS NOT AVAILABLE
-                                // AND/OR THE OS DOES NOT HAVE THE PERMISSION TO ACCESSS THE MICROPHONE
-                                Online_Speech_Recognition.Online_Speech_Recognition_Error_Management(
-                                                          Online_Speech_Recognition.Online_Speech_Recognition_Error_Type
-                                                          .Microphone_Access_Denied);
+                                if (App.PermisissionWindowOpen == false)
+                                {
+                                    ErrorWindow OpenPermissionDeclinedWindow = new ErrorWindow("Mircrophone Access Denied");
+                                    OpenPermissionDeclinedWindow.Show();
+                                }
                             }
                         }
 
@@ -956,7 +869,7 @@ namespace Eva_5._0
         }
 
 
-        protected static bool Online_Speech_Recogniser_Delay_Calculator()
+        protected static bool Speech_Recogniser_Delay_Calculator()
         {
             // DISCOVERED THROUGH RESEARCH AND EXPERIMENTATION THAT THE
             // SERVERS ARE THROWING DROPPING REQUESTS THAT ARE MADE IF
@@ -978,7 +891,7 @@ namespace Eva_5._0
             {
                 return true;
             }
-            else if (((TimeSpan)(DateTime.UtcNow - Online_Speech_Recogniser_Activation_Delay_Detector)).TotalSeconds > Online_Speech_Recogniser_Activation_Delay)
+            else if (((TimeSpan)(DateTime.UtcNow - Online_Speech_Recogniser_Activation_Delay_Detector)).TotalSeconds > Speech_Recogniser_Activation_Delay)
             {
                 return true;
             }
