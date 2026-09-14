@@ -32,8 +32,6 @@ namespace Eva_5._0
     {
         private static RotateTransform Rotate = new RotateTransform();
 
-        private static System.Collections.Generic.List<string> Online_Speech_Recognition_Timeout_Timer_UI_Intervals = new System.Collections.Generic.List<string>();
-
         private bool Cropped = true;
 
         public static bool invisibility_mode;
@@ -102,8 +100,6 @@ namespace Eva_5._0
 
         protected static long Wake_Word_Detected;
 
-        protected static long Initiated;
-
         // [ END ] STATIC OBJECTS OBJECTS FOR THE SPEECH RECOGNITION SYSTEM STATE MACHINE THAT ARE ACCESSED IN A THREAD SAFE MANNER
 
 
@@ -145,9 +141,6 @@ namespace Eva_5._0
             wake_Word_Engine_Event_Handler = new Wake_Word_Engine.Wake_Word_Engine_Event_Handler(SpeechOnCallback);
 
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
-
-            for (int i = 20; i >= 0; i--)
-                Online_Speech_Recognition_Timeout_Timer_UI_Intervals.Add(i.ToString());
 
             InitializeComponent();
         }
@@ -315,7 +308,7 @@ namespace Eva_5._0
                                             // AND INITIATE THE ONLINE SPEECH RECOGNITION ENGINE.
                                             if (Speech_Recogniser_Delay_Calculator() == true)
                                             {
-                                                await MoonshineASR.StartEngine();
+                                                MoonshineASR.StartEngine();
                                             }
                                         };
                                         Start();
@@ -342,12 +335,11 @@ namespace Eva_5._0
                                     if (speech_recognition_timeout != null)
                                     {
                                         // IF THE DIFFERENCE BETWEEN THE CURRENT TIME AND THE TIME WHEN THE ONLINE SPEECH RECOGNITION ENGINE
-                                        // BEGAN THE SPEECH TO TEXT OPERATION IS GREATER THAN 20 SECONDS ADUJUST THE GUI TO DISPLAY THAT
+                                        // BEGAN THE SPEECH TO TEXT OPERATION IS GREATER THAN 5 SECONDS ADUJUST THE GUI TO DISPLAY THAT
                                         // THE ONLINE SPEECH RECOGNITION ENGINE DOES NOT TAKE INPUT AND STOP THE ONLINE SPEECH
                                         // RECOGNITION ENGINE SPEECH FROM TAKING INPUT
-                                        if (((TimeSpan)(DateTime.UtcNow - speech_recognition_timeout)).TotalMilliseconds >= 20000)
+                                        if (((TimeSpan)(DateTime.UtcNow - speech_recognition_timeout)).TotalMilliseconds >= 5000)
                                         {
-                                            Online_Speech_Recognition_Timer_Display.Text = String.Empty;
                                             Interlocked.Exchange(ref Online_Speech_Recogniser_Listening, 0);
                                             MoonshineASR.StopEngine();
                                         }
@@ -362,7 +354,6 @@ namespace Eva_5._0
                                             if (Interlocked.Read(ref Speech_Detected) == 1)
                                             {
                                                 Interlocked.Exchange(ref Speech_Detected, 0);
-                                                Online_Speech_Recognition_Timer_Display.Text = String.Empty;
                                             }
 
 
@@ -601,13 +592,6 @@ namespace Eva_5._0
                 this.Height = 159;
                 this.Width = 260;
                 Extra_Functionalities.Width = double.NaN;
-                Wire1.Width = double.NaN;
-                Wire2.Width = double.NaN;
-                Main_Display.Width = 45;
-                Main_Inner_Display.Width = 40;
-                Main_Innermost_Display.Width = 38;
-                Online_Speech_Recognition_Timer_Display.Width = double.NaN;
-                Online_Speech_Recognition_Timer_Display.Visibility = Visibility.Visible;
                 Grid.SetColumn(Main_Window_Controls, 3);
                 Grid.SetColumnSpan(Main_Window_Controls, 3);
                 OuterElipse.Width = 50;
@@ -629,13 +613,6 @@ namespace Eva_5._0
                 this.Height = 120;
                 this.Width = 120;
                 Extra_Functionalities.Width = 0;
-                Wire1.Width = 0;
-                Wire2.Width = 0;
-                Main_Display.Width = 0;
-                Main_Inner_Display.Width = 0;
-                Main_Innermost_Display.Width = 0;
-                Online_Speech_Recognition_Timer_Display.Width = 0;
-                Online_Speech_Recognition_Timer_Display.Visibility = Visibility.Hidden;
                 Grid.SetColumn(Main_Window_Controls, 0);
                 Grid.SetColumnSpan(Main_Window_Controls, 6);
                 OuterElipse.Width = 40;
