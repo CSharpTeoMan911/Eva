@@ -309,6 +309,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Asr.py" />
+    <Content Include="Controller.py" />
     <Content Include="main.py" />
     <Content Include="Sounds\AlarmSound.wav" />
     <Content Include="Sounds\App closing.wav" />

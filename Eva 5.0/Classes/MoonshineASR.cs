@@ -17,15 +17,11 @@ namespace Eva_5._0.Classes
 
         private static Process sttEngine;
         private static int SessionId;
-        private static DateTime time = DateTime.UtcNow;
 
         public MoonshineASR()
         {
 
         }
-
-        private static bool IsTimeout() => (DateTime.UtcNow - time).TotalMilliseconds < 1000;
-
 
         private static void TaskScheduler(string text)
         {
@@ -77,11 +73,7 @@ namespace Eva_5._0.Classes
                     }
                     else
                     {
-                        if (!IsTimeout())
-                        {
-                            time = DateTime.UtcNow;
-                            TaskScheduler(e.Data);
-                        }
+                        TaskScheduler(e.Data);
                     }
                 }
             };
