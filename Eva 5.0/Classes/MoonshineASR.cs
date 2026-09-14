@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -9,49 +10,44 @@ namespace Eva_5._0.Classes
 {
     internal class MoonshineASR:MainWindow
     {
-        private static string previousResult = string.Empty;
+        private static string previousHypothesis = string.Empty;
         private static CancellationTokenSource tokenSource = new CancellationTokenSource();
         private static readonly string enginePath = Path.Combine(Environment.CurrentDirectory, "MoonshineEngine", "python.exe");
         private static bool engineLoaded = false;
 
         private static Process sttEngine;
         private static int SessionId;
+        private static DateTime time = DateTime.UtcNow;
 
         public MoonshineASR()
         {
 
         }
 
+        private static bool IsTimeout() => (DateTime.UtcNow - time).TotalMilliseconds < 1000;
+
 
         private static void TaskScheduler(string text)
         {
-            string[] words = text.Split(' ');
-            int index = 0;
-            int i = 0;
-
-
-
-
-            while (i < text.Length && index < words.Length)
+            Task.Run(async() =>
             {
-                string word = words[index];
+                string[] words = text.Split(' ');
+                int index = 0;
+                int i = 0;
 
-                Debug.WriteLine(text.Substring(i));
-
-                if (text != previousResult)
+                while (i < text.Length && index < words.Length)
                 {
-                    Task.Run(() =>
-                    {
-                        string str = new string((from c in text.Substring(i).ToLower().Trim()
-                                                 where char.IsWhiteSpace(c) || char.IsLetterOrDigit(c)
-                                                 select c).ToArray());
-                        Natural_Language_Processing.PreProcessing(str);
-                    });
-                }
+                    string word = words[index];
+                    string current = text.Substring(i);
 
-                i += word.Length;
-                index++;
-            }
+                    if (await Natural_Language_Processing.PreProcessing(current))
+                        break;
+
+
+                    i += word.Length + 1;
+                    index++;
+                }
+            });
         }
 
 
@@ -73,9 +69,20 @@ namespace Eva_5._0.Classes
             {
                 if (!string.IsNullOrWhiteSpace(e.Data))
                 {
-                    Debug.WriteLine($"[Moonshine Python] {e.Data}");
-                    TaskScheduler(e.Data);
-                    previousResult = e.Data;
+                    Interlocked.MemoryBarrier();
+
+                    if (Speech_Recogniser_Listening == 0)
+                    {
+                        Interlocked.Exchange(ref Speech_Recogniser_Listening, 1);
+                    }
+                    else
+                    {
+                        if (!IsTimeout())
+                        {
+                            time = DateTime.UtcNow;
+                            TaskScheduler(e.Data);
+                        }
+                    }
                 }
             };
 

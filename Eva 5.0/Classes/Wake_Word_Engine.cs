@@ -491,15 +491,15 @@ namespace Eva_5._0
                                             }
                                             else if (socket_message_value == cancel_wake_word)
                                             {
-                                                if (Interlocked.Read(ref Online_Speech_Recogniser_Listening) == 1)
+                                                if (Interlocked.Read(ref Speech_Recogniser_Listening) == 1)
                                                 {
-                                                    Interlocked.Exchange(ref Online_Speech_Recogniser_Listening, 0);
+                                                    Interlocked.Exchange(ref Speech_Recogniser_Listening, 0);
                                                     
                                                 }
                                             }
                                             else if (socket_message_value == wake_word)
                                             {
-                                                if (Interlocked.Read(ref Online_Speech_Recogniser_Listening) == 0)
+                                                if (Interlocked.Read(ref Speech_Recogniser_Listening) == 0)
                                                 {
                                                     Interlocked.Exchange(ref Wake_Word_Detected, 1);
                                                 }

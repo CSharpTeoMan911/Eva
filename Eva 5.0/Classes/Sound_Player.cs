@@ -42,11 +42,12 @@ namespace Eva_5._0.Properties
         }
 
 
+
         public void PlayBackgroundNoise()
         {
             if (timer == null)
             {
-                timer = new System.Timers.Timer(100);
+                timer = new System.Timers.Timer(1000);
                 timer.Elapsed += PlugAndPlayDetection;
                 timer.Start();
             }
@@ -64,12 +65,12 @@ namespace Eva_5._0.Properties
 
                         if (current_render_device.ID != deviceID)
                         {
-                            // Set the capture's device audio volume to 50% in order to have a high degree of accuracy as well as to avoid audio distortions
+                            // Set the capture's device audio volume to 90% in order to have a high degree of accuracy as well as to avoid audio distortions
                             using (MMDevice current_capture_device = GetAudioCaptureDevice())
                             {
                                 if (current_capture_device != null)
                                 {
-                                    current_capture_device.AudioEndpointVolume.MasterVolumeLevelScalar = 0.5f;
+                                    current_capture_device.AudioEndpointVolume.MasterVolumeLevelScalar = 0.9f;
                                 }
 
                                 deviceID = current_render_device.ID;
@@ -101,7 +102,7 @@ namespace Eva_5._0.Properties
                     byte[] audio = memoryPool.Rent(wave_format.AverageBytesPerSecond).Memory.ToArray();
                     BufferedWaveProvider bufferedWave = new BufferedWaveProvider(wave_format);
                     bufferedWave.AddSamples(audio, 0, audio.Length);
-                    wave_player.DeviceNumber = -1;
+                    wave_player.DeviceNumber = 0;
                     wave_player.Init(bufferedWave);
                     wave_player.Play();
                 }

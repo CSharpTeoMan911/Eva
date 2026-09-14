@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Eva_5._0
 {
@@ -49,20 +52,34 @@ namespace Eva_5._0
         private static StringBuilder WebApplicationSearchContent_StringBuilder = new StringBuilder();
         private static StringBuilder WordBuffer_StringBuilder = new StringBuilder();
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async void PreProcessing(string Result)
+
+        private static void ClearBuffers()
         {
             Sentence_StringBuilder.Clear();
             Application_StringBuilder.Clear();
             WebApplication_StringBuilder.Clear();
             WebApplicationSearchContent_StringBuilder.Clear();
             WordBuffer_StringBuilder.Clear();
-            Sentence_StringBuilder.Append(Result);
+        }
 
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async Task<bool> PreProcessing(string Result)
+        {
+            ClearBuffers();
+
+            foreach (char c in Result.ToLower().Trim())
+            {
+                if (char.IsWhiteSpace(c) || char.IsLetterOrDigit(c))
+                    Sentence_StringBuilder.Append(c);
+            }
+
+       
+            Result = Sentence_StringBuilder.ToString();
             display_recognition_result = Result;
 
             if (CommandTest == true)
-                goto End;
+                return true;
 
 
 
@@ -76,117 +93,123 @@ namespace Eva_5._0
 
             if (Result == "stop listening")
             {
-                goto End;
+                return true;
             }
             else if (Result == "invisible")
             {
                 MainWindow.invisibility_mode = true;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTActivationSoundEffect);
-                goto ChatGptMode;
+                ClearBuffers();
+                return true;
             }
             else if (Result == "visible")
             {
                 MainWindow.invisibility_mode = false;
                 MainWindow.bring_to_top = true;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTDeactivationSoundEffect);
-                goto ChatGptMode;
+                ClearBuffers();
+                return true;
             }
             else if (Result.IndexOf("activate c") == 0 && Result.IndexOf(" mode") == Result.Length - " mode".Length)
             {
                 MainWindow.chatgpt_mode_enabled = true;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTActivationSoundEffect);
-                goto ChatGptMode;
+                ClearBuffers();
+                return true;
             }
             else if (Result.IndexOf("enable c") == 0 && Result.IndexOf(" mode") == Result.Length - " mode".Length)
             {
                 MainWindow.chatgpt_mode_enabled = true;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTActivationSoundEffect);
-                goto ChatGptMode;
+                ClearBuffers();
+                return true;
             }
             else if (Result.IndexOf("deactivate c") == 0 && Result.IndexOf(" mode") == Result.Length - " mode".Length)
             {
                 MainWindow.chatgpt_mode_enabled = false;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTDeactivationSoundEffect);
-                goto ChatGptMode;
+                ClearBuffers();
+                return true;
             }
             else if (Result.IndexOf("disable c") == 0 && Result.IndexOf(" mode") == Result.Length - " mode".Length)
             {
                 MainWindow.chatgpt_mode_enabled = false;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTDeactivationSoundEffect);
-                goto ChatGptMode;
+                ClearBuffers();
+                return true;
             }
 
             if (MainWindow.chatgpt_mode_enabled == true)
             {
-                PostProcessing("chatgpt [ ChatGPT Query ]", Result);
+                return PostProcessing("chatgpt [ ChatGPT Query ]", Result);
             }
             else
             {
                 if (Result.IndexOf("please open ") == 0)
                 {
-                    PostProcessing("please open [Application]", Result);
+                    return PostProcessing("please open [Application]", Result);
                 }
                 else if (Result.IndexOf("open ") == 0)
                 {
                     if (Result.LastIndexOf(" please") + " please".Length - 1 == Result.Length - 1)
                     {
-                        PostProcessing("open [Application] please", Result);
+                        return PostProcessing("open [Application] please", Result);
                     }
                     else if (Result.LastIndexOf(" now") + " now".Length - 1 == Result.Length - 1)
                     {
-                        PostProcessing("open [Application] now", Result);
+                        return PostProcessing("open [Application] now", Result);
                     }
                     else
                     {
-                        PostProcessing("open [Application]", Result);
+                        return PostProcessing("open [Application]", Result);
                     }
                 }
                 else if (Result.IndexOf("please close ") == 0)
                 {
-                    PostProcessing("please close [Application]", Result);
+                    return PostProcessing("please close [Application]", Result);
                 }
                 else if (Result.IndexOf("close ") == 0)
                 {
                     if (Result.LastIndexOf(" please") + " please".Length - 1 == Result.Length - 1)
                     {
-                        PostProcessing("close [Application] please", Result);
+                        return PostProcessing("close [Application] please", Result);
                     }
                     else if (Result.LastIndexOf(" now") + " now".Length - 1 == Result.Length - 1)
                     {
-                        PostProcessing("close [Application] now", Result);
+                        return PostProcessing("close [Application] now", Result);
                     }
                     else
                     {
-                        PostProcessing("close [Application]", Result);
+                        return PostProcessing("close [Application]", Result);
                     }
                 }
                 else if (Result.IndexOf("please search on ") == 0)
                 {
-                    PostProcessing("please search on [Web Application Keyword] [Content]", Result);
+                    return PostProcessing("please search on [Web Application Keyword] [Content]", Result);
                 }
                 else if ((Result.IndexOf("please search ") == 0) && (Result.Contains(" on ") == true))
                 {
-                    PostProcessing("please search [Content] on [Web Application Keyword]", Result);
+                    return PostProcessing("please search [Content] on [Web Application Keyword]", Result);
                 }
                 else if (Result.IndexOf("search on ") == 0)
                 {
-                    PostProcessing("search on [Web Application Keyword] [Content]", Result);
+                    return PostProcessing("search on [Web Application Keyword] [Content]", Result);
                 }
                 else if ((Result.IndexOf("search ") == 0) && (Result.Contains(" on ") == true))
                 {
-                    PostProcessing("search [Content] on [Web Application Keyword]", Result);
+                    return PostProcessing("search [Content] on [Web Application Keyword]", Result);
                 }
                 else if (Result.IndexOf("set a ") == 0)
                 {
                     if (Result.IndexOf(" timer") == Result.Length - 6)
                     {
-                        PostProcessing("set a [Timer Interval] timer", Result);
+                        return PostProcessing("set a [Timer Interval] timer", Result);
                     }
                     else if (Result.IndexOf(" please") == Result.Length - 7)
                     {
                         if (Result.IndexOf(" timer ") == Result.Length - 13)
                         {
-                            PostProcessing("set a [Timer Interval] timer please", Result);
+                            return PostProcessing("set a [Timer Interval] timer please", Result);
                         }
                     }
                 }
@@ -194,13 +217,13 @@ namespace Eva_5._0
                 {
                     if (Result.IndexOf(" timer") == Result.Length - 6)
                     {
-                        PostProcessing("set an [Timer Interval] timer", Result);
+                        return PostProcessing("set an [Timer Interval] timer", Result);
                     }
                     else if (Result.IndexOf(" please") == Result.Length - 7)
                     {
                         if (Result.IndexOf(" timer ") == Result.Length - 13)
                         {
-                            PostProcessing("set an [Timer Interval] timer please", Result);
+                            return PostProcessing("set an [Timer Interval] timer please", Result);
                         }
                     }
                 }
@@ -208,19 +231,19 @@ namespace Eva_5._0
                 {
                     if (Result.IndexOf(" timer") == Result.Length - 6)
                     {
-                        PostProcessing("please set a [Timer Interval] timer", Result);
+                        return PostProcessing("please set a [Timer Interval] timer", Result);
                     }
                 }
                 else if (Result.IndexOf("please set an ") == 0)
                 {
                     if (Result.IndexOf(" timer") == Result.Length - 6)
                     {
-                        PostProcessing("please set a [Timer Interval] timer", Result);
+                        return PostProcessing("please set a [Timer Interval] timer", Result);
                     }
                 }
                 else if (Result.IndexOf("gpt ") == 0)
                 {
-                    PostProcessing("chatgpt [ ChatGPT Query ]", Result);
+                    return PostProcessing("chatgpt [ ChatGPT Query ]", Result);
                 }
                 else
                 {
@@ -235,40 +258,39 @@ namespace Eva_5._0
                     if (Result.IndexOf("take screenshot") == 0)
                     {
                         Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                        return true;
                     }
                     else if (Result.IndexOf("take a screenshot") == 0)
                     {
                         Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                        return true;
                     }
                     else if (Result.IndexOf("take a screenshot please") == 0)
                     {
                         Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                        return true;
                     }
                     else if (Result.IndexOf("please take a screenshot") == 0)
                     {
                         Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                        return true;
                     }
                     else if (Result.IndexOf("screenshot") == 0)
                     {
                         Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                        return true;
                     }
 
                     //[ END ]
                 }
             }
 
-        ChatGptMode:
-        End:
-            Sentence_StringBuilder.Clear();
-            Application_StringBuilder.Clear();
-            WebApplication_StringBuilder.Clear();
-            WebApplicationSearchContent_StringBuilder.Clear();
-            WordBuffer_StringBuilder.Clear();
+            return false;
         }
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void PostProcessing(string Param, string Sentence)
+        private static bool PostProcessing(string Param, string Sentence)
         {
             // THE SECOND TOKENIZATION IS INITIATED. HERE THE CONTEXTUAL NATURAL LANGUAGE PROCESSING TAKES PLACE. THE KEYWORDS RELATED TO THE COMMAND FORMATS DETECTED ARE TOKENIZED.
             // THE KEYWORDS FOR OPERATIONS, APPLICATIONS AND THE CONTENT FOR WEB SEARCH FUNCTIONS OR THE TIMER FUNCTION ARE EXTRACTED FROM THE SENTENCE.
@@ -293,39 +315,48 @@ namespace Eva_5._0
             {
                 case "please open [Application]":
                     Application = System_Application_Selector("please open ".Length - 1, Sentence_StringBuilder.ToString());
+                    Application_StringBuilder.Clear();
+
                     if (Application != String.Empty)
                     {
                         Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
+                        return true;
                     }
-                    Application_StringBuilder.Clear();
-                    break;
+                    return false;
 
                 case "open [Application] please":
                     Application = System_Application_Selector("open ".Length - 1, Sentence_StringBuilder.ToString());
+                    Application_StringBuilder.Clear();
+
                     if (Application != String.Empty)
                     {
                         Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
+                        return true;
                     }
-                    Application_StringBuilder.Clear();
-                    break;
+                    return false;
 
                 case "open [Application] now":
                     Application = System_Application_Selector("open ".Length - 1, Sentence_StringBuilder.ToString());
+                    Application_StringBuilder.Clear();
+
                     if (Application != String.Empty)
                     {
                         Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
+                        return true;
                     }
-                    Application_StringBuilder.Clear();
-                    break;
+                    return false;
 
                 case "open [Application]":
+
                     Application = System_Application_Selector("open ".Length - 1, Sentence_StringBuilder.ToString());
+                    Application_StringBuilder.Clear();
+
                     if (Application != String.Empty)
                     {
                         Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
+                        return true;
                     }
-                    Application_StringBuilder.Clear();
-                    break;
+                    return false;
 
 
 
@@ -333,45 +364,53 @@ namespace Eva_5._0
                 case "please close [Application]":
                     Application = System_Process_Selector("please close ".Length - 1, Sentence_StringBuilder.ToString());
 
+                    Application_StringBuilder.Clear();
+
                     if (Application != String.Empty)
                     {
                         Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
+                        return true;
                     }
-                    Application_StringBuilder.Clear();
-                    break;
+                    return false;
 
                 case "close [Application] please":
 
                     Application = System_Process_Selector("close ".Length - 1, Sentence_StringBuilder.ToString());
 
+                    Application_StringBuilder.Clear();
+
                     if (Application != String.Empty)
                     {
                         Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
+                        return true;
                     }
-                    Application_StringBuilder.Clear();
-                    break;
+                    return false;
 
                 case "close [Application] now":
 
                     Application = System_Process_Selector("close ".Length - 1, Sentence_StringBuilder.ToString());
 
+                    Application_StringBuilder.Clear();
+
                     if (Application != String.Empty)
                     {
                         Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
+                        return true;
                     }
-                    Application_StringBuilder.Clear();
-                    break;
+                    return false;
 
                 case "close [Application]":
 
                     Application = System_Process_Selector("close ".Length - 1, Sentence_StringBuilder.ToString());
 
+                    Application_StringBuilder.Clear();
+
                     if (Application != String.Empty)
                     {
                         Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
+                        return true;
                     }
-                    Application_StringBuilder.Clear();
-                    break;
+                    return false;
 
 
 
@@ -405,8 +444,9 @@ namespace Eva_5._0
 
                         WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString().Trim();
                         Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
+                        return true;
                     }
-                    break;
+                    return false;
 
                 case "search on [Web Application Keyword] [Content]":
 
@@ -421,8 +461,9 @@ namespace Eva_5._0
 
                         WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString().Trim();
                         Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
+                        return true;
                     }
-                    break;
+                    return false;
 
                 case "search [Content] on [Web Application Keyword]":
 
@@ -438,8 +479,9 @@ namespace Eva_5._0
 
                         WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString().Trim();
                         Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
+                        return true;
                     }
-                    break;
+                    return false;
 
                 case "chatgpt [ ChatGPT Query ]":
                     if (MainWindow.chatgpt_mode_enabled == true)
@@ -455,40 +497,46 @@ namespace Eva_5._0
 
                         WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString();
                     }
-                    Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("ChatGPT Process", Application, WebApplicationSearchContent);
-                    break;
+
+                    if (WebApplicationSearchContent != String.Empty)
+                    {
+                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("ChatGPT Process", Application, WebApplicationSearchContent);
+                        return true;
+                    }
+                    return false;
 
                 case "set a [Timer Interval] timer":
                     Timer_Time_Selector(Sentence, time_interval, "set a ".Length - 1);
                     Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
-                    break;
+                    return true;
 
                 case "set an [Timer Interval] timer":
                     Timer_Time_Selector(Sentence, time_interval, "set an ".Length - 1);
                     Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
-                    break;
+                    return true;
 
                 case "set a [Timer Interval] timer please":
                     Timer_Time_Selector(Sentence, time_interval, "set a ".Length - 1);
                     Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
-                    break;
+                    return true;
 
                 case "set an [Timer Interval] timer please":
                     Timer_Time_Selector(Sentence, time_interval, "set an ".Length - 1);
                     Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
-                    break;
+                    return true;
 
                 case "please set a [Timer Interval] timer":
                     Timer_Time_Selector(Sentence, time_interval, "please set a ".Length - 1);
                     Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
-                    break;
+                    return true;
 
                 case "please set an [Timer Interval] timer":
                     Timer_Time_Selector(Sentence, time_interval, "please set an ".Length - 1);
                     Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
-                    break;
+                    return true;
             }
 
+            return false;
             // [ END ]
         }
 

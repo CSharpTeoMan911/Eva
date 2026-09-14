@@ -44,14 +44,10 @@ namespace Eva_5._0
         //
         // BEGIN
 
-        private string normal_mode_outer_elipse_offset_color = "#FF7BBFD8";
-        private string normal_mode_outer_elipse_gradient_color = "#FF052544";
 
         private string normal_mode_activated_outer_elipse_offset_color = "#FF91E1FF";
         private string normal_mode_activated_outer_elipse_gradient_color = "#FF3099FF";
 
-        private string chatbot_mode_outer_elipse_offset_color = "#FF7BD889";
-        private string chatbot_mode_outer_elipse_gradient_color = "#FF054406";
 
         private string chatbot_mode_activated_outer_elipse_offset_color = "#FF00FF1B";
         private string chatbot_mode_activated_outer_elipse_gradient_color = "#FF34F19F";
@@ -86,7 +82,7 @@ namespace Eva_5._0
 
         // [ BEGIN ] STATIC OBJECTS OBJECTS FOR THE SPEECH RECOGNITION SYSTEM STATE MACHINE THAT ARE ACCESSED IN A THREAD SAFE MANNER
 
-        protected static long Online_Speech_Recogniser_Listening;
+        protected static long Speech_Recogniser_Listening;
 
         protected static long BeginExecutionAnimation;
 
@@ -238,33 +234,6 @@ namespace Eva_5._0
                                 }
 
 
-                                // IF THE CALCULATED ONLINE SPEECH RECOGNITION ACTIVATION DELAY INTERVAL IS NOT NULL
-                                if (Online_Speech_Recogniser_Activation_Delay_Detector != null)
-                                {
-                                    // IF THE INTERVAL OF TIME BETWEEN THE CURRENT TIME AND THE TIME WHEN THE ONLINE SPEECH RECOGNITION ENGINE EXCEEDS THE 
-                                    // AMOUNT OF SECONDS SET FOR THE SET ONLINE SPEECH RECOGNITION DELAY, MAKE THE APPLICATION MAIN WINDOW'S
-                                    // CIRCULAR STATUS INDICATOR BLUE
-                                    if (((TimeSpan)(DateTime.UtcNow - Online_Speech_Recogniser_Activation_Delay_Detector)).TotalSeconds > Speech_Recogniser_Activation_Delay)
-                                    {
-                                        if (chatgpt_mode_enabled == true)
-                                        {
-                                            OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString(chatbot_mode_outer_elipse_offset_color);
-                                            OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString(chatbot_mode_outer_elipse_gradient_color);
-                                        }
-                                        else
-                                        {
-                                            OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString(normal_mode_outer_elipse_offset_color);
-                                            OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString(normal_mode_outer_elipse_gradient_color);
-                                        }
-                                    }
-                                    // ELSE MAKE THE CIRCULAR STATUS INDICATOR RED
-                                    else
-                                    {
-                                        OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("Red");
-                                        OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FFF13434");
-                                    }
-                                }
-
                                 // IF THE APPLICATION HAS AN ERROR THAT REQUIRES THE APPLICATION TO SHUT DOWN,
                                 // STOP THE TIMER AND HIDE THE WINDOW
                                 if (App.Application_Error_Shutdown)
@@ -317,59 +286,20 @@ namespace Eva_5._0
 
 
 
-                                if (Online_Speech_Recogniser_Listening == 1)
+                                if (Speech_Recogniser_Listening == 1)
                                 {
                                     // IF THE ONLINE SPEECH RECOGNITION ENGINE IS DISABLED OR THE WINDOW IS MINIMISED,
-                                    // MAKE THE ONLINE SPEECH RECOGNITION ENGINE STOP TAKING INPUT
-                                    if (Interlocked.Read(ref Window_Minimised) == 1 || Interlocked.Read(ref Online_Speech_Recogniser_Disabled) == 1)
+                                    // WHILE THE ONLINE SPEECH RECOGNITION ENGINE IS OPERATING SET THE CIRCULAR STATUS INDICATOR
+                                    // COLOR AS BRIGHT BLUE
+                                    if (chatgpt_mode_enabled == true)
                                     {
-                                        Interlocked.Exchange(ref Wake_Word_Detected, 0);
-
-                                        Interlocked.Exchange(ref Online_Speech_Recogniser_Listening, 0);
-                                        
+                                        OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString(chatbot_mode_activated_outer_elipse_offset_color);
+                                        OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString(chatbot_mode_activated_outer_elipse_gradient_color);
                                     }
-
-
-
-                                    // IF THE TIMEOUT FOR THE ONLINE SPEECH RECOGNITION ENGINE SPEECH TO TEXT OPERATION IS NOT NULL
-                                    if (speech_recognition_timeout != null)
+                                    else
                                     {
-                                        // IF THE DIFFERENCE BETWEEN THE CURRENT TIME AND THE TIME WHEN THE ONLINE SPEECH RECOGNITION ENGINE
-                                        // BEGAN THE SPEECH TO TEXT OPERATION IS GREATER THAN 5 SECONDS ADUJUST THE GUI TO DISPLAY THAT
-                                        // THE ONLINE SPEECH RECOGNITION ENGINE DOES NOT TAKE INPUT AND STOP THE ONLINE SPEECH
-                                        // RECOGNITION ENGINE SPEECH FROM TAKING INPUT
-                                        if (((TimeSpan)(DateTime.UtcNow - speech_recognition_timeout)).TotalMilliseconds >= 5000)
-                                        {
-                                            Interlocked.Exchange(ref Online_Speech_Recogniser_Listening, 0);
-                                            MoonshineASR.StopEngine();
-                                        }
-                                        // ELSE IF THE DIFFERENCE BETWEEN THE CURRENT TIME AND THE TIME WHEN THE ONLINE SPEECH RECOGNITION ENGINE
-                                        // BEGAN THE SPEECH TO TEXT OPERATION IS LESS THAN 20 SECONDS
-                                        else
-                                        {
-
-
-                                            // IF THE ONLINE SPEECH RECOGNITION ENGINE DETECTED SPEECH, RESET THE GUI COUNTER
-                                            // REGARDING THE ONLINE SPEECH RECOGNITION ENGINE TIMEOUT
-                                            if (Interlocked.Read(ref Speech_Detected) == 1)
-                                            {
-                                                Interlocked.Exchange(ref Speech_Detected, 0);
-                                            }
-
-
-                                            // WHILE THE ONLINE SPEECH RECOGNITION ENGINE IS OPERATING SET THE CIRCULAR STATUS INDICATOR
-                                            // COLOR AS BRIGHT BLUE
-                                            if (chatgpt_mode_enabled == true)
-                                            {
-                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString(chatbot_mode_activated_outer_elipse_offset_color);
-                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString(chatbot_mode_activated_outer_elipse_gradient_color);
-                                            }
-                                            else
-                                            {
-                                                OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString(normal_mode_activated_outer_elipse_offset_color);
-                                                OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString(normal_mode_activated_outer_elipse_gradient_color);
-                                            }
-                                        }
+                                        OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString(normal_mode_activated_outer_elipse_offset_color);
+                                        OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString(normal_mode_activated_outer_elipse_gradient_color);
                                     }
                                 }
 
