@@ -70,7 +70,7 @@ namespace Eva_5._0.Properties
                             {
                                 if (current_capture_device != null)
                                 {
-                                    current_capture_device.AudioEndpointVolume.MasterVolumeLevelScalar = 0.9f;
+                                    current_capture_device.AudioEndpointVolume.MasterVolumeLevelScalar = 1f;
                                 }
 
                                 deviceID = current_render_device.ID;

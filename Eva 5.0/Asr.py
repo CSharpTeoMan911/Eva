@@ -3,7 +3,7 @@ import time
 import os
 
 class AsrEngine:
-
+    context = str()
     engineLoaded = False
 
     transcriptionTimeout = int() 
@@ -15,7 +15,8 @@ class AsrEngine:
     hypothesisTime = float()
     resultTime = float()
 
-    def __init__(self, transcriptionTimeout:int):
+    def __init__(self, transcriptionTimeout:int, context:str=str()):
+        self.context = context
         self.transcriptionTimeout = transcriptionTimeout if transcriptionTimeout >= 3 else 3
 
     def _processHypothesis(self, text:str):
@@ -36,10 +37,11 @@ class AsrEngine:
         self.mic = (
         MicTranscriber()
         .options({
-            "spelling_model_path": spellingModel
+            "spelling_model_path": spellingModel,
+            "context":self.context
         })
         .models_from(transcriptionModel)
-        .update_interval(1.2)
+        .update_interval(1)
         .language("en")
         .on_text(lambda text: self._processHypothesis(text))
         .on_line(lambda line: self._processLine(line.text))

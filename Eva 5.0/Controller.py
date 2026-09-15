@@ -1,15 +1,17 @@
 import time
+import sys
+import Asr
 
 class Controller:
-    import Asr
-
+    context = str()
     hypothesis = str()
     result = str()
 
     isControllerRunning = False
 
-    def __init__(self):
-        self.engine = self.Asr.AsrEngine(transcriptionTimeout=3)
+    def __init__(self, context:str = str()):
+        self.engine = Asr.AsrEngine(transcriptionTimeout=3, context=self.context)
+        self.context = context
 
     def start(self):
         self.engine.loadEngine()
@@ -38,12 +40,23 @@ class Controller:
         self.engine.clearHypothesis()
 
 
-controller = Controller()
+
+key = str()
+values = []
+has_parameters = False
+
+if len(sys.argv) >= 3:
+    key = sys.argv[1]
+    values = [x for x in sys.argv[2:]]
+    has_parameters = True if key == '-c' and len(values) > 0 else False
+
+controller = Controller() if has_parameters else Controller(context=str(values))
 controller.start()
+
 print('[ loaded ]', flush=True)
 t = time.time()
 while True:
-    if (time.time() - t) > 1:
+    if (time.time() - t) >= 1:
         t = time.time()
         print(controller.getResult(), flush=True)
 
