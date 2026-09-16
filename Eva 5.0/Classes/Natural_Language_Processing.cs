@@ -46,14 +46,14 @@ namespace Eva_5._0
 
     internal class Natural_Language_Processing : A_p_l____And____P_r_o_c
     {
-        private static StringBuilder Sentence_StringBuilder = new StringBuilder();
-        private static StringBuilder Application_StringBuilder = new StringBuilder();
-        private static StringBuilder WebApplication_StringBuilder = new StringBuilder();
-        private static StringBuilder WebApplicationSearchContent_StringBuilder = new StringBuilder();
-        private static StringBuilder WordBuffer_StringBuilder = new StringBuilder();
+        private StringBuilder Sentence_StringBuilder = new StringBuilder();
+        private StringBuilder Application_StringBuilder = new StringBuilder();
+        private StringBuilder WebApplication_StringBuilder = new StringBuilder();
+        private StringBuilder WebApplicationSearchContent_StringBuilder = new StringBuilder();
+        private StringBuilder WordBuffer_StringBuilder = new StringBuilder();
 
 
-        private static void ClearBuffers()
+        private void ClearBuffers()
         {
             Sentence_StringBuilder.Clear();
             Application_StringBuilder.Clear();
@@ -64,7 +64,7 @@ namespace Eva_5._0
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<bool> PreProcessing(string Result)
+        public async Task<bool> PreProcessing(string Result)
         {
             ClearBuffers();
 
@@ -81,8 +81,6 @@ namespace Eva_5._0
             if (CommandTest == true)
                 return true;
 
-
-
             // THE FIRST TOKENIZATION IS INITIATED. THE FIRST TOKENIZATION IS RESPONSIBLE FOR PARAMETER ASSOCIATION WITH THEIR RESPECTIVE COMMAND FORMATS
             // FOR EXAMPLE IF YOU SAY "SEARCH ROBOTS ARE COOL ON YOUTUBE" THE FIRST TOKENIZATION WILL ASSOCIATE THE COMMAND WITH THE 
             // "SEARCH [ CONTENT ] ON [ WEB APPLICATION ] COMMAND FORMAT BASED ON THE POSITION OF THE KEYWORD "SEARCH" WITHIN THE
@@ -90,56 +88,52 @@ namespace Eva_5._0
             // THE TOKENIZATION SESSION WILL DROP THE COMMAND.
             //
             // [ BEGIN ]
-
-            if (Result == "stop listening")
+            
+            if (Result == "invisible")
             {
-                return true;
-            }
-            else if (Result == "invisible")
-            {
-                MainWindow.invisibility_mode = true;
+                App.stateMachine.invisibility_mode = true;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTActivationSoundEffect);
                 ClearBuffers();
                 return true;
             }
             else if (Result == "visible")
             {
-                MainWindow.invisibility_mode = false;
-                MainWindow.bring_to_top = true;
+                App.stateMachine.invisibility_mode = false;
+                App.stateMachine.bring_to_top = true;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTDeactivationSoundEffect);
                 ClearBuffers();
                 return true;
             }
             else if (Result.IndexOf("activate c") == 0 && Result.IndexOf(" mode") == Result.Length - " mode".Length)
             {
-                MainWindow.chatgpt_mode_enabled = true;
+                App.stateMachine.chatgpt_mode_enabled = true;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTActivationSoundEffect);
                 ClearBuffers();
                 return true;
             }
             else if (Result.IndexOf("enable c") == 0 && Result.IndexOf(" mode") == Result.Length - " mode".Length)
             {
-                MainWindow.chatgpt_mode_enabled = true;
+                App.stateMachine.chatgpt_mode_enabled = true;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTActivationSoundEffect);
                 ClearBuffers();
                 return true;
             }
             else if (Result.IndexOf("deactivate c") == 0 && Result.IndexOf(" mode") == Result.Length - " mode".Length)
             {
-                MainWindow.chatgpt_mode_enabled = false;
+                App.stateMachine.chatgpt_mode_enabled = false;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTDeactivationSoundEffect);
                 ClearBuffers();
                 return true;
             }
             else if (Result.IndexOf("disable c") == 0 && Result.IndexOf(" mode") == Result.Length - " mode".Length)
             {
-                MainWindow.chatgpt_mode_enabled = false;
+                App.stateMachine.chatgpt_mode_enabled = false;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTDeactivationSoundEffect);
                 ClearBuffers();
                 return true;
             }
 
-            if (MainWindow.chatgpt_mode_enabled == true)
+            if (App.stateMachine.chatgpt_mode_enabled == true)
             {
                 return PostProcessing("chatgpt [ ChatGPT Query ]", Result);
             }
@@ -257,27 +251,27 @@ namespace Eva_5._0
 
                     if (Result.IndexOf("take screenshot") == 0)
                     {
-                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                        App.stateMachine.proc.ProcInitialisation<string>("Screen Capture Process", null, null);
                         return true;
                     }
                     else if (Result.IndexOf("take a screenshot") == 0)
                     {
-                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                        App.stateMachine.proc.ProcInitialisation<string>("Screen Capture Process", null, null);
                         return true;
                     }
                     else if (Result.IndexOf("take a screenshot please") == 0)
                     {
-                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                        App.stateMachine.proc.ProcInitialisation<string>("Screen Capture Process", null, null);
                         return true;
                     }
                     else if (Result.IndexOf("please take a screenshot") == 0)
                     {
-                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                        App.stateMachine.proc.ProcInitialisation<string>("Screen Capture Process", null, null);
                         return true;
                     }
                     else if (Result.IndexOf("screenshot") == 0)
                     {
-                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Screen Capture Process", null, null);
+                        App.stateMachine.proc.ProcInitialisation<string>("Screen Capture Process", null, null);
                         return true;
                     }
 
@@ -290,7 +284,7 @@ namespace Eva_5._0
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool PostProcessing(string Param, string Sentence)
+        private bool PostProcessing(string Param, string Sentence)
         {
             // THE SECOND TOKENIZATION IS INITIATED. HERE THE CONTEXTUAL NATURAL LANGUAGE PROCESSING TAKES PLACE. THE KEYWORDS RELATED TO THE COMMAND FORMATS DETECTED ARE TOKENIZED.
             // THE KEYWORDS FOR OPERATIONS, APPLICATIONS AND THE CONTENT FOR WEB SEARCH FUNCTIONS OR THE TIMER FUNCTION ARE EXTRACTED FROM THE SENTENCE.
@@ -319,7 +313,7 @@ namespace Eva_5._0
 
                     if (Application != String.Empty)
                     {
-                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
+                        App.stateMachine.proc.ProcInitialisation<string>("System Process", Application, "open");
                         return true;
                     }
                     return false;
@@ -330,7 +324,7 @@ namespace Eva_5._0
 
                     if (Application != String.Empty)
                     {
-                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
+                        App.stateMachine.proc.ProcInitialisation<string>("System Process", Application, "open");
                         return true;
                     }
                     return false;
@@ -341,7 +335,7 @@ namespace Eva_5._0
 
                     if (Application != String.Empty)
                     {
-                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
+                        App.stateMachine.proc.ProcInitialisation<string>("System Process", Application, "open");
                         return true;
                     }
                     return false;
@@ -353,7 +347,7 @@ namespace Eva_5._0
 
                     if (Application != String.Empty)
                     {
-                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "open");
+                        App.stateMachine.proc.ProcInitialisation<string>("System Process", Application, "open");
                         return true;
                     }
                     return false;
@@ -368,7 +362,7 @@ namespace Eva_5._0
 
                     if (Application != String.Empty)
                     {
-                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
+                        App.stateMachine.proc.ProcInitialisation<string>("System Process", Application, "close");
                         return true;
                     }
                     return false;
@@ -381,7 +375,7 @@ namespace Eva_5._0
 
                     if (Application != String.Empty)
                     {
-                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
+                        App.stateMachine.proc.ProcInitialisation<string>("System Process", Application, "close");
                         return true;
                     }
                     return false;
@@ -394,7 +388,7 @@ namespace Eva_5._0
 
                     if (Application != String.Empty)
                     {
-                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
+                        App.stateMachine.proc.ProcInitialisation<string>("System Process", Application, "close");
                         return true;
                     }
                     return false;
@@ -407,7 +401,7 @@ namespace Eva_5._0
 
                     if (Application != String.Empty)
                     {
-                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("System Process", Application, "close");
+                        App.stateMachine.proc.ProcInitialisation<string>("System Process", Application, "close");
                         return true;
                     }
                     return false;
@@ -427,7 +421,7 @@ namespace Eva_5._0
                         }
 
                         WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString();
-                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
+                        App.stateMachine.proc.ProcInitialisation<string>("Online Process", Application, WebApplicationSearchContent);
                     }
                     break;
 
@@ -443,7 +437,7 @@ namespace Eva_5._0
                         }
 
                         WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString().Trim();
-                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
+                        App.stateMachine.proc.ProcInitialisation<string>("Online Process", Application, WebApplicationSearchContent);
                         return true;
                     }
                     return false;
@@ -460,7 +454,7 @@ namespace Eva_5._0
                         }
 
                         WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString().Trim();
-                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
+                        App.stateMachine.proc.ProcInitialisation<string>("Online Process", Application, WebApplicationSearchContent);
                         return true;
                     }
                     return false;
@@ -478,13 +472,13 @@ namespace Eva_5._0
 
 
                         WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString().Trim();
-                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("Online Process", Application, WebApplicationSearchContent);
+                        App.stateMachine.proc.ProcInitialisation<string>("Online Process", Application, WebApplicationSearchContent);
                         return true;
                     }
                     return false;
 
                 case "chatgpt [ ChatGPT Query ]":
-                    if (MainWindow.chatgpt_mode_enabled == true)
+                    if (App.stateMachine.chatgpt_mode_enabled == true)
                     {
                         WebApplicationSearchContent = Sentence;
                     }
@@ -500,39 +494,39 @@ namespace Eva_5._0
 
                     if (WebApplicationSearchContent != String.Empty)
                     {
-                        Eva_Functionalities.Proc_Mitigator.Process_Initialisation<string>("ChatGPT Process", Application, WebApplicationSearchContent);
+                        App.stateMachine.proc.ProcInitialisation<string>("ChatGPT Process", Application, WebApplicationSearchContent);
                         return true;
                     }
                     return false;
 
                 case "set a [Timer Interval] timer":
                     Timer_Time_Selector(Sentence, time_interval, "set a ".Length - 1);
-                    Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
+                    App.stateMachine.proc.ProcInitialisation("Timer Process", null, time_interval);
                     return true;
 
                 case "set an [Timer Interval] timer":
                     Timer_Time_Selector(Sentence, time_interval, "set an ".Length - 1);
-                    Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
+                    App.stateMachine.proc.ProcInitialisation("Timer Process", null, time_interval);
                     return true;
 
                 case "set a [Timer Interval] timer please":
                     Timer_Time_Selector(Sentence, time_interval, "set a ".Length - 1);
-                    Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
+                    App.stateMachine.proc.ProcInitialisation("Timer Process", null, time_interval);
                     return true;
 
                 case "set an [Timer Interval] timer please":
                     Timer_Time_Selector(Sentence, time_interval, "set an ".Length - 1);
-                    Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
+                    App.stateMachine.proc.ProcInitialisation("Timer Process", null, time_interval);
                     return true;
 
                 case "please set a [Timer Interval] timer":
                     Timer_Time_Selector(Sentence, time_interval, "please set a ".Length - 1);
-                    Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
+                    App.stateMachine.proc.ProcInitialisation("Timer Process", null, time_interval);
                     return true;
 
                 case "please set an [Timer Interval] timer":
                     Timer_Time_Selector(Sentence, time_interval, "please set an ".Length - 1);
-                    Eva_Functionalities.Proc_Mitigator.Process_Initialisation("Timer Process", null, time_interval);
+                    App.stateMachine.proc.ProcInitialisation("Timer Process", null, time_interval);
                     return true;
             }
 
@@ -543,7 +537,7 @@ namespace Eva_5._0
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void Timer_Time_Selector(string Sentence, System.Collections.Concurrent.ConcurrentDictionary<string, int> time_interval, int start_index)
+        private void Timer_Time_Selector(string Sentence, System.Collections.Concurrent.ConcurrentDictionary<string, int> time_interval, int start_index)
         {
             // WHEN A TIMER IS SET THE TIME VARIABLES FROM THE SENTECE MUST BE EXTRACTED. THE SECOND TOKENIZATION WILL EXTRACTS WHERE
             // THE POSITION OF THESE TIME VARIALBLES WILL BE WITHIN THE SENTENCE AND PASS THE SENTENCE AND INDEX WHERE THESE TIME
@@ -733,7 +727,7 @@ namespace Eva_5._0
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static string System_Application_Selector(int start_index, string Sentence)
+        private string System_Application_Selector(int start_index, string Sentence)
         {
             System.Collections.Generic.Stack<string> Token_Buffer_List = new System.Collections.Generic.Stack<string>();
             string Token_Buffer;
@@ -772,7 +766,7 @@ namespace Eva_5._0
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static string System_Process_Selector(int start_index, string Sentence)
+        private string System_Process_Selector(int start_index, string Sentence)
         {
             System.Collections.Generic.Stack<string> Token_Buffer_List = new System.Collections.Generic.Stack<string>();
             string Token_Buffer;
@@ -811,7 +805,7 @@ namespace Eva_5._0
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static string Web_Application_Selector(int start_index, string Sentence)
+        private string Web_Application_Selector(int start_index, string Sentence)
         {
             // THE SECOND TOKENIZATION IDENTIFIES WHERE THE POSITION OF THE WEB APPLICATION KEYWORD IS WITHIN THE SENTENCE
             // PASSES THE SENTENCE AND THE WEB APPLICATION'S DETECTED KEYWORD INDEX TO THIS METHOD. THIS METHOD WILL THEN 

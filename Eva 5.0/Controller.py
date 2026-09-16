@@ -1,62 +1,91 @@
+from moonshine_voice import MicTranscriber
 import time
-import sys
-import Asr
+import os
 
-class Controller:
+class AsrEngine:
     context = str()
+    engineLoaded = False
+
+    transcriptionTimeout = int() 
+    mic = MicTranscriber()
+
     hypothesis = str()
     result = str()
 
-    isControllerRunning = False
+    hypothesisTime = float()
+    resultTime = float()
 
-    def __init__(self, context:str = str()):
-        self.engine = Asr.AsrEngine(transcriptionTimeout=3, context=self.context)
+    def __init__(self, transcriptionTimeout:int, context:str=str()):
         self.context = context
+        self.transcriptionTimeout = transcriptionTimeout if transcriptionTimeout >= 3 else 3
 
-    def start(self):
-        self.engine.loadEngine()
-        self.engine.startTranscription()
+    def _processHypothesis(self, text:str):
+        if text is not None and text != '':
+            self.hypothesis = f'{self.hypothesis} {text}'.strip('\r').strip('\n')
+            self.hypothesisTime = time.time()
 
-    def stop(self):
-        self.engine.unloadEngine()
-        self.engine.stopTranscription()
 
-    def getResult(self) -> str:
-        r = self.engine.getResult()
-        val = r if self.result != r else str()
-        self.result = r
-        return val
+    def _processLine(self, line:str):
+        if line is not None and line != '':
+            self.result = f'{self.result} {line}'.strip('\r').strip('\n')
+            self.resultTime = time.time()
+
+
+    def loadEngine(self):
+        spellingModel = os.path.join(os.getcwd(), 'python', 'spelling-en', 'spelling_cnn.ort')
+        transcriptionModel = os.path.join(os.getcwd(), 'python', 'medium-streaming-en' , 'quantized_26_08_21')
+        self.mic = (
+        MicTranscriber()
+        .options({
+            "spelling_model_path": spellingModel,
+            "context":self.context
+        })
+        .models_from(transcriptionModel)
+        .update_interval(1)
+        .language("en")
+        .on_text(lambda text: self._processHypothesis(text))
+        .on_line(lambda line: self._processLine(line.text))
+        )
+        self.mic.load()
+        self.engineLoaded = True
+
+    def unloadEngine(self):
+        self.mic.close()
+        self.engineLoaded = False
+
+
+    def startTranscription(self):
+        self.mic.start()
+
+    def stopTranscription(self):
+        self.mic.stop()
+
 
     def getHypothesis(self) -> str:
-        h = self.engine.getHypothesis()
-        val = h if self.hypothesis != h else str()
-        self.hypothesis = h
-        return val
-    
+        if self.engineLoaded is True:
+            val = self.hypothesis
+            self.hypothesisTime = self.hypothesisTime if self.hypothesisTime > 0 else time.time()
+            if (time.time() - self.hypothesisTime) >= self.transcriptionTimeout:
+                self.hypothesis = str()
+            self.hypothesisTime = time.time()
+            return val
+        else:
+            raise Exception("The ASR Engine is not loaded")
+
+
+    def getResult(self) -> str:
+        if self.engineLoaded is True:
+            val = self.result
+            self.resultTime = self.resultTime if self.resultTime > 0 else time.time()
+            if (time.time() - self.resultTime) >= self.transcriptionTimeout:
+                self.result = str()
+                self.resultTime = time.time()
+            return val
+        else:
+            raise Exception("The ASR Engine is not loaded")
+
     def clearResult(self):
-        self.engine.clearResult()
+        self.result = str()
 
     def clearHypothesis(self):
-        self.engine.clearHypothesis()
-
-
-
-key = str()
-values = []
-has_parameters = False
-
-if len(sys.argv) >= 3:
-    key = sys.argv[1]
-    values = [x for x in sys.argv[2:]]
-    has_parameters = True if key == '-c' and len(values) > 0 else False
-
-controller = Controller() if has_parameters else Controller(context=str(values))
-controller.start()
-
-print('[ loaded ]', flush=True)
-t = time.time()
-while True:
-    if (time.time() - t) >= 1:
-        t = time.time()
-        print(controller.getResult(), flush=True)
-
+        self.hypothesis = str()

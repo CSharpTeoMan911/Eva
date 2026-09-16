@@ -97,25 +97,19 @@ namespace Eva_5._0
                 internal static void Empty_Recycle_Bin_Implementor() => Empty_Recycle_Bin();
             }
 
-            public class Begin_Application_Execution_Animation : MainWindow
+            public class Begin_Application_Execution_Animation
             {
                 internal static void Start_The_Application_Execution_Animation()
                 {
                     Interlocked.MemoryBarrier();
                     Interlocked.SpeculationBarrier();
-                    Interlocked.Exchange(ref BeginExecutionAnimation, 1);
+                    Interlocked.Exchange(ref App.stateMachine.BeginExecutionAnimation, 1);
                 }
             }
 
             public class Screen_Capture_Mechanism_Mitigator : Screen_Capture_Mechanism
             {
                 internal static async Task Screen_Capture_Initiator() => await Screen_Capture();
-            }
-
-
-            public class Proc_Mitigator : Proc
-            {
-                internal static void Process_Initialisation<Content>(string process_type, string application, Content content) => ProcInitialisation<Content>(process_type, application, content);
             }
         }
 

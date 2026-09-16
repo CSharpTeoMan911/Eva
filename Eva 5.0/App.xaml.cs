@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic.Devices;
+﻿using Eva_5._0.Classes;
+using Microsoft.VisualBasic.Devices;
 using System;
 using System.Linq;
 using System.Text;
@@ -31,6 +32,7 @@ namespace Eva_5._0
 
     public partial class App : Application
     {
+        internal static AppStateMachine stateMachine = new AppStateMachine();
         internal static ChatGPT_API ChatGPT_API = new ChatGPT_API();
 
         public static bool SettingsWindowOpen;
@@ -53,7 +55,7 @@ namespace Eva_5._0
         {
             public static void Wake_Word_Engine_Stop()
             {
-                Stop_The_Wake_Word_Engine();
+                App.stateMachine.wakeWordEngine.Stop_The_Wake_Word_Engine();
             }
         }
 

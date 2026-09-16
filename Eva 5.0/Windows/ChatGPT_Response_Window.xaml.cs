@@ -724,7 +724,7 @@ namespace Eva_5._0
             string link = e.Link;
             if (!string.IsNullOrEmpty(link))
             {
-                Proc.NavigateToLink(link);
+                App.stateMachine.proc.NavigateToLink(link);
             }
         }
 

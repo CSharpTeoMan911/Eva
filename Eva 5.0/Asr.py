@@ -32,8 +32,8 @@ class AsrEngine:
 
 
     def loadEngine(self):
-        spellingModel = os.path.join(os.getcwd(), 'MoonshineEngine', 'spelling-en', 'spelling_cnn.ort')
-        transcriptionModel = os.path.join(os.getcwd(), 'MoonshineEngine', 'medium-streaming-en' , 'quantized_26_08_21')
+        spellingModel = os.path.join(os.getcwd(), 'python', 'spelling-en', 'spelling_cnn.ort')
+        transcriptionModel = os.path.join(os.getcwd(), 'python', 'medium-streaming-en' , 'quantized_26_08_21')
         self.mic = (
         MicTranscriber()
         .options({

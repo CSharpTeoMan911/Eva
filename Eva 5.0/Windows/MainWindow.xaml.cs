@@ -1,6 +1,8 @@
 ﻿using Eva_5._0.Classes;
+using Eva_5._0.Properties;
 using Microsoft.Win32;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -32,13 +34,6 @@ namespace Eva_5._0
     {
         private static RotateTransform Rotate = new RotateTransform();
 
-        private bool Cropped = true;
-
-        public static bool invisibility_mode;
-
-        public static bool bring_to_top;
-
-
 
         // COLORS FOR THE CIRCULAR INDICATOR FOR EACH OPERATIONAL MODE (CHATBOT MODE AND NORMAL MODE)
         //
@@ -52,59 +47,9 @@ namespace Eva_5._0
         private string chatbot_mode_activated_outer_elipse_offset_color = "#FF00FF1B";
         private string chatbot_mode_activated_outer_elipse_gradient_color = "#FF34F19F";
 
-        // END
-
-
-
-
-        // ONLINE SPEECH RECOGNITION ACTIVATION DELAY MACHANISM VARIABLES 
-        //
-        // BEGIN
-
-        protected static DateTime? Online_Speech_Recogniser_Activation_Delay_Detector = null;
-        private static readonly double Speech_Recogniser_Activation_Delay = 0.2;
-
-        // END
-
-
 
 
         private System.Timers.Timer AnimationAndFunctionalityTimer;
-
-        public static bool chatgpt_mode_enabled = false;
-
-
-        /// <summary>
-        ///  Gradient Arithmetic For Neon Glow Chromatic Effect
-        /// </summary>
-        /// 
-
-
-        // [ BEGIN ] STATIC OBJECTS OBJECTS FOR THE SPEECH RECOGNITION SYSTEM STATE MACHINE THAT ARE ACCESSED IN A THREAD SAFE MANNER
-
-        protected static long Speech_Recogniser_Listening;
-
-        protected static long BeginExecutionAnimation;
-
-        protected static long Speech_Detected;
-
-        protected static long Window_Minimised;
-
-        protected static long Online_Speech_Recogniser_Disabled;
-
-        protected static Windows.Media.SpeechRecognition.SpeechRecognizerState Online_Speech_Recogniser_State = Windows.Media.SpeechRecognition.SpeechRecognizerState.Idle;
-
-        protected static long Wake_Word_Detected;
-
-        // [ END ] STATIC OBJECTS OBJECTS FOR THE SPEECH RECOGNITION SYSTEM STATE MACHINE THAT ARE ACCESSED IN A THREAD SAFE MANNER
-
-
-
-
-        protected static DateTime? speech_recognition_timeout;
-
-
-
 
 
         private bool SwitchOffset;
@@ -115,8 +60,6 @@ namespace Eva_5._0
         /// <summary>
         ///  Gradient Arithmetic For Neon Glow Chromatic Effect
         /// </summary>
-
-        protected static bool MainWindowIsClosing;
 
         private bool Colour_Switch;
 
@@ -172,16 +115,16 @@ namespace Eva_5._0
             AnimationAndFunctionalityTimer.Start();
         }
 
-        private void CurrentDomain_ProcessExit(object sender, EventArgs e) => Wake_Word_Engine.Stop_The_Wake_Word_Engine();
+        private void CurrentDomain_ProcessExit(object sender, EventArgs e) => App.stateMachine.wakeWordEngine.Stop_The_Wake_Word_Engine();
 
-        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e) => Wake_Word_Engine.Stop_The_Wake_Word_Engine();
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e) => App.stateMachine.wakeWordEngine.Stop_The_Wake_Word_Engine();
 
         private async void AnimationAndFunctionalityTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             try
             {
                 // VERIFY IF MAIN WINDOW IS CLOSING
-                if (MainWindowIsClosing == true)
+                if (App.stateMachine.MainWindowIsClosing == true)
                 {
                     AnimationAndFunctionalityTimer?.Stop();
                 }
@@ -206,7 +149,7 @@ namespace Eva_5._0
 
                         // METHODS AND PARAMETERS THAT MUST BE EXECUTED AND/OR MANIPULATED ON THE UI THREAD,
                         // ARE MOVED ON THE UI THREAD VIA THE "Application.Current.Dispatcher.Invoke()" METHOD
-                        await Application.Current.Dispatcher.InvokeAsync(() =>
+                        await Application.Current.Dispatcher.InvokeAsync(async () =>
                         {
 
                             if (Application.Current.MainWindow == null)
@@ -216,7 +159,7 @@ namespace Eva_5._0
                             else
                             {
 
-                                switch (invisibility_mode)
+                                switch (App.stateMachine.invisibility_mode)
                                 {
                                     case true:
                                         this.Height = 0;
@@ -227,10 +170,10 @@ namespace Eva_5._0
                                         break;
                                 }
 
-                                if (bring_to_top)
+                                if (App.stateMachine.bring_to_top)
                                 {
                                     this.Activate();
-                                    bring_to_top = false;
+                                    App.stateMachine.bring_to_top = false;
                                 }
 
 
@@ -257,19 +200,21 @@ namespace Eva_5._0
                                     if (this.ShowInTaskbar)
                                         this.ShowInTaskbar = false;
 
-                                    Interlocked.Exchange(ref Window_Minimised, 0);
+                                    Interlocked.Exchange(ref App.stateMachine.Window_Minimised, 0);
                                 }
 
 
                                 // IF THE WAKE WORD ENGINE DETECTED A KEYWORD
-                                if (Interlocked.Read(ref Wake_Word_Detected) == 1)
+                                if (Interlocked.Read(ref App.stateMachine.Wake_Word_Detected) == 1)
                                 {
-                                    // AFTER THE WAKE WORD DETECTION PROCEDURE IS FINISHED, RESET THE INICATOR TO ITS DEFAULT VALUE
-                                    Interlocked.Exchange(ref Wake_Word_Detected, 0);
+                                    await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppActivationSoundEffect);
 
+                                    // AFTER THE WAKE WORD DETECTION PROCEDURE IS FINISHED, RESET THE INICATOR TO ITS DEFAULT VALUE
+                                    Interlocked.Exchange(ref App.stateMachine.Wake_Word_Detected, 0);
+                                    Interlocked.Exchange(ref App.stateMachine.Speech_Recogniser_Listening, 1);
 
                                     // IF THE ONLINE SPEECH RECOGNITION ENGINE IS NOT DISABLED
-                                    if (Interlocked.Read(ref Online_Speech_Recogniser_Disabled) == 0)
+                                    if (Interlocked.Read(ref App.stateMachine.Online_Speech_Recogniser_Disabled) == 0)
                                     {
                                         async void Start()
                                         {
@@ -277,7 +222,7 @@ namespace Eva_5._0
                                             // AND INITIATE THE ONLINE SPEECH RECOGNITION ENGINE.
                                             if (Speech_Recogniser_Delay_Calculator() == true)
                                             {
-                                                MoonshineASR.StartEngine();
+                                                App.stateMachine.moonshineASR.StartEngine();
                                             }
                                         };
                                         Start();
@@ -286,12 +231,12 @@ namespace Eva_5._0
 
 
 
-                                if (Speech_Recogniser_Listening == 1)
+                                if (App.stateMachine.Speech_Recogniser_Listening == 1)
                                 {
                                     // IF THE ONLINE SPEECH RECOGNITION ENGINE IS DISABLED OR THE WINDOW IS MINIMISED,
                                     // WHILE THE ONLINE SPEECH RECOGNITION ENGINE IS OPERATING SET THE CIRCULAR STATUS INDICATOR
                                     // COLOR AS BRIGHT BLUE
-                                    if (chatgpt_mode_enabled == true)
+                                    if (App.stateMachine.chatgpt_mode_enabled == true)
                                     {
                                         OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString(chatbot_mode_activated_outer_elipse_offset_color);
                                         OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString(chatbot_mode_activated_outer_elipse_gradient_color);
@@ -301,6 +246,11 @@ namespace Eva_5._0
                                         OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString(normal_mode_activated_outer_elipse_offset_color);
                                         OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString(normal_mode_activated_outer_elipse_gradient_color);
                                     }
+                                }
+                                else
+                                {
+                                    OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                                    OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
                                 }
 
 
@@ -359,7 +309,7 @@ namespace Eva_5._0
 
 
 
-                                if (Interlocked.Read(ref BeginExecutionAnimation) == 1)
+                                if (Interlocked.Read(ref App.stateMachine.BeginExecutionAnimation) == 1)
                                 {
                                     // IF A PROCESS WAS EXECUTED, BEGIN THE PROCESS EXECUTION ANIMATION
                                     // BY MAKING THE RECTANGLE WITHIN THE CIRCULAR STATUS INDICATOR
@@ -374,7 +324,7 @@ namespace Eva_5._0
                                         OuterElipseGradient.Color = (Color)ColorConverter.ConvertFromString("#FF052544");
                                         OuterElipseOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
                                         ExecutionAnimationArithmetic = 0;
-                                        Interlocked.Exchange(ref BeginExecutionAnimation, 0);
+                                        Interlocked.Exchange(ref App.stateMachine.BeginExecutionAnimation, 0);
                                     }
                                     else
                                     {
@@ -473,13 +423,13 @@ namespace Eva_5._0
 
         private void MainWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            MainWindowIsClosing = true;
+            App.stateMachine.MainWindowIsClosing = true;
 
             try
             {
                 AnimationAndFunctionalityTimer?.Dispose();
 
-                Wake_Word_Engine.Stop_The_Wake_Word_Engine();
+                App.stateMachine.wakeWordEngine.Stop_The_Wake_Word_Engine();
                 Environment.Exit(0);
             }
             catch { }
@@ -490,7 +440,7 @@ namespace Eva_5._0
         {
             try
             {
-                if (MainWindowIsClosing == false)
+                if (App.stateMachine.MainWindowIsClosing == false)
                 {
                     if (Application.Current != null)
                     {
@@ -509,13 +459,13 @@ namespace Eva_5._0
 
         private void ContractOrExpandTheMainWindow(object sender, RoutedEventArgs e)
         {
-            Cropped = !Cropped;
+            App.stateMachine.Cropped = !App.stateMachine.Cropped;
             Crop_Or_UnCrop();
         }
 
         private void Crop_Or_UnCrop()
         {
-            if (Cropped == true)
+            if (App.stateMachine.Cropped == true)
             {
                 Window_Geometry.Rect = new Rect(0, 0, 260, 159);
                 ContractOrExpandTheWindowButton.Content = "\xE73F";
@@ -562,7 +512,7 @@ namespace Eva_5._0
 
         private void MinimiseTheMainWindow(object sender, RoutedEventArgs e)
         {
-            if (MainWindowIsClosing == false)
+            if (App.stateMachine.MainWindowIsClosing == false)
             {
 
                 if (Application.Current.Dispatcher.HasShutdownStarted == false)
@@ -573,7 +523,7 @@ namespace Eva_5._0
                         this.ShowInTaskbar = true;
                         Application.Current.MainWindow.WindowState = WindowState.Minimized;
 
-                        Interlocked.Exchange(ref Window_Minimised, 1);
+                        Interlocked.Exchange(ref App.stateMachine.Window_Minimised, 1);
                     }
 
                 }
@@ -583,13 +533,13 @@ namespace Eva_5._0
 
         private void CloseTheApplication(object sender, RoutedEventArgs e)
         {
-            if (MainWindowIsClosing == false)
+            if (App.stateMachine.MainWindowIsClosing == false)
             {
                 if (Application.Current.Dispatcher.HasShutdownStarted == false)
                 {
                     if (Application.Current.MainWindow != null)
                     {
-                        Wake_Word_Engine.Stop_The_Wake_Word_Engine();
+                        App.stateMachine.wakeWordEngine.Stop_The_Wake_Word_Engine();
                         this.Close();
                     }
                 }
@@ -605,7 +555,7 @@ namespace Eva_5._0
                 Button_Timeout = 400;
 
                 // IF THE MAIN WINDOW IS NOT CLOSING
-                if (MainWindowIsClosing == false)
+                if (App.stateMachine.MainWindowIsClosing == false)
                 {
                     // IF THE APPLICATION UI DISPATCHER IS NOT CLOSING
                     if (Application.Current.Dispatcher.HasShutdownStarted == false)
@@ -663,7 +613,7 @@ namespace Eva_5._0
                 }, System.Windows.Threading.DispatcherPriority.Render);
 
                 // START THE WAKE WORD ENGINE PROCESS
-                Wake_Word_Engine.Start_The_Wake_Word_Engine(wake_Word_Engine_Event_Handler);
+                App.stateMachine.wakeWordEngine.Start_The_Wake_Word_Engine(wake_Word_Engine_Event_Handler);
             }
         }
 
@@ -678,7 +628,7 @@ namespace Eva_5._0
                 Interlocked.Exchange(ref OnOff, 1);
 
                 // LOCK THE VARIABLE ON THE STACK TO BE ACCESSED ONLY BY THE CURRENT THREAD
-                Interlocked.Exchange(ref Online_Speech_Recogniser_Disabled, 0);
+                Interlocked.Exchange(ref App.stateMachine.Online_Speech_Recogniser_Disabled, 0);
 
                 // CHANGE THE BUTTON CONTENT BY INVOKING THE OPERATION ON THE UI THREAD
                 await Application.Current.Dispatcher.InvokeAsync(() =>
@@ -703,10 +653,10 @@ namespace Eva_5._0
                 }, System.Windows.Threading.DispatcherPriority.Render);
 
                 // LOCK THE VARIABLE ON THE STACK TO BE ACCESSED ONLY BY THE CURRENT THREAD
-                Interlocked.Exchange(ref Online_Speech_Recogniser_Disabled, 1);
+                Interlocked.Exchange(ref App.stateMachine.Online_Speech_Recogniser_Disabled, 1);
 
                 // TEMINATE THE WAKE WORD ENGINE PROCESS
-                Wake_Word_Engine.Stop_The_Wake_Word_Engine();
+                App.stateMachine.wakeWordEngine.Stop_The_Wake_Word_Engine();
                 Interlocked.Exchange(ref OnOff, 0);
 
                 // CHANGE THE BUTTON CONTENT BY INVOKING THE OPERATION ON THE UI THREAD
@@ -721,7 +671,7 @@ namespace Eva_5._0
 
         private void OpenSettingsWindow(object sender, RoutedEventArgs e)
         {
-            if (MainWindowIsClosing == false)
+            if (App.stateMachine.MainWindowIsClosing == false)
             {
 
                 if (Application.Current.Dispatcher.HasShutdownStarted == false)
@@ -749,7 +699,7 @@ namespace Eva_5._0
 
         private void OpenTimerWindow(object sender, RoutedEventArgs e)
         {
-            if (MainWindowIsClosing == false)
+            if (App.stateMachine.MainWindowIsClosing == false)
             {
 
                 if (Application.Current.Dispatcher.HasShutdownStarted == false)
@@ -794,11 +744,11 @@ namespace Eva_5._0
             // SET.
 
 
-            if (Online_Speech_Recogniser_Activation_Delay_Detector == null)
+            if (App.stateMachine.Speech_Recogniser_Activation_Delay_Detector == null)
             {
                 return true;
             }
-            else if (((TimeSpan)(DateTime.UtcNow - Online_Speech_Recogniser_Activation_Delay_Detector)).TotalSeconds > Speech_Recogniser_Activation_Delay)
+            else if (((TimeSpan)(DateTime.UtcNow - App.stateMachine.Speech_Recogniser_Activation_Delay_Detector)).TotalSeconds > App.stateMachine.Speech_Recogniser_Activation_Delay)
             {
                 return true;
             }

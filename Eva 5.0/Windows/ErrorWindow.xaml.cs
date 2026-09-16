@@ -26,38 +26,41 @@ namespace Eva_5._0
 
         public ErrorWindow(string ErrorType)
         {
-            InitializeComponent();
-            App.PermisissionWindowOpen = true;
-
-            Application.Current.Dispatcher.Invoke(() =>
+            if (!App.PermisissionWindowOpen)
             {
-                switch (ErrorType)
+                InitializeComponent();
+                App.PermisissionWindowOpen = true;
+
+                Application.Current.Dispatcher.Invoke(() =>
                 {
-                    case "Mircrophone Access Denied":
-                        MicrophoneAccessDenied();
-                        break;
+                    switch (ErrorType)
+                    {
+                        case "Mircrophone Access Denied":
+                            MicrophoneAccessDenied();
+                            break;
 
-                    case "Invalid ChatGPT API key":
-                        InvalidChatGPTAPIKey();
-                        break;
+                        case "Invalid ChatGPT API key":
+                            InvalidChatGPTAPIKey();
+                            break;
 
-                    case "ChatGPT error":
-                        ChatGPTError();
-                        break;
+                        case "ChatGPT error":
+                            ChatGPTError();
+                            break;
 
-                    case "Maximum number of tokens exceeded":
-                        Token_Limit_Exceeded();
-                        break;
+                        case "Maximum number of tokens exceeded":
+                            Token_Limit_Exceeded();
+                            break;
 
-                    case "Language not supported":
-                        Language_Not_Supported();
-                        break;
+                        case "Language not supported":
+                            Language_Not_Supported();
+                            break;
 
-                    case "Unsupported Voice":
-                        Unsupported_Voice();
-                        break;
-                }
-            });
+                        case "Unsupported Voice":
+                            Unsupported_Voice();
+                            break;
+                    }
+                });
+            }           
         }
 
 
@@ -328,10 +331,13 @@ namespace Eva_5._0
 
         private void ErrorWindowLoaded(object sender, RoutedEventArgs e)
         {
-            AnimationTimer = new System.Timers.Timer();
-            AnimationTimer.Elapsed += AnimationTimer_Elapsed;
-            AnimationTimer.Interval = 10;
-            AnimationTimer.Start();
+            if (!App.PermisissionWindowOpen)
+            {
+                AnimationTimer = new System.Timers.Timer();
+                AnimationTimer.Elapsed += AnimationTimer_Elapsed;
+                AnimationTimer.Interval = 10;
+                AnimationTimer.Start();
+            }
         }
 
         private void AnimationTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -480,7 +486,7 @@ namespace Eva_5._0
 
             if (App.Application_Error_Shutdown == true)
             {
-                Wake_Word_Engine.Stop_The_Wake_Word_Engine();
+                App.stateMachine.wakeWordEngine.Stop_The_Wake_Word_Engine();
                 Environment.Exit(0);
             }
         }
