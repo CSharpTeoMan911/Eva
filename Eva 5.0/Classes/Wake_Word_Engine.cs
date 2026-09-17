@@ -480,32 +480,29 @@ namespace Eva_5._0
                                     {
                                         string socket_message_value = Encoding.UTF8.GetString(buffer, 0, bytes_read);
 
-                                        if (App.stateMachine.proc.tasks_running == 0)
+                                        if (socket_message_value == wake_word_engine_loaded)
                                         {
-                                            if (socket_message_value == wake_word_engine_loaded)
+                                            if (Interlocked.Read(ref App.stateMachine.OnOff) == 0)
                                             {
-                                                if (Interlocked.Read(ref App.stateMachine.OnOff) == 0)
-                                                {
-                                                    _Wake_Word_Engine_Event.Invoke();
-                                                }
+                                                _Wake_Word_Engine_Event.Invoke();
+                                            }
 
-                                                resetTime = DateTime.UtcNow;
-                                                Interlocked.Increment(ref wake_word_engines_loaded);
-                                            }
-                                            else if (socket_message_value == cancel_wake_word)
+                                            resetTime = DateTime.UtcNow;
+                                            Interlocked.Increment(ref wake_word_engines_loaded);
+                                        }
+                                        else if (socket_message_value == cancel_wake_word)
+                                        {
+                                            if (Interlocked.Read(ref App.stateMachine.Speech_Recogniser_Listening) == 1)
                                             {
-                                                if (Interlocked.Read(ref App.stateMachine.Speech_Recogniser_Listening) == 1)
-                                                {
-                                                    Interlocked.Exchange(ref App.stateMachine.Speech_Recogniser_Listening, 0);
-                                                    App.stateMachine.moonshineASR.StopEngine();
-                                                }
+                                                Interlocked.Exchange(ref App.stateMachine.Speech_Recogniser_Listening, 0);
+                                                App.stateMachine.moonshineASR.StopEngine();
                                             }
-                                            else if (socket_message_value == wake_word)
+                                        }
+                                        else if (socket_message_value == wake_word)
+                                        {
+                                            if (Interlocked.Read(ref App.stateMachine.Speech_Recogniser_Listening) == 0)
                                             {
-                                                if (Interlocked.Read(ref App.stateMachine.Speech_Recogniser_Listening) == 0)
-                                                {
-                                                    Interlocked.Exchange(ref App.stateMachine.Wake_Word_Detected, 1);
-                                                }
+                                                Interlocked.Exchange(ref App.stateMachine.Wake_Word_Detected, 1);
                                             }
                                         }
 

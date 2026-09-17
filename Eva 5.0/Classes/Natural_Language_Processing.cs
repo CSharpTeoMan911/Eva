@@ -64,7 +64,7 @@ namespace Eva_5._0
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public async Task<bool> PreProcessing(string Result)
+        public async Task<Func<bool>> PreProcessing(string Result)
         {
             ClearBuffers();
 
@@ -79,7 +79,7 @@ namespace Eva_5._0
             display_recognition_result = Result;
 
             if (CommandTest == true)
-                return true;
+                return new Func<bool>(() => { return true; });
 
             // THE FIRST TOKENIZATION IS INITIATED. THE FIRST TOKENIZATION IS RESPONSIBLE FOR PARAMETER ASSOCIATION WITH THEIR RESPECTIVE COMMAND FORMATS
             // FOR EXAMPLE IF YOU SAY "SEARCH ROBOTS ARE COOL ON YOUTUBE" THE FIRST TOKENIZATION WILL ASSOCIATE THE COMMAND WITH THE 
@@ -88,13 +88,13 @@ namespace Eva_5._0
             // THE TOKENIZATION SESSION WILL DROP THE COMMAND.
             //
             // [ BEGIN ]
-            
+
             if (Result == "invisible")
             {
                 App.stateMachine.invisibility_mode = true;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTActivationSoundEffect);
                 ClearBuffers();
-                return true;
+                return new Func<bool>(() => { return true; });
             }
             else if (Result == "visible")
             {
@@ -102,108 +102,153 @@ namespace Eva_5._0
                 App.stateMachine.bring_to_top = true;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTDeactivationSoundEffect);
                 ClearBuffers();
-                return true;
+                return new Func<bool>(() => { return true; });
             }
             else if (Result.IndexOf("activate c") == 0 && Result.IndexOf(" mode") == Result.Length - " mode".Length)
             {
                 App.stateMachine.chatgpt_mode_enabled = true;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTActivationSoundEffect);
                 ClearBuffers();
-                return true;
+                return new Func<bool>(() => { return true; });
             }
             else if (Result.IndexOf("enable c") == 0 && Result.IndexOf(" mode") == Result.Length - " mode".Length)
             {
                 App.stateMachine.chatgpt_mode_enabled = true;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTActivationSoundEffect);
                 ClearBuffers();
-                return true;
+                return new Func<bool>(() => { return true; });;
             }
             else if (Result.IndexOf("deactivate c") == 0 && Result.IndexOf(" mode") == Result.Length - " mode".Length)
             {
                 App.stateMachine.chatgpt_mode_enabled = false;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTDeactivationSoundEffect);
                 ClearBuffers();
-                return true;
+                return new Func<bool>(() => { return true; });;
             }
             else if (Result.IndexOf("disable c") == 0 && Result.IndexOf(" mode") == Result.Length - " mode".Length)
             {
                 App.stateMachine.chatgpt_mode_enabled = false;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTDeactivationSoundEffect);
                 ClearBuffers();
-                return true;
+                return new Func<bool>(() => { return true; });;
             }
 
             if (App.stateMachine.chatgpt_mode_enabled == true)
             {
-                return PostProcessing("chatgpt [ ChatGPT Query ]", Result);
+                return new Func<bool>(() => {
+                    PostProcessing("chatgpt [ ChatGPT Query ]", Result);
+                    return true;
+                });
             }
             else
             {
                 if (Result.IndexOf("please open ") == 0)
                 {
-                    return PostProcessing("please open [Application]", Result);
+                    return new Func<bool>(() => {
+                        PostProcessing("please open [Application]", Result);
+                        return true;
+                    });
                 }
                 else if (Result.IndexOf("open ") == 0)
                 {
                     if (Result.LastIndexOf(" please") + " please".Length - 1 == Result.Length - 1)
                     {
-                        return PostProcessing("open [Application] please", Result);
+                        return new Func<bool>(() => {
+                            PostProcessing("open [Application] please", Result);
+                            return true;
+                        });
                     }
                     else if (Result.LastIndexOf(" now") + " now".Length - 1 == Result.Length - 1)
                     {
-                        return PostProcessing("open [Application] now", Result);
+                        return new Func<bool>(() => {
+                            PostProcessing("open [Application] now", Result);
+                            return true;
+                        });
                     }
                     else
                     {
-                        return PostProcessing("open [Application]", Result);
+                        return new Func<bool>(() => {
+                            PostProcessing("open [Application]", Result);
+                            return true;
+                        });
                     }
                 }
                 else if (Result.IndexOf("please close ") == 0)
                 {
-                    return PostProcessing("please close [Application]", Result);
+                    return new Func<bool>(() => {
+                        PostProcessing("please close [Application]", Result);
+                        return true;
+                    });
                 }
                 else if (Result.IndexOf("close ") == 0)
                 {
                     if (Result.LastIndexOf(" please") + " please".Length - 1 == Result.Length - 1)
                     {
-                        return PostProcessing("close [Application] please", Result);
+                        return new Func<bool>(() => {
+                            PostProcessing("close [Application] please", Result);
+                            return true;
+                        });
                     }
                     else if (Result.LastIndexOf(" now") + " now".Length - 1 == Result.Length - 1)
                     {
-                        return PostProcessing("close [Application] now", Result);
+                        return new Func<bool>(() => {
+                            PostProcessing("close [Application] now", Result);
+                            return true;
+                        });
                     }
                     else
                     {
-                        return PostProcessing("close [Application]", Result);
+                        return new Func<bool>(() => {
+                            PostProcessing("close [Application]", Result);
+                            return true;
+                        });
                     }
                 }
                 else if (Result.IndexOf("please search on ") == 0)
                 {
-                    return PostProcessing("please search on [Web Application Keyword] [Content]", Result);
+                    return new Func<bool>(() => {
+                        PostProcessing("please search on [Web Application Keyword] [Content]", Result);
+                        return true;
+                    });
                 }
                 else if ((Result.IndexOf("please search ") == 0) && (Result.Contains(" on ") == true))
                 {
-                    return PostProcessing("please search [Content] on [Web Application Keyword]", Result);
+                    return new Func<bool>(() => {
+                        PostProcessing("please search [Content] on [Web Application Keyword]", Result);
+                        return true;
+                    });
                 }
                 else if (Result.IndexOf("search on ") == 0)
                 {
-                    return PostProcessing("search on [Web Application Keyword] [Content]", Result);
+                    return new Func<bool>(() => {
+                        PostProcessing("search on [Web Application Keyword] [Content]", Result);
+                        return true;
+                    });
                 }
                 else if ((Result.IndexOf("search ") == 0) && (Result.Contains(" on ") == true))
                 {
-                    return PostProcessing("search [Content] on [Web Application Keyword]", Result);
+                    return new Func<bool>(() => {
+                        PostProcessing("search [Content] on [Web Application Keyword]", Result);
+                        return true;
+                    });
                 }
                 else if (Result.IndexOf("set a ") == 0)
                 {
                     if (Result.IndexOf(" timer") == Result.Length - 6)
                     {
-                        return PostProcessing("set a [Timer Interval] timer", Result);
+                        return new Func<bool>(() => {
+                            PostProcessing("set a [Timer Interval] timer", Result);
+                            return true;
+                        });
                     }
                     else if (Result.IndexOf(" please") == Result.Length - 7)
                     {
                         if (Result.IndexOf(" timer ") == Result.Length - 13)
                         {
-                            return PostProcessing("set a [Timer Interval] timer please", Result);
+                            return new Func<bool>(() => {
+                                PostProcessing("set a [Timer Interval] timer please", Result);
+                                return true;
+                            });
                         }
                     }
                 }
@@ -211,13 +256,19 @@ namespace Eva_5._0
                 {
                     if (Result.IndexOf(" timer") == Result.Length - 6)
                     {
-                        return PostProcessing("set an [Timer Interval] timer", Result);
+                        return new Func<bool>(() => {
+                            PostProcessing("set an [Timer Interval] timer", Result);
+                            return true;
+                        });
                     }
                     else if (Result.IndexOf(" please") == Result.Length - 7)
                     {
                         if (Result.IndexOf(" timer ") == Result.Length - 13)
                         {
-                            return PostProcessing("set an [Timer Interval] timer please", Result);
+                            return new Func<bool>(() => {
+                                PostProcessing("set an [Timer Interval] timer please", Result);
+                                return true;
+                            });
                         }
                     }
                 }
@@ -225,19 +276,28 @@ namespace Eva_5._0
                 {
                     if (Result.IndexOf(" timer") == Result.Length - 6)
                     {
-                        return PostProcessing("please set a [Timer Interval] timer", Result);
+                        return new Func<bool>(() => {
+                            PostProcessing("please set a [Timer Interval] timer", Result);
+                            return true;
+                        });
                     }
                 }
                 else if (Result.IndexOf("please set an ") == 0)
                 {
                     if (Result.IndexOf(" timer") == Result.Length - 6)
                     {
-                        return PostProcessing("please set a [Timer Interval] timer", Result);
+                        return new Func<bool>(() => {
+                            PostProcessing("please set an [Timer Interval] timer", Result);
+                            return true;
+                        });
                     }
                 }
                 else if (Result.IndexOf("gpt ") == 0)
                 {
-                    return PostProcessing("chatgpt [ ChatGPT Query ]", Result);
+                    return new Func<bool>(() => {
+                        PostProcessing("chatgpt [ ChatGPT Query ]", Result);
+                        return true;
+                    });
                 }
                 else
                 {
@@ -251,35 +311,45 @@ namespace Eva_5._0
 
                     if (Result.IndexOf("take screenshot") == 0)
                     {
-                        App.stateMachine.proc.ProcInitialisation<string>("Screen Capture Process", null, null);
-                        return true;
+                        return new Func<bool>(() => {
+                            App.stateMachine.proc.ProcInitialisation<string>("Screen Capture Process", null, null);
+                            return true;
+                        });
                     }
                     else if (Result.IndexOf("take a screenshot") == 0)
                     {
-                        App.stateMachine.proc.ProcInitialisation<string>("Screen Capture Process", null, null);
-                        return true;
+                        return new Func<bool>(() => {
+                            App.stateMachine.proc.ProcInitialisation<string>("Screen Capture Process", null, null);
+                            return true;
+                        });
                     }
                     else if (Result.IndexOf("take a screenshot please") == 0)
                     {
-                        App.stateMachine.proc.ProcInitialisation<string>("Screen Capture Process", null, null);
-                        return true;
+                        return new Func<bool>(() => {
+                            App.stateMachine.proc.ProcInitialisation<string>("Screen Capture Process", null, null);
+                            return true;
+                        });
                     }
                     else if (Result.IndexOf("please take a screenshot") == 0)
                     {
-                        App.stateMachine.proc.ProcInitialisation<string>("Screen Capture Process", null, null);
-                        return true;
+                        return new Func<bool>(() => {
+                            App.stateMachine.proc.ProcInitialisation<string>("Screen Capture Process", null, null);
+                            return true;
+                        });
                     }
                     else if (Result.IndexOf("screenshot") == 0)
                     {
-                        App.stateMachine.proc.ProcInitialisation<string>("Screen Capture Process", null, null);
-                        return true;
+                        return new Func<bool>(() => {
+                            App.stateMachine.proc.ProcInitialisation<string>("Screen Capture Process", null, null);
+                            return true; 
+                        });;
                     }
 
                     //[ END ]
                 }
             }
 
-            return false;
+            return null;
         }
 
 

@@ -29,45 +29,31 @@ namespace Eva_5._0
 
 
         // INT THAT IS MONITORING THE AMOUNT OF TASKS THAT ARE CURRENTLY RUNNING
-        public int tasks_running;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ProcInitialisation<Content>(string process_type, string application, Content content)
         {
-            // IF THE AMOUNT OF TASKS CURRENTLY RUNNING IS '0'
-            if (tasks_running == 0)
+            switch (process_type)
             {
-                // INCREMENT THE AMOUNT OF TASKS CURRENTLY RUNNING BY '1'
-                Interlocked.MemoryBarrier();
-                Interlocked.SpeculationBarrier();
-                Interlocked.Increment(ref tasks_running);
+                case "Online Process":
+                    OnlineProcesses(application, content as string);
+                    break;
 
-                switch (process_type)
-                {
-                    case "Online Process":
-                        OnlineProcesses(application, content as string);
-                        break;
+                case "ChatGPT Process":
+                    ChatGPT_API_Interface(content as string);
+                    break;
 
-                    case "ChatGPT Process":
-                        ChatGPT_API_Interface(content as string);
-                        break;
+                case "System Process":
+                    SystemProcesses(application, content as string);
+                    break;
 
-                    case "System Process":
-                        SystemProcesses(application, content as string);
-                        break;
+                case "Timer Process":
+                    TimerProcess(content as System.Collections.Concurrent.ConcurrentDictionary<string, int>);
+                    break;
 
-                    case "Timer Process":
-                        TimerProcess(content as System.Collections.Concurrent.ConcurrentDictionary<string, int>);
-                        break;
-
-                    case "Screen Capture Process":
-                        Screen_Capture();
-                        break;
-                }
-
-
-                // DECREMENT THE AMOUNT OF TASKS CURRENTLY RUNNING BY '1'
-                Interlocked.Decrement(ref tasks_running);
+                case "Screen Capture Process":
+                    Screen_Capture();
+                    break;
             }
         }
 

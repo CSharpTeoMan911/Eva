@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
@@ -15,17 +17,40 @@ namespace Eva_5._0.Classes
         private CancellationTokenSource tokenSource = new CancellationTokenSource();
         private readonly string enginePath = Path.Combine(Environment.CurrentDirectory, "python", "python.exe");
         private bool engineLoaded = false;
-        private Process sttEngine;
+        private bool dispatcherRunning = false;
+        private Process? sttEngine;
+
+        private ConcurrentQueue<Func<bool>> tasks = new ConcurrentQueue<Func<bool>>();
 
         public MoonshineASR()
         {
 
         }
 
+        private void TaskDispatcher()
+        {
+            dispatcherRunning = true;
+
+            Task.Run(async() =>
+            {
+                while (dispatcherRunning && !tokenSource.IsCancellationRequested)
+                {
+                    Func<bool>? task = null;
+                    if (engineLoaded && tasks.TryDequeue(out task) && SpeechSynthesis.GetState() == SpeechSynthesis.State.Free)
+                    {
+                        _ = task?.Invoke();
+                    }
+                }
+            });
+        }
+
         private void TaskScheduler(string text)
         {
             Task.Run(async() =>
             {
+                DateTime time = DateTime.UtcNow;
+                bool initialised = false;
+
                 string[] words = text.Split(' ');
                 int index = 0;
                 int i = 0;
@@ -39,9 +64,18 @@ namespace Eva_5._0.Classes
                         string word = words[index];
                         string current = text.Substring(i);
 
-                        if (await App.stateMachine.nlp.PreProcessing(current))
-                            break;
+                        Func<bool> result = await App.stateMachine.nlp.PreProcessing(current);
 
+                        if (result != null)
+                        {
+                            if (!initialised || (DateTime.UtcNow - time).TotalMilliseconds > 100 && SpeechSynthesis.GetState() == SpeechSynthesis.State.Free)
+                            {
+                                initialised = true;
+                                time = DateTime.UtcNow;
+                                tasks.Enqueue(result);
+                            }
+                            break;
+                        }
 
                         i += word.Length + 1;
                         index++;
@@ -80,6 +114,8 @@ namespace Eva_5._0.Classes
             if (engineLoaded)
                 return;
 
+            TaskDispatcher();
+
             sttEngine = new Process();
             sttEngine.StartInfo.FileName = enginePath;
             sttEngine.StartInfo.Arguments = $"./python/Controller.py -c {s.ToString()}";
@@ -88,6 +124,8 @@ namespace Eva_5._0.Classes
             sttEngine.StartInfo.CreateNoWindow = true;
             sttEngine.StartInfo.RedirectStandardOutput = true;
             sttEngine.StartInfo.RedirectStandardError = true;
+
+            sttEngine.Exited += SttEngine_Exited;
 
             sttEngine.OutputDataReceived += (sender, e) =>
             {
@@ -133,6 +171,7 @@ namespace Eva_5._0.Classes
             engineLoaded = true;
         }
 
+        private void SttEngine_Exited(object sender, EventArgs e) => StopEngine();
 
         public void StopEngine()
         {
@@ -143,9 +182,11 @@ namespace Eva_5._0.Classes
 
                 tokenSource.Cancel();
                 engineLoaded = false;
+                dispatcherRunning = false;
 
-                if (!sttEngine.HasExited)
-                    sttEngine.Kill();
+                if(sttEngine != null)
+                    if (!sttEngine.HasExited)
+                        sttEngine.Kill();
             }
             catch { }
         }
