@@ -2,9 +2,12 @@ from moonshine_voice import MicTranscriber
 import time
 import os
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 class AsrEngine:
     context = str()
     engineLoaded = False
+    transcriptionStarted = False
 
     transcriptionTimeout = int() 
     mic = MicTranscriber()
@@ -32,8 +35,8 @@ class AsrEngine:
 
 
     def loadEngine(self):
-        spellingModel = os.path.join(os.getcwd(), 'python', 'spelling-en', 'spelling_cnn.ort')
-        transcriptionModel = os.path.join(os.getcwd(), 'python', 'medium-streaming-en' , 'quantized_26_08_21')
+        spellingModel = os.path.join(BASE_DIR, 'spelling-en', 'spelling_cnn.ort')
+        transcriptionModel = os.path.join(BASE_DIR, 'medium-streaming-en', 'quantized_26_08_21')
         self.mic = (
         MicTranscriber()
         .options({
@@ -56,10 +59,14 @@ class AsrEngine:
 
     def startTranscription(self):
         self.mic.start()
+        self.transcriptionStarted = True
 
     def stopTranscription(self):
         self.mic.stop()
+        self.transcriptionStarted = False
 
+    def getTrasncriptionState(self) -> bool:
+        return self.transcriptionStarted
 
     def getHypothesis(self) -> str:
         if self.engineLoaded is True:
