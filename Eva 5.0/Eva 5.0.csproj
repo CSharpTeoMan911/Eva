@@ -126,6 +126,7 @@
     <Compile Include="Classes\Command.cs" />
     <Compile Include="Classes\CommandCharacteristics.cs" />
     <Compile Include="Classes\MoonshineASR.cs" />
+    <Compile Include="Classes\SpeechClassification.cs" />
     <Compile Include="Windows\ChatGPT_Response_Window.xaml.cs">
       <DependentUpon>ChatGPT_Response_Window.xaml</DependentUpon>
     </Compile>

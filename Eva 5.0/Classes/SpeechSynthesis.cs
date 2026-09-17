@@ -41,11 +41,13 @@ namespace Eva_5._0
 
         public static async Task Synthesis(Action action, string content, string app)
         {
+            Interlocked.MemoryBarrier();
+            Interlocked.SpeculationBarrier();
+
             if (GetState() == State.Free)
             {
                 if (await Settings.Get_Synthesis_Settings())
                 {
-                    Interlocked.MemoryBarrier();
                     Interlocked.Exchange(ref processing, StateToInt(State.Processing));
 
                     string outputPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".wav");

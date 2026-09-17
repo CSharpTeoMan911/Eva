@@ -63,9 +63,10 @@ namespace Eva_5._0
         }
 
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
         public async Task<Func<bool>> PreProcessing(string Result)
         {
+            Debug.WriteLine(Result);
             ClearBuffers();
 
             foreach (char c in Result.ToLower().Trim())

@@ -207,11 +207,8 @@ namespace Eva_5._0
                                 // IF THE WAKE WORD ENGINE DETECTED A KEYWORD
                                 if (Interlocked.Read(ref App.stateMachine.Wake_Word_Detected) == 1)
                                 {
-                                    await A_p_l____And____P_r_o_c.sound_player.Play_Sound(Sound_Player.Sounds.AppActivationSoundEffect);
-
                                     // AFTER THE WAKE WORD DETECTION PROCEDURE IS FINISHED, RESET THE INICATOR TO ITS DEFAULT VALUE
                                     Interlocked.Exchange(ref App.stateMachine.Wake_Word_Detected, 0);
-                                    Interlocked.Exchange(ref App.stateMachine.Speech_Recogniser_Listening, 1);
 
                                     // IF THE ONLINE SPEECH RECOGNITION ENGINE IS NOT DISABLED
                                     if (Interlocked.Read(ref App.stateMachine.Online_Speech_Recogniser_Disabled) == 0)
