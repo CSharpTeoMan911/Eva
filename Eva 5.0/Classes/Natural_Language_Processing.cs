@@ -105,28 +105,28 @@ namespace Eva_5._0
                 ClearBuffers();
                 return new Func<bool>(() => { return true; });
             }
-            else if (Result.IndexOf("activate c") == 0 && Result.IndexOf(" mode") == Result.Length - " mode".Length)
+            else if (Result == "activate gpt mode")
             {
                 App.stateMachine.chatgpt_mode_enabled = true;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTActivationSoundEffect);
                 ClearBuffers();
                 return new Func<bool>(() => { return true; });
             }
-            else if (Result.IndexOf("enable c") == 0 && Result.IndexOf(" mode") == Result.Length - " mode".Length)
+            else if (Result == "enable gpt mode")
             {
                 App.stateMachine.chatgpt_mode_enabled = true;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTActivationSoundEffect);
                 ClearBuffers();
                 return new Func<bool>(() => { return true; });;
             }
-            else if (Result.IndexOf("deactivate c") == 0 && Result.IndexOf(" mode") == Result.Length - " mode".Length)
+            else if (Result == "deactivate gpt mode")
             {
                 App.stateMachine.chatgpt_mode_enabled = false;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTDeactivationSoundEffect);
                 ClearBuffers();
                 return new Func<bool>(() => { return true; });;
             }
-            else if (Result.IndexOf("disable c") == 0 && Result.IndexOf(" mode") == Result.Length - " mode".Length)
+            else if (Result == "disable gpt mode")
             {
                 App.stateMachine.chatgpt_mode_enabled = false;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTDeactivationSoundEffect);

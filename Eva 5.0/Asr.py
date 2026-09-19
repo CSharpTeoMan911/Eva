@@ -1,6 +1,8 @@
 from moonshine_voice import MicTranscriber
+from moonshine_voice.transcriber import MOONSHINE_FLAG_SPELLING_MODE
 import time
 import os
+import sys
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -23,25 +25,33 @@ class AsrEngine:
         self.transcriptionTimeout = transcriptionTimeout if transcriptionTimeout >= 3 else 3
 
     def _processHypothesis(self, text:str):
+        if sys.getsizeof(self.hypothesis) >= 1024 * 1024 * 10: # 10 MB
+            self.hypothesis = " ".join(self.hypothesis.split()[: len(self.hypothesis.split()) // 2])
+
         if text is not None and text != '':
             self.hypothesis = f'{self.hypothesis} {text}'.strip('\r').strip('\n')
             self.hypothesisTime = time.time()
 
 
     def _processLine(self, line:str):
+        if sys.getsizeof(self.result) >= 1024 * 1024 * 10: # 10 MB
+            self.result = " ".join(self.result.split()[: len(self.result.split()) // 2])
+
         if line is not None and line != '':
             self.result = f'{self.result} {line}'.strip('\r').strip('\n')
             self.resultTime = time.time()
 
 
     def loadEngine(self):
-        spellingModel = os.path.join(BASE_DIR, 'spelling-en', 'spelling_cnn.ort')
         transcriptionModel = os.path.join(BASE_DIR, 'medium-streaming-en', 'quantized_26_08_21')
         self.mic = (
         MicTranscriber()
         .options({
-            "spelling_model_path": spellingModel,
-            "context":self.context
+            "context_max_terms": 150,     # Limit context parsing to keep the model focused
+            "keyterm_boost": 3.0,          # Boost specific phrases (default 2.0, max 4.0)
+            "vad_threshold": 0.3,          # Raise from 0.5 to discard breathing or fan hum
+            "max_tokens_per_second": 6.5,  # Ideal for structural/Latin languages like English
+            "use_speculative_decoding": True
         })
         .models_from(transcriptionModel)
         .update_interval(1)

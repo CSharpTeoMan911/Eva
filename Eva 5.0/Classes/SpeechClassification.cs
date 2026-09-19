@@ -19,6 +19,11 @@ namespace Eva_5._0.Classes
 
          */
 
+        public SpeechClassification()
+        {
+            
+        }
+
         public enum SegmentType
         {
             Action,
@@ -49,8 +54,36 @@ namespace Eva_5._0.Classes
             "please",
             "timer",
             "gpt",
+            "screenshot",
+            "mode"
+        };
+
+        private readonly HashSet<string> commandFormats = new HashSet<string>()
+        {
+            "visible",
+            "invisible",
+            "activate gpt mode",
+            "enable gpt mode",
+            "deactivate gpt mode",
+            "disable gpt mode",
+            "open [Application] now",
+            "open [Application]",
+            "close [Application] now",
+            "close [Application]",
+            "search on [WebApplication] [Content]",
+            "search [Content] on [WebApplication]",
+            "set a [Content] timer",
+            "set an [Content] timer",
+            "gpt [Content]",
+            "take screenshot",
+            "take a screenshot",
+            "take a screenshot please",
+            "please take a screenshot",
             "screenshot"
         };
+
+
+        private readonly ConcurrentDictionary<string, Dictionary<int, string>> linkTree = new ConcurrentDictionary<string, Dictionary<int, string>>();
 
 
         private void GetSegmentType(string segment, int index)

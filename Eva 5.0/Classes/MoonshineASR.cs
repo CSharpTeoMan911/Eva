@@ -133,7 +133,7 @@ namespace Eva_5._0.Classes
                 for (int i = 0; i < context.Length; i++)
                 {
                     if (i != context.Length)
-                        s.Append(context[i]).Append(' ');
+                        s.Append(context[i]).Append(',');
                     else
                         s.Append(context[i]);
                 }
@@ -147,7 +147,7 @@ namespace Eva_5._0.Classes
 
                 sttEngine = new Process();
                 sttEngine.StartInfo.FileName = enginePath;
-                sttEngine.StartInfo.Arguments = $"./python/Controller.py -c {s.ToString()}";
+                sttEngine.StartInfo.Arguments = $"./python/Controller.py -k \"{s.ToString()}\"";
                 sttEngine.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 sttEngine.StartInfo.UseShellExecute = false;
                 sttEngine.StartInfo.CreateNoWindow = true;
@@ -183,7 +183,7 @@ namespace Eva_5._0.Classes
                 {
                     if (!tokenSource.IsCancellationRequested)
                     {
-                        Debug.WriteLine(e.Data);
+                        Debug.WriteLine($"Error: {e.Data}");
                         StopEngine();
                     }
                 };

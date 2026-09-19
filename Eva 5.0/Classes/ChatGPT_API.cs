@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Diagnostics;
 
 
 namespace Eva_5._0
@@ -261,6 +262,7 @@ namespace Eva_5._0
                                 request.temperature = temp;
 
 
+                            BadTemp:
                                 if (!cancellation.IsCancellationRequested)
                                 {
                                     using (System.Net.Http.StringContent message_content = new System.Net.Http.StringContent(await JsonSerialisation.JsonSerialiser(request), Encoding.UTF8, "application/json"))
@@ -342,6 +344,14 @@ namespace Eva_5._0
                                                 }
                                                 else
                                                 {
+                                                    string errorBody = await response.Content.ReadAsStringAsync();
+
+                                                    if (errorBody.Contains("Unsupported value: 'temperature'"))
+                                                    {
+                                                        request.temperature = 1;
+                                                        goto BadTemp;
+                                                    }
+
                                                     await Dispatch(new ApiResponse()
                                                     {
                                                         type = ApiResponse.PayloadType.Exception,
@@ -392,8 +402,9 @@ namespace Eva_5._0
                                 token = cancellation
                             });
                         }
-                        catch
+                        catch(Exception E)
                         {
+                            Debug.WriteLine(E.Message);
                             // IF AN EXCEPTION OCCURS, THEN THE OPERATION
                             // IS NOT SUCCESSFUL AND THE SET TYPE VALUE
                             // WITHIN THE TUPLE IS AN EXCEPTION AND THE

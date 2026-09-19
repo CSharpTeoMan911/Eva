@@ -1,6 +1,7 @@
 import time
 import sys
 import Asr
+import traceback
 
 class Controller:
     context = str()
@@ -10,8 +11,8 @@ class Controller:
     isControllerRunning = False
 
     def __init__(self, context:str = str()):
-        self.engine = Asr.AsrEngine(transcriptionTimeout=3, context=self.context)
         self.context = context
+        self.engine = Asr.AsrEngine(transcriptionTimeout=3, context=self.context)
 
     def start(self):
         self.engine.loadEngine()
@@ -20,7 +21,7 @@ class Controller:
     def stop(self):
         self.engine.unloadEngine()
         self.engine.stopTranscription()
-        
+
     def startTranscription(self):
         if not self.engine.getTrasncriptionState():
             self.engine.startTranscription()
@@ -48,7 +49,25 @@ class Controller:
         self.engine.clearHypothesis()
 
 
-
+control_words = ["open",
+            "close",
+            "set",
+            "search",
+            "activate",
+            "deactivate",
+            "enable",
+            "disable",
+            "invisible",
+            "visible",
+            "take",
+            "on",
+            "a",
+            "an",
+            "please",
+            "timer",
+            "gpt",
+            "screenshot",
+            "mode"]
 key = str()
 values = []
 has_parameters = False
@@ -58,13 +77,27 @@ if len(sys.argv) >= 3:
     values = [x for x in sys.argv[2:]]
     has_parameters = True if key == '-c' and len(values) > 0 else False
 
+values.extend(control_words)
+
 controller = Controller() if has_parameters else Controller(context=str(values))
 controller.start()
 
-print('[ loaded ]', flush=True)
+Loaded = False
+
 t = time.time()
 while True:
     if (time.time() - t) >= 1:
+        if not Loaded:
+            print('[ loaded ]', flush=True)
+            Loaded = True
+        else:
+            print(controller.getResult(), flush=True)
+
+        match input():
+            case '[ startTranscription ]':
+                controller.startTranscription()
+            case '[ stopTranscription ]':
+                controller.stopTranscription()
         t = time.time()
-        print(controller.getResult(), flush=True)
+
 

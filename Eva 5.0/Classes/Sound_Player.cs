@@ -1,6 +1,5 @@
 ﻿using NAudio.CoreAudioApi;
 using NAudio.Wave;
-using System;
 using System.Buffers;
 using System.Diagnostics;
 using System.IO;
@@ -66,13 +65,18 @@ namespace Eva_5._0.Properties
 
                         if (current_render_device.ID != deviceID)
                         {
-                            // Set the capture's device audio volume to 80% in order to have a high degree of accuracy as well as to avoid audio distortions
+                            // Set the capture's device audio volume to 90% in order to have a high degree of accuracy as well as to avoid audio distortions
                             using (MMDevice current_capture_device = GetAudioCaptureDevice())
                             {
                                 if (current_capture_device != null)
                                 {
-                                    // Normal microphone volume: usually 0 dB is the endpoint maximum.
-                                    current_capture_device.AudioEndpointVolume.MasterVolumeLevel = current_capture_device.AudioEndpointVolume.VolumeRange.MaxDecibels;
+                                    current_capture_device.AudioEndpointVolume.MasterVolumeLevelScalar = 1f;
+
+                                    for (int i = 0; i < current_capture_device.AudioEndpointVolume.Channels.Count; i++)
+                                    {
+                                        AudioEndpointVolumeChannel channel = current_capture_device.AudioEndpointVolume.Channels[i];
+                                        channel.VolumeLevelScalar = 1f;
+                                    }
                                 }
 
                                 deviceID = current_render_device.ID;
