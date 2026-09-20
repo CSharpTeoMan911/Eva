@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
 namespace Eva_5._0
 {
     internal class SpeechSynthesis
@@ -24,96 +25,142 @@ namespace Eva_5._0
             Taking
         }
 
+        private static Process? synthesiser;
         private static int processing = (int)State.Free;
 
         public static State GetState(int val) => (State)val;
         public static State GetState() => (State)processing;
         public static int StateToInt(State state) => (int)state;
 
-        private static readonly string PiperPath =
-            Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                         "python", "piper", "piper.exe");
-
-        private static readonly string ModelPath =
-            Path.Combine(Environment.CurrentDirectory,
-                         "python", "eva_voice",
-                         "en_GB-cori-high.onnx");
-
-        public static async Task Synthesis(Action action, string content, string app)
+        private static bool engineLoaded;
+        private static readonly string PythonPath = Path.Combine(Environment.CurrentDirectory, "python", "python.exe");
+        private static readonly string PiperPath = Path.Combine(Environment.CurrentDirectory, "python", "PiperController.py");
+        public static async void StartSynthesiser()
         {
             Interlocked.MemoryBarrier();
             Interlocked.SpeculationBarrier();
 
-            if (GetState() == State.Free)
+            if (GetState() == State.Free && !engineLoaded)
             {
                 if (await Settings.Get_Synthesis_Settings())
                 {
                     Interlocked.Exchange(ref processing, StateToInt(State.Processing));
 
-                    string outputPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".wav");
-                    ProcessStartInfo psi = new ProcessStartInfo
+                    synthesiser = new Process();
+                    synthesiser.StartInfo.FileName = PythonPath;
+                    synthesiser.StartInfo.Arguments = $"\"{PiperPath}\"";
+                    synthesiser.StartInfo.UseShellExecute = false;
+                    synthesiser.StartInfo.RedirectStandardInput = true;
+                    synthesiser.StartInfo.RedirectStandardOutput = true;
+                    synthesiser.StartInfo.RedirectStandardError = true;
+                    synthesiser.StartInfo.CreateNoWindow = true;
+                    synthesiser.Exited += Synthesiser_Exited;
+                    synthesiser.OutputDataReceived += Synthesiser_OutputDataReceived;
+                    synthesiser.ErrorDataReceived += Synthesiser_ErrorDataReceived;
+                    synthesiser.Start();
+
+                    synthesiser.BeginOutputReadLine();
+                    synthesiser.BeginErrorReadLine();
+
+                    DateTime start = DateTime.UtcNow;
+                    while ((DateTime.UtcNow - start).TotalMilliseconds < 10000)
                     {
-                        FileName = PiperPath,
-                        Arguments = $"--model \"{ModelPath}\" --output_file \"{outputPath}\"",
-
-                        UseShellExecute = false,
-                        RedirectStandardInput = true,
-                        RedirectStandardOutput = false,
-                        RedirectStandardError = true,
-                        CreateNoWindow = true
-                    };
-
-                    using Process process = new Process
-                    {
-                        StartInfo = psi
-                    };
-
-                    process.Start();
-
-                    StringBuilder synthesis_builder = new StringBuilder();
-
-                    if (content != null)
-                    {
-                        synthesis_builder.Append(action.ToString());
-                        synthesis_builder.Append(content);
-                        synthesis_builder.Append(" on ");
-                        synthesis_builder.Append(app);
-                    }
-                    else
-                    {
-                        synthesis_builder.Append(action.ToString());
-                        synthesis_builder.Append(" ");
-                        synthesis_builder.Append(app);
+                        if (engineLoaded)
+                        {
+                            Interlocked.Exchange(ref processing, StateToInt(State.Free));
+                            return;
+                        }
                     }
 
-                    await process.StandardInput.WriteAsync(synthesis_builder.ToString());
-                    process.StandardInput.Close();
-
-                    string error = await process.StandardError.ReadToEndAsync();
-                    process.WaitForExit();
-
-
-                    if (process.ExitCode != 0)
-                    {
-                        throw new Exception($"Piper failed: {error}");
-                    }
-
-                    if (!File.Exists(outputPath) || new FileInfo(outputPath).Length == 0)
-                        throw new Exception("Piper produced no audio.");
-
-                    using (var audio = new FileStream(outputPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-                    using (var reader = new NAudio.Wave.WaveFileReader(audio))
-                    using (var waveOut = new NAudio.Wave.WaveOutEvent())
-                    {
-                        waveOut.Init(reader);
-                        waveOut.Play();
-
-                        while (waveOut.PlaybackState == NAudio.Wave.PlaybackState.Playing) ;
-                    }
-
-                    File.Delete(outputPath);
-                    Interlocked.Exchange(ref processing, StateToInt(State.Free));
+                    throw new Exception("Synthesiser fatal error");
                 }
+            }
+        }
+
+        private static void Synthesiser_Exited(object sender, EventArgs e) => StopSynthesiser();
+
+        private static void Synthesiser_ErrorDataReceived(object sender, DataReceivedEventArgs e) => StopSynthesiser();
+
+        public static void StopSynthesiser()
+        {
+            try
+            {
+                if (engineLoaded)
+                {
+                    Interlocked.MemoryBarrier();
+                    Interlocked.SpeculationBarrier();
+                    Interlocked.Exchange(ref processing, StateToInt(State.Free));
+                    engineLoaded = false;
+
+                    if(synthesiser != null)
+                        if(synthesiser.HasExited)
+                            synthesiser.Kill();
+                }
+            }
+            catch { }
+        }
+
+        private static void Synthesiser_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            Interlocked.MemoryBarrier();
+            Interlocked.SpeculationBarrier();
+
+            string result = e.Data;
+            if (!engineLoaded && result == "[ loaded ]")
+            {
+                engineLoaded = true;
+            }
+            else
+            {
+                if (engineLoaded)
+                {
+                    if (result == "[ Synthesis finished ]")
+                    {
+                        Interlocked.Exchange(ref processing, StateToInt(State.Free));
+                    }
+                }
+            }
+        }
+
+        public static async Task Synthesis(Action action, string content, string app)
+        {
+            try
+            {
+                Interlocked.MemoryBarrier();
+                Interlocked.SpeculationBarrier();
+
+                if (GetState() == State.Free && synthesiser != null && engineLoaded == true)
+                {
+                    if (await Settings.Get_Synthesis_Settings())
+                    {
+                        Interlocked.Exchange(ref processing, StateToInt(State.Processing));
+
+                        StringBuilder synthesis_builder = new StringBuilder();
+
+                        if (content != null)
+                        {
+                            synthesis_builder.Append(action.ToString());
+                            synthesis_builder.Append(content);
+                            synthesis_builder.Append(" on ");
+                            synthesis_builder.Append(app);
+                        }
+                        else
+                        {
+                            synthesis_builder.Append(action.ToString());
+                            synthesis_builder.Append(" ");
+                            synthesis_builder.Append(app);
+                        }
+
+                        await synthesiser.StandardInput.WriteLineAsync(synthesis_builder.ToString());
+
+                        DateTime time = DateTime.UtcNow;
+                        while ((DateTime.UtcNow - time).TotalMilliseconds < 10000 && processing == StateToInt(State.Processing)) ;
+                    }
+                }
+            }
+            catch 
+            {
+                StopSynthesiser();
             }
         }
     }

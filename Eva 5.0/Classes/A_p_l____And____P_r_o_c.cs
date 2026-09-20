@@ -121,12 +121,6 @@ namespace Eva_5._0
             new A_p_l____And____P_r_o_c(true);
         }
 
-        public enum SpeechRecognitionOperation
-        {
-            FormFilling,
-            Dictation,
-            WebSearch
-        }
 
         private A_p_l____And____P_r_o_c(bool initiate)
         {

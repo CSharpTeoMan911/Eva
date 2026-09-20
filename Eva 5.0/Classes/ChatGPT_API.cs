@@ -10,7 +10,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Diagnostics;
 
 
 namespace Eva_5._0
@@ -404,7 +403,6 @@ namespace Eva_5._0
                         }
                         catch(Exception E)
                         {
-                            Debug.WriteLine(E.Message);
                             // IF AN EXCEPTION OCCURS, THEN THE OPERATION
                             // IS NOT SUCCESSFUL AND THE SET TYPE VALUE
                             // WITHIN THE TUPLE IS AN EXCEPTION AND THE

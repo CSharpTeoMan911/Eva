@@ -66,10 +66,9 @@ namespace Eva_5._0
 
         public async Task<Func<bool>> PreProcessing(string Result)
         {
-            Debug.WriteLine(Result);
             ClearBuffers();
-
-            foreach (char c in Result.ToLower().Trim())
+            Result = Result.ToLower().Trim();
+            foreach (char c in Result)
             {
                 if (char.IsWhiteSpace(c) || char.IsLetterOrDigit(c))
                     Sentence_StringBuilder.Append(c);
@@ -78,6 +77,8 @@ namespace Eva_5._0
        
             Result = Sentence_StringBuilder.ToString();
             display_recognition_result = Result;
+
+            Debug.WriteLine(Result);
 
             if (CommandTest == true)
                 return new Func<bool>(() => { return true; });

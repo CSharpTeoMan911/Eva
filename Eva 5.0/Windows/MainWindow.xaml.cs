@@ -71,8 +71,6 @@ namespace Eva_5._0
 
         private double RotationValue;
 
-        protected static long OnOff;
-
         private Wake_Word_Engine.Wake_Word_Engine_Event_Handler wake_Word_Engine_Event_Handler;
 
         public MainWindow()
@@ -569,11 +567,11 @@ namespace Eva_5._0
                                 Interlocked.MemoryBarrier();
                                 Interlocked.SpeculationBarrier();
 
-                                if (Interlocked.Read(ref OnOff) == 0)
+                                if (Interlocked.Read(ref App.stateMachine.OnOff) == 0)
                                 {
                                     SpeechOn();
                                 }
-                                else if (Interlocked.Read(ref OnOff) == 1)
+                                else if (Interlocked.Read(ref App.stateMachine.OnOff) == 1)
                                 {
                                     SpeechOff();
                                 }
@@ -602,13 +600,14 @@ namespace Eva_5._0
             Interlocked.MemoryBarrier();
             Interlocked.SpeculationBarrier();
 
-            if (Interlocked.Read(ref OnOff) == 0)
+            if (Interlocked.Read(ref App.stateMachine.OnOff) == 0)
             {
                 await Application.Current.Dispatcher.InvokeAsync(() =>
                 {
                     this.SpeechRecognitionButton.IsEnabled = false;
                 }, System.Windows.Threading.DispatcherPriority.Render);
 
+                SpeechSynthesis.StartSynthesiser();
                 // START THE WAKE WORD ENGINE PROCESS
                 App.stateMachine.wakeWordEngine.Start_The_Wake_Word_Engine(wake_Word_Engine_Event_Handler);
             }
@@ -619,10 +618,10 @@ namespace Eva_5._0
             Interlocked.MemoryBarrier();
             Interlocked.SpeculationBarrier();
 
-            if (Interlocked.Read(ref OnOff) == 0)
+            if (Interlocked.Read(ref App.stateMachine.OnOff) == 0)
             {
                 // LOCK THE VARIABLE ON THE STACK TO BE ACCESSED ONLY BY THE CURRENT THREAD
-                Interlocked.Exchange(ref OnOff, 1);
+                Interlocked.Exchange(ref App.stateMachine.OnOff, 1);
 
                 // LOCK THE VARIABLE ON THE STACK TO BE ACCESSED ONLY BY THE CURRENT THREAD
                 Interlocked.Exchange(ref App.stateMachine.Online_Speech_Recogniser_Disabled, 0);
@@ -642,8 +641,10 @@ namespace Eva_5._0
             Interlocked.MemoryBarrier();
             Interlocked.SpeculationBarrier();
 
-            if (Interlocked.Read(ref OnOff) == 1)
+            if (Interlocked.Read(ref App.stateMachine.OnOff) == 1)
             {
+                SpeechSynthesis.StopSynthesiser();
+
                 await Application.Current.Dispatcher.InvokeAsync(() =>
                 {
                     this.SpeechRecognitionButton.IsEnabled = false;
@@ -654,7 +655,7 @@ namespace Eva_5._0
 
                 // TEMINATE THE WAKE WORD ENGINE PROCESS
                 App.stateMachine.wakeWordEngine.Stop_The_Wake_Word_Engine();
-                Interlocked.Exchange(ref OnOff, 0);
+                Interlocked.Exchange(ref App.stateMachine.OnOff, 0);
 
                 // CHANGE THE BUTTON CONTENT BY INVOKING THE OPERATION ON THE UI THREAD
                 await Application.Current.Dispatcher.InvokeAsync(() =>

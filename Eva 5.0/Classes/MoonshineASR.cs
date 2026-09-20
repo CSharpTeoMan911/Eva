@@ -1,6 +1,7 @@
 #nullable enable
 
 using Eva_5._0.Properties;
+using NAudio.CoreAudioApi;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -15,6 +16,13 @@ namespace Eva_5._0.Classes
 {
     internal class MoonshineASR
     {
+        private enum MicState
+        {
+            Active,
+            Mute
+        }
+
+        private MMDeviceEnumerator? enumerator;
         private CancellationTokenSource tokenSource = new CancellationTokenSource();
         private readonly string enginePath = Path.Combine(Environment.CurrentDirectory, "python", "python.exe");
         private bool engineLoaded = false;
@@ -29,28 +37,61 @@ namespace Eva_5._0.Classes
 
         }
 
+
+        private void ChangeMicVolume(MicState state)
+        {
+            try
+            {
+                if (enumerator != null)
+                {
+                    MMDevice? device = enumerator?.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Communications);
+
+                    if (device != null)
+                    {
+                        AudioSessionManager sessionManager = device.AudioSessionManager;
+                        AudioSessionControl sessions = sessionManager.AudioSessionControl;
+
+                        for (int i = 0; i < device.AudioSessionManager.Sessions.Count; i++)
+                        {
+                            var session = device.AudioSessionManager.Sessions[i];
+                            if (session.GetProcessID == sttEngine?.Id)
+                            {
+                                session.SimpleAudioVolume.Mute = state == MicState.Mute;
+                            }
+                        }
+                    }
+                }
+            }
+            catch { }
+        }
+
+
         private void TaskDispatcher()
         {
             dispatcherRunning = true;
 
-            Task.Run(async() =>
+            Task.Run(() =>
             {
                 while (dispatcherRunning && !tokenSource.IsCancellationRequested)
                 {
+                    Interlocked.MemoryBarrier();
+                    Interlocked.SpeculationBarrier();
+
                     Func<bool>? task = null;
-                    if (engineLoaded && tasks.TryDequeue(out task) && sttEngine != null)
+                    if (engineLoaded && sttEngine != null)
                     {
                         if (SpeechSynthesis.GetState() == SpeechSynthesis.State.Free)
                         {
-                            if (task != null)
+                            if (tasks.TryDequeue(out task))
                             {
-                                _ = task.Invoke();
-                                sttEngine.StandardInput.WriteLine("[ startTranscription ]");
+                                _ = task?.Invoke();
                             }
+
+                            ChangeMicVolume(MicState.Active);
                         }
                         else
                         {
-                            sttEngine.StandardInput.WriteLine("[ stopTranscription ]");
+                            ChangeMicVolume(MicState.Mute);
                         }
                     }
                 }
@@ -121,6 +162,7 @@ namespace Eva_5._0.Classes
         {
             if (!engineStarted)
             {
+                enumerator = new MMDeviceEnumerator();
                 tokenSource = new CancellationTokenSource();
 
                 List<string> procs = A_p_l____And____P_r_o_c.commands.A_p_l_Name__And__A_p_l___P_r_o_c_Name.Keys.ToList();
@@ -153,15 +195,15 @@ namespace Eva_5._0.Classes
                 sttEngine.StartInfo.CreateNoWindow = true;
                 sttEngine.StartInfo.RedirectStandardOutput = true;
                 sttEngine.StartInfo.RedirectStandardError = true;
-                sttEngine.StartInfo.RedirectStandardInput = true;
+                sttEngine.StartInfo.RedirectStandardInput = false;
 
                 sttEngine.Exited += SttEngine_Exited;
 
-                sttEngine.OutputDataReceived += (sender, e) =>
+                sttEngine.OutputDataReceived += async(sender, e) =>
                 {
                     if (!tokenSource.IsCancellationRequested && SpeechSynthesis.GetState() == SpeechSynthesis.State.Free)
                     {
-                        sttEngine.StandardInput.WriteLine("[ startTranscription ]");
+                        ChangeMicVolume(MicState.Active);
                         Interlocked.MemoryBarrier();
                         Interlocked.SpeculationBarrier();
 
@@ -175,7 +217,7 @@ namespace Eva_5._0.Classes
                     }
                     else
                     {
-                        sttEngine.StandardInput.WriteLine("[ stopTranscription ]");
+                        ChangeMicVolume(MicState.Mute);
                     }
                 };
 
@@ -183,7 +225,6 @@ namespace Eva_5._0.Classes
                 {
                     if (!tokenSource.IsCancellationRequested)
                     {
-                        Debug.WriteLine($"Error: {e.Data}");
                         StopEngine();
                     }
                 };
@@ -208,6 +249,7 @@ namespace Eva_5._0.Classes
                     Interlocked.SpeculationBarrier();
                     Interlocked.Exchange(ref App.stateMachine.Speech_Recogniser_Listening, 0);
 
+                    enumerator?.Dispose();
                     tokenSource.Cancel();
                     engineStarted = false;
                     engineLoaded = false;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -171,10 +172,6 @@ namespace Eva_5._0
 
                     bool SoundOrOff = await Settings.Get_Sound_Settings();
                     bool SythesisOnOrOff = await Settings.Get_Synthesis_Settings();
-                    string SpeechLanguage = await Settings.Get_Speech_Language_Settings();
-                    int Timeout = await Settings.Get_Speech_Timeout_Settings();
-
-                    A_p_l____And____P_r_o_c.SpeechRecognitionOperation operation = await Settings.Get_Speech_Operation_Settings();
 
                     await Application.Current.Dispatcher.InvokeAsync(() =>
                     {
@@ -211,22 +208,6 @@ namespace Eva_5._0
                             SynthesisSoundButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF1B70C3");
                             SynthesisMuteButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
                         }
-
-                        switch (operation)
-                        {
-                            case A_p_l____And____P_r_o_c.SpeechRecognitionOperation.FormFilling:
-                                SpeechOperationDisplay.Text = "Form filling";
-                                break;
-                            case A_p_l____And____P_r_o_c.SpeechRecognitionOperation.Dictation:
-                                SpeechOperationDisplay.Text = "Dictation";
-                                break;
-                            case A_p_l____And____P_r_o_c.SpeechRecognitionOperation.WebSearch:
-                                SpeechOperationDisplay.Text = "Web search";
-                                break;
-                        }
-
-                        SpeechLanguageDisplay.Text = SpeechLanguage;
-                        SpeechOperationTimeout.Text = Timeout.ToString();
                     });
                 }
                 catch { }
@@ -406,17 +387,6 @@ namespace Eva_5._0
                                         SensitivityTitleOffset.Offset -= 0.01;
                                         ModelTempOffset.Offset -= 0.01;
                                         SensitivityOffset.Offset -= 0.01;
-                                        SpeechLanguagelOffset.Offset -= 0.01;
-                                        PreviousSpeechLanguageButtonOffset.Offset -= 0.025;
-                                        NextSpeechLanguageButtonOffset.Offset -= 0.025;
-                                        SpeechOperationOffset.Offset -= 0.01;
-                                        PreviousSpeechOperationButtonOffset.Offset -= 0.025;
-                                        CurrentSpeechOperationOffset.Offset -= 0.01;
-                                        NextSpeechOperationButtonOffset.Offset -= 0.025;
-                                        SpeechTimeoutOffset.Offset -= 0.01;
-                                        CurrentSpeechTimeoutOffset.Offset -= 0.01;
-                                        NextSpeechTimeoutButtonOffset.Offset -= 0.025;
-                                        PreviousSpeechTimeoutButtonOffset.Offset -= 0.025;
                                     }
                                     else
                                     {
@@ -450,17 +420,6 @@ namespace Eva_5._0
                                         SensitivityTitleOffset.Offset += 0.01;
                                         ModelTempOffset.Offset += 0.01;
                                         SensitivityOffset.Offset += 0.01;
-                                        SpeechLanguagelOffset.Offset += 0.01;
-                                        PreviousSpeechLanguageButtonOffset.Offset += 0.025;
-                                        NextSpeechLanguageButtonOffset.Offset += 0.025;
-                                        SpeechOperationOffset.Offset += 0.01;
-                                        PreviousSpeechOperationButtonOffset.Offset += 0.025;
-                                        CurrentSpeechOperationOffset.Offset += 0.01;
-                                        NextSpeechOperationButtonOffset.Offset += 0.025;
-                                        SpeechTimeoutOffset.Offset += 0.01;
-                                        CurrentSpeechTimeoutOffset.Offset += 0.01;
-                                        NextSpeechTimeoutButtonOffset.Offset += 0.025;
-                                        PreviousSpeechTimeoutButtonOffset.Offset += 0.025;
                                     }
                                     else
                                     {
@@ -546,7 +505,13 @@ namespace Eva_5._0
 
                     if (Application.Current.MainWindow != null)
                     {
+                        Interlocked.MemoryBarrier();
+                        Interlocked.SpeculationBarrier();
+
                         await Settings.Set_Synthesis_Settings(true);
+
+                        if(App.stateMachine.OnOff == 1)
+                            SpeechSynthesis.StartSynthesiser();
 
                         SynthesisSoundOnButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
                         SynthesisSoundOffButton.Background = new SolidColorBrush(Colors.Transparent);
@@ -562,6 +527,9 @@ namespace Eva_5._0
 
         private async void SynthesisSoundOff(object sender, RoutedEventArgs e)
         {
+            Interlocked.MemoryBarrier();
+            Interlocked.SpeculationBarrier();
+
             if (App.SettingsWindowOpen == true)
             {
 
@@ -572,6 +540,9 @@ namespace Eva_5._0
                     {
 
                         await Settings.Set_Synthesis_Settings(false);
+
+                        if (App.stateMachine.OnOff == 1)
+                            SpeechSynthesis.StopSynthesiser();
 
                         SynthesisSoundOffButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
                         SynthesisSoundOnButton.Background = new SolidColorBrush(Colors.Transparent);
@@ -747,82 +718,6 @@ namespace Eva_5._0
         {
             Commands_Main_Window commands = new Commands_Main_Window(openSpeech);
             commands.ShowDialog();
-        }
-
-        private async void PreviousLanguage(object sender, RoutedEventArgs e)
-        {
-            if (SpeechLanguageDisplay.Text == "en-US")
-            {
-                SpeechLanguageDisplay.Text = "en-GB";
-                await Settings.Set_Speech_Language_Settings(Settings.SpeechLanguage.en_GB);
-            }
-        }
-
-        private async void NextLanguage(object sender, RoutedEventArgs e)
-        {
-            if (SpeechLanguageDisplay.Text == "en-GB")
-            {
-                SpeechLanguageDisplay.Text = "en-US";
-                await Settings.Set_Speech_Language_Settings(Settings.SpeechLanguage.en_US);
-            }
-        }
-
-        private async void NextOperation(object sender, RoutedEventArgs e)
-        {
-            A_p_l____And____P_r_o_c.SpeechRecognitionOperation operation = A_p_l____And____P_r_o_c.SpeechRecognitionOperation.FormFilling;
-
-            if (SpeechOperationDisplay.Text == "Form filling")
-            {
-                SpeechOperationDisplay.Text = "Web search";
-                operation = A_p_l____And____P_r_o_c.SpeechRecognitionOperation.WebSearch;
-            }
-            else if (SpeechOperationDisplay.Text == "Web search")
-            {
-                SpeechOperationDisplay.Text = "Dictation";
-                operation = A_p_l____And____P_r_o_c.SpeechRecognitionOperation.Dictation;
-            }
-
-            await Settings.Set_Speech_Operation_Settings(operation);
-        }
-
-        private async void PreviousOperation(object sender, RoutedEventArgs e)
-        {
-            A_p_l____And____P_r_o_c.SpeechRecognitionOperation operation = A_p_l____And____P_r_o_c.SpeechRecognitionOperation.FormFilling;
-
-            if (SpeechOperationDisplay.Text == "Dictation")
-            {
-                SpeechOperationDisplay.Text = "Web search";
-                operation = A_p_l____And____P_r_o_c.SpeechRecognitionOperation.WebSearch;
-            }
-            else if (SpeechOperationDisplay.Text == "Web search")
-            {
-                SpeechOperationDisplay.Text = "Form filling";
-                operation = A_p_l____And____P_r_o_c.SpeechRecognitionOperation.FormFilling;
-            }
-
-            await Settings.Set_Speech_Operation_Settings(operation);
-        }
-
-        private async void PreviousTimeout(object sender, RoutedEventArgs e)
-        {
-            int Timeout = Convert.ToInt32(SpeechOperationTimeout.Text);
-            if (Timeout > 1)
-            {
-                Timeout--;
-                SpeechOperationTimeout.Text = Timeout.ToString();
-                await Settings.Set_Speech_Timeout_Settings(Timeout);
-            }
-        }
-
-        private async void NextTimeout(object sender, RoutedEventArgs e)
-        {
-            int Timeout = Convert.ToInt32(SpeechOperationTimeout.Text);
-            if (Timeout < 7)
-            {
-                Timeout++;
-                SpeechOperationTimeout.Text = Timeout.ToString();
-                await Settings.Set_Speech_Timeout_Settings(Timeout);
-            }
         }
     }
 }
