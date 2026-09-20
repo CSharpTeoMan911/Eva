@@ -314,6 +314,8 @@
     <Content Include="Asr.py" />
     <Content Include="Controller.py" />
     <Content Include="main.py" />
+    <Content Include="Piper.py" />
+    <Content Include="PiperController.py" />
     <Content Include="Sounds\AlarmSound.wav" />
     <Content Include="Sounds\App closing.wav" />
     <Content Include="Sounds\App execution.wav" />

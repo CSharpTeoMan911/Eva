@@ -1,5 +1,4 @@
 from moonshine_voice import MicTranscriber
-from moonshine_voice.transcriber import MOONSHINE_FLAG_SPELLING_MODE
 import time
 import os
 import sys
@@ -7,7 +6,7 @@ import sys
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class AsrEngine:
-    context = str()
+    keywords = str()
     engineLoaded = False
     transcriptionStarted = False
 
@@ -20,8 +19,8 @@ class AsrEngine:
     hypothesisTime = float()
     resultTime = float()
 
-    def __init__(self, transcriptionTimeout:int, context:str=str()):
-        self.context = context
+    def __init__(self, transcriptionTimeout:int, keywords:str=str()):
+        self.keywords = keywords
         self.transcriptionTimeout = transcriptionTimeout if transcriptionTimeout >= 3 else 3
 
     def _processHypothesis(self, text:str):
@@ -47,9 +46,10 @@ class AsrEngine:
         self.mic = (
         MicTranscriber()
         .options({
+            "context": self.keywords,
             "context_max_terms": 150,     # Limit context parsing to keep the model focused
             "keyterm_boost": 3.0,          # Boost specific phrases (default 2.0, max 4.0)
-            "vad_threshold": 0.3,          # Raise from 0.5 to discard breathing or fan hum
+            "vad_threshold": 0.3,          # Raise from 0.3 to discard breathing or fan hum
             "max_tokens_per_second": 6.5,  # Ideal for structural/Latin languages like English
             "use_speculative_decoding": True
         })

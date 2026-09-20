@@ -4,15 +4,15 @@ import Asr
 import traceback
 
 class Controller:
-    context = str()
+    keywords = list()
     hypothesis = str()
     result = str()
 
     isControllerRunning = False
 
-    def __init__(self, context:str = str()):
-        self.context = context
-        self.engine = Asr.AsrEngine(transcriptionTimeout=3, context=self.context)
+    def __init__(self, keywords:str = str()):
+        self.keywords = keywords
+        self.engine = Asr.AsrEngine(transcriptionTimeout=3, keywords=self.keywords)
 
     def start(self):
         self.engine.loadEngine()
@@ -69,19 +69,20 @@ control_words = ["open",
             "screenshot",
             "mode"]
 key = str()
-values = []
+values = str()
 has_parameters = False
 
-if len(sys.argv) >= 3:
+if len(sys.argv) == 3:
     key = sys.argv[1]
-    values = [x for x in sys.argv[2:]]
-    has_parameters = True if key == '-c' and len(values) > 0 else False
+    values = sys.argv[2]
+    has_parameters = True if key == '-k' and len(values) > 0 else False
 
-values.extend(control_words)
 
-controller = Controller() if has_parameters else Controller(context=str(values))
+values += ',' if len(values) > 0 else ''
+values += ','.join(control_words)
+
+controller = Controller() if has_parameters else Controller(keywords=values)
 controller.start()
-
 Loaded = False
 
 t = time.time()
@@ -92,12 +93,6 @@ while True:
             Loaded = True
         else:
             print(controller.getResult(), flush=True)
-
-        match input():
-            case '[ startTranscription ]':
-                controller.startTranscription()
-            case '[ stopTranscription ]':
-                controller.stopTranscription()
         t = time.time()
 
 
