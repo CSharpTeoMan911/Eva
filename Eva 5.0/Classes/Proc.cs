@@ -29,50 +29,36 @@ namespace Eva_5._0
 
 
         // INT THAT IS MONITORING THE AMOUNT OF TASKS THAT ARE CURRENTLY RUNNING
-        public static int tasks_running;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected static void ProcInitialisation<Content>(string process_type, string application, Content content)
+        public void ProcInitialisation<Content>(string process_type, string application, Content content)
         {
-            // IF THE AMOUNT OF TASKS CURRENTLY RUNNING IS '0'
-            if (tasks_running == 0)
+            switch (process_type)
             {
-                // INCREMENT THE AMOUNT OF TASKS CURRENTLY RUNNING BY '1'
-                Interlocked.MemoryBarrier();
-                Interlocked.SpeculationBarrier();
-                Interlocked.Increment(ref tasks_running);
+                case "Online Process":
+                    OnlineProcesses(application, content as string);
+                    break;
 
-                switch (process_type)
-                {
-                    case "Online Process":
-                        OnlineProcesses(application, content as string);
-                        break;
+                case "ChatGPT Process":
+                    ChatGPT_API_Interface(content as string);
+                    break;
 
-                    case "ChatGPT Process":
-                        ChatGPT_API_Interface(content as string);
-                        break;
+                case "System Process":
+                    SystemProcesses(application, content as string);
+                    break;
 
-                    case "System Process":
-                        SystemProcesses(application, content as string);
-                        break;
+                case "Timer Process":
+                    TimerProcess(content as System.Collections.Concurrent.ConcurrentDictionary<string, int>);
+                    break;
 
-                    case "Timer Process":
-                        TimerProcess(content as System.Collections.Concurrent.ConcurrentDictionary<string, int>);
-                        break;
-
-                    case "Screen Capture Process":
-                        Screen_Capture();
-                        break;
-                }
-
-
-                // DECREMENT THE AMOUNT OF TASKS CURRENTLY RUNNING BY '1'
-                Interlocked.Decrement(ref tasks_running);
+                case "Screen Capture Process":
+                    Screen_Capture();
+                    break;
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static async void OnlineProcesses(string WebApplication, string SearchContent)
+        private async void OnlineProcesses(string WebApplication, string SearchContent)
         {
             string Process = String.Empty;
 
@@ -105,7 +91,7 @@ namespace Eva_5._0
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static async void SystemProcesses(string Application, string Process)
+        private async void SystemProcesses(string Application, string Process)
         {
             string application_executable_name = String.Empty;
             bool Application_Executable_Name_Retrieval_Result = commands.A_p_l_Name__And__A_p_l___E_x__Name.TryGetValue(Application, out application_executable_name);
@@ -229,7 +215,7 @@ namespace Eva_5._0
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static async void MissingApplicationDownload(string application_not_found_error_link)
+        private async void MissingApplicationDownload(string application_not_found_error_link)
         {
             Eva_Functionalities.Begin_Application_Execution_Animation.Start_The_Application_Execution_Animation();
 
@@ -249,7 +235,7 @@ namespace Eva_5._0
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private async static void TimerProcess(System.Collections.Concurrent.ConcurrentDictionary<string, int> Timer_Time_Intervals)
+        private async void TimerProcess(System.Collections.Concurrent.ConcurrentDictionary<string, int> Timer_Time_Intervals)
         {
             try
             {
@@ -274,7 +260,7 @@ namespace Eva_5._0
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static async void ChatGPT_API_Interface(string input)
+        private async void ChatGPT_API_Interface(string input)
         {
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
@@ -291,7 +277,7 @@ namespace Eva_5._0
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static async void Screen_Capture()
+        private async void Screen_Capture()
         {
             await SpeechSynthesis.Synthesis(SpeechSynthesis.Action.Taking, null, "a screenshot");
 
@@ -301,7 +287,7 @@ namespace Eva_5._0
             await Eva_Functionalities.Screen_Capture_Mechanism_Mitigator.Screen_Capture_Initiator();
         }
 
-        public static void NavigateToLink(string link)
+        public void NavigateToLink(string link)
         {
             try
             {

@@ -135,8 +135,8 @@ namespace Eva_5._0
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            await ChatGPT_API.Get_Available_Gpt_Models();
             App.ChatGPTResponseWindowOpened = true;
+            await ChatGPT_API.Get_Available_Gpt_Models();
 
             Animation_Timer = new System.Timers.Timer();
             Animation_Timer.Interval = 10;
@@ -724,7 +724,7 @@ namespace Eva_5._0
             string link = e.Link;
             if (!string.IsNullOrEmpty(link))
             {
-                Proc.NavigateToLink(link);
+                App.stateMachine.proc.NavigateToLink(link);
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.IO.Pipes;
 using System.Text;
 using System.Threading;
@@ -26,7 +27,7 @@ namespace Eva_5._0
     /////////////////////////////////////////////////////////////////////////////
 
 
-    internal class Wake_Word_Engine : MainWindow
+    internal class Wake_Word_Engine
     {
 
         // THE WAKE WORD ENGINE IS THE "VOSK" WAKE WORD ENGINE AND IS AVAILABLE ONLY IN PYTHON.
@@ -50,28 +51,27 @@ namespace Eva_5._0
         // 2) INSTALL THE PIP PACKAGES: "Vosk", "PyAudio", AND "sounddevice" USING THE 
         //    COMMAND: /path/to/Eva 5.0.exe/python.exe -m pip install [ PACKAGE NAME ]
 
-        private static Queue<Process> wake_word_processes = new Queue<Process>();
+        private Queue<Process> wake_word_processes = new Queue<Process>();
 
-        private static long wake_word_engines_loaded;
+        private long wake_word_engines_loaded;
 
-        private static string wake_word_engine_loaded = "[ loaded ]";
-        private static string cancel_wake_word = "stop listening";
-        private static string wake_word = "listen";
-        private static bool Wake_Word_Started = false;
-        private static string model = "0";
+        private string wake_word_engine_loaded = "[ loaded ]";
+        private string cancel_wake_word = "stop listening";
+        private string wake_word = "listen";
+        private bool Wake_Word_Started = false;
 
 
         // Variable that sets in how many minutes the wake word engine is reset
-        private static int wake_word_engine_reset_time = 7;
-        public static DateTime resetTime;
+        private int wake_word_engine_reset_time = 7;
+        public  DateTime resetTime;
 
-        private static CancellationTokenSource pipeCancellationTokenSource;
-        private static CancellationToken pipeCancellationToken;
+        private CancellationTokenSource pipeCancellationTokenSource;
+        private CancellationToken pipeCancellationToken;
 
         public delegate void Wake_Word_Engine_Event_Handler();
-        public static event Wake_Word_Engine_Event_Handler _Wake_Word_Engine_Event;
+        public event Wake_Word_Engine_Event_Handler _Wake_Word_Engine_Event;
 
-        public static void Start_The_Wake_Word_Engine(Wake_Word_Engine_Event_Handler Wake_Word_Engine_Event)
+        public void Start_The_Wake_Word_Engine(Wake_Word_Engine_Event_Handler Wake_Word_Engine_Event)
         {
             // INITIATE A WAKE WORD ENGINE PROCESS ON A DIFFERENT THREAD FOR CPU LOAD DISTRIBUTION PURPOSES
             // AND ALSO TO PREVENT THE LOCKING OF THE CALLING THREAD. AFTER THE WAKE WORD ENGINE PROCESS
@@ -104,7 +104,7 @@ namespace Eva_5._0
             // [ END ]
         }
 
-        private static void Wake_word_management_timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void Wake_word_management_timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             // RESET THE WAKE WORD ENGINE PROCESS ONCE EVERY 10 MINUTES. THIS IS DONE TO PREVENT WAKE WORD ENGINE LOCK,
             // AND ALSO TO PREVENT THE OVERFLOW OF THE DATA BUFFER USED BY THE ENGINE TO STORE THE AUDIO DATA
@@ -120,7 +120,7 @@ namespace Eva_5._0
 
                 if (Wake_Word_Started == true)
                 {
-                    if (MainWindowIsClosing == false)
+                    if (App.stateMachine.MainWindowIsClosing == false)
                     {
                         if (App.Application_Error_Shutdown == false)
                         {
@@ -183,7 +183,7 @@ namespace Eva_5._0
         }
 
 
-        private static async void Initiate_Wake_Word_Engine()
+        private async void Initiate_Wake_Word_Engine()
         {
             try
             {
@@ -197,13 +197,24 @@ namespace Eva_5._0
 
                 System.Diagnostics.Process wake_word_process = new System.Diagnostics.Process();
                 wake_word_process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                wake_word_process.StartInfo.FileName = new StringBuilder(Environment.CurrentDirectory).Append(@"\python 3.12\python.exe").ToString();
+
+                // 1. Establish the absolute path to your embedded engine directory
+                string pythonDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "python");
+                string pythonExePath = Path.Combine(pythonDir, "python.exe");
+
+                wake_word_process.StartInfo.FileName = pythonExePath;
+
+                // 2. CRITICAL: Force the process execution context into the embedded directory
+                wake_word_process.StartInfo.WorkingDirectory = pythonDir;
+
                 wake_word_process.StartInfo.CreateNoWindow = true;
                 wake_word_process.StartInfo.UseShellExecute = false;
-                wake_word_process.StartInfo.Arguments = new StringBuilder("main.py ").Append(model).Append(' ').Append((await Settings.GetSettingsFilePath()).ToString()).ToString();
-                wake_word_process.Start();
 
-                SwitchModel();
+                // 3. Since WorkingDirectory is set to the 'python' folder, main.py is locally relative
+                string settingsPath = await Settings.GetSettingsFilePath();
+                wake_word_process.StartInfo.Arguments = $"main.py \"{settingsPath}\"";
+
+                wake_word_process.Start();
 
                 wake_word_processes.Enqueue(wake_word_process);
 
@@ -215,7 +226,7 @@ namespace Eva_5._0
         }
 
 
-        public static bool Stop_The_Wake_Word_Engine()
+        public  bool Stop_The_Wake_Word_Engine()
         {
             try
             {
@@ -441,15 +452,7 @@ namespace Eva_5._0
             }
         }
 
-
-        private static void SwitchModel()
-        {
-            if (model == "0")
-                model = "1";
-            else
-                model = "0";
-        }
-        private static async Task Wake_Word_Detector(Process python)
+        private async Task Wake_Word_Detector(Process python)
         {
             try
             {
@@ -462,7 +465,7 @@ namespace Eva_5._0
 
                         await namedPipe?.WaitForConnectionAsync(pipeCancellationToken);
 
-                        if (MainWindowIsClosing == false)
+                        if (App.stateMachine.MainWindowIsClosing == false)
                         {
                             if (App.Application_Error_Shutdown == false)
                             {
@@ -477,32 +480,29 @@ namespace Eva_5._0
                                     {
                                         string socket_message_value = Encoding.UTF8.GetString(buffer, 0, bytes_read);
 
-                                        if (Proc.tasks_running == 0)
+                                        if (socket_message_value == wake_word_engine_loaded)
                                         {
-                                            if (socket_message_value == wake_word_engine_loaded)
+                                            if (Interlocked.Read(ref App.stateMachine.OnOff) == 0)
                                             {
-                                                if (Interlocked.Read(ref OnOff) == 0)
-                                                {
-                                                    _Wake_Word_Engine_Event.Invoke();
-                                                }
+                                                _Wake_Word_Engine_Event.Invoke();
+                                            }
 
-                                                resetTime = DateTime.UtcNow;
-                                                Interlocked.Increment(ref wake_word_engines_loaded);
-                                            }
-                                            else if (socket_message_value == cancel_wake_word)
+                                            resetTime = DateTime.UtcNow;
+                                            Interlocked.Increment(ref wake_word_engines_loaded);
+                                        }
+                                        else if (socket_message_value == cancel_wake_word)
+                                        {
+                                            if (Interlocked.Read(ref App.stateMachine.Speech_Recogniser_Listening) == 1)
                                             {
-                                                if (Interlocked.Read(ref Online_Speech_Recogniser_Listening) == 1)
-                                                {
-                                                    Interlocked.Exchange(ref Online_Speech_Recogniser_Listening, 0);
-                                                    Online_Speech_Recognition.Close_Speech_Recognition_Interface();
-                                                }
+                                                Interlocked.Exchange(ref App.stateMachine.Speech_Recogniser_Listening, 0);
+                                                App.stateMachine.moonshineASR.StopEngine();
                                             }
-                                            else if (socket_message_value == wake_word)
+                                        }
+                                        else if (socket_message_value == wake_word)
+                                        {
+                                            if (Interlocked.Read(ref App.stateMachine.Speech_Recogniser_Listening) == 0)
                                             {
-                                                if (Interlocked.Read(ref Online_Speech_Recogniser_Listening) == 0)
-                                                {
-                                                    Interlocked.Exchange(ref Wake_Word_Detected, 1);
-                                                }
+                                                Interlocked.Exchange(ref App.stateMachine.Wake_Word_Detected, 1);
                                             }
                                         }
 
@@ -528,9 +528,7 @@ namespace Eva_5._0
                 }
             }
             catch { }
-
         }
-
     }
 
 }

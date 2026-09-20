@@ -26,42 +26,37 @@ namespace Eva_5._0
 
         public ErrorWindow(string ErrorType)
         {
-            InitializeComponent();
-            App.PermisissionWindowOpen = true;
-
-            Application.Current.Dispatcher.Invoke(() =>
+            if (!App.PermisissionWindowOpen)
             {
-                switch (ErrorType)
+                InitializeComponent();
+                App.PermisissionWindowOpen = true;
+
+                Application.Current.Dispatcher.Invoke(() =>
                 {
-                    case "Mircrophone Access Denied":
-                        MicrophoneAccessDenied();
-                        break;
+                    switch (ErrorType)
+                    {
+                        case "Mircrophone Access Denied":
+                            MicrophoneAccessDenied();
+                            break;
 
-                    case "Online Speech Recognition Access Denied":
-                        OnlineSpeechRecognitionAccessDenied();
-                        break;
+                        case "Invalid ChatGPT API key":
+                            InvalidChatGPTAPIKey();
+                            break;
 
-                    case "Invalid ChatGPT API key":
-                        InvalidChatGPTAPIKey();
-                        break;
+                        case "ChatGPT error":
+                            ChatGPTError();
+                            break;
 
-                    case "ChatGPT error":
-                        ChatGPTError();
-                        break;
+                        case "Maximum number of tokens exceeded":
+                            Token_Limit_Exceeded();
+                            break;
 
-                    case "Maximum number of tokens exceeded":
-                        Token_Limit_Exceeded();
-                        break;
-
-                    case "Language not supported":
-                        Language_Not_Supported();
-                        break;
-
-                    case "Unsupported Voice":
-                        Unsupported_Voice();
-                        break;
-                }
-            });
+                        case "Unsupported Voice":
+                            Unsupported_Voice();
+                            break;
+                    }
+                });
+            }           
         }
 
 
@@ -83,29 +78,6 @@ namespace Eva_5._0
                     else
                     {
                         ErrorContext.Text = "Go to Privacy & Security  ->  Microphone.\n\n\nUnder the  [Microphone access] section, press the\nbutton associated with it, in order to enable it.";
-                    }
-                });
-            }
-            catch { }
-        }
-
-        private async void OnlineSpeechRecognitionAccessDenied()
-        {
-            await player.Play_Sound(Sound_Player.Sounds.ErrorSoundEffect);
-
-            try
-            {
-                await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:privacy-speech"));
-
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    if (App.Get_Windows_Version() == "Windows 10")
-                    {
-                        ErrorContext.Text = "Go to Settings  ->  Privacy  ->  Speech.\n\n\nUnder the  [Online speech recognition]  section,\npress the button associated with it,\nin order to enable it.";
-                    }
-                    else
-                    {
-                        ErrorContext.Text = "Go to Privacy & Security  ->  Speech.\n\n\nUnder the  [Online speech recognition]  section,\npress the button associated with it,\nin order to enable it.";
                     }
                 });
             }
@@ -209,45 +181,6 @@ namespace Eva_5._0
             ErrorContext.Inlines.Add("\n");
             ErrorContext.Inlines.Add("number of characters in a query is ");
             ErrorContext.Inlines.Add("4000 characters.");
-        }
-
-
-        private async void Language_Not_Supported()
-        {
-            try
-            {
-                await player.Play_Sound(Sound_Player.Sounds.ErrorSoundEffect);
-
-                await Application.Current.Dispatcher.Invoke(async () =>
-                {
-                    if (App.Get_Windows_Version() == "Windows 10")
-                    {
-                        await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:speech"));
-
-                        ErrorContext.Inlines.Add("The English language pack is ");
-                        ErrorContext.Inlines.Add("not detected on your system. \n");
-                        ErrorContext.Inlines.Add("Go to Settings  ->  Time & Language  ->  Language.\n");
-                        ErrorContext.Inlines.Add("Under the 'Preferred Languages' section press the \n");
-                        ErrorContext.Inlines.Add("'Add a language' button and download the 'en-US'\n");
-                        ErrorContext.Inlines.Add("or the 'en-GB' language pack. You must restart\n");
-                        ErrorContext.Inlines.Add("your computer afterwards.");
-                    }
-                    else
-                    {
-                        await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:regionlanguage"));
-
-                        ErrorContext.Inlines.Add("The English language pack is ");
-                        ErrorContext.Inlines.Add("not detected on your system. \n");
-                        ErrorContext.Inlines.Add("Go to Settings  ->  Time & Language  ->  Language & Region.\n");
-                        ErrorContext.Inlines.Add("Under the 'Preferred Languages' section press the \n");
-                        ErrorContext.Inlines.Add("'Add a language' button and download the 'en-US'\n");
-                        ErrorContext.Inlines.Add("or the 'en-GB' language pack. You must restart\n");
-                        ErrorContext.Inlines.Add("your computer afterwards.");
-                    }
-                });
-
-            }
-            catch { }
         }
 
 
@@ -355,10 +288,13 @@ namespace Eva_5._0
 
         private void ErrorWindowLoaded(object sender, RoutedEventArgs e)
         {
-            AnimationTimer = new System.Timers.Timer();
-            AnimationTimer.Elapsed += AnimationTimer_Elapsed;
-            AnimationTimer.Interval = 10;
-            AnimationTimer.Start();
+            if (!App.PermisissionWindowOpen)
+            {
+                AnimationTimer = new System.Timers.Timer();
+                AnimationTimer.Elapsed += AnimationTimer_Elapsed;
+                AnimationTimer.Interval = 10;
+                AnimationTimer.Start();
+            }
         }
 
         private void AnimationTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -507,7 +443,7 @@ namespace Eva_5._0
 
             if (App.Application_Error_Shutdown == true)
             {
-                Wake_Word_Engine.Stop_The_Wake_Word_Engine();
+                App.stateMachine.wakeWordEngine.Stop_The_Wake_Word_Engine();
                 Environment.Exit(0);
             }
         }
