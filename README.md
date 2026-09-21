@@ -7,15 +7,15 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.6.1
+📌 Latest Version: v7.6.5
 
-* 🆕 Removed paged memory cleanup
-* 🆕 Re-added physical model switch-up 
-* 🆕 Added automatic microphone audio level maximisation
-* 🆕 Re-calibrated the 
-* 🐞 Re-added the wake word engine reset mechanism
-* 🐞 Fixed UI related issues regarding threading
-* 🐞 Fixed thread synchronisation bugs
+* 🆕 Eva stays activated on **'Listen'** and stops on **'Stop Listening'**
+* 🆕 Added a new local speech recognition engine: **Moonshine 🌕**
+* 🆕 Added a new local speech synthesys engine: **Piper 🪈** 
+* 🆕 Removed **recognition timeouts**. Commands can now have **an indefinite duration**.
+* 🆕 Removed unnecessary **STT settings**
+* 🐞 Fixed command customisation bugs
+* 🐞 Fixed GPT api bugs
 
 
 <img width="724" height="681" alt="Settings" src="https://github.com/user-attachments/assets/a6879123-9362-45fe-9975-7faa034dac57" />
@@ -44,13 +44,15 @@ https://github.com/user-attachments/assets/cb57aae9-8f52-4323-95ef-aac1812aa80e
 <br> 
 
 ## 💻 Technologies
-* The Eva's core technologies are the **Vosk** In-proc speech recognition engine, the **Microsoft online speech recognition engine**, the **.NET framework**, **Windows Presentation Foundation** (**WPF**), and the **Universal Windows Platforms** (**UWP**). 
+* The Eva's core technologies are the **Vosk** in-proc speech recognition engine, the **Moonshine** in-proc speech recognition engine, the **.NET Framework**, **Windows Presentation Foundation** (**WPF**), and **Python**. 
 
 * 🖥️🎙️ [Vosk Speech Recognition Engine](https://github.com/alphacep/vosk-api) 
 
 * 🤖🧠 [Speech recognition model](https://alphacephei.com/vosk/models)
 
-* 🖥️🎙️ [UWP Speech Recognition Engine](https://learn.microsoft.com/en-us/uwp/api/windows.media.speechrecognition.speechrecognizer?view=winrt-22621)
+* 🖥️🎙️ [Moonshine🌕 STT Engine](https://github.com/moonshine-ai/moonshine)
+
+* 🖥️🎙️ [Piper🪈 TTS Engine](https://github.com/OHF-voice/piper1-gpl)
 
 <br>
 <br>
@@ -58,12 +60,11 @@ https://github.com/user-attachments/assets/cb57aae9-8f52-4323-95ef-aac1812aa80e
 ### 🗣️💻⚙️🌐📡 Speech recognition infrastructure
 ___________________________________________________
 
-![Speech system flowchart](https://user-images.githubusercontent.com/87245086/234708319-0ad38208-afe3-460c-9066-224704151b20.png)
-
+<img width="712" height="412" alt="ASR Workflow" src="https://github.com/user-attachments/assets/9e9e874d-b831-4bba-8d22-5bbb95e331de" />
 
 <br>
 
-* The Vosk speech recogniser is listening permanently, if the listening function is activated. Once it recognises the word "Listen" or "Hey listen", the online speech recognition engine is activated. The online speech recognition engine has the role of extracting commands and their content.
+* The Vosk speech recogniser is listening permanently, if the listening function is activated. Once it recognises the word "Listen" or "Hey listen", the **Moonshine🌕 ASR** engine will be started each recognised sentence from that point will be treated as a potential command. The **Moonshine🌕** engine is an on device highly accurate, lightweight, and fast **Speech-To-Text engine**. 
 
 <br>
 <br>
@@ -111,30 +112,7 @@ If no valid variables are found, no process is triggered.
 * Precision and Accuracy: By using multiple tokenization steps, Eva ensures that the correct processes are executed based on the user's exact intent.
 * Flexibility: Eva can handle various types of commands (e.g., opening apps, searching the web) by adjusting to different formats of user input.
 * User Experience: This process ensures that even with a wide variety of potential commands, Eva can respond accurately and intuitively.
-
-
-![302436808-cbed89ab-0788-4fcf-976d-bb694cdb888f](https://github.com/CSharpTeoMan911/Eva/assets/87245086/bf68529e-295f-4300-9b8f-15959da55643)
-
-<br>
-
-
-#### ⏱️📊 Natural Language Understanding Engine Time Complexities
-__________________________________________________________
-
-<br>
-
-![Time complexity](https://github.com/user-attachments/assets/996de477-159c-400c-adc5-3dc7d7b86f77)
-
-<br>
-
-The time complexity of the natural language understanding engine is in ***O(n)*** in the worst case and average case scenarios, and the time complexity ***O(n - (ci + 1))*** is in the best case scenario, where "ci" stands for current index where the engine could not match the input with any patern related to any process. Because the natural language understanding engine has 3 stages of tokenisation that are verifying if certain criterias are met within the given sentence, the natural language understanding engine will stop processing the information at the index where the sentence did not fulfil the specified criterias, depending at which tokenisation stage the natural language understanding engine the criterias are not satisfied, and thus the ***RAM*** memory resources and the ***CPU*** processing power are not wasted unnecessary.
-
-#### Note 📝
-
-The previously mentioned formula results in the fact that the resulting best case is **O(1)**, and it was used like in other algorithms **(e.g. Boyer Moore algorithm, best case: **O(n/m)**)** to signify the underlying process through which the time complexity was achieved as well as highlighting the variations of the result **(e.g. O(1), O(2), O(3), etc.)**, which can be part of the same class **(e.g. O(1))**, but at a discreete level are different **(O(2) has two steps, whereas O(3) has three steps, but Big-O notation concludes that they are both part of the O(1) class)**.
-
-<br>
-<br>
+  
 <br>
 
 # ∇🔺📉 Gradient fluctuation formula
@@ -181,10 +159,13 @@ This algorithm allows Eva to create smooth, beautiful animations with fluid tran
 
 # 📋 Usage
 
-To give commands to Eva, simply say the word "Listen" or "Hey listen" followed by your desired command. For example:
+To give commands to Eva, simply say the word "Listen" or "Hey listen". To stop Eva from executing commands say 'Stop listening'.
 
+## Example
+_______________
 1) Say "Hey listen" or "Listen" to activate Eva.
 2) Then say "Search robots are cool on Google" to initiate a web search.
+3) Say 'Stop listening' to deactivate Eva.
 
 <br/>
 
