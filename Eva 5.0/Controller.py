@@ -79,10 +79,16 @@ t = time.time()
 while True:
     if (time.time() - t) >= 1:
         if not Loaded:
-            print('[ loaded ]', flush=True)
+            print('[Result: [ loaded ]]', flush=True)
             Loaded = True
         else:
-            print(controller.getResult(), flush=True)
+            res = f'[Result: {controller.getResult()}]'
+            hyp = f'[Result: {controller.getHypothesis()}]'
+
+            if res is not None:
+                print(res, flush=True)
+            elif hyp is not None:
+                print(hyp, flush=True)
         t = time.time()
 
 

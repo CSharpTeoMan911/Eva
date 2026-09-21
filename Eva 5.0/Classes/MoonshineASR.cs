@@ -199,19 +199,28 @@ namespace Eva_5._0.Classes
 
                 sttEngine.Exited += SttEngine_Exited;
 
+
+                string res_pattern = "[Result: ";
+
                 sttEngine.OutputDataReceived += async(sender, e) =>
                 {
-                    if (!tokenSource.IsCancellationRequested && SpeechSynthesis.GetState() == SpeechSynthesis.State.Free)
+                    if (!tokenSource.IsCancellationRequested && SpeechSynthesis.GetState() == SpeechSynthesis.State.Free && engineStarted)
                     {
-                        ChangeMicVolume(MicState.Active);
-                        Interlocked.MemoryBarrier();
-                        Interlocked.SpeculationBarrier();
-
-                        if (engineStarted)
+                        if (e.Data != null)
                         {
-                            if (!string.IsNullOrWhiteSpace(e.Data))
+                            int result_length = e.Data.Length - (res_pattern.Length + 1);
+                            string result = e.Data.IndexOf(res_pattern) == 0 && e.Data[e.Data.Length - 1] == ']' ? e.Data.Substring(res_pattern.Length, result_length) : String.Empty;
+
+                            ChangeMicVolume(MicState.Active);
+                            Interlocked.MemoryBarrier();
+                            Interlocked.SpeculationBarrier();
+
+                            if (engineStarted)
                             {
-                                TaskScheduler(e.Data);
+                                if (!string.IsNullOrWhiteSpace(result))
+                                {
+                                    TaskScheduler(result);
+                                }
                             }
                         }
                     }

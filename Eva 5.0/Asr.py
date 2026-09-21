@@ -49,7 +49,7 @@ class AsrEngine:
             "context": self.keywords,
             "context_max_terms": 150,     # Limit context parsing to keep the model focused
             "keyterm_boost": 3.0,          # Boost specific phrases (default 2.0, max 4.0)
-            "vad_threshold": 0.3,          # Raise from 0.3 to discard breathing or fan hum
+            "vad_threshold": 0.2,          # Raise from 0.2 to discard breathing or fan hum
             "max_tokens_per_second": 6.5,  # Ideal for structural/Latin languages like English
             "use_speculative_decoding": True
         })
