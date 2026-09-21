@@ -1,7 +1,5 @@
 import time
-import sys
 import Asr
-import traceback
 
 class Controller:
     keywords = list()
@@ -82,13 +80,8 @@ while True:
             print('[Result: [ loaded ]]', flush=True)
             Loaded = True
         else:
-            res = f'[Result: {controller.getResult()}]'
-            hyp = f'[Result: {controller.getHypothesis()}]'
-
-            if res is not None:
-                print(res, flush=True)
-            elif hyp is not None:
-                print(hyp, flush=True)
+            res = controller.getResult()
+            print( f'[Result: {res}]', flush=True)
         t = time.time()
 
 
