@@ -71,7 +71,13 @@ namespace Eva_5._0
             foreach (char c in Result)
             {
                 if (char.IsWhiteSpace(c) || char.IsLetterOrDigit(c))
+                {
                     Sentence_StringBuilder.Append(c);
+                }
+                else if (c != ',' && c != '.' && c != '-')
+                {
+                    Sentence_StringBuilder.Append(c);
+                }
             }
 
        
