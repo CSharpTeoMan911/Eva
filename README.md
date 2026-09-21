@@ -64,7 +64,7 @@ ___________________________________________________
 
 <br>
 
-* The Vosk speech recogniser is listening permanently, if the listening function is activated. Once it recognises the word "Listen" or "Hey listen", the **Moonshine🌕 ASR** engine will be started each recognised sentence from that point will be treated as a potential command. The **Moonshine🌕** engine is an on device highly accurate, lightweight, and fast **Speech-To-Text engine**. 
+* The Vosk speech recogniser is listening permanently, if the listening function is activated. Once it recognises the word "Listen" or "Hey listen", the **Moonshine🌕 ASR** engine will be started each recognised sentence from that point will be treated as a potential command. **Moonshine🌕** is an on-device highly accurate, lightweight, and fast **Speech-To-Text engine**. 
 
 <br>
 <br>
