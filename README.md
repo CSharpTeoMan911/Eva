@@ -40,7 +40,7 @@
 ## About ❓
 * Eva is an A.I. assistant that has the purpose of helping users multi-task. It also has the use of helping people with mental and phisical disabilities. All the commands to be executed are given to Eva through voice commmands.
 
-https://github.com/user-attachments/assets/cb57aae9-8f52-4323-95ef-aac1812aa80e
+https://github.com/user-attachments/assets/9a505217-1986-43de-b319-c435accd0f75
 
 <br> 
 
@@ -65,7 +65,8 @@ ___________________________________________________
 
 <br>
 
-* The Vosk speech recogniser is listening permanently, if the listening function is activated. Once it recognises the word "Listen" or "Hey listen", the **Moonshine🌕 ASR** engine will be started each recognised sentence from that point will be treated as a potential command. **Moonshine🌕** is an on-device highly accurate, lightweight, and fast **Speech-To-Text engine**. 
+* The Vosk speech recogniser is listening permanently, if the listening function is activated. Once it recognises the word "Listen" or "Hey listen", the **Moonshine🌕 ASR** engine will be started each recognised sentence from that point will be treated as a potential command.
+* **Moonshine🌕** is an on-device highly accurate, lightweight, and fast **Speech-To-Text engine**. Its activation is controlled by **Vosk** because it is more light-weight than **Moonshine🌕**, thus the CPU usage increases only when needed. 
 
 <br>
 <br>
