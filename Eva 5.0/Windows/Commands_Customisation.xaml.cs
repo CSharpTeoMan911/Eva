@@ -96,6 +96,7 @@ namespace Eva_5._0
 
             A_p_l____And____P_r_o_c.commands = await Command_Pallet.Get_Commands();
 
+
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 switch (selected_option)
@@ -200,26 +201,21 @@ namespace Eva_5._0
 
         private async Task UpdateCommands()
         {
-            if (!write_initiated)
+            switch (selected_option)
             {
-                switch (selected_option)
-                {
-                    case Option.OpenApplications:
-                        A_p_l____And____P_r_o_c.commands.A_p_l_Name__And__A_p_l___E_x__Name = clone;
-                        await Command_Pallet.Set_Commands(A_p_l____And____P_r_o_c.commands);
-                        break;
-                    case Option.CloseApplications:
-                        A_p_l____And____P_r_o_c.commands.A_p_l_Name__And__A_p_l___P_r_o_c_Name = clone;
-                        await Command_Pallet.Set_Commands(A_p_l____And____P_r_o_c.commands);
-                        break;
-                    case Option.SearchContentOnWebApplications:
-                        A_p_l____And____P_r_o_c.commands.W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name = clone;
-                        await Command_Pallet.Set_Commands(A_p_l____And____P_r_o_c.commands);
-                        break;
-                }
-
-                await LoadContents();
+                case Option.OpenApplications:
+                    A_p_l____And____P_r_o_c.commands.A_p_l_Name__And__A_p_l___E_x__Name = clone;
+                    break;
+                case Option.CloseApplications:
+                    A_p_l____And____P_r_o_c.commands.A_p_l_Name__And__A_p_l___P_r_o_c_Name = clone;
+                    break;
+                case Option.SearchContentOnWebApplications:
+                    A_p_l____And____P_r_o_c.commands.W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name = clone;
+                    break;
             }
+
+            await Command_Pallet.Set_Commands(A_p_l____And____P_r_o_c.commands);
+            await LoadContents();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -235,7 +231,7 @@ namespace Eva_5._0
                 write_initiated = true;
 
                 clone = clone_;
-
+                
                 await UpdateCommands();
 
                 commands.Clear();
