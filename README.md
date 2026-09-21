@@ -10,15 +10,16 @@
 📌 Latest Version: v7.6.5
 
 * 🆕 Eva stays activated on **'Listen'** and stops on **'Stop Listening'**
-* 🆕 Added a new local speech recognition engine: **Moonshine 🌕**
-* 🆕 Added a new local speech synthesys engine: **Piper 🪈** 
+* 🆕 Added a new **on-device speech recognition** engine: **Moonshine 🌕**
+* 🆕 Added a new **on-device speech synthesis** engine: **Piper 🪈** 
 * 🆕 Removed **recognition timeouts**. Commands can now have **an indefinite duration**.
 * 🆕 Removed unnecessary **STT settings**
 * 🐞 Fixed command customisation bugs
-* 🐞 Fixed GPT api bugs
+* 🐞 Fixed **GPT** API bugs
 
 
-<img width="724" height="681" alt="Settings" src="https://github.com/user-attachments/assets/a6879123-9362-45fe-9975-7faa034dac57" />
+<img width="602" height="463" alt="Screenshot 2026-09-21 192442" src="https://github.com/user-attachments/assets/0d51860d-62c2-4b84-9918-6887a9edea9b" />
+
 
 <br>
 <br>
@@ -173,15 +174,16 @@ You can find detailed instructions on command patterns and troubleshooting in th
 
 <br>
 
-![Eva_Capture1225954986](https://github.com/user-attachments/assets/28e1d5ac-942d-4ca2-aef2-0bc695f47f64)
+<img width="313" height="431" alt="Screenshot 2026-09-21 210518" src="https://github.com/user-attachments/assets/c2c9381d-6ec7-4980-8914-61d53612714a" />
 
-![Eva_Capture1445270440](https://github.com/user-attachments/assets/1ad5b108-db95-47c9-a134-e8e28f71f8c0)
+<img width="607" height="339" alt="Screenshot 2026-09-21 210633" src="https://github.com/user-attachments/assets/89d061c4-4116-433d-b04f-bec93ef72fb7" />
+
 
 <br>
 
 # ⚙️ Command Customization
 
-<img width="1128" height="683" alt="Command Customisation" src="https://github.com/user-attachments/assets/9582eece-f325-4c2e-899a-4cbcf8bbd21e" />
+<img width="813" height="502" alt="Screenshot 2026-09-21 210841" src="https://github.com/user-attachments/assets/ab5b5f66-ceb3-49fa-bf0b-313ab7373175" />
 
 
 * Add, remove, and modify commands as you desire. For detailed instruction regarding command customisation, go to the Wiki page: **https://github.com/CSharpTeoMan911/Eva/wiki/Commands-customisation** 
@@ -199,7 +201,8 @@ You can find detailed instructions on command patterns and troubleshooting in th
 
 <br>
 
-<img width="820" height="681" alt="Api key setup" src="https://github.com/user-attachments/assets/d5f470f4-31d1-4561-baf3-58d893cbe839" />
+<img width="570" height="422" alt="Screenshot 2026-09-21 210927" src="https://github.com/user-attachments/assets/4ba6f55b-5b82-4418-9347-f9bfe1fc36e3" />
+
 
 ![Eva_Capture1350166031](https://github.com/user-attachments/assets/a328a720-dca8-43db-99c1-576ee0e4fb4f)
 
