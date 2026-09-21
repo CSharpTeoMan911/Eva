@@ -44,7 +44,7 @@ namespace Eva_5._0.Classes
             {
                 if (enumerator != null)
                 {
-                    MMDevice? device = enumerator?.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Communications);
+                    MMDevice device = enumerator.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Communications);
 
                     if (device != null)
                     {
@@ -189,7 +189,7 @@ namespace Eva_5._0.Classes
 
                 sttEngine = new Process();
                 sttEngine.StartInfo.FileName = enginePath;
-                sttEngine.StartInfo.Arguments = $"./python/Controller.py -k \"{s.ToString()}\"";
+                sttEngine.StartInfo.Arguments = $"./python/Controller.py";
                 sttEngine.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 sttEngine.StartInfo.UseShellExecute = false;
                 sttEngine.StartInfo.CreateNoWindow = true;

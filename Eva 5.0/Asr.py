@@ -7,8 +7,6 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class AsrEngine:
     keywords = str()
-    context = str()
-
     engineLoaded = False
     transcriptionStarted = False
 
@@ -21,9 +19,8 @@ class AsrEngine:
     hypothesisTime = float()
     resultTime = float()
 
-    def __init__(self, transcriptionTimeout:int, keywords:str=str(), context:str=str()):
+    def __init__(self, transcriptionTimeout:int, keywords:str=str()):
         self.keywords = keywords
-        self.context = context
         self.transcriptionTimeout = transcriptionTimeout if transcriptionTimeout >= 3 else 3
 
     def _processHypothesis(self, text:str):
@@ -49,8 +46,7 @@ class AsrEngine:
         self.mic = (
         MicTranscriber()
         .options({
-            "keyterms": self.keywords,
-            "context": self.context,
+            "context": self.keywords,
             "context_max_terms": 150,     # Limit context parsing to keep the model focused
             "keyterm_boost": 3.0,          # Boost specific phrases (default 2.0, max 4.0)
             "vad_threshold": 0.3,          # Raise from 0.3 to discard breathing or fan hum
