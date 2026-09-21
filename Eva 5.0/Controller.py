@@ -1,17 +1,19 @@
 import time
 import sys
 import Asr
-import traceback
 
 class Controller:
-    keywords = list()
+    keywords = str()
+    context = str()
+
     hypothesis = str()
     result = str()
 
     isControllerRunning = False
 
-    def __init__(self, keywords:str = str()):
+    def __init__(self, keywords:str = str(), context:str=str()):
         self.keywords = keywords
+        self.context = context
         self.engine = Asr.AsrEngine(transcriptionTimeout=3, keywords=self.keywords)
 
     def start(self):
@@ -49,7 +51,7 @@ class Controller:
         self.engine.clearHypothesis()
 
 
-control_words = ["open",
+control_words = ','.join(["open",
             "close",
             "set",
             "search",
@@ -67,7 +69,7 @@ control_words = ["open",
             "timer",
             "gpt",
             "screenshot",
-            "mode"]
+            "mode"])
 key = str()
 values = str()
 has_parameters = False
@@ -79,9 +81,8 @@ if len(sys.argv) == 3:
 
 
 values += ',' if len(values) > 0 else ''
-values += ','.join(control_words)
 
-controller = Controller() if has_parameters else Controller(keywords=values)
+controller = Controller() if has_parameters else Controller(keywords=values, context=control_words)
 controller.start()
 Loaded = False
 
