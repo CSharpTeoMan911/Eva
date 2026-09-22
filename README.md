@@ -74,10 +74,10 @@ ___________________________________________________
 ### 🧠💬📖⚙️ Natural Language Understanding (NLU) in Eva
 ____________________________________________________________
 
-Eva utilizes Natural Language Understanding (NLU) in two key ways: speech recognition and contextual command/content extraction. These two components are powered by Vosk and Windows Online Speech Recognition engines for speech recognition, and a custom-built command and content extraction engine that I developed.
+Eva utilizes Natural Language Understanding (NLU) in two key ways: speech recognition and contextual command/content extraction. These two components are powered by **Vosk** and **Moonshine🌕** speech recognition engines, and a custom-built command and content extraction engine that I developed.
 
 1) **Speech Recognition with NLU:**
-* Both Vosk and Windows Online Speech Recognition use NLU to convert spoken words from any audio medium into text. These engines are responsible for interpreting and transcribing the user's voice.
+* Both **Vosk** and **Moonshine🌕** use NLU to convert spoken words from any audio medium into text. These engines are responsible for interpreting and transcribing the user's voice.
 
 3) **Contextual Command & Content Extraction:**
 * Eva understands commands and extracts relevant content based on user input. This is done by processing commands through the following steps:
