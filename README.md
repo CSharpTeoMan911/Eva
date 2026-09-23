@@ -7,13 +7,14 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.6.7
+📌 Latest Version: v7.6.8
 
 * 🆕 Eva stays activated on **'Listen'** and stops on **'Stop Listening'**
 * 🆕 Added a new **on-device speech recognition** engine: **Moonshine 🌕**
 * 🆕 Added a new **on-device speech synthesis** engine: **Piper 🪈** 
 * 🆕 Removed **recognition timeouts**. Commands can now have **an indefinite duration**.
 * 🆕 Removed unnecessary **STT settings**
+* 🆕 Added ASR result character to be removed
 * 🐞 Fixed command customisation bugs
 * 🐞 Fixed **GPT** API bugs
 * 🐞 Fixed latency and synthesis bugs
