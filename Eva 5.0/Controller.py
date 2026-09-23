@@ -1,5 +1,7 @@
 import time
+import sys
 import Asr
+import traceback
 
 class Controller:
     keywords = list()
@@ -10,7 +12,7 @@ class Controller:
 
     def __init__(self, keywords:str = str()):
         self.keywords = keywords
-        self.engine = Asr.AsrEngine(transcriptionTimeout=3, keywords=self.keywords)
+        self.engine = Asr.AsrEngine(transcriptionTimeout=1.5, keywords=self.keywords)
 
     def start(self):
         self.engine.loadEngine()
@@ -80,8 +82,13 @@ while True:
             print('[Result: [ loaded ]]', flush=True)
             Loaded = True
         else:
-            res = controller.getResult()
-            print( f'[Result: {res}]', flush=True)
+            res = f'[Result: {controller.getResult()}]'
+            hyp = f'[Result: {controller.getHypothesis()}]'
+
+            if res is not None:
+                print(res, flush=True)
+            elif hyp is not None:
+                print(hyp, flush=True)
         t = time.time()
 
 

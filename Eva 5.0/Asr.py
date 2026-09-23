@@ -10,7 +10,7 @@ class AsrEngine:
     engineLoaded = False
     transcriptionStarted = False
 
-    transcriptionTimeout = int() 
+    transcriptionTimeout = float() 
     mic = MicTranscriber()
 
     hypothesis = str()
@@ -19,9 +19,9 @@ class AsrEngine:
     hypothesisTime = float()
     resultTime = float()
 
-    def __init__(self, transcriptionTimeout:int, keywords:str=str()):
+    def __init__(self, transcriptionTimeout:float, keywords:str=str()):
         self.keywords = keywords
-        self.transcriptionTimeout = transcriptionTimeout if transcriptionTimeout >= 3 else 3
+        self.transcriptionTimeout = transcriptionTimeout if transcriptionTimeout >= 1 else 1
 
     def _processHypothesis(self, text:str):
         if sys.getsizeof(self.hypothesis) >= 1024 * 1024 * 10: # 10 MB
@@ -49,12 +49,12 @@ class AsrEngine:
             "context": self.keywords,
             "context_max_terms": 150,     # Limit context parsing to keep the model focused
             "keyterm_boost": 3.0,          # Boost specific phrases (default 2.0, max 4.0)
-            "vad_threshold": 0.01,          # Raise from 0.2 to discard breathing or fan hum
+            "vad_threshold": 0.2,          # Raise from 0.2 to discard breathing or fan hum
             "max_tokens_per_second": 6.5,  # Ideal for structural/Latin languages like English
             "use_speculative_decoding": True
         })
         .models_from(transcriptionModel)
-        .update_interval(1)
+        .update_interval(1.2)
         .language("en")
         .on_text(lambda text: self._processHypothesis(text))
         .on_line(lambda line: self._processLine(line.text))
