@@ -7,7 +7,7 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.6.5
+📌 Latest Version: v7.6.6
 
 * 🆕 Eva stays activated on **'Listen'** and stops on **'Stop Listening'**
 * 🆕 Added a new **on-device speech recognition** engine: **Moonshine 🌕**
@@ -16,6 +16,7 @@
 * 🆕 Removed unnecessary **STT settings**
 * 🐞 Fixed command customisation bugs
 * 🐞 Fixed **GPT** API bugs
+* 🐞 Fixed latency and synthesis bugs
 
 
 <img width="602" height="463" alt="Screenshot 2026-09-21 192442" src="https://github.com/user-attachments/assets/0d51860d-62c2-4b84-9918-6887a9edea9b" />
