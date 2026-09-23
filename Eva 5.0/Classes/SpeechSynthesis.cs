@@ -63,7 +63,7 @@ namespace Eva_5._0
                     synthesiser.BeginErrorReadLine();
 
                     DateTime start = DateTime.UtcNow;
-                    while ((DateTime.UtcNow - start).TotalMilliseconds < 10000)
+                    while ((DateTime.UtcNow - start).TotalMinutes < 5)
                     {
                         if (engineLoaded)
                         {
@@ -154,7 +154,7 @@ namespace Eva_5._0
                         await synthesiser.StandardInput.WriteLineAsync(synthesis_builder.ToString());
 
                         DateTime time = DateTime.UtcNow;
-                        while ((DateTime.UtcNow - time).TotalMilliseconds < 10000 && processing == StateToInt(State.Processing)) ;
+                        while ((DateTime.UtcNow - time).TotalMinutes < 3 && processing == StateToInt(State.Processing));
                     }
                 }
             }
