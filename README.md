@@ -7,7 +7,7 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.6.6
+📌 Latest Version: v7.6.7
 
 * 🆕 Eva stays activated on **'Listen'** and stops on **'Stop Listening'**
 * 🆕 Added a new **on-device speech recognition** engine: **Moonshine 🌕**
