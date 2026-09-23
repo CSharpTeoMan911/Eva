@@ -74,7 +74,7 @@ namespace Eva_5._0
                 {
                     Sentence_StringBuilder.Append(c);
                 }
-                else if (c != ',' && c != '.' && c != '-')
+                else if (c != ',' && c != '.' && c != '-' && c != '"')
                 {
                     Sentence_StringBuilder.Append(c);
                 }
