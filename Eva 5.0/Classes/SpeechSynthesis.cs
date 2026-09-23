@@ -154,7 +154,7 @@ namespace Eva_5._0
                         await synthesiser.StandardInput.WriteLineAsync(synthesis_builder.ToString());
 
                         DateTime time = DateTime.UtcNow;
-                        while ((DateTime.UtcNow - time).TotalMinutes < 3 && processing == StateToInt(State.Processing));
+                        while ((DateTime.UtcNow - time).TotalMinutes < 5 && processing == StateToInt(State.Processing));
                     }
                 }
             }
