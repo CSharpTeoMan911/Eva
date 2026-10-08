@@ -48,13 +48,13 @@ class AsrEngine:
         .options({
             "context": self.keywords,
             "context_max_terms": 150,     # Limit context parsing to keep the model focused
-            "keyterm_boost": 3.0,          # Boost specific phrases (default 2.0, max 4.0)
+            "keyterm_boost": 4.0,          # Boost specific phrases (default 2.0, max 4.0)
             "vad_threshold": 0.05,          # Raise from 0.05 (5%) to discard breathing or fan hum
-            "max_tokens_per_second": 6.5,  # Ideal for structural/Latin languages like English
+            "decode_incomplete_lines": True,
             "use_speculative_decoding": True
         })
         .models_from(transcriptionModel)
-        .update_interval(1.2)
+        .update_interval(1)
         .language("en")
         .on_text(lambda text: self._processHypothesis(text))
         .on_line(lambda line: self._processLine(line.text))

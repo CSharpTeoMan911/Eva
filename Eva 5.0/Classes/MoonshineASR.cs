@@ -174,22 +174,6 @@ namespace Eva_5._0.Classes
                 enumerator = new MMDeviceEnumerator();
                 tokenSource = new CancellationTokenSource();
 
-                List<string> procs = A_p_l____And____P_r_o_c.commands.A_p_l_Name__And__A_p_l___P_r_o_c_Name.Keys.ToList();
-                List<string> exes = A_p_l____And____P_r_o_c.commands.A_p_l_Name__And__A_p_l___E_x__Name.Keys.ToList();
-                List<string> web_exes = A_p_l____And____P_r_o_c.commands.W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.Keys.ToList();
-
-
-                StringBuilder s = new StringBuilder();
-                string[] context = procs.Concat(exes).Concat(web_exes).ToArray();
-                for (int i = 0; i < context.Length; i++)
-                {
-                    if (i != context.Length)
-                        s.Append(context[i]).Append(',');
-                    else
-                        s.Append(context[i]);
-                }
-
-
 
                 if (engineLoaded)
                     return;

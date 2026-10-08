@@ -1,7 +1,7 @@
 import time
-import sys
 import Asr
-import traceback
+import subprocess
+import sys
 
 class Controller:
     keywords = list()
@@ -77,6 +77,10 @@ Loaded = False
 
 t = time.time()
 while True:
+
+    if subprocess.getoutput('powershell -Command "(Get-Process \'Eva 5.0\' -ErrorAction SilentlyContinue).Id"') == "":
+        sys.exit(0)
+
     if (time.time() - t) >= 1:
         if not Loaded:
             print('[Result: [ loaded ]]', flush=True)

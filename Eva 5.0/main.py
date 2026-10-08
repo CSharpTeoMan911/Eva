@@ -6,6 +6,9 @@ import json
 import time
 import asyncio
 import aiofiles
+import subprocess
+import threading
+import signal
 
 config = sys.argv[1]
 
@@ -137,6 +140,11 @@ async def keyword_spotter(sentence:str):
     except KeyboardInterrupt:
         sys.exit(0)
 
+async def process_checkup():
+    while True:
+        if subprocess.getoutput('powershell -Command "(Get-Process \'Eva 5.0\' -ErrorAction SilentlyContinue).Id"') == "":
+            sys.exit(0)
 
 if __name__ == '__main__':
+    asyncio.create_task(process_checkup())
     asyncio.run(wake_word_engine_operation())
