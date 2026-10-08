@@ -9,6 +9,7 @@
 ## 🔄 Changelog
 📌 Latest Version: v7.6.8
 
+* 🆕 Modified the app to perform with a low latency under high CPU loads
 * 🆕 Eva stays activated on **'Listen'** and stops on **'Stop Listening'**
 * 🆕 Added a new **on-device speech recognition** engine: **Moonshine 🌕**
 * 🆕 Added a new **on-device speech synthesis** engine: **Piper 🪈** 
