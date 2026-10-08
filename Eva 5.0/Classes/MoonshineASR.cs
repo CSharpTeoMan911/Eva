@@ -70,13 +70,12 @@ namespace Eva_5._0.Classes
         {
             dispatcherRunning = true;
 
-            Task.Run(() =>
+            Thread execution_thread = new Thread(() =>
             {
                 while (dispatcherRunning && !tokenSource.IsCancellationRequested)
                 {
                     Interlocked.MemoryBarrier();
                     Interlocked.SpeculationBarrier();
-
                     Func<bool>? task = null;
                     if (engineLoaded && sttEngine != null)
                     {
@@ -86,7 +85,6 @@ namespace Eva_5._0.Classes
                             {
                                 _ = task?.Invoke();
                             }
-
                             ChangeMicVolume(MicState.Active);
                         }
                         else
@@ -96,6 +94,17 @@ namespace Eva_5._0.Classes
                     }
                 }
             });
+
+            // Set the thread as a foreground thread, set the .COM thread resource sharing as self-contained,
+            // and set the thread priority to the highest level. When the thread is set as a high-priority foreground thread,
+            // it will have a higher chance of being scheduled for execution by the operating system, which can help reduce
+            // latency and improve responsiveness, even during high CPU usage.
+            execution_thread.IsBackground = false;
+            execution_thread.SetApartmentState(ApartmentState.STA);
+            execution_thread.Priority = ThreadPriority.Highest;
+            execution_thread.DisableComObjectEagerCleanup();
+
+            execution_thread.Start();
         }
 
         private void TaskScheduler(string text)

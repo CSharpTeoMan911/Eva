@@ -84,7 +84,7 @@ namespace Eva_5._0
             Result = Sentence_StringBuilder.ToString();
             display_recognition_result = Result;
 
-            Debug.WriteLine(Result);
+            //Debug.WriteLine(Result);
 
             if (CommandTest == true)
                 return new Func<bool>(() => { return true; });
