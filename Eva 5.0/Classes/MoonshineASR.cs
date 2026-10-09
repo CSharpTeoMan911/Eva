@@ -221,13 +221,11 @@ namespace Eva_5._0.Classes
                                     if (!string.IsNullOrWhiteSpace(result))
                                     {
                                         lastCommand = DateTime.UtcNow;
-                                        Debug.WriteLine($"Result: {result}");
                                         TaskScheduler(result);
                                     }
                                     else if (!string.IsNullOrWhiteSpace(hypothesis) && string.IsNullOrWhiteSpace(result) && App.stateMachine.chatgpt_mode_enabled == false && App.stateMachine.gptProcess == 0)
                                     {
                                         lastCommand = DateTime.UtcNow;
-                                        Debug.WriteLine($"Hypothesis: {hypothesis}");
                                         TaskScheduler(hypothesis);
                                     }
                                 }
