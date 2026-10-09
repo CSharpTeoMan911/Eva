@@ -28,5 +28,6 @@ namespace Eva_5._0.Classes
         public Wake_Word_Engine wakeWordEngine = new Wake_Word_Engine();
         public Natural_Language_Processing nlp = new Natural_Language_Processing();
         public MoonshineASR moonshineASR = new MoonshineASR();
+        public long gptProcess;
     }
 }

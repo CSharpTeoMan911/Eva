@@ -262,6 +262,11 @@ namespace Eva_5._0
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private async void ChatGPT_API_Interface(string input)
         {
+            Interlocked.MemoryBarrier();
+            Interlocked.SpeculationBarrier();
+
+            Interlocked.Exchange(ref App.stateMachine.gptProcess, 1);
+
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 if (App.ChatGPTResponseWindowOpened == false)
@@ -273,6 +278,8 @@ namespace Eva_5._0
 
             await sound_player.Play_Sound(Sound_Player.Sounds.AppExecutionSoundEffect);
             await App.chatGPT_Response_Window.Update_Conversation(input);
+
+            Interlocked.Exchange(ref App.stateMachine.gptProcess, 0);
         }
 
 

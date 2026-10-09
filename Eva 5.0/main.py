@@ -53,9 +53,9 @@ async def pipe_messaging(message:str):
             pass
 
 
-async def wake_word_engine_operation():
+async def wake_word_engine_operation(shutdown_event: threading.Event):
     try:
-        while True:
+        while not shutdown_event.is_set():
             await wake_word_engine_process()
     except KeyboardInterrupt:
         sys.exit(0)
@@ -140,11 +140,23 @@ async def keyword_spotter(sentence:str):
     except KeyboardInterrupt:
         sys.exit(0)
 
-async def process_checkup():
-    while True:
+def process_checkup(shutdown_event: threading.Event):
+    while not shutdown_event.is_set():
         if subprocess.getoutput('powershell -Command "(Get-Process \'Eva 5.0\' -ErrorAction SilentlyContinue).Id"') == "":
-            sys.exit(0)
+            shutdown_event.set()
+            return
+        shutdown_event.wait(1)
 
 if __name__ == '__main__':
-    asyncio.create_task(process_checkup())
-    asyncio.run(wake_word_engine_operation())
+    shutdown_event = threading.Event()
+    checkup_thread = threading.Thread(
+        target=process_checkup,
+        args=(shutdown_event,),
+        daemon=True,
+    )
+    checkup_thread.start()
+    try:
+        asyncio.run(wake_word_engine_operation(shutdown_event))
+    finally:
+        shutdown_event.set()
+        checkup_thread.join(timeout=1)

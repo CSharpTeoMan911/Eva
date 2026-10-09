@@ -1,9 +1,31 @@
-from moonshine_voice import MicTranscriber
+from moonshine_voice import (
+    LineCompleted,
+    LineTextChanged,
+    MicTranscriber,
+    ModelArch,
+    Transcriber,
+    TranscriptEventListener,
+)
 import time
 import os
 import sys
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+
+class Listener(TranscriptEventListener):
+    def __init__(self, engine: "AsrEngine"):
+        self.engine = engine
+
+    def on_line_started(self, event):
+       self.engine._processHypothesis(event.line.text)
+
+    def on_line_text_changed(self, event: LineTextChanged) -> None:
+        self.engine._processHypothesis(event.line.text)
+
+    def on_line_completed(self, event: LineCompleted) -> None:
+        self.engine._processLine(event.line.text)
+
 
 class AsrEngine:
     keywords = str()
@@ -11,7 +33,6 @@ class AsrEngine:
     transcriptionStarted = False
 
     transcriptionTimeout = float() 
-    mic = MicTranscriber()
 
     hypothesis = str()
     result = str()
@@ -22,6 +43,8 @@ class AsrEngine:
     def __init__(self, transcriptionTimeout:float, keywords:str=str()):
         self.keywords = keywords
         self.transcriptionTimeout = transcriptionTimeout if transcriptionTimeout >= 1 else 1
+        self.transcriber = None
+        self.mic = MicTranscriber()
 
     def _processHypothesis(self, text:str):
         if sys.getsizeof(self.hypothesis) >= 1024 * 1024 * 10: # 10 MB
@@ -43,27 +66,34 @@ class AsrEngine:
 
     def loadEngine(self):
         transcriptionModel = os.path.join(BASE_DIR, 'medium-streaming-en', 'quantized_26_08_21')
+        self.transcriber = Transcriber(
+            model_path=transcriptionModel,
+            model_arch=ModelArch.MEDIUM_STREAMING,
+            update_interval=1,
+            options={
+                "context": self.keywords,
+                "context_max_terms": 150,
+                "keyterm_boost": 4.0,
+                "vad_threshold": 0.05,
+                "decode_incomplete_lines": True,
+                "use_speculative_decoding": True,
+            },
+        )
         self.mic = (
         MicTranscriber()
-        .options({
-            "context": self.keywords,
-            "context_max_terms": 150,     # Limit context parsing to keep the model focused
-            "keyterm_boost": 4.0,          # Boost specific phrases (default 2.0, max 4.0)
-            "vad_threshold": 0.05,          # Raise from 0.05 (5%) to discard breathing or fan hum
-            "decode_incomplete_lines": True,
-            "use_speculative_decoding": True
-        })
-        .models_from(transcriptionModel)
+        .use_transcriber(self.transcriber)
         .update_interval(1)
         .language("en")
-        .on_text(lambda text: self._processHypothesis(text))
-        .on_line(lambda line: self._processLine(line.text))
         )
+        self.mic.add_listener(Listener(self))
         self.mic.load()
         self.engineLoaded = True
 
     def unloadEngine(self):
         self.mic.close()
+        if self.transcriber is not None:
+            self.transcriber.close()
+            self.transcriber = None
         self.engineLoaded = False
 
 
@@ -92,17 +122,18 @@ class AsrEngine:
 
     def getResult(self) -> str:
         if self.engineLoaded is True:
-            val = self.result
-            self.resultTime = self.resultTime if self.resultTime > 0 else time.time()
-            if (time.time() - self.resultTime) >= self.transcriptionTimeout:
+            if self.result and self.resultTime > 0 and (time.time() - self.resultTime) >= self.transcriptionTimeout:
+                val = self.result
                 self.result = str()
-                self.resultTime = time.time()
-            return val
+                self.resultTime = 0
+                return val
+            return str()
         else:
             raise Exception("The ASR Engine is not loaded")
 
     def clearResult(self):
         self.result = str()
+        self.resultTime = 0
 
     def clearHypothesis(self):
         self.hypothesis = str()

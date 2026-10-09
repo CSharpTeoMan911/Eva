@@ -92,18 +92,22 @@ namespace Eva_5._0
 
         private async Task WriteToFile()
         {
-            if (File.Exists(chatsFilePath))
+            try
             {
-                await Ensure_Access_To_The_Settings_File();
-            }
+                if (File.Exists(chatsFilePath))
+                {
+                    await Ensure_Access_To_The_Settings_File();
+                }
 
-            using (FileStream fs = File.Open(chatsFilePath, FileMode.Create))
-            {
-                string json = await JsonSerialisation.JsonSerialiser(chatHistory);
-                byte[] json_binary = Encoding.UTF8.GetBytes(json);
-                await fs.WriteAsync(json_binary, 0, json_binary.Length);
-                await fs.FlushAsync();
+                using (FileStream fs = File.Open(chatsFilePath, FileMode.Create))
+                {
+                    string json = await JsonSerialisation.JsonSerialiser(chatHistory);
+                    byte[] json_binary = Encoding.UTF8.GetBytes(json);
+                    await fs.WriteAsync(json_binary, 0, json_binary.Length);
+                    await fs.FlushAsync();
+                }
             }
+            catch { }
         }
 
         private async Task<string> ReadFile()

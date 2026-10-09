@@ -75,6 +75,8 @@ controller = Controller(keywords=values)
 controller.start()
 Loaded = False
 
+_res, _hyp = str(), str() 
+
 t = time.time()
 while True:
 
@@ -86,13 +88,16 @@ while True:
             print('[Result: [ loaded ]]', flush=True)
             Loaded = True
         else:
-            res = f'[Result: {controller.getResult()}]'
-            hyp = f'[Result: {controller.getHypothesis()}]'
+            res = controller.getResult()
+            hyp = controller.getHypothesis()
 
-            if res is not None:
-                print(res, flush=True)
-            elif hyp is not None:
-                print(hyp, flush=True)
+            if res != _res and res != "":
+                print(f'[Result: {res}]', flush=True)
+                _res = res
+            else:
+                if hyp != _hyp and hyp != "":
+                    print(f'[Hypothesis: {hyp}]', flush=True)
+                    _hyp = hyp
+                    
         t = time.time()
-
 

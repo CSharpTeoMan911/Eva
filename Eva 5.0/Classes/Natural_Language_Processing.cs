@@ -67,7 +67,7 @@ namespace Eva_5._0
         public async Task<Func<bool>> PreProcessing(string Result)
         {
             ClearBuffers();
-            Result = Result.ToLower().Trim();
+            Result = Result.Trim();
             foreach (char c in Result)
             {
                 if (char.IsWhiteSpace(c) || char.IsLetterOrDigit(c))

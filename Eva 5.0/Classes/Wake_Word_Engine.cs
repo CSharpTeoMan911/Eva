@@ -209,12 +209,23 @@ namespace Eva_5._0
 
                 wake_word_process.StartInfo.CreateNoWindow = true;
                 wake_word_process.StartInfo.UseShellExecute = false;
-
+                wake_word_process.StartInfo.RedirectStandardError = true;
                 // 3. Since WorkingDirectory is set to the 'python' folder, main.py is locally relative
                 string settingsPath = await Settings.GetSettingsFilePath();
                 wake_word_process.StartInfo.Arguments = $"main.py \"{settingsPath}\"";
 
+                wake_word_process.ErrorDataReceived += (sender, e) =>
+                {
+                    if (!string.IsNullOrEmpty(e.Data))
+                    {
+                        // Handle the error output from the Python process here
+                        Console.WriteLine($"Python Error: {e.Data}");
+                    }
+                };
+
                 wake_word_process.Start();
+
+                wake_word_process.BeginErrorReadLine();
 
                 wake_word_processes.Enqueue(wake_word_process);
 

@@ -194,6 +194,9 @@ namespace Eva_5._0.Classes
 
 
                 string res_pattern = "[Result: ";
+                string hyp_pattern = "[Hypothesis: ";
+
+                DateTime lastCommand = DateTime.UtcNow;
 
                 sttEngine.OutputDataReceived += async(sender, e) =>
                 {
@@ -202,7 +205,10 @@ namespace Eva_5._0.Classes
                         if (e.Data != null)
                         {
                             int result_length = e.Data.Length - (res_pattern.Length + 1);
-                            string result = e.Data.IndexOf(res_pattern) == 0 && e.Data[e.Data.Length - 1] == ']' ? e.Data.Substring(res_pattern.Length, result_length) : String.Empty;
+                            string result = (e.Data.IndexOf(res_pattern) == 0 && e.Data[e.Data.Length - 1] == ']' ? e.Data.Substring(res_pattern.Length, result_length) : String.Empty).ToLower();
+
+                            int hypothesis_length = e.Data.Length - (hyp_pattern.Length + 1);
+                            string hypothesis = (e.Data.IndexOf(hyp_pattern) == 0 && e.Data[e.Data.Length - 1] == ']' ? e.Data.Substring(hyp_pattern.Length, hypothesis_length) : String.Empty).ToLower();
 
                             ChangeMicVolume(MicState.Active);
                             Interlocked.MemoryBarrier();
@@ -210,9 +216,20 @@ namespace Eva_5._0.Classes
 
                             if (engineStarted)
                             {
-                                if (!string.IsNullOrWhiteSpace(result))
+                                if ((DateTime.UtcNow - lastCommand).TotalMilliseconds >= 1000 && App.stateMachine.gptProcess == 0)
                                 {
-                                    TaskScheduler(result);
+                                    if (!string.IsNullOrWhiteSpace(result))
+                                    {
+                                        lastCommand = DateTime.UtcNow;
+                                        Debug.WriteLine($"Result: {result}");
+                                        TaskScheduler(result);
+                                    }
+                                    else if (!string.IsNullOrWhiteSpace(hypothesis) && string.IsNullOrWhiteSpace(result) && App.stateMachine.chatgpt_mode_enabled == false && App.stateMachine.gptProcess == 0)
+                                    {
+                                        lastCommand = DateTime.UtcNow;
+                                        Debug.WriteLine($"Hypothesis: {hypothesis}");
+                                        TaskScheduler(hypothesis);
+                                    }
                                 }
                             }
                         }
