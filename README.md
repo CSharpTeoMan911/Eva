@@ -9,6 +9,7 @@
 ## 🔄 Changelog
 📌 Latest Version: v7.6.8
 
+* 🆕 Improved latency
 * 🆕 Added python subprocess auto-shutdown
 * 🆕 Modified the app to perform with a low latency under high CPU loads
 * 🆕 Eva stays activated on **'Listen'** and stops on **'Stop Listening'**
@@ -20,6 +21,8 @@
 * 🐞 Fixed command customisation bugs
 * 🐞 Fixed **GPT** API bugs
 * 🐞 Fixed latency and synthesis bugs
+* 🐞 Fixed command execution lag caused by speech traffic
+* 🐞 Fixed multi-threading bugs
 
 
 <img width="602" height="463" alt="Screenshot 2026-09-21 192442" src="https://github.com/user-attachments/assets/0d51860d-62c2-4b84-9918-6887a9edea9b" />
