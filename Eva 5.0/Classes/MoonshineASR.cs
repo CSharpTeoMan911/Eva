@@ -16,6 +16,18 @@ namespace Eva_5._0.Classes
 {
     internal class MoonshineASR
     {
+
+        private class Command
+        {
+            public Func<bool> command;
+            public bool isResult;
+
+            public Command(Func<bool> command, bool isResult)
+            {
+                this.command = command;
+                this.isResult = isResult;
+            }
+        }
         private enum MicState
         {
             Active,
@@ -30,7 +42,9 @@ namespace Eva_5._0.Classes
         private bool dispatcherRunning = false;
         private Process? sttEngine;
 
-        private ConcurrentQueue<Func<bool>> tasks = new ConcurrentQueue<Func<bool>>();
+        private bool hypothesysExecuted = false;
+
+        private ConcurrentQueue<Command> tasks = new ConcurrentQueue<Command>();
 
         public MoonshineASR()
         {
@@ -44,7 +58,7 @@ namespace Eva_5._0.Classes
             {
                 if (enumerator != null)
                 {
-                    MMDevice device = enumerator.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Communications);
+                    MMDevice? device = enumerator?.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Communications);
 
                     if (device != null)
                     {
@@ -76,14 +90,22 @@ namespace Eva_5._0.Classes
                 {
                     Interlocked.MemoryBarrier();
                     Interlocked.SpeculationBarrier();
-                    Func<bool>? task = null;
+                    Command command = null;
                     if (engineLoaded && sttEngine != null)
                     {
                         if (SpeechSynthesis.GetState() == SpeechSynthesis.State.Free)
                         {
-                            if (tasks.TryDequeue(out task))
+                            if (tasks.TryDequeue(out command))
                             {
-                                _ = task?.Invoke();
+                                if(command != null)
+                                {
+                                    if (!command.isResult || !hypothesysExecuted)
+                                    {
+                                        _ = command.command.Invoke();
+                                    }
+
+                                    hypothesysExecuted = !command.isResult;
+                                }
                             }
                             ChangeMicVolume(MicState.Active);
                         }
@@ -107,7 +129,7 @@ namespace Eva_5._0.Classes
             execution_thread.Start();
         }
 
-        private void TaskScheduler(string text)
+        private void TaskScheduler(string text, bool isResult)
         {
             Task.Run(async() =>
             {
@@ -148,7 +170,7 @@ namespace Eva_5._0.Classes
                                 {
                                     initialised = true;
                                     time = DateTime.UtcNow;
-                                    tasks.Enqueue(result);
+                                    tasks.Enqueue(new Command(result, isResult));
                                 }
                                 return;
                             }
@@ -197,6 +219,7 @@ namespace Eva_5._0.Classes
                 string hyp_pattern = "[Hypothesis: ";
 
                 DateTime lastCommand = DateTime.UtcNow;
+                bool resultProcessedSinceHypothesis = false;
 
                 sttEngine.OutputDataReceived += async(sender, e) =>
                 {
@@ -220,13 +243,20 @@ namespace Eva_5._0.Classes
                                 {
                                     if (!string.IsNullOrWhiteSpace(result))
                                     {
-                                        lastCommand = DateTime.UtcNow;
-                                        TaskScheduler(result);
+                                        if (!resultProcessedSinceHypothesis)
+                                        {
+                                            resultProcessedSinceHypothesis = true;
+                                            Debug.WriteLine($"Result: {result}");
+                                            lastCommand = DateTime.UtcNow;
+                                            TaskScheduler(result, true);
+                                        }
                                     }
-                                    else if (!string.IsNullOrWhiteSpace(hypothesis) && string.IsNullOrWhiteSpace(result) && App.stateMachine.chatgpt_mode_enabled == false && App.stateMachine.gptProcess == 0)
+                                    else if (!string.IsNullOrWhiteSpace(hypothesis) && App.stateMachine.chatgpt_mode_enabled == false)
                                     {
+                                        resultProcessedSinceHypothesis = false;
+                                        Debug.WriteLine($"Hypothesis: {hypothesis}");
                                         lastCommand = DateTime.UtcNow;
-                                        TaskScheduler(hypothesis);
+                                        TaskScheduler(hypothesis, false);
                                     }
                                 }
                             }

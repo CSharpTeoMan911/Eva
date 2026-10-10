@@ -70,11 +70,13 @@ namespace Eva_5._0
             Result = Result.Trim();
             foreach (char c in Result)
             {
+                Result = Result.Replace('-', ' ');
+
                 if (char.IsWhiteSpace(c) || char.IsLetterOrDigit(c))
                 {
                     Sentence_StringBuilder.Append(c);
                 }
-                else if (c != ',' && c != '.' && c != '-' && c != '"')
+                else if (c != ',' && c != '.' && c != '"')
                 {
                     Sentence_StringBuilder.Append(c);
                 }

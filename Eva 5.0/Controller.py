@@ -37,10 +37,28 @@ class Controller:
         return val
 
     def getHypothesis(self) -> str:
-        h = self.engine.getHypothesis()
-        val = h if self.hypothesis != h else str()
+        h = str(self.engine.getHypothesis()).strip()
+
+        if not h:
+            return str()
+
+        if not self.hypothesis:
+            self.hypothesis = h
+            return h
+
+        if h == self.hypothesis:
+            return str()
+
+        prev_words = self.hypothesis.split()
+        curr_words = h.split()
+
+        i = 0
+        while i < len(prev_words) and i < len(curr_words) and prev_words[i] == curr_words[i]:
+            i += 1
+
+        delta = ' '.join(curr_words[i:]).strip()
         self.hypothesis = h
-        return val
+        return delta
     
     def clearResult(self):
         self.engine.clearResult()
@@ -75,8 +93,6 @@ controller = Controller(keywords=values)
 controller.start()
 Loaded = False
 
-_res, _hyp = str(), str() 
-
 t = time.time()
 while True:
 
@@ -91,13 +107,10 @@ while True:
             res = controller.getResult()
             hyp = controller.getHypothesis()
 
-            if res != _res and res != "":
+            if res != "":
                 print(f'[Result: {res}]', flush=True)
-                _res = res
-            else:
-                if hyp != _hyp and hyp != "":
-                    print(f'[Hypothesis: {hyp}]', flush=True)
-                    _hyp = hyp
+            elif hyp != "":
+                print(f'[Hypothesis: {hyp}]', flush=True)
                     
         t = time.time()
 
