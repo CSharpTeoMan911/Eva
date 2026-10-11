@@ -59,7 +59,7 @@ https://github.com/user-attachments/assets/9a505217-1986-43de-b319-c435accd0f75
 
 * 🤖🧠 [Speech recognition model](https://alphacephei.com/vosk/models)
 
-* 🖥️🎙️ [Granite-Speech🪨 STT Engine]([https://github.com/moonshine-ai/moonshine](https://huggingface.co/superflow-hq/granite-speech-5.0-470m-turboctc-nc-Q8_0-GGUF/blob/main/granite-speech-5.0-470m-turboctc-nc-q8_0.gguf))
+* 🖥️🎙️ [Granite-Speech🪨 STT Engine](https://huggingface.co/superflow-hq/granite-speech-5.0-470m-turboctc-nc-Q8_0-GGUF/blob/main/granite-speech-5.0-470m-turboctc-nc-q8_0.gguf)
 
 * 🖥️🎙️ [Piper🪈 TTS Engine](https://github.com/OHF-voice/piper1-gpl)
 
