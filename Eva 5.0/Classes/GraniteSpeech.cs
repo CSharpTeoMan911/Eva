@@ -193,7 +193,10 @@ namespace Eva_5._0.Classes
                 sttEngine.StartInfo.RedirectStandardOutput = true;
                 sttEngine.StartInfo.RedirectStandardError = true;
                 sttEngine.StartInfo.RedirectStandardInput = false;
-
+                sttEngine.ErrorDataReceived += ((obj, e) =>
+                {
+                    Debug.WriteLine(e.Data);
+                });
                 sttEngine.Exited += SttEngine_Exited;
                 sttEngine.EnableRaisingEvents = true;
 
@@ -236,6 +239,7 @@ namespace Eva_5._0.Classes
 
                 sttEngine.Start();
                 sttEngine.BeginOutputReadLine();
+                sttEngine.BeginErrorReadLine();
 
                 engineStarted = true;
             }
