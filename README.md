@@ -7,14 +7,15 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.6.8
+📌 Latest Version: v7.7.3
 
 * 🆕 Improved latency
+* 🆕 Added a new **on-device speech recognition** engine: 🪨 Granite-Speech
+* 🆕 Added a new **on-device speech synthesis** engine: **Piper 🪈** 
+* 🆕 Added multi-threaded, thread-safe, speech synthesiser control mechanism
 * 🆕 Added python subprocess auto-shutdown
 * 🆕 Modified the app to perform with a low latency under high CPU loads
 * 🆕 Eva stays activated on **'Listen'** and stops on **'Stop Listening'**
-* 🆕 Added a new **on-device speech recognition** engine: **Moonshine 🌕**
-* 🆕 Added a new **on-device speech synthesis** engine: **Piper 🪈** 
 * 🆕 Removed **recognition timeouts**. Commands can now have **an indefinite duration**.
 * 🆕 Removed unnecessary **STT settings**
 * 🆕 Added ASR result character to be removed
