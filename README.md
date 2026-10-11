@@ -53,13 +53,13 @@ https://github.com/user-attachments/assets/9a505217-1986-43de-b319-c435accd0f75
 <br> 
 
 ## 💻 Technologies
-* The Eva's core technologies are the **Vosk** in-proc speech recognition engine, the **Moonshine** in-proc speech recognition engine, the **.NET Framework**, **Windows Presentation Foundation** (**WPF**), and **Python**. 
+* The Eva's core technologies are the **Vosk** in-proc speech recognition engine, the **Granite-Speech** in-proc speech recognition engine, the **.NET Framework**, **Windows Presentation Foundation** (**WPF**), and **Python**. 
 
 * 🖥️🎙️ [Vosk Speech Recognition Engine](https://github.com/alphacep/vosk-api) 
 
 * 🤖🧠 [Speech recognition model](https://alphacephei.com/vosk/models)
 
-* 🖥️🎙️ [Moonshine🌕 STT Engine](https://github.com/moonshine-ai/moonshine)
+* 🖥️🎙️ [Granite-Speech🪨 STT Engine]([https://github.com/moonshine-ai/moonshine](https://huggingface.co/superflow-hq/granite-speech-5.0-470m-turboctc-nc-Q8_0-GGUF/blob/main/granite-speech-5.0-470m-turboctc-nc-q8_0.gguf))
 
 * 🖥️🎙️ [Piper🪈 TTS Engine](https://github.com/OHF-voice/piper1-gpl)
 
@@ -73,8 +73,8 @@ ___________________________________________________
 
 <br>
 
-* The Vosk speech recogniser is listening permanently, if the listening function is activated. Once it recognises the word "Listen" or "Hey listen", the **Moonshine🌕 ASR** engine will be started each recognised sentence from that point will be treated as a potential command.
-* **Moonshine🌕** is an on-device highly accurate, lightweight, and fast **Speech-To-Text engine**. Its activation is controlled by **Vosk** because it is more light-weight than **Moonshine🌕**, thus the CPU usage increases only when needed. 
+* The Vosk speech recogniser is listening permanently, if the listening function is activated. Once it recognises the word "Listen" or "Hey listen", the **Granite-Speech🪨 ASR** engine will be started each recognised sentence from that point will be treated as a potential command.
+* **Granite-Speech🪨** is an on-device highly accurate, lightweight, and fast **Speech-To-Text engine**. Its activation is controlled by **Vosk** because it is more light-weight than **Granite-Speech🪨**, thus the CPU usage increases only when needed. 
 
 <br>
 <br>
@@ -82,10 +82,10 @@ ___________________________________________________
 ### 🧠💬📖⚙️ Natural Language Understanding (NLU) in Eva
 ____________________________________________________________
 
-Eva utilizes Natural Language Understanding (NLU) in two key ways: speech recognition and contextual command/content extraction. These two components are powered by **Vosk** and **Moonshine🌕** speech recognition engines, and a custom-built command and content extraction engine that I developed.
+Eva utilizes Natural Language Understanding (NLU) in two key ways: speech recognition and contextual command/content extraction. These two components are powered by **Vosk** and **Granite-Speech🪨** speech recognition engines, and a custom-built command and content extraction engine that I developed.
 
 1) **Speech Recognition with NLU:**
-* Both **Vosk** and **Moonshine🌕** use NLU to convert spoken words from any audio medium into text. These engines are responsible for interpreting and transcribing the user's voice.
+* Both **Vosk** and **Granite-Speech🪨** use NLU to convert spoken words from any audio medium into text. These engines are responsible for interpreting and transcribing the user's voice.
 
 3) **Contextual Command & Content Extraction:**
 * Eva understands commands and extracts relevant content based on user input. This is done by processing commands through the following steps:
