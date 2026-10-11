@@ -606,9 +606,25 @@ namespace Eva_5._0
                     this.SpeechRecognitionButton.IsEnabled = false;
                 }, System.Windows.Threading.DispatcherPriority.Render);
 
-                SpeechSynthesis.StartSynthesiser();
-                // START THE WAKE WORD ENGINE PROCESS
-                App.stateMachine.wakeWordEngine.Start_The_Wake_Word_Engine(wake_Word_Engine_Event_Handler);
+                if (await Settings.Get_Synthesis_Settings())
+                {
+                    _= Task.Run(() =>
+                    {
+                        DateTime start = DateTime.UtcNow;
+
+                        SpeechSynthesis.StartSynthesiser();
+
+                        while (!SpeechSynthesis.IsLoaded() && (DateTime.UtcNow - start).TotalMilliseconds <= 5000);
+
+                        // START THE WAKE WORD ENGINE PROCESS
+                        App.stateMachine.wakeWordEngine.Start_The_Wake_Word_Engine(wake_Word_Engine_Event_Handler);
+                    });
+                }
+                else
+                {
+                    // START THE WAKE WORD ENGINE PROCESS
+                    App.stateMachine.wakeWordEngine.Start_The_Wake_Word_Engine(wake_Word_Engine_Event_Handler);
+                }
             }
         }
 

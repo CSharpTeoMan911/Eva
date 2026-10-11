@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 
 #nullable enable
 namespace Eva_5._0
@@ -35,6 +36,11 @@ namespace Eva_5._0
         private static bool engineLoaded;
         private static readonly string PythonPath = Path.Combine(Environment.CurrentDirectory, "python", "python.exe");
         private static readonly string PiperPath = Path.Combine(Environment.CurrentDirectory, "python", "PiperController.py");
+
+        public static bool IsLoaded() => engineLoaded;
+
+        public static bool HasExited() => synthesiser == null ? true : synthesiser.HasExited;
+
         public static async void StartSynthesiser()
         {
             Interlocked.MemoryBarrier();
@@ -49,6 +55,7 @@ namespace Eva_5._0
                     synthesiser = new Process();
                     synthesiser.StartInfo.FileName = PythonPath;
                     synthesiser.StartInfo.Arguments = $"\"{PiperPath}\"";
+                    synthesiser.EnableRaisingEvents = true;
                     synthesiser.StartInfo.UseShellExecute = false;
                     synthesiser.StartInfo.RedirectStandardInput = true;
                     synthesiser.StartInfo.RedirectStandardOutput = true;
@@ -79,7 +86,11 @@ namespace Eva_5._0
 
         private static void Synthesiser_Exited(object sender, EventArgs e) => StopSynthesiser();
 
-        private static void Synthesiser_ErrorDataReceived(object sender, DataReceivedEventArgs e) => StopSynthesiser();
+        private static void Synthesiser_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            Debug.WriteLine($"Synthesiser error: {e.Data}");
+            StopSynthesiser();
+        }
 
         public static void StopSynthesiser()
         {
@@ -93,7 +104,7 @@ namespace Eva_5._0
                     engineLoaded = false;
 
                     if(synthesiser != null)
-                        if(synthesiser.HasExited)
+                        if(!synthesiser.HasExited)
                             synthesiser.Kill();
                 }
             }

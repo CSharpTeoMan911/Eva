@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -495,7 +496,7 @@ namespace Eva_5._0
             VoskSensitivityChanged = true;
         }
 
-        private async void SynthesisSoundOn(object sender, RoutedEventArgs e)
+        private void SynthesisSoundOn(object sender, RoutedEventArgs e)
         {
             if (App.SettingsWindowOpen == true)
             {
@@ -503,21 +504,31 @@ namespace Eva_5._0
                 if (Application.Current.Dispatcher.HasShutdownStarted == false)
                 {
 
-                    if (Application.Current.MainWindow != null)
+                    if (Application.Current.MainWindow != null && !SpeechSynthesis.IsLoaded())
                     {
                         Interlocked.MemoryBarrier();
                         Interlocked.SpeculationBarrier();
 
-                        await Settings.Set_Synthesis_Settings(true);
 
-                        if(App.stateMachine.OnOff == 1)
+                        _ = Task.Run(async () =>
+                        {
+                            DateTime start = DateTime.UtcNow;
+
+                            await Settings.Set_Synthesis_Settings(true);
                             SpeechSynthesis.StartSynthesiser();
 
-                        SynthesisSoundOnButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
-                        SynthesisSoundOffButton.Background = new SolidColorBrush(Colors.Transparent);
+                            while (!SpeechSynthesis.IsLoaded() && (DateTime.UtcNow - start).TotalMilliseconds <= 5000);
 
-                        SynthesisMuteButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF1B70C3");
-                        SynthesisSoundButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                            await Application.Current.Dispatcher.InvokeAsync(() =>
+                            {
+                                SynthesisSoundOnButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
+                                SynthesisSoundOffButton.Background = new SolidColorBrush(Colors.Transparent);
+
+                                SynthesisMuteButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF1B70C3");
+                                SynthesisSoundButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                            });
+                            return;
+                        });
                     }
 
                 }
@@ -525,7 +536,7 @@ namespace Eva_5._0
             }
         }
 
-        private async void SynthesisSoundOff(object sender, RoutedEventArgs e)
+        private void SynthesisSoundOff(object sender, RoutedEventArgs e)
         {
             Interlocked.MemoryBarrier();
             Interlocked.SpeculationBarrier();
@@ -536,20 +547,26 @@ namespace Eva_5._0
                 if (Application.Current.Dispatcher.HasShutdownStarted == false)
                 {
 
-                    if (Application.Current.MainWindow != null)
+                    if (Application.Current.MainWindow != null && SpeechSynthesis.IsLoaded())
                     {
+                        _ = Task.Run(async () =>
+                        {
+                            DateTime start = DateTime.UtcNow;
 
-                        await Settings.Set_Synthesis_Settings(false);
-
-                        if (App.stateMachine.OnOff == 1)
+                            await Settings.Set_Synthesis_Settings(false);
                             SpeechSynthesis.StopSynthesiser();
 
-                        SynthesisSoundOffButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
-                        SynthesisSoundOnButton.Background = new SolidColorBrush(Colors.Transparent);
+                            while (SpeechSynthesis.IsLoaded() && (DateTime.UtcNow - start).TotalMilliseconds <= 5000) ;
 
-                        SynthesisSoundButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF1B70C3");
-                        SynthesisMuteButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                            await Application.Current.Dispatcher.InvokeAsync(() =>
+                            {
+                                SynthesisSoundOffButton.Background = (Brush)new BrushConverter().ConvertFromString("#FF081725");
+                                SynthesisSoundOnButton.Background = new SolidColorBrush(Colors.Transparent);
 
+                                SynthesisSoundButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF1B70C3");
+                                SynthesisMuteButtonOffset.Color = (Color)ColorConverter.ConvertFromString("#FF7BBFD8");
+                            });
+                        });
                     }
 
                 }

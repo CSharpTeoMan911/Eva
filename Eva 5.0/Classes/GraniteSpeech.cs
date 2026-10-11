@@ -28,6 +28,8 @@ namespace Eva_5._0.Classes
         private bool dispatcherRunning = false;
         private Process? sttEngine;
 
+        private MicState micState = MicState.Active;
+
 
 
         private ConcurrentQueue<Func<bool>> tasks = new ConcurrentQueue<Func<bool>>();
@@ -51,6 +53,7 @@ namespace Eva_5._0.Classes
                             var session = device.AudioSessionManager.Sessions[i];
                             if (session.GetProcessID == sttEngine?.Id)
                             {
+                                micState = state;
                                 session.SimpleAudioVolume.Mute = state == MicState.Mute;
                             }
                         }
@@ -83,11 +86,14 @@ namespace Eva_5._0.Classes
                                     _ = command.Invoke();
                                 }
                             }
-                            ChangeMicVolume(MicState.Active);
+
+                            if (micState == MicState.Mute)
+                                ChangeMicVolume(MicState.Active);
                         }
                         else
                         {
-                            ChangeMicVolume(MicState.Mute);
+                            if (micState == MicState.Mute)
+                                ChangeMicVolume(MicState.Mute);
                         }
                     }
                 }
