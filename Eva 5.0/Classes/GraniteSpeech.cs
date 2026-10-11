@@ -189,6 +189,7 @@ namespace Eva_5._0.Classes
                 sttEngine.StartInfo.RedirectStandardInput = false;
 
                 sttEngine.Exited += SttEngine_Exited;
+                sttEngine.EnableRaisingEvents = true;
 
 
                 string res_pattern = "[Result: ";
