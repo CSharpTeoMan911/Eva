@@ -126,8 +126,7 @@
     <Compile Include="Classes\ChatHistory.cs" />
     <Compile Include="Classes\Command.cs" />
     <Compile Include="Classes\CommandCharacteristics.cs" />
-    <Compile Include="Classes\MoonshineASR.cs" />
-    <Compile Include="Classes\SpeechClassification.cs" />
+    <Compile Include="Classes\GraniteSpeech.cs" />
     <Compile Include="Windows\ChatGPT_Response_Window.xaml.cs">
       <DependentUpon>ChatGPT_Response_Window.xaml</DependentUpon>
     </Compile>
@@ -239,6 +238,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="granite-speech.py" />
     <None Include="InstructionManual.md" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -312,8 +312,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Asr.py" />
-    <Content Include="Controller.py" />
     <Content Include="main.py" />
     <Content Include="Piper.py" />
     <Content Include="PiperController.py" />

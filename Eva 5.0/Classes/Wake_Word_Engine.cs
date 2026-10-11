@@ -506,7 +506,7 @@ namespace Eva_5._0
                                             if (Interlocked.Read(ref App.stateMachine.Speech_Recogniser_Listening) == 1)
                                             {
                                                 Interlocked.Exchange(ref App.stateMachine.Speech_Recogniser_Listening, 0);
-                                                App.stateMachine.moonshineASR.StopEngine();
+                                                App.stateMachine.graniteSpeech.StopEngine();
                                             }
                                         }
                                         else if (socket_message_value == wake_word)

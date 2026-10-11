@@ -1,6 +1,4 @@
-#nullable enable
-
-using Eva_5._0.Properties;
+﻿using Eva_5._0.Properties;
 using NAudio.CoreAudioApi;
 using System;
 using System.Collections.Concurrent;
@@ -14,25 +12,15 @@ using System.Threading.Tasks;
 
 namespace Eva_5._0.Classes
 {
-    internal class MoonshineASR
+    internal class GraniteSpeech
     {
-
-        private class Command
-        {
-            public Func<bool> command;
-            public bool isResult;
-
-            public Command(Func<bool> command, bool isResult)
-            {
-                this.command = command;
-                this.isResult = isResult;
-            }
-        }
         private enum MicState
         {
             Active,
             Mute
         }
+
+        string lastResult = String.Empty;
 
         private MMDeviceEnumerator? enumerator;
         private CancellationTokenSource tokenSource = new CancellationTokenSource();
@@ -42,21 +30,16 @@ namespace Eva_5._0.Classes
         private bool dispatcherRunning = false;
         private Process? sttEngine;
 
-        private bool hypothesysExecuted = false;
 
-        private ConcurrentQueue<Command> tasks = new ConcurrentQueue<Command>();
 
-        public MoonshineASR()
-        {
-
-        }
+        private ConcurrentQueue<Func<bool>> tasks = new ConcurrentQueue<Func<bool>>();
 
 
         private void ChangeMicVolume(MicState state)
         {
             try
             {
-                if (enumerator != null)
+                if (enumerator != null && engineLoaded)
                 {
                     MMDevice? device = enumerator?.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Communications);
 
@@ -90,21 +73,16 @@ namespace Eva_5._0.Classes
                 {
                     Interlocked.MemoryBarrier();
                     Interlocked.SpeculationBarrier();
-                    Command command = null;
+                    Func<bool> command = null;
                     if (engineLoaded && sttEngine != null)
                     {
                         if (SpeechSynthesis.GetState() == SpeechSynthesis.State.Free)
                         {
                             if (tasks.TryDequeue(out command))
                             {
-                                if(command != null)
+                                if (command != null)
                                 {
-                                    if (!command.isResult || !hypothesysExecuted)
-                                    {
-                                        _ = command.command.Invoke();
-                                    }
-
-                                    hypothesysExecuted = !command.isResult;
+                                    _ = command.Invoke();
                                 }
                             }
                             ChangeMicVolume(MicState.Active);
@@ -131,22 +109,25 @@ namespace Eva_5._0.Classes
 
         private void TaskScheduler(string text, bool isResult)
         {
-            Task.Run(async() =>
+            Task.Run(async () =>
             {
                 DateTime time = DateTime.UtcNow;
                 bool initialised = false;
-
-                string[] words = text.Split(' ');
-                int index = 0;
                 int i = 0;
 
-                while (i < text.Length && index < words.Length && engineStarted && !tokenSource.IsCancellationRequested)
+                string[] words = text.Split(' ');
+
+                while (i < words.Length && engineStarted && !tokenSource.IsCancellationRequested)
                 {
                     Interlocked.MemoryBarrier();
                     Interlocked.SpeculationBarrier();
 
-                    string word = words[index];
-                    string current = text.Substring(i);
+                    string current = String.Empty;
+
+                    for (int j = i; j < words.Length; j++)
+                    {
+                        current += j != words.Length - 1 ? words[j] + " " : words[j] + String.Empty;
+                    }
 
                     if (engineLoaded != true)
                     {
@@ -170,7 +151,7 @@ namespace Eva_5._0.Classes
                                 {
                                     initialised = true;
                                     time = DateTime.UtcNow;
-                                    tasks.Enqueue(new Command(result, isResult));
+                                    tasks.Enqueue(result);
                                 }
                                 return;
                             }
@@ -182,12 +163,10 @@ namespace Eva_5._0.Classes
                         }
                     }
 
-                    i += word.Length + 1;
-                    index++;
+                    i++;
                 }
             });
         }
-
 
         public void StartEngine()
         {
@@ -204,7 +183,7 @@ namespace Eva_5._0.Classes
 
                 sttEngine = new Process();
                 sttEngine.StartInfo.FileName = enginePath;
-                sttEngine.StartInfo.Arguments = $"./python/Controller.py";
+                sttEngine.StartInfo.Arguments = $"./python/granite-speech.py";
                 sttEngine.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 sttEngine.StartInfo.UseShellExecute = false;
                 sttEngine.StartInfo.CreateNoWindow = true;
@@ -216,12 +195,8 @@ namespace Eva_5._0.Classes
 
 
                 string res_pattern = "[Result: ";
-                string hyp_pattern = "[Hypothesis: ";
 
-                DateTime lastCommand = DateTime.UtcNow;
-                bool resultProcessedSinceHypothesis = false;
-
-                sttEngine.OutputDataReceived += async(sender, e) =>
+                sttEngine.OutputDataReceived += async (sender, e) =>
                 {
                     if (!tokenSource.IsCancellationRequested && SpeechSynthesis.GetState() == SpeechSynthesis.State.Free && engineStarted)
                     {
@@ -230,33 +205,32 @@ namespace Eva_5._0.Classes
                             int result_length = e.Data.Length - (res_pattern.Length + 1);
                             string result = (e.Data.IndexOf(res_pattern) == 0 && e.Data[e.Data.Length - 1] == ']' ? e.Data.Substring(res_pattern.Length, result_length) : String.Empty).ToLower();
 
-                            int hypothesis_length = e.Data.Length - (hyp_pattern.Length + 1);
-                            string hypothesis = (e.Data.IndexOf(hyp_pattern) == 0 && e.Data[e.Data.Length - 1] == ']' ? e.Data.Substring(hyp_pattern.Length, hypothesis_length) : String.Empty).ToLower();
-
                             ChangeMicVolume(MicState.Active);
                             Interlocked.MemoryBarrier();
                             Interlocked.SpeculationBarrier();
 
+
                             if (engineStarted)
                             {
-                                if ((DateTime.UtcNow - lastCommand).TotalMilliseconds >= 1000 && App.stateMachine.gptProcess == 0)
+                                if (App.stateMachine.gptProcess == 0)
                                 {
                                     if (!string.IsNullOrWhiteSpace(result))
                                     {
-                                        if (!resultProcessedSinceHypothesis)
-                                        {
-                                            resultProcessedSinceHypothesis = true;
-                                            Debug.WriteLine($"Result: {result}");
-                                            lastCommand = DateTime.UtcNow;
-                                            TaskScheduler(result, true);
-                                        }
-                                    }
-                                    else if (!string.IsNullOrWhiteSpace(hypothesis) && App.stateMachine.chatgpt_mode_enabled == false)
-                                    {
-                                        resultProcessedSinceHypothesis = false;
-                                        Debug.WriteLine($"Hypothesis: {hypothesis}");
-                                        lastCommand = DateTime.UtcNow;
-                                        TaskScheduler(hypothesis, false);
+                                        string currentResult = result;
+                                        int i = string.IsNullOrEmpty(lastResult)
+                                            ? -1
+                                            : currentResult.IndexOf(lastResult, StringComparison.Ordinal);
+
+                                        string diff = i >= 0
+                                            ? currentResult.Substring(i + lastResult.Length)
+                                            : currentResult;
+
+                                        lastResult = currentResult;
+                                        result = diff;
+
+                                        Debug.WriteLine(result);
+
+                                        TaskScheduler(result, true);
                                     }
                                 }
                             }
@@ -283,6 +257,7 @@ namespace Eva_5._0.Classes
                 engineStarted = true;
             }
         }
+
 
         private void SttEngine_Exited(object sender, EventArgs e) => StopEngine();
 

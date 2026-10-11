@@ -217,13 +217,14 @@ namespace Eva_5._0
                                             // AND INITIATE THE ONLINE SPEECH RECOGNITION ENGINE.
                                             if (Speech_Recogniser_Delay_Calculator() == true)
                                             {
-                                                App.stateMachine.moonshineASR.StartEngine();
+                                                App.stateMachine.graniteSpeech.StartEngine();
                                             }
                                         };
                                         Start();
                                     }
                                 }
 
+                                Debug.WriteLine($"App.stateMachine.Speech_Recogniser_Listening: {App.stateMachine.Speech_Recogniser_Listening}");
 
 
                                 if (App.stateMachine.Speech_Recogniser_Listening == 1)
@@ -652,6 +653,8 @@ namespace Eva_5._0
 
                 // LOCK THE VARIABLE ON THE STACK TO BE ACCESSED ONLY BY THE CURRENT THREAD
                 Interlocked.Exchange(ref App.stateMachine.Online_Speech_Recogniser_Disabled, 1);
+
+                Interlocked.Exchange(ref App.stateMachine.Speech_Recogniser_Listening, 0);
 
                 // TEMINATE THE WAKE WORD ENGINE PROCESS
                 App.stateMachine.wakeWordEngine.Stop_The_Wake_Word_Engine();
