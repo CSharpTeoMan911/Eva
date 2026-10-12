@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-
+#nullable enable
 namespace Eva_5._0.Classes
 {
     internal class GraniteSpeech
@@ -39,22 +39,25 @@ namespace Eva_5._0.Classes
         {
             try
             {
-                if (enumerator != null && engineLoaded)
+                if (sttEngine != null)
                 {
-                    MMDevice? device = enumerator?.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Communications);
-
-                    if (device != null)
+                    if (enumerator != null && engineLoaded && !sttEngine.HasExited)
                     {
-                        AudioSessionManager sessionManager = device.AudioSessionManager;
-                        AudioSessionControl sessions = sessionManager.AudioSessionControl;
+                        MMDevice? device = enumerator?.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Communications);
 
-                        for (int i = 0; i < device.AudioSessionManager.Sessions.Count; i++)
+                        if (device != null)
                         {
-                            var session = device.AudioSessionManager.Sessions[i];
-                            if (session.GetProcessID == sttEngine?.Id)
+                            AudioSessionManager sessionManager = device.AudioSessionManager;
+                            AudioSessionControl sessions = sessionManager.AudioSessionControl;
+
+                            for (int i = 0; i < device.AudioSessionManager.Sessions.Count; i++)
                             {
-                                micState = state;
-                                session.SimpleAudioVolume.Mute = state == MicState.Mute;
+                                var session = device.AudioSessionManager.Sessions[i];
+                                if (session.GetProcessID == sttEngine?.Id)
+                                {
+                                    micState = state;
+                                    session.SimpleAudioVolume.Mute = state == MicState.Mute;
+                                }
                             }
                         }
                     }
@@ -74,17 +77,14 @@ namespace Eva_5._0.Classes
                 {
                     Interlocked.MemoryBarrier();
                     Interlocked.SpeculationBarrier();
-                    Func<bool> command = null;
+                    Func<bool>? command = null;
                     if (engineLoaded && sttEngine != null)
                     {
                         if (SpeechSynthesis.GetState() == SpeechSynthesis.State.Free)
                         {
                             if (tasks.TryDequeue(out command))
                             {
-                                if (command != null)
-                                {
-                                    _ = command.Invoke();
-                                }
+                                _ = command?.Invoke();
                             }
 
                             if (micState == MicState.Mute)
@@ -104,18 +104,15 @@ namespace Eva_5._0.Classes
             // it will have a higher chance of being scheduled for execution by the operating system, which can help reduce
             // latency and improve responsiveness, even during high CPU usage.
             execution_thread.IsBackground = false;
-            execution_thread.SetApartmentState(ApartmentState.STA);
+            execution_thread.SetApartmentState(ApartmentState.MTA);
             execution_thread.Priority = ThreadPriority.Highest;
-            execution_thread.DisableComObjectEagerCleanup();
-
             execution_thread.Start();
         }
 
-        private void TaskScheduler(string text, bool isResult)
+        private void TaskScheduler(string text)
         {
             Task.Run(async () =>
             {
-                DateTime time = DateTime.UtcNow;
                 bool initialised = false;
                 int i = 0;
 
@@ -150,10 +147,9 @@ namespace Eva_5._0.Classes
 
                             if (result != null)
                             {
-                                if (!initialised || (DateTime.UtcNow - time).TotalMilliseconds > 100 && SpeechSynthesis.GetState() == SpeechSynthesis.State.Free)
+                                if (!initialised || SpeechSynthesis.GetState() == SpeechSynthesis.State.Free)
                                 {
                                     initialised = true;
-                                    time = DateTime.UtcNow;
                                     tasks.Enqueue(result);
                                 }
                                 return;
@@ -224,8 +220,7 @@ namespace Eva_5._0.Classes
                                     if (!string.IsNullOrWhiteSpace(result))
                                     {
                                         Debug.WriteLine(result);
-
-                                        TaskScheduler(result, true);
+                                        TaskScheduler(result);
                                     }
                                 }
                             }
