@@ -46,7 +46,7 @@
 <br>
 
 ## About ❓
-* Eva is an A.I. assistant that has the purpose of helping users multi-task. It also has the use of helping people with mental and phisical disabilities. All the commands to be executed are given to Eva through voice commmands.
+* Eva is an A.I. assistant that has the purpose of helping users multi-task. It also has the use of helping people with mental and phisical disabilities. All the commands to be executed are given to Eva through voice commmands. **Avoid using aggressive noise cancelling methods as it may chop the audio and degrade the recognition quality.**
 
 
 
