@@ -11,6 +11,52 @@ import sounddevice as sd
 import transcribe_cpp
 
 
+
+
+
+##################################################################################################################
+#                                                                                                                #
+#  utterance = queue(max_num_frames)                                                                             #
+#  pre_roll = []                                                                                                 #
+#                                                                                                                #
+##################################################################################################################
+#                                                                                                                #
+#  Audio --> is_speech |---> no : append to the pre_roll buffer append if user is not speaking, if user          #
+#                      |          speaks the current utterance becomes the accumulated pre_roll buffer           #                   #
+#                      |                                                                                         #
+#                      |---> yes : if user not speaking submit the number of speech frames as well               #
+#                                  as the utterance buffer to be transcribed and set the num of                  #
+#                                  silence frames to 0, else set the number of silence frames                    #
+#                                  to 0 and increment the number of speech frames                                #
+#                                                                                                                #
+##################################################################################################################
+
+
+'''
+The audio is held in a buffer named pre_roll, this buffer is capturing the noise including 
+silence and it has a max length. When speech is detected, what is accumulated in the 
+pre_roll buffer is added added in the buffer that holds speech and the speech is 
+accumulated there too as well as trailling noise. This is done to prevent extra 
+work for the recogniser that can be done on silence, thus increasing latency 
+dramatically, and also to prevent audio clipping, meaning that words can be 
+'chewed' up by ignoring surrounding sound that contributes to the 
+recogniser's accuracy.  
+'''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # ------------------------------------------------------------
 # Configuration
 # ------------------------------------------------------------
@@ -18,7 +64,7 @@ import transcribe_cpp
 MODEL_PATH = Path(
     os.path.join(
         os.getcwd(),
-        "python",
+        #"python",
         "granite-speech-5.0-470m-turboctc-gguf",
         "granite-speech-5.0-470m-turboctc-Q8_0.gguf",
     )
@@ -29,13 +75,13 @@ BACKEND = "auto"
 SAMPLE_RATE = 16000
 CHANNELS = 1
 
-FRAME_MS = 10
+FRAME_MS = 50
 FRAME_SAMPLES = SAMPLE_RATE * FRAME_MS // 1000
 
-SPEECH_THRESHOLD = 0.005
+SPEECH_THRESHOLD = 0.001
 
-END_SILENCE_MS = 900
-MIN_SPEECH_MS = 100
+END_SILENCE_MS = 1000
+MIN_SPEECH_MS = 1
 PRE_ROLL_MS = 1000
 
 
