@@ -143,7 +143,7 @@ namespace Eva_5._0.Classes
                     {
                         if (App.stateMachine.Speech_Recogniser_Listening == 1)
                         {
-                            Func<bool> result = await App.stateMachine.nlp.PreProcessing(current);
+                            Func<bool> result = await App.stateMachine.nlu.PreProcessing(current);
 
                             if (result != null)
                             {

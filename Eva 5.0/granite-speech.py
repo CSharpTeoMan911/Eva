@@ -3,15 +3,32 @@ import os
 import queue
 import threading
 from collections import deque
+from contextlib import contextmanager
 from pathlib import Path
 import subprocess
 
 import numpy as np
-import sounddevice as sd
+import pyaudio
 import transcribe_cpp
 
 
+#-----------------------------------------------------------
+#           AUDIO BUFFERING ARCHITECTURE
+#-----------------------------------------------------------
 
+
+################################################################################################################
+#                                                                                                              #
+#  [pre_roll] --> contains a maximum of 1000ms of speech. It is used to store audio before speech is detected  #
+#                                                                                                              #
+#  [utterance] --> [ [ pre_roll ] + [ speech_audio ] + [non_speech_audio] ] --> it is using the 'pre_roll'     #
+#                                                                               buffer as well as well as      #
+#                                                                               the speech audio and 1000 MS   #
+#                                                                               of non-speech audio. This is   #
+#                                                                               done to prevent audio          #
+#                                                                               clipping.                      #
+#                                                                                                              #
+################################################################################################################
 
 
 ##################################################################################################################
@@ -32,26 +49,6 @@ import transcribe_cpp
 ##################################################################################################################
 
 
-'''
-The audio is held in a buffer named pre_roll, this buffer is capturing the noise including 
-silence and it has a max length. When speech is detected, what is accumulated in the 
-pre_roll buffer is added added in the buffer that holds speech and the speech is 
-accumulated there too as well as trailling noise. This is done to prevent extra 
-work for the recogniser that can be done on silence, thus increasing latency 
-dramatically, and also to prevent audio clipping, meaning that words can be 
-'chewed' up by ignoring surrounding sound that contributes to the 
-recogniser's accuracy.  
-'''
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -66,7 +63,7 @@ MODEL_PATH = Path(
         os.getcwd(),
         "python",
         "granite-speech-5.0-470m-turboctc-gguf",
-        "granite-speech-5.0-470m-turboctc-Q8_0.gguf",
+        "granite-speech-5.0-470m-turboctc-nc-F16.gguf",
     )
 )
 
@@ -75,10 +72,10 @@ BACKEND = "auto"
 SAMPLE_RATE = 16000
 CHANNELS = 1
 
-FRAME_MS = 50
+FRAME_MS = 10
 FRAME_SAMPLES = SAMPLE_RATE * FRAME_MS // 1000
 
-SPEECH_THRESHOLD = 0.001
+SPEECH_THRESHOLD = 0.005
 
 END_SILENCE_MS = 1000
 MIN_SPEECH_MS = 1
@@ -108,8 +105,42 @@ asr_queue = queue.Queue()
 # Microphone
 # ------------------------------------------------------------
 
-def microphone_callback(indata, frames, time_info, status):
-    audio_queue.put(indata[:, 0].copy())
+def microphone_callback(in_data, frame_count, time_info, status_flags):
+    # PyAudio input-overflow flags are intentionally ignored; keep the stream running.
+    if in_data:
+        samples = np.frombuffer(in_data, dtype=np.float32)
+        if samples.size == frame_count * CHANNELS:
+            frame = samples.reshape(frame_count, CHANNELS)[:, 0].copy()
+            audio_queue.put(frame)
+
+    return (None, pyaudio.paContinue)
+
+
+@contextmanager
+def pyaudio_input_stream(callback):
+    audio = pyaudio.PyAudio()
+    stream = None
+
+    try:
+        stream = audio.open(
+            format=pyaudio.paFloat32,
+            channels=CHANNELS,
+            rate=SAMPLE_RATE,
+            input=True,
+            frames_per_buffer=FRAME_SAMPLES,
+            stream_callback=callback,
+        )
+        yield stream
+    finally:
+        try:
+            if stream is not None:
+                try:
+                    if stream.is_active():
+                        stream.stop_stream()
+                finally:
+                    stream.close()
+        finally:
+            audio.terminate()
 
 
 # ------------------------------------------------------------
@@ -144,17 +175,20 @@ def asr_worker(session):
 # ------------------------------------------------------------
 
 def submit_utterance(utterance, speech_frame_count, minimum_frames):
-    if speech_frame_count < minimum_frames or not utterance:
-        return
+    try:
+        if speech_frame_count < minimum_frames or not utterance:
+            return
 
-    # Preserve every captured frame, including leading and trailing
-    # silence. Do not trim the beginning or end of the audio.
-    audio = np.concatenate(utterance).astype(
-        np.float32,
-        copy=False,
-    )
+        # Preserve every captured frame, including leading and trailing
+        # silence. Do not trim the beginning or end of the audio.
+        audio = np.concatenate(utterance).astype(
+            np.float32,
+            copy=False,
+        )
 
-    asr_queue.put(audio)
+        asr_queue.put(audio)
+    except Exception:
+        pass
 
 
 # ------------------------------------------------------------
@@ -193,13 +227,7 @@ def main():
             print("[Result: [ loaded ]]", flush=True)
 
             try:
-                with sd.InputStream(
-                    samplerate=SAMPLE_RATE,
-                    channels=CHANNELS,
-                    dtype="float32",
-                    blocksize=FRAME_SAMPLES,
-                    callback=microphone_callback,
-                ):
+                with pyaudio_input_stream(microphone_callback):
                     while True:
                         try:
                             frame = audio_queue.get(timeout=0.03)
@@ -244,7 +272,7 @@ def main():
                                 speech_frame_count = 0
                                 pre_roll.clear()
 
-            except KeyboardInterrupt:
+            except Exception:
                 pass
 
             finally:

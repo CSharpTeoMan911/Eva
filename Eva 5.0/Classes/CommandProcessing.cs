@@ -1,50 +1,14 @@
-﻿using System;
-using System.Diagnostics;
+﻿using Eva_5._0.Properties;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
-namespace Eva_5._0
+namespace Eva_5._0.Classes
 {
-
-    /////////////////////////////////////////////////////////////////////////////
-    ///                                                                       ///
-    ///                   PRODUCT: EVA A.I. ASSISTANT                         ///
-    ///                                                                       ///
-    ///                   AUTHOR: TEODOR MIHAIL                               ///
-    ///                                                                       ///
-    ///                                                                       ///
-    /// ANY UNAUTHORISED TRADEMARK USE OF THIS SOFTWARE IS PUNISHABLE BY LAW  ///
-    ///                                                                       ///
-    /// THE AUTHOR OF THIS SOFTWARE DOES NOT LET ANY PEOPLE PATENT OR USE     ///
-    /// THIS PRODUCT'S TRADEMARK.                                             ///
-    ///                                                                       ///
-    /// DO NOT REMOVE THIS FILE HEADER                                        ///
-    ///                                                                       ///
-    /////////////////////////////////////////////////////////////////////////////
-
-
-
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////
-    //                                                                                                  //
-    //       CONTEXTUAL NATURAL LANGUAGE PROCESSING ENGINE ( NATURAL LANGUAGE UNDERSTANDING ENGINE )    //
-    //                                                                                                  //
-    //////////////////////////////////////////////////////////////////////////////////////////////////////
-    //                                                                                                  //
-    //          TIME COMPLEXITIES:                                                                      //
-    //                                                                                                  //
-    //          WORST: O(N)                                                                             //
-    //                                                                                                  //
-    //          BEST: O (N - (ci + 1))     ===>  "ci = current index of the sentence where          //
-    //                                          did not match with any command patern"                  //
-    //                                                                                                  //
-    //                                                                                                  //
-    //////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    internal class Natural_Language_Processing : A_p_l____And____P_r_o_c
+    internal class CommandProcessing:A_p_l____And____P_r_o_c
     {
         private StringBuilder Sentence_StringBuilder = new StringBuilder();
         private StringBuilder Application_StringBuilder = new StringBuilder();
@@ -82,7 +46,7 @@ namespace Eva_5._0
                 }
             }
 
-       
+
             Result = Sentence_StringBuilder.ToString();
             display_recognition_result = Result;
 
@@ -126,21 +90,21 @@ namespace Eva_5._0
                 App.stateMachine.chatgpt_mode_enabled = true;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTActivationSoundEffect);
                 ClearBuffers();
-                return new Func<bool>(() => { return true; });;
+                return new Func<bool>(() => { return true; }); ;
             }
             else if (Result == "deactivate gpt mode")
             {
                 App.stateMachine.chatgpt_mode_enabled = false;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTDeactivationSoundEffect);
                 ClearBuffers();
-                return new Func<bool>(() => { return true; });;
+                return new Func<bool>(() => { return true; }); ;
             }
             else if (Result == "disable gpt mode")
             {
                 App.stateMachine.chatgpt_mode_enabled = false;
                 await sound_player.Play_Sound(Properties.Sound_Player.Sounds.ChatGPTDeactivationSoundEffect);
                 ClearBuffers();
-                return new Func<bool>(() => { return true; });;
+                return new Func<bool>(() => { return true; }); ;
             }
 
             if (App.stateMachine.chatgpt_mode_enabled == true)
@@ -152,79 +116,31 @@ namespace Eva_5._0
             }
             else
             {
-                if (Result.IndexOf("please open ") == 0)
+                if (Result.IndexOf("open ") == 0)
                 {
                     return new Func<bool>(() => {
-                        PostProcessing("please open [Application]", Result);
+                        PostProcessing("open [Application]", Result);
                         return true;
                     });
                 }
-                else if (Result.IndexOf("open ") == 0)
-                {
-                    if (Result.LastIndexOf(" please") + " please".Length - 1 == Result.Length - 1)
-                    {
-                        return new Func<bool>(() => {
-                            PostProcessing("open [Application] please", Result);
-                            return true;
-                        });
-                    }
-                    else if (Result.LastIndexOf(" now") + " now".Length - 1 == Result.Length - 1)
-                    {
-                        return new Func<bool>(() => {
-                            PostProcessing("open [Application] now", Result);
-                            return true;
-                        });
-                    }
-                    else
-                    {
-                        return new Func<bool>(() => {
-                            PostProcessing("open [Application]", Result);
-                            return true;
-                        });
-                    }
-                }
-                else if (Result.IndexOf("please close ") == 0)
+                else if (Result.IndexOf("opened ") == 0)
                 {
                     return new Func<bool>(() => {
-                        PostProcessing("please close [Application]", Result);
+                        PostProcessing("opened [Application]", Result);
                         return true;
                     });
                 }
                 else if (Result.IndexOf("close ") == 0)
                 {
-                    if (Result.LastIndexOf(" please") + " please".Length - 1 == Result.Length - 1)
-                    {
-                        return new Func<bool>(() => {
-                            PostProcessing("close [Application] please", Result);
-                            return true;
-                        });
-                    }
-                    else if (Result.LastIndexOf(" now") + " now".Length - 1 == Result.Length - 1)
-                    {
-                        return new Func<bool>(() => {
-                            PostProcessing("close [Application] now", Result);
-                            return true;
-                        });
-                    }
-                    else
-                    {
-                        return new Func<bool>(() => {
-                            PostProcessing("close [Application]", Result);
-                            return true;
-                        });
-                    }
-                }
-                else if (Result.IndexOf("please search on ") == 0)
-                {
                     return new Func<bool>(() => {
-                        PostProcessing("please search on [Web Application Keyword] [Content]", Result);
+                        PostProcessing("close [Application]", Result);
                         return true;
                     });
                 }
-                else if ((Result.IndexOf("please search ") == 0) && (Result.Contains(" on ") == true))
+                else if (Result.IndexOf("closed ") == 0)
                 {
                     return new Func<bool>(() => {
-                        PostProcessing("please search [Content] on [Web Application Keyword]", Result);
+                        PostProcessing("closed [Application]", Result);
                         return true;
                     });
                 }
@@ -251,16 +167,6 @@ namespace Eva_5._0
                             return true;
                         });
                     }
-                    else if (Result.IndexOf(" please") == Result.Length - 7)
-                    {
-                        if (Result.IndexOf(" timer ") == Result.Length - 13)
-                        {
-                            return new Func<bool>(() => {
-                                PostProcessing("set a [Timer Interval] timer please", Result);
-                                return true;
-                            });
-                        }
-                    }
                 }
                 else if (Result.IndexOf("set an ") == 0)
                 {
@@ -268,36 +174,6 @@ namespace Eva_5._0
                     {
                         return new Func<bool>(() => {
                             PostProcessing("set an [Timer Interval] timer", Result);
-                            return true;
-                        });
-                    }
-                    else if (Result.IndexOf(" please") == Result.Length - 7)
-                    {
-                        if (Result.IndexOf(" timer ") == Result.Length - 13)
-                        {
-                            return new Func<bool>(() => {
-                                PostProcessing("set an [Timer Interval] timer please", Result);
-                                return true;
-                            });
-                        }
-                    }
-                }
-                else if (Result.IndexOf("please set a ") == 0)
-                {
-                    if (Result.IndexOf(" timer") == Result.Length - 6)
-                    {
-                        return new Func<bool>(() => {
-                            PostProcessing("please set a [Timer Interval] timer", Result);
-                            return true;
-                        });
-                    }
-                }
-                else if (Result.IndexOf("please set an ") == 0)
-                {
-                    if (Result.IndexOf(" timer") == Result.Length - 6)
-                    {
-                        return new Func<bool>(() => {
-                            PostProcessing("please set an [Timer Interval] timer", Result);
                             return true;
                         });
                     }
@@ -333,26 +209,12 @@ namespace Eva_5._0
                             return true;
                         });
                     }
-                    else if (Result.IndexOf("take a screenshot please") == 0)
-                    {
-                        return new Func<bool>(() => {
-                            App.stateMachine.proc.ProcInitialisation<string>("Screen Capture Process", null, null);
-                            return true;
-                        });
-                    }
-                    else if (Result.IndexOf("please take a screenshot") == 0)
-                    {
-                        return new Func<bool>(() => {
-                            App.stateMachine.proc.ProcInitialisation<string>("Screen Capture Process", null, null);
-                            return true;
-                        });
-                    }
                     else if (Result.IndexOf("screenshot") == 0)
                     {
                         return new Func<bool>(() => {
                             App.stateMachine.proc.ProcInitialisation<string>("Screen Capture Process", null, null);
-                            return true; 
-                        });;
+                            return true;
+                        }); ;
                     }
 
                     //[ END ]
@@ -387,39 +249,6 @@ namespace Eva_5._0
 
             switch (Param)
             {
-                case "please open [Application]":
-                    Application = System_Application_Selector("please open ".Length - 1, Sentence_StringBuilder.ToString());
-                    Application_StringBuilder.Clear();
-
-                    if (Application != String.Empty)
-                    {
-                        App.stateMachine.proc.ProcInitialisation<string>("System Process", Application, "open");
-                        return true;
-                    }
-                    return false;
-
-                case "open [Application] please":
-                    Application = System_Application_Selector("open ".Length - 1, Sentence_StringBuilder.ToString());
-                    Application_StringBuilder.Clear();
-
-                    if (Application != String.Empty)
-                    {
-                        App.stateMachine.proc.ProcInitialisation<string>("System Process", Application, "open");
-                        return true;
-                    }
-                    return false;
-
-                case "open [Application] now":
-                    Application = System_Application_Selector("open ".Length - 1, Sentence_StringBuilder.ToString());
-                    Application_StringBuilder.Clear();
-
-                    if (Application != String.Empty)
-                    {
-                        App.stateMachine.proc.ProcInitialisation<string>("System Process", Application, "open");
-                        return true;
-                    }
-                    return false;
-
                 case "open [Application]":
 
                     Application = System_Application_Selector("open ".Length - 1, Sentence_StringBuilder.ToString());
@@ -428,47 +257,6 @@ namespace Eva_5._0
                     if (Application != String.Empty)
                     {
                         App.stateMachine.proc.ProcInitialisation<string>("System Process", Application, "open");
-                        return true;
-                    }
-                    return false;
-
-
-
-
-                case "please close [Application]":
-                    Application = System_Process_Selector("please close ".Length - 1, Sentence_StringBuilder.ToString());
-
-                    Application_StringBuilder.Clear();
-
-                    if (Application != String.Empty)
-                    {
-                        App.stateMachine.proc.ProcInitialisation<string>("System Process", Application, "close");
-                        return true;
-                    }
-                    return false;
-
-                case "close [Application] please":
-
-                    Application = System_Process_Selector("close ".Length - 1, Sentence_StringBuilder.ToString());
-
-                    Application_StringBuilder.Clear();
-
-                    if (Application != String.Empty)
-                    {
-                        App.stateMachine.proc.ProcInitialisation<string>("System Process", Application, "close");
-                        return true;
-                    }
-                    return false;
-
-                case "close [Application] now":
-
-                    Application = System_Process_Selector("close ".Length - 1, Sentence_StringBuilder.ToString());
-
-                    Application_StringBuilder.Clear();
-
-                    if (Application != String.Empty)
-                    {
-                        App.stateMachine.proc.ProcInitialisation<string>("System Process", Application, "close");
                         return true;
                     }
                     return false;
@@ -487,40 +275,31 @@ namespace Eva_5._0
                     return false;
 
 
+                case "opened [Application]":
 
-
-                case "please search [Content] on [Web Application Keyword]":
-
-                    Application = Web_Application_Selector(Sentence.LastIndexOf(" on ") + " on ".Length - 1, Sentence_StringBuilder.ToString());
-
-                    if (Application != String.Empty)
-                    {
-                        for (int Index = "please search".Length; Index < Sentence.LastIndexOf(" on "); Index++)
-                        {
-                            WebApplicationSearchContent_StringBuilder.Append(Sentence[Index]);
-                        }
-
-                        WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString();
-                        App.stateMachine.proc.ProcInitialisation<string>("Online Process", Application, WebApplicationSearchContent);
-                    }
-                    break;
-
-                case "please search on [Web Application Keyword] [Content]":
-
-                    Application = Web_Application_Selector(Sentence.LastIndexOf(" on ") + " on ".Length - 1, Sentence_StringBuilder.ToString());
+                    Application = System_Application_Selector("opened ".Length - 1, Sentence_StringBuilder.ToString());
+                    Application_StringBuilder.Clear();
 
                     if (Application != String.Empty)
                     {
-                        for (int Index = "please search on ".Length + Application.Length; Index <= Sentence.Length - 1; Index++)
-                        {
-                            WebApplicationSearchContent_StringBuilder.Append(Sentence[Index]);
-                        }
-
-                        WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString().Trim();
-                        App.stateMachine.proc.ProcInitialisation<string>("Online Process", Application, WebApplicationSearchContent);
+                        App.stateMachine.proc.ProcInitialisation<string>("System Process", Application, "open");
                         return true;
                     }
                     return false;
+
+                case "closed [Application]":
+
+                    Application = System_Process_Selector("closed ".Length - 1, Sentence_StringBuilder.ToString());
+
+                    Application_StringBuilder.Clear();
+
+                    if (Application != String.Empty)
+                    {
+                        App.stateMachine.proc.ProcInitialisation<string>("System Process", Application, "close");
+                        return true;
+                    }
+                    return false;
+
 
                 case "search on [Web Application Keyword] [Content]":
 
@@ -586,26 +365,6 @@ namespace Eva_5._0
 
                 case "set an [Timer Interval] timer":
                     Timer_Time_Selector(Sentence, time_interval, "set an ".Length - 1);
-                    App.stateMachine.proc.ProcInitialisation("Timer Process", null, time_interval);
-                    return true;
-
-                case "set a [Timer Interval] timer please":
-                    Timer_Time_Selector(Sentence, time_interval, "set a ".Length - 1);
-                    App.stateMachine.proc.ProcInitialisation("Timer Process", null, time_interval);
-                    return true;
-
-                case "set an [Timer Interval] timer please":
-                    Timer_Time_Selector(Sentence, time_interval, "set an ".Length - 1);
-                    App.stateMachine.proc.ProcInitialisation("Timer Process", null, time_interval);
-                    return true;
-
-                case "please set a [Timer Interval] timer":
-                    Timer_Time_Selector(Sentence, time_interval, "please set a ".Length - 1);
-                    App.stateMachine.proc.ProcInitialisation("Timer Process", null, time_interval);
-                    return true;
-
-                case "please set an [Timer Interval] timer":
-                    Timer_Time_Selector(Sentence, time_interval, "please set an ".Length - 1);
                     App.stateMachine.proc.ProcInitialisation("Timer Process", null, time_interval);
                     return true;
             }
@@ -941,11 +700,10 @@ namespace Eva_5._0
             }
         }
 
-        ~Natural_Language_Processing()
+        ~CommandProcessing()
         {
             System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect(0, GCCollectionMode.Forced, true, true);
         }
-
     }
 }

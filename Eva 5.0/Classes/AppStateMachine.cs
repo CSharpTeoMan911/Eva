@@ -25,7 +25,7 @@ namespace Eva_5._0.Classes
         public long OnOff;
         public Proc proc = new Proc();
         public Wake_Word_Engine wakeWordEngine = new Wake_Word_Engine();
-        public Natural_Language_Processing nlp = new Natural_Language_Processing();
+        public CommandProcessing nlu = new CommandProcessing();
         public GraniteSpeech graniteSpeech = new GraniteSpeech();
         public long gptProcess;
     }
