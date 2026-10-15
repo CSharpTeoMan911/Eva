@@ -22,7 +22,7 @@ import transcribe_cpp
 ##################################################################################################################
 #                                                                                                                #
 #  Audio --> is_speech |---> no : append to the pre_roll buffer append if user is not speaking, if user          #
-#                      |          speaks the current utterance becomes the accumulated pre_roll buffer           #                   #
+#                      |          speaks the current utterance becomes the accumulated pre_roll buffer           #
 #                      |                                                                                         #
 #                      |---> yes : if user not speaking submit the number of speech frames as well               #
 #                                  as the utterance buffer to be transcribed and set the num of                  #
@@ -64,7 +64,7 @@ recogniser's accuracy.
 MODEL_PATH = Path(
     os.path.join(
         os.getcwd(),
-        #"python",
+        "python",
         "granite-speech-5.0-470m-turboctc-gguf",
         "granite-speech-5.0-470m-turboctc-Q8_0.gguf",
     )
