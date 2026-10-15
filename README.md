@@ -7,7 +7,7 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.7.5
+📌 Latest Version: v7.7.6
 
 * 🆕 Improved latency
 * 🆕 Added a new **on-device speech recognition** engine: 🪨 Granite-Speech
