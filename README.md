@@ -7,9 +7,10 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.7.6
+📌 Latest Version: v7.7.7
 
 * 🆕 Improved latency
+* 🆕 Addded **Energy-based RMS** signal-processing algorithm for speech detection
 * 🆕 Added a new **on-device speech recognition** engine: 🪨 Granite-Speech
 * 🆕 Added a new **on-device speech synthesis** engine: **Piper 🪈** 
 * 🐞 Fixed audio clipping issues
