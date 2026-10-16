@@ -253,12 +253,29 @@ def main():
                                 error_logging(e)
                                 continue
 
-                            try:
+                            try:    #################################################
+                                    #               [ RMS FORMULA ]
+                                    #################################################
+                                    #             __________________________
+	                                #            /
+	                                #           /               N
+	                                #          /              -----
+	                                #         /       1       \     
+                                    #        /       ---  *    >    (X)i ^2
+	                                #  _    /         N       /
+	                                #   \  /                  -----
+	                                #    \/                    i=1
+                                    #
+                                    #################################################
+                                
+                                
+                                
                                 # Calculate RMS using every sample.
-                                rms = float(
-                                    np.sqrt(np.mean(np.square(frame)))
-                                )
-
+                                N = len(frame)
+                                _sum = sum([float(n * n) for n in frame])
+                                
+                                rms = float(np.sqrt(float(1/N) * _sum))
+                                
                                 is_speech = rms >= SPEECH_THRESHOLD
 
                                 if not speaking:
