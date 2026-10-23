@@ -7,6 +7,7 @@ from contextlib import contextmanager
 from pathlib import Path
 import subprocess
 import traceback
+from datetime import datetime
 
 import numpy as np
 import pyaudio
@@ -37,9 +38,9 @@ FRAME_SAMPLES = SAMPLE_RATE * FRAME_MS // 1000
 
 SPEECH_THRESHOLD = 0.02
 
-END_SILENCE_MS = 500
+END_SILENCE_MS = 1000
 MIN_SPEECH_MS = 1
-PRE_ROLL_MS = 500
+PRE_ROLL_MS = 1000
 
 
 # ------------------------------------------------------------
@@ -48,11 +49,19 @@ PRE_ROLL_MS = 500
 
 def error_logging(e: Exception):
     try:
+        current_dateTime = datetime.now()
+        timeof = f"Time: {current_dateTime}"
+        delimiter = '_' * len(timeof) 
+        
         with open("error_log.txt", "a", encoding="utf-8") as f:
             f.write(f"\n[{threading.current_thread().name}] ")
             f.write(f"Error: {e}\n")
             f.write(traceback.format_exc())
             f.write("\n")
+            f.write(timeof)
+            f.write("\n")
+            f.write(delimiter)
+            f.write("\n\n")
     except Exception:
         pass
 
@@ -244,7 +253,7 @@ def main():
                     with pyaudio_input_stream(microphone_callback):
                         while True:
                             try:
-                                frame = audio_queue.get(timeout=0.03)
+                                frame = audio_queue.get(block=True, timeout=1)
 
                             except queue.Empty:
                                 continue

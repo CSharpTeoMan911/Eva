@@ -20,6 +20,9 @@ namespace Eva_5._0.Classes
             Active,
             Mute
         }
+
+
+        private StringBuilder builder = new StringBuilder();
         private MMDeviceEnumerator? enumerator;
         private CancellationTokenSource tokenSource = new CancellationTokenSource();
         private readonly string enginePath = Path.Combine(Environment.CurrentDirectory, "python", "python.exe");
@@ -29,6 +32,8 @@ namespace Eva_5._0.Classes
         private Process? sttEngine;
 
         private MicState micState = MicState.Active;
+        private DateTime time = DateTime.UtcNow;
+        private const double RESULT_TIMEOUT = 3000;
 
 
 
@@ -75,6 +80,11 @@ namespace Eva_5._0.Classes
             {
                 while (dispatcherRunning && !tokenSource.IsCancellationRequested)
                 {
+                    if ((DateTime.UtcNow - time).TotalMilliseconds >= RESULT_TIMEOUT)
+                    {
+                        builder.Clear();
+                    }
+
                     Interlocked.MemoryBarrier();
                     Interlocked.SpeculationBarrier();
                     Func<bool>? command = null;
@@ -219,8 +229,22 @@ namespace Eva_5._0.Classes
                                 {
                                     if (!string.IsNullOrWhiteSpace(result))
                                     {
-                                        Debug.WriteLine(result);
-                                        TaskScheduler(result);
+                                        time = DateTime.UtcNow;
+                                        switch (builder.Length > 0)
+                                        {
+                                            case true:
+                                                builder.Append(' ').Append(result);
+                                                break;
+
+                                            case false:
+                                                builder.Append(result);
+                                                break;
+                                        }
+
+                                        string accumulated_result= builder.ToString();
+
+                                        Debug.WriteLine($"Accumulated result: {accumulated_result}");
+                                        TaskScheduler(accumulated_result);
                                     }
                                 }
                             }

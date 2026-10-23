@@ -151,10 +151,24 @@ namespace Eva_5._0.Classes
                         return true;
                     });
                 }
-                else if ((Result.IndexOf("search ") == 0) && (Result.Contains(" on ") == true))
+                else if (Result.IndexOf("such on ") == 0)
+                {
+                    return new Func<bool>(() => {
+                        PostProcessing("such on [Web Application Keyword] [Content]", Result);
+                        return true;
+                    });
+                }
+                else if (Result.IndexOf("search ") == 0 && Result.Contains(" on ") == true)
                 {
                     return new Func<bool>(() => {
                         PostProcessing("search [Content] on [Web Application Keyword]", Result);
+                        return true;
+                    });
+                }
+                else if (Result.IndexOf("such ") == 0 && Result.Contains(" on ") == true)
+                {
+                    return new Func<bool>(() => {
+                        PostProcessing("such [Content] on [Web Application Keyword]", Result);
                         return true;
                     });
                 }
@@ -318,6 +332,24 @@ namespace Eva_5._0.Classes
                     }
                     return false;
 
+
+                case "such on [Web Application Keyword] [Content]":
+
+                    Application = Web_Application_Selector("search on ".Length - 1, Sentence);
+
+                    if (Application != String.Empty)
+                    {
+                        for (int Index = "such on ".Length + Application.Length; Index <= Sentence.Length - 1; Index++)
+                        {
+                            WebApplicationSearchContent_StringBuilder.Append(Sentence[Index]);
+                        }
+
+                        WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString().Trim();
+                        App.stateMachine.proc.ProcInitialisation<string>("Online Process", Application, WebApplicationSearchContent);
+                        return true;
+                    }
+                    return false;
+
                 case "search [Content] on [Web Application Keyword]":
 
                     Application = Web_Application_Selector(Sentence.LastIndexOf(" on ") + " on ".Length - 1, Sentence_StringBuilder.ToString());
@@ -325,6 +357,24 @@ namespace Eva_5._0.Classes
                     if (Application != String.Empty)
                     {
                         for (int Index = 7; Index < Sentence.LastIndexOf(" on "); Index++)
+                        {
+                            WebApplicationSearchContent_StringBuilder.Append(Sentence[Index]);
+                        }
+
+
+                        WebApplicationSearchContent = WebApplicationSearchContent_StringBuilder.ToString().Trim();
+                        App.stateMachine.proc.ProcInitialisation<string>("Online Process", Application, WebApplicationSearchContent);
+                        return true;
+                    }
+                    return false;
+
+                case "such [Content] on [Web Application Keyword]":
+
+                    Application = Web_Application_Selector(Sentence.LastIndexOf(" on ") + " on ".Length - 1, Sentence_StringBuilder.ToString());
+
+                    if (Application != String.Empty)
+                    {
+                        for (int Index = 5; Index < Sentence.LastIndexOf(" on "); Index++)
                         {
                             WebApplicationSearchContent_StringBuilder.Append(Sentence[Index]);
                         }
