@@ -7,14 +7,16 @@
 <br>
 
 ## 🔄 Changelog
-📌 Latest Version: v7.7.7
+📌 Latest Version: v7.7.8
 
+* 🆕 Added command estimation for search by adding an option for the leading keyword for 'such'
+* 🆕 Added time beased logging
 * 🆕 Improved latency
 * 🆕 Addded **Energy-based RMS** signal-processing algorithm for speech detection
 * 🆕 Added a new **on-device speech recognition** engine: 🪨 Granite-Speech
 * 🆕 Added a new **on-device speech synthesis** engine: **Piper 🪈** 
 * 🐞 Fixed audio clipping issues
-
+* 🐞 Decreased audio data corruption of the main STT engine by making the audio extraction thread blocking
 
 <img width="602" height="463" alt="Screenshot 2026-09-21 192442" src="https://github.com/user-attachments/assets/0d51860d-62c2-4b84-9918-6887a9edea9b" />
 
