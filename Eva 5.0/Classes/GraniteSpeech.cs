@@ -80,30 +80,34 @@ namespace Eva_5._0.Classes
             {
                 while (dispatcherRunning && !tokenSource.IsCancellationRequested)
                 {
-                    if ((DateTime.UtcNow - time).TotalMilliseconds >= RESULT_TIMEOUT)
+                    lock (builder)
                     {
-                        builder.Clear();
-                    }
-
-                    Interlocked.MemoryBarrier();
-                    Interlocked.SpeculationBarrier();
-                    Func<bool>? command = null;
-                    if (engineLoaded && sttEngine != null)
-                    {
-                        if (SpeechSynthesis.GetState() == SpeechSynthesis.State.Free)
+                        if ((DateTime.UtcNow - time).TotalMilliseconds >= RESULT_TIMEOUT)
                         {
-                            if (tasks.TryDequeue(out command))
-                            {
-                                _ = command?.Invoke();
-                            }
-
-                            if (micState == MicState.Mute)
-                                ChangeMicVolume(MicState.Active);
+                            builder.Clear();
                         }
-                        else
+
+                        Interlocked.MemoryBarrier();
+                        Interlocked.SpeculationBarrier();
+                        Func<bool>? command = null;
+                        if (engineLoaded && sttEngine != null)
                         {
-                            if (micState == MicState.Mute)
-                                ChangeMicVolume(MicState.Mute);
+                            if (SpeechSynthesis.GetState() == SpeechSynthesis.State.Free)
+                            {
+                                if (tasks.TryDequeue(out command))
+                                {
+                                    _ = command?.Invoke();
+                                    builder.Clear();
+                                }
+
+                                if (micState == MicState.Mute)
+                                    ChangeMicVolume(MicState.Active);
+                            }
+                            else
+                            {
+                                if (micState == MicState.Mute)
+                                    ChangeMicVolume(MicState.Mute);
+                            }
                         }
                     }
                 }
@@ -229,22 +233,25 @@ namespace Eva_5._0.Classes
                                 {
                                     if (!string.IsNullOrWhiteSpace(result))
                                     {
-                                        time = DateTime.UtcNow;
-                                        switch (builder.Length > 0)
+                                        lock (builder)
                                         {
-                                            case true:
-                                                builder.Append(' ').Append(result);
-                                                break;
+                                            time = DateTime.UtcNow;
+                                            switch (builder.Length > 0)
+                                            {
+                                                case true:
+                                                    builder.Append(' ').Append(result);
+                                                    break;
 
-                                            case false:
-                                                builder.Append(result);
-                                                break;
+                                                case false:
+                                                    builder.Append(result);
+                                                    break;
+                                            }
+
+                                            string accumulated_result = builder.ToString();
+
+                                            Debug.WriteLine($"Accumulated result: {accumulated_result}");
+                                            TaskScheduler(accumulated_result);
                                         }
-
-                                        string accumulated_result= builder.ToString();
-
-                                        Debug.WriteLine($"Accumulated result: {accumulated_result}");
-                                        TaskScheduler(accumulated_result);
                                     }
                                 }
                             }
