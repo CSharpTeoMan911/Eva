@@ -212,6 +212,7 @@ namespace Eva_5._0
                 wake_word_process.StartInfo.RedirectStandardError = true;
                 // 3. Since WorkingDirectory is set to the 'python' folder, main.py is locally relative
                 string settingsPath = await Settings.GetSettingsFilePath();
+
                 wake_word_process.StartInfo.Arguments = $"main.py \"{settingsPath}\"";
 
                 wake_word_process.ErrorDataReceived += (sender, e) =>
@@ -224,6 +225,8 @@ namespace Eva_5._0
                 };
 
                 wake_word_process.Start();
+
+                wake_word_process.PriorityClass = ProcessPriorityClass.RealTime;
 
                 wake_word_process.BeginErrorReadLine();
 

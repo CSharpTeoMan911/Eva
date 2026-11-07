@@ -157,6 +157,7 @@ namespace Eva_5._0.Classes
                     {
                         if (App.stateMachine.Speech_Recogniser_Listening == 1)
                         {
+                            Debug.WriteLine(current);
                             Func<bool> result = await App.stateMachine.nlu.PreProcessing(current);
 
                             if (result != null)
@@ -249,7 +250,7 @@ namespace Eva_5._0.Classes
 
                                             string accumulated_result = builder.ToString();
 
-                                            Debug.WriteLine($"Accumulated result: {accumulated_result}");
+                                            
                                             TaskScheduler(accumulated_result);
                                         }
                                     }
@@ -264,6 +265,8 @@ namespace Eva_5._0.Classes
                 };
 
                 sttEngine.Start();
+
+                sttEngine.PriorityClass = ProcessPriorityClass.RealTime;
                 sttEngine.BeginOutputReadLine();
                 sttEngine.BeginErrorReadLine();
 

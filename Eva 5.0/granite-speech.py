@@ -1,17 +1,46 @@
 
+import ctypes
 import os
 import queue
+import subprocess
 import threading
+import traceback
 from collections import deque
 from contextlib import contextmanager
-from pathlib import Path
-import subprocess
-import traceback
+from ctypes import wintypes
 from datetime import datetime
+from pathlib import Path
 
 import numpy as np
 import pyaudio
 import transcribe_cpp
+
+
+
+#-------------------------------
+# Thread Priority 
+#-------------------------------
+
+'''
+Inject the 'kernel32.dll' to invoke the Windows OS level API
+functions that allow modifying thread priority levels.
+This must be done to prevent OS level resource clogging
+that could make the recogniser stall or interrupt when
+the CPU or RAM is consumed by other processes, thus
+making the current process wait or hang.
+'''
+
+
+kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+
+kernel32.GetCurrentThread.restype = wintypes.HANDLE
+
+kernel32.SetThreadPriority.argtypes = [
+    wintypes.HANDLE,
+    ctypes.c_int
+]
+kernel32.SetThreadPriority.restype = wintypes.BOOL
+
 
 
 # ------------------------------------------------------------
@@ -163,6 +192,11 @@ def pyaudio_input_stream(callback):
 # ------------------------------------------------------------
 
 def asr_worker(session):
+    handle = kernel32.GetCurrentThread()
+    
+    if not kernel32.SetThreadPriority(handle, 15):
+        raise ctypes.WinError(ctypes.get_last_error())
+    
     while True:
         try:
             audio = asr_queue.get()
@@ -363,6 +397,11 @@ def main():
 # ------------------------------------------------------------
 
 def process_checkup(shutdown_event: threading.Event):
+    handle = kernel32.GetCurrentThread()
+    
+    if not kernel32.SetThreadPriority(handle, 15):
+        raise ctypes.WinError(ctypes.get_last_error())
+    
     while not shutdown_event.is_set():
         try:
             result = subprocess.getoutput(

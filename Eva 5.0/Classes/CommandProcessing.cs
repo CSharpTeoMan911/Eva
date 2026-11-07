@@ -31,26 +31,31 @@ namespace Eva_5._0.Classes
         public async Task<Func<bool>> PreProcessing(string Result)
         {
             ClearBuffers();
+
             Result = Result.Trim();
-            foreach (char c in Result)
+            Sentence_StringBuilder.Append(Result);
+
+            if (Result.Contains('-'))
             {
-                Result = Result.Replace('-', ' ');
+                for (int i = 0; i < Sentence_StringBuilder.Length; i++)
+                {
+                    if (i > 0 && i < Sentence_StringBuilder.Length - 1)
+                    {
+                        if (Sentence_StringBuilder[i] == '-')
+                        {
+                            if (Sentence_StringBuilder[i - 1] != ' ' && Sentence_StringBuilder[i + 1] != ' ')
+                            {
+                                Sentence_StringBuilder[i] = ' ';
+                            }
+                        }
+                    }
+                }
 
-                if (char.IsWhiteSpace(c) || char.IsLetterOrDigit(c))
-                {
-                    Sentence_StringBuilder.Append(c);
-                }
-                else if (c != ',' && c != '.' && c != '"')
-                {
-                    Sentence_StringBuilder.Append(c);
-                }
+                Result = Sentence_StringBuilder.ToString();
             }
-
-
-            Result = Sentence_StringBuilder.ToString();
+    
             display_recognition_result = Result;
 
-            //Debug.WriteLine(Result);
 
             if (CommandTest == true)
                 return new Func<bool>(() => { return true; });
