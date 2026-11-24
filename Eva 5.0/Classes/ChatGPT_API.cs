@@ -201,7 +201,7 @@ namespace Eva_5._0
                 cached_conversation.RemoveAt(cached_conversation.Count - 1);
         }
 
-        public bool Initiate_Chat_GPT(string input, CancellationToken cancellation)
+        public void Initiate_Chat_GPT(string input, CancellationToken cancellation)
         {
             Task.Run(async () =>
             {
@@ -435,8 +435,6 @@ namespace Eva_5._0
                     RemoveLastMessage();
                 }
             });
-
-            return true;
         }
 
         public void AddAssistantMessage(string input)

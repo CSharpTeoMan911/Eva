@@ -259,27 +259,17 @@ namespace Eva_5._0
 
         private async void ChatGPT_API_Interface(string input)
         {
-            Interlocked.MemoryBarrier();
-            Interlocked.SpeculationBarrier();
-
-            if (App.stateMachine.gptProcess == 0)
+            await Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                Interlocked.Exchange(ref App.stateMachine.gptProcess, 1);
-
-                await Application.Current.Dispatcher.InvokeAsync(() =>
+                if (App.ChatGPTResponseWindowOpened == false)
                 {
-                    if (App.ChatGPTResponseWindowOpened == false)
-                    {
-                        App.chatGPT_Response_Window = new ChatGPT_Response_Window(true);
-                        App.chatGPT_Response_Window.Show();
-                    }
-                });
+                    App.chatGPT_Response_Window = new ChatGPT_Response_Window(true);
+                    App.chatGPT_Response_Window.Show();
+                }
+            });
 
-                await sound_player.Play_Sound(Sound_Player.Sounds.AppExecutionSoundEffect);
-                await App.chatGPT_Response_Window.Update_Conversation(input);
-
-                Interlocked.Exchange(ref App.stateMachine.gptProcess, 0);
-            }
+            await sound_player.Play_Sound(Sound_Player.Sounds.AppExecutionSoundEffect);
+            await App.chatGPT_Response_Window.Update_Conversation(input);
         }
 
 

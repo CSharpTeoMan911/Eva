@@ -75,6 +75,11 @@ namespace Eva_5._0
             {
                 if (processing)
                 {
+                    Interlocked.MemoryBarrier();
+                    Interlocked.SpeculationBarrier();
+
+                    Interlocked.Exchange(ref App.stateMachine.gptProcess, 0);
+
                     if (!response.token.IsCancellationRequested)
                     {
                         if (response.type == ChatGPT_API.ApiResponse.PayloadType.Payload)
@@ -243,34 +248,41 @@ namespace Eva_5._0
 
         public async Task Update_Conversation(string input)
         {
-            if (!String.IsNullOrEmpty(input))
+            Interlocked.MemoryBarrier();
+            Interlocked.SpeculationBarrier();
+
+            if (App.stateMachine.gptProcess == 0)
             {
-                await Dispatcher.InvokeAsync(async () =>
+                Interlocked.Exchange(ref App.stateMachine.gptProcess, 1);
+
+                if (!String.IsNullOrEmpty(input))
                 {
-                    if (WindowIsClosing == false)
+                    await Dispatcher.InvokeAsync(async () =>
                     {
-                        tokenSource = new CancellationTokenSource();
-                        messages.Add(new Message(Message.MessageType.User, input));
-
-                        last_gpt_message = new Message(Message.MessageType.Assistant, String.Empty);
-                        messages.Add(last_gpt_message);
-                        last_gpt_message.PendingStarted();
-
-                        processing = ChatGPT_API.Initiate_Chat_GPT(input, tokenSource.Token);
-
-                        if (processing)
+                        if (WindowIsClosing == false)
                         {
+                            tokenSource = new CancellationTokenSource();
+                            messages.Add(new Message(Message.MessageType.User, input));
+
+                            last_gpt_message = new Message(Message.MessageType.Assistant, String.Empty);
+                            messages.Add(last_gpt_message);
+                            last_gpt_message.PendingStarted();
+
+                            ChatGPT_API.Initiate_Chat_GPT(input, tokenSource.Token);
+
                             Input_Button.Style = Application.Current.FindResource("SendGptQueryButtonProcessingStyle") as Style;
                             Input_Button.Content = "\xF8AE";
+
+                            processing = true;
+
+                            await UpdateChat(input);
+                            ConversationScrollViewer.ScrollToBottom();
+
+                            GC.Collect(1, GCCollectionMode.Forced);
+                            GC.WaitForPendingFinalizers();
                         }
-
-                        await UpdateChat(input);
-                        ConversationScrollViewer.ScrollToBottom();
-
-                        GC.Collect(1, GCCollectionMode.Forced);
-                        GC.WaitForPendingFinalizers();
-                    }
-                }, DispatcherPriority.Render);
+                    }, DispatcherPriority.Render);
+                }
             }
         }
 
