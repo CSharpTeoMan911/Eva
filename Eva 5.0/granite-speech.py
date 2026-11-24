@@ -1,9 +1,9 @@
-
 import ctypes
 import os
 import queue
 import subprocess
 import threading
+import time
 import traceback
 from collections import deque
 from contextlib import contextmanager
@@ -15,32 +15,26 @@ import numpy as np
 import pyaudio
 import transcribe_cpp
 
+# -------------------------------
+# Thread Priority
+# -------------------------------
 
-
-#-------------------------------
-# Thread Priority 
-#-------------------------------
-
-'''
+"""
 Inject the 'kernel32.dll' to invoke the Windows OS level API
 functions that allow modifying thread priority levels.
 This must be done to prevent OS level resource clogging
 that could make the recogniser stall or interrupt when
 the CPU or RAM is consumed by other processes, thus
 making the current process wait or hang.
-'''
+"""
 
 
 kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
 
 kernel32.GetCurrentThread.restype = wintypes.HANDLE
 
-kernel32.SetThreadPriority.argtypes = [
-    wintypes.HANDLE,
-    ctypes.c_int
-]
+kernel32.SetThreadPriority.argtypes = [wintypes.HANDLE, ctypes.c_int]
 kernel32.SetThreadPriority.restype = wintypes.BOOL
-
 
 
 # ------------------------------------------------------------
@@ -71,17 +65,20 @@ END_SILENCE_MS = 1000
 MIN_SPEECH_MS = 1
 PRE_ROLL_MS = 1000
 
+AUTOMATIC_PRE_ROLL_TIMEOUT = 2  # Dump the audio bytes every 2 seconds
+
 
 # ------------------------------------------------------------
 # Error Logging
 # ------------------------------------------------------------
 
+
 def error_logging(e: Exception):
     try:
         current_dateTime = datetime.now()
         timeof = f"Time: {current_dateTime}"
-        delimiter = '_' * len(timeof) 
-        
+        delimiter = "_" * len(timeof)
+
         with open("error_log.txt", "a", encoding="utf-8") as f:
             f.write(f"\n[{threading.current_thread().name}] ")
             f.write(f"Error: {e}\n")
@@ -98,6 +95,7 @@ def error_logging(e: Exception):
 # ------------------------------------------------------------
 # Logging
 # ------------------------------------------------------------
+
 
 def log_callback(level, message):
     try:
@@ -123,6 +121,7 @@ asr_queue = queue.Queue()
 # ------------------------------------------------------------
 # Microphone
 # ------------------------------------------------------------
+
 
 def microphone_callback(in_data, frame_count, time_info, status_flags):
     try:
@@ -191,12 +190,13 @@ def pyaudio_input_stream(callback):
 # Transcription
 # ------------------------------------------------------------
 
+
 def asr_worker(session):
     handle = kernel32.GetCurrentThread()
-    
+
     if not kernel32.SetThreadPriority(handle, 15):
         raise ctypes.WinError(ctypes.get_last_error())
-    
+
     while True:
         try:
             audio = asr_queue.get()
@@ -228,6 +228,7 @@ def asr_worker(session):
 # Utterance Submission
 # ------------------------------------------------------------
 
+
 def submit_utterance(utterance, speech_frame_count, minimum_frames):
     try:
         if speech_frame_count < minimum_frames or not utterance:
@@ -248,147 +249,153 @@ def submit_utterance(utterance, speech_frame_count, minimum_frames):
 # Main
 # ------------------------------------------------------------
 
+
 def main():
     try:
         if not MODEL_PATH.is_file():
-            error_logging(
-                FileNotFoundError(f"Model not found: {MODEL_PATH}")
-            )
+            error_logging(FileNotFoundError(f"Model not found: {MODEL_PATH}"))
             return
 
         silence_limit = max(1, END_SILENCE_MS // FRAME_MS)
         minimum_frames = max(1, MIN_SPEECH_MS // FRAME_MS)
         pre_roll_frames = max(1, PRE_ROLL_MS // FRAME_MS)
 
-        with transcribe_cpp.Model(
-            str(MODEL_PATH),
-            backend=BACKEND,
-        ) as model:
+        with (
+            transcribe_cpp.Model(
+                str(MODEL_PATH),
+                backend=BACKEND,
+            ) as model,
+            model.session() as session,
+        ):
+            worker = threading.Thread(
+                target=asr_worker,
+                args=(session,),
+                daemon=True,
+                name="GraniteASRWorker",
+            )
+            worker.start()
 
-            with model.session() as session:
-                worker = threading.Thread(
-                    target=asr_worker,
-                    args=(session,),
-                    daemon=True,
-                    name="GraniteASRWorker",
-                )
-                worker.start()
+            pre_roll = deque(maxlen=pre_roll_frames)
 
-                pre_roll = deque(maxlen=pre_roll_frames)
+            utterance = []
+            speaking = False
+            silence_frames = 0
+            speech_frame_count = 0
 
-                utterance = []
-                speaking = False
-                silence_frames = 0
-                speech_frame_count = 0
+            automatic_pre_roll = time.monotonic()
 
-                print("[Result: [ loaded ]]", flush=True)
+            print("[Result: [ loaded ]]", flush=True)
 
-                try:
-                    with pyaudio_input_stream(microphone_callback):
-                        while True:
-                            try:
-                                frame = audio_queue.get(block=True, timeout=1)
+            try:
+                with pyaudio_input_stream(microphone_callback):
+                    while True:
+                        try:
+                            frame = audio_queue.get(block=True, timeout=1)
 
-                            except queue.Empty:
-                                continue
+                        except queue.Empty:
+                            continue
 
-                            except Exception as e:
-                                error_logging(e)
-                                continue
+                        except Exception as e:
+                            error_logging(e)
+                            continue
 
-                            try:    #################################################
-                                    #               [ RMS FORMULA ]
-                                    #################################################
-                                    #             __________________________
-	                                #            /
-	                                #           /               N
-	                                #          /              -----
-	                                #         /       1       \     
-                                    #        /       ---  *    >    (X)i ^2
-	                                #  _    /         N       /
-	                                #   \  /                  -----
-	                                #    \/                    i=1
-                                    #
-                                    #################################################
-                                
-                                
-                                
-                                # Calculate RMS using every sample.
-                                N = len(frame)
-                                _sum = sum([float(n * n) for n in frame])
-                                
-                                rms = float(np.sqrt(float(1/N) * _sum))
-                                
-                                is_speech = rms >= SPEECH_THRESHOLD
+                        try:  #################################################
+                            #               [ RMS FORMULA ]
+                            #################################################
+                            #             __________________________
+                            #            /
+                            #           /               N
+                            #          /              -----
+                            #         /       1       \
+                            #        /       ---  *    >    (X)i ^2
+                            #  _    /         N       /
+                            #   \  /                  -----
+                            #    \/                    i=1
+                            #
+                            #################################################
 
-                                if not speaking:
-                                    pre_roll.append(frame)
+                            # Calculate RMS using every sample.
+                            N = len(frame)
+                            _sum = sum([float(n * n) for n in frame])
 
-                                    if is_speech:
-                                        speaking = True
-                                        utterance = list(pre_roll)
-                                        pre_roll.clear()
+                            rms = float(np.sqrt(float(1 / N) * _sum))
 
-                                        silence_frames = 0
-                                        speech_frame_count = 1
+                            is_speech = rms >= SPEECH_THRESHOLD
 
+                            if not speaking:
+                                pre_roll.append(frame)
+
+                                if is_speech:
+                                    speaking = True
+                                    utterance = list(pre_roll)
+                                    pre_roll.clear()
+
+                                    silence_frames = 0
+                                    speech_frame_count = 1
+
+                            else:
+                                utterance.append(frame)
+
+                                if is_speech:
+                                    silence_frames = 0
+                                    speech_frame_count += 1
                                 else:
-                                    utterance.append(frame)
+                                    silence_frames += 1
 
-                                    if is_speech:
-                                        silence_frames = 0
-                                        speech_frame_count += 1
-                                    else:
-                                        silence_frames += 1
+                                if (
+                                    silence_frames >= silence_limit
+                                    or (time.monotonic() - automatic_pre_roll)
+                                    >= AUTOMATIC_PRE_ROLL_TIMEOUT
+                                ):
+                                    automatic_pre_roll = time.monotonic()
+                                    
+                                    submit_utterance(
+                                        utterance,
+                                        speech_frame_count,
+                                        minimum_frames,
+                                    )
 
-                                    if silence_frames >= silence_limit:
-                                        submit_utterance(
-                                            utterance,
-                                            speech_frame_count,
-                                            minimum_frames,
-                                        )
+                                    speaking = False
+                                    utterance = []
+                                    silence_frames = 0
+                                    speech_frame_count = 0
+                                    pre_roll.clear()
 
-                                        speaking = False
-                                        utterance = []
-                                        silence_frames = 0
-                                        speech_frame_count = 0
-                                        pre_roll.clear()
+                        except Exception as e:  # noqa: BLE001
+                            error_logging(e)
 
-                            except Exception as e:
-                                error_logging(e)
+            except KeyboardInterrupt:
+                pass
 
-                except KeyboardInterrupt:
-                    pass
+            except Exception as e:  # noqa: BLE001
+                error_logging(e)
 
-                except Exception as e:
+            finally:
+                try:
+                    if speaking and utterance:
+                        submit_utterance(
+                            utterance,
+                            speech_frame_count,
+                            minimum_frames,
+                        )
+                except Exception as e:  # noqa: BLE001
                     error_logging(e)
 
-                finally:
-                    try:
-                        if speaking and utterance:
-                            submit_utterance(
-                                utterance,
-                                speech_frame_count,
-                                minimum_frames,
-                            )
-                    except Exception as e:
-                        error_logging(e)
+                try:
+                    asr_queue.join()
+                except Exception as e:  # noqa: BLE001
+                    error_logging(e)
 
-                    try:
-                        asr_queue.join()
-                    except Exception as e:
-                        error_logging(e)
-
-                    try:
-                        asr_queue.put(None)
-                        worker.join()
-                    except Exception as e:
-                        error_logging(e)
+                try:
+                    asr_queue.put(None)
+                    worker.join()
+                except Exception as e:  # noqa: BLE001
+                    error_logging(e)
 
     except KeyboardInterrupt:
         pass
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         error_logging(e)
 
 
@@ -396,17 +403,18 @@ def main():
 # Process Check
 # ------------------------------------------------------------
 
+
 def process_checkup(shutdown_event: threading.Event):
     handle = kernel32.GetCurrentThread()
-    
+
     if not kernel32.SetThreadPriority(handle, 15):
         raise ctypes.WinError(ctypes.get_last_error())
-    
+
     while not shutdown_event.is_set():
         try:
             result = subprocess.getoutput(
-                'powershell -Command '
-                '"(Get-Process \'Eva 5.0\' '
+                "powershell -Command "
+                "\"(Get-Process 'Eva 5.0' "
                 '-ErrorAction SilentlyContinue).Id"'
             )
 

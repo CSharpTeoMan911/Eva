@@ -3,6 +3,7 @@ using SharpToken;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -16,8 +17,6 @@ namespace Eva_5._0
 {
     internal class ChatGPT_API
     {
-
-
         private System.Timers.Timer dispatcherTimer;
         private ConcurrentQueue<ApiResponse> responseQueue = new ConcurrentQueue<ApiResponse>();
 
@@ -26,6 +25,7 @@ namespace Eva_5._0
 
         private List<messages> cached_conversation = new List<messages>();
         private int total_tokens;
+        private readonly SemaphoreSlim model_context_window_semaphore = new SemaphoreSlim(1, 1);
         public List<string> gpt_models = new List<string>();
         public string gpt_model_buffer;
         private string data_label = "data: ";
@@ -211,13 +211,13 @@ namespace Eva_5._0
                     string selected_model = await Settings.Get_Current_Chat_GPT__Model();
                     double temp = await Settings.Get_Current_Model_Temperature();
                     int tokens = await GetGptModelEncoding(input);
-                    int max_tokens = GetModelContextWindow(selected_model);
+                    int max_tokens = await GetModelContextWindow(selected_model);
 
                     if (tokens < max_tokens)
                     {
                         try
                         {
-                            Remove_Superflous_Tokens(tokens, selected_model);
+                            await Remove_Superflous_Tokens(tokens, selected_model);
 
                             // 'HttpClient' OBJECT NEEDED TO SEND HTTP REQUESTS TO THE OPENAI SERVER.
                             using (HttpClient api_client = new HttpClient())
@@ -247,8 +247,8 @@ namespace Eva_5._0
 
                                 if (selected_model == null)
                                 {
-                                    request.model = "gpt-3.5-turbo";
                                     await Get_Available_Gpt_Models();
+                                    request.model = gpt_models.ElementAt(0);
                                 }
                                 else
                                 {
@@ -403,6 +403,7 @@ namespace Eva_5._0
                         }
                         catch(Exception E)
                         {
+                            System.Diagnostics.Debug.WriteLine(E.Message);
                             // IF AN EXCEPTION OCCURS, THEN THE OPERATION
                             // IS NOT SUCCESSFUL AND THE SET TYPE VALUE
                             // WITHIN THE TUPLE IS AN EXCEPTION AND THE
@@ -454,103 +455,68 @@ namespace Eva_5._0
             });
         }
 
-        private int GetModelContextWindow(string model)
+        private async Task<int> GetModelContextWindow(string model)
         {
-            return model switch
+            const int fallback_context_window = 4096;
+            int? matched_context_window = null;
+
+            if (String.IsNullOrWhiteSpace(model))
             {
-                // GPT-3.5 family
-                "gpt-3.5-turbo-16k" => 16385, // 16,385 tokens max
-                "gpt-3.5-turbo-instruct" => 4096, // 4,096 tokens max
-                "gpt-3.5-turbo-instruct-0914" => 4096, // 4,096 tokens max
-                "gpt-3.5-turbo-1106" => 16385, // 16,385 tokens max
-                "gpt-3.5-turbo-0125" => 16385, // 16,385 tokens max
-                "gpt-3.5-turbo" => 4096, // legacy / 4,096 tokens max
+                return fallback_context_window;
+            }
 
-                // GPT-4o models
-                "gpt-4o-mini" => 128000, // 128,000 tokens max
-                "gpt-4o" => 128000, // 128,000 tokens max
+            await model_context_window_semaphore.WaitAsync();
 
-                // GPT-4.1 models
-                "gpt-4.1-nano" => 1047576, // 1,047,576 tokens max
-                "gpt-4.1-mini" => 1047576, // 1,047,576 tokens max
-                "gpt-4.1" => 1047576, // 1,047,576 tokens max
 
-                // GPT-4 turbo models
-                "gpt-4-turbo-preview" => 128000, // 128,000 tokens max
-                "gpt-4-turbo-2024-04-09" => 128000, // 128,000 tokens max
-                "gpt-4-turbo" => 128000, // 128,000 tokens max
+            try
+            {
+                using (HttpClient api_client = new HttpClient())
+                {
+                    api_client.Timeout = TimeSpan.FromSeconds(10);
 
-                // GPT-4 preview models
-                "gpt-4-1106-preview" => 128000, // 128,000 tokens max
-                "gpt-4-0125-preview" => 128000, // 128,000 tokens max
+                    using (HttpResponseMessage response = await api_client.GetAsync("https://openrouter.ai/api/v1/models"))
+                    {
+                        response.EnsureSuccessStatusCode();
 
-                // GPT-4 standard models
-                "gpt-4-32k" => 32768, // 32,768 tokens max
-                "gpt-4-0613" => 8192, // 8,192 tokens max
-                "gpt-4" => 8192, // 8,192 tokens max
+                        string response_string = await response.Content.ReadAsStringAsync();
+                        JObject response_object = JObject.Parse(response_string);
+                        JArray model_data = response_object["data"] as JArray;
 
-                // GPT-5 models
-                "gpt-5-nano" => 400000, // 8,192 tokens max
-                "gpt-5-mini" => 400000, // 32,768 tokens max
-                "gpt-5" => 400000, // 400,000 tokens max
+                        if (model_data != null)
+                        {
+                            foreach (JToken model_entry in model_data)
+                            {
+                                string model_id = (string)model_entry["id"];
+                                int? context_window = (int?)model_entry["context_length"];
 
-                // Fallback for unknown models
-                _ => 4096 // default
-            };
+                                if (model_id.Split('/')[1] == model)
+                                {
+                                    string model_suffix = "/" + model;
+                                    matched_context_window = context_window;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+            finally
+            {
+                model_context_window_semaphore.Release();
+            }
+
+            return matched_context_window ?? fallback_context_window;
         }
 
-
-        private string GetModelTokenizer(string model)
-        {
-            return model switch
-            {
-                // GPT-3.5 family (use cl100k_base)
-                "gpt-3.5-turbo-16k" => "cl100k_base",
-                "gpt-3.5-turbo-instruct" => "cl100k_base",
-                "gpt-3.5-turbo-instruct-0914" => "cl100k_base",
-                "gpt-3.5-turbo-1106" => "cl100k_base",
-                "gpt-3.5-turbo-0125" => "cl100k_base",
-                "gpt-3.5-turbo" => "cl100k_base",
-
-                // GPT-4o models (use cl100k_base)
-                "gpt-4o-mini" => "cl100k_base",
-                "gpt-4o" => "cl100k_base",
-
-                // GPT-4.1 models (use cl100k_base)
-                "gpt-4.1-nano" => "cl100k_base",
-                "gpt-4.1-mini" => "cl100k_base",
-                "gpt-4.1" => "cl100k_base",
-
-                // GPT-4 turbo models (use cl100k_base)
-                "gpt-4-turbo-preview" => "cl100k_base",
-                "gpt-4-turbo-2024-04-09" => "cl100k_base",
-                "gpt-4-turbo" => "cl100k_base",
-
-                // GPT-4 preview models (use cl100k_base)
-                "gpt-4-1106-preview" => "cl100k_base",
-                "gpt-4-0125-preview" => "cl100k_base",
-
-                // GPT-4 standard models (use cl100k_base)
-                "gpt-4-32k" => "cl100k_base",
-                "gpt-4-0613" => "cl100k_base",
-                "gpt-4" => "cl100k_base",
-
-                // GPT-5 models (assuming cl100k_base)
-                "gpt-5-nano" => "cl100k_base",
-                "gpt-5-mini" => "cl100k_base",
-                "gpt-5" => "cl100k_base",
-
-                // Fallback for unknown models: assume r50k_base (legacy GPT-3)
-                _ => "r50k_base"
-            };
-        }
-
-        private async void Remove_Superflous_Tokens(int tokens, string model)
+        private async Task Remove_Superflous_Tokens(int tokens, string model)
         {
             // IF THE NUMBERS OF EXTRACTED GPT MODELS IS GREATER THAN 0
             if (gpt_models.Count > 0)
             {
-                int max_tokens = GetModelContextWindow(model);
+                int max_tokens = await GetModelContextWindow(model);
 
                 // IF THE TOTAL NUMBER OF TOKENS IS LESS THAN OR EQUAL WITH max_tokens
                 if (total_tokens + tokens <= max_tokens)
@@ -628,7 +594,7 @@ namespace Eva_5._0
                 }
 
 
-                GptEncoding encoding = GptEncoding.GetEncoding(GetModelTokenizer(current_model));
+                GptEncoding encoding = GptEncoding.GetEncoding("cl100k_base");
 
                 // GET THE NUMBER OF TOKENS THAT THE INPUT CONTAINS
                 // IN ACCORDANCE WITH THE SELECTED MODEL AND ITS

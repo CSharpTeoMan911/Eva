@@ -1,4 +1,5 @@
 ﻿using Eva_5._0.Properties;
+using Markdig.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -244,7 +245,7 @@ namespace Eva_5._0.Classes
         }
 
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+      
         private bool PostProcessing(string Param, string Sentence)
         {
             // THE SECOND TOKENIZATION IS INITIATED. HERE THE CONTEXTUAL NATURAL LANGUAGE PROCESSING TAKES PLACE. THE KEYWORDS RELATED TO THE COMMAND FORMATS DETECTED ARE TOKENIZED.
@@ -430,7 +431,6 @@ namespace Eva_5._0.Classes
 
 
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void Timer_Time_Selector(string Sentence, System.Collections.Concurrent.ConcurrentDictionary<string, int> time_interval, int start_index)
         {
             // WHEN A TIMER IS SET THE TIME VARIABLES FROM THE SENTECE MUST BE EXTRACTED. THE SECOND TOKENIZATION WILL EXTRACTS WHERE
@@ -635,14 +635,19 @@ namespace Eva_5._0.Classes
             {
                 Application_StringBuilder.Append(Sentence[index]);
 
-                app = Application_StringBuilder.ToString();
-                commands.A_p_l_Name__And__A_p_l___E_x__Name.TryGetValue(app, out Token_Buffer);
+                bool allocate_string = index == Sentence.Length - 1 ? true : (Sentence[index + 1] == ' ') || Sentence[index + 1].IsEscapableSymbol() || Sentence[index + 1].IsAsciiPunctuation();
 
-
-                if (Token_Buffer != null)
+                if (allocate_string)
                 {
-                    Token_Buffer_List.Push(app);
-                    Token_Buffer = null;
+                    app = Application_StringBuilder.ToString();
+                    commands.A_p_l_Name__And__A_p_l___E_x__Name.TryGetValue(app, out Token_Buffer);
+
+
+                    if (Token_Buffer != null)
+                    {
+                        Token_Buffer_List.Push(app);
+                        Token_Buffer = null;
+                    }
                 }
 
                 index++;
@@ -674,14 +679,20 @@ namespace Eva_5._0.Classes
             {
                 Application_StringBuilder.Append(Sentence[index]);
 
-                process = Application_StringBuilder.ToString();
-                commands.A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryGetValue(process, out Token_Buffer);
+                bool allocate_string = index == Sentence.Length - 1 ? true : (Sentence[index + 1] == ' ' || Sentence[index + 1].IsEscapableSymbol() || Sentence[index + 1].IsAsciiPunctuation());
 
-
-                if (Token_Buffer != null)
+                if (allocate_string)
                 {
-                    Token_Buffer_List.Push(process);
-                    Token_Buffer = null;
+                    process = Application_StringBuilder.ToString();
+                    commands.A_p_l_Name__And__A_p_l___P_r_o_c_Name.TryGetValue(process, out Token_Buffer);
+
+
+                    if (Token_Buffer != null)
+                    {
+                        Token_Buffer_List.Push(process);
+                        Token_Buffer = null;
+                    }
+
                 }
 
                 index++;
@@ -720,20 +731,26 @@ namespace Eva_5._0.Classes
 
 
 
-            WebApplicationSearchContent_StringBuilder.Clear();
+            WebApplication_StringBuilder.Clear();
 
             while (index < Sentence.Length)
             {
                 WebApplication_StringBuilder.Append(Sentence[index]);
 
-                web_app = WebApplication_StringBuilder.ToString();
-                commands.W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryGetValue(web_app, out Token_Buffer);
+                bool allocate_string = index == Sentence.Length - 1 ? true : (Sentence[index + 1] == ' ' || Sentence[index + 1].IsEscapableSymbol() || Sentence[index + 1].IsAsciiPunctuation());
 
-
-                if (Token_Buffer != null)
+                if (allocate_string)
                 {
-                    Token_Buffer_List.Push(web_app);
-                    Token_Buffer = null;
+
+                    web_app = WebApplication_StringBuilder.ToString();
+                    commands.W_e_b__A_p_l_Name__And__W_e_b__A_p_l___P_r_o_c_Name.TryGetValue(web_app, out Token_Buffer);
+
+
+                    if (Token_Buffer != null)
+                    {
+                        Token_Buffer_List.Push(web_app);
+                        Token_Buffer = null;
+                    }
                 }
 
                 index++;
